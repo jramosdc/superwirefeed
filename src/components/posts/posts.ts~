@@ -1,0 +1,100 @@
+// <reference path="../../../typings/tsd.d.ts">
+
+import { Component, Pipe, PipeTransform, OnInit, Injector } from 'angular2/core';
+import { RouterLink, RouteParams, CanActivate, ComponentInstruction, Router } from 'angular2/router';
+import { User, authService } from '../services/authService';
+import { ClipboardDirective } from './clip';
+import { ReversePipe } from "./pipe";
+
+@Pipe({
+	name: 'searchPostTitle'
+})
+class SearchPostTitlePipe implements PipeTransform {
+	transform(values, args?) {
+        let [filter] = args;
+        return filter ? values.filter(value=> value.title.toLocaleLowerCase().lastIndexOf(filter) != -1) : values;
+	}
+}
+
+
+@Component({
+	selector: 'posts',
+	host: {
+		class: 'col s10'
+	},
+    styleUrls: ['components/posts/posts.css'],
+	templateUrl: 'components/posts/posts.html',
+	directives: [RouterLink, ClipboardDirective],
+	pipes: [SearchPostTitlePipe, ReversePipe]
+})
+// @CanActivate((next: ComponentInstruction, prev: ComponentInstruction) => {
+// 	let injector = Injector.resolveAndCreate([authService]);
+// 	let as : authService = injector.get(authService);
+// 	return new Promise((resolve, reject) => {
+// 		let userid: string = next.params.userid;
+// 		as.getFeedName(userid, (feedName) => {
+// 			as.setActivePageTitle(feedName);
+// 			resolve(true);
+// 		});
+// 	});
+// })
+export class PostsComponent implements OnInit {
+
+	User: User = {
+		password: {
+			email: '',
+			profileImageURL: ''
+		},
+        uid: '',
+        feed: {
+            id: '',
+            name: '',
+			userid: ''
+        }
+	}
+
+	Domain: string
+	UserID: string
+	search: string
+	deletePostID: string
+	posts = [];
+    
+	constructor(public as: authService, public params: RouteParams, private router: Router) {
+		this.Domain = this.as.getDomain();
+		this.User = this.as.getUser();
+		this.UserID = this.params.get('userid')
+		this.as.loadPosts(this.UserID);
+		this.as.setRoute('Posts', this.UserID);
+		this.posts = this.as.getPosts();
+	}
+
+	ngOnInit() {
+		$('.modal-trigger').leanModal();
+	}
+	
+	deleteModel(postid) {
+		this.deletePostID = postid;
+		$('#deleteModel').openModal();
+	}
+
+	deletePost() {
+		this.as.deletePost(this.deletePostID);
+	}
+
+	voteUp() {
+		this.as.voteUp(this.UserID);
+	}
+
+	voteDown() {
+		this.as.voteDown(this.UserID);
+	}
+
+	returnMoment(timestamp) {
+		if (timestamp) {
+			return moment().to(timestamp);
+		} else {
+			return ''
+		}
+    }
+
+}

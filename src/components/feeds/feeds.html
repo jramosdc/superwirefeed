@@ -1,0 +1,26 @@
+<div class="progress" *ngIf="feeds.length == 0">
+      <div class="indeterminate"></div>
+</div>
+<div class="row">
+    <div class="col l3 s12" *ngFor="#feed of feeds" [routerLink]="['/Posts', { userid: feed.owner.userid }]">
+        <div class="card deep-purple lighten-1">
+            <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
+                {{returnMoment(feed.timestamp)}}
+            </div>
+            <div class="card-content white-text">
+                <span class="card-title">{{feed.name}}</span>
+                <p>{{feed.description}}</p> 
+            </div>
+            <div class="card-action pink lighten-2 layout-row layout-align-space-between-center">
+                <span class="white-text">@{{feed.owner.userid}}</span>
+                <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
+                <a class="btn secondary-content nobackground nopadding" *ngIf="User.password.email && UserID == User.feed.userid"
+                style="margin-right: 20px;">
+                <i class="black-text large mdi mdi-delete"></i>
+            </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+

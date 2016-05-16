@@ -1,0 +1,76 @@
+<div class="row">
+    <div class="col s12 card padding10px">
+        <div class="row">
+
+
+  <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name}}</a><a href="#" class="active">New Post</a>
+   </div>
+
+        </div>
+        <div class="row">
+            <label for="title">Title</label>
+            <div class="input-field">
+                <input type="text" class="validate" #title placeholder="Title">
+            </div>
+        </div>
+        <div class="row">
+            <label for="editor">Add text, links, images, embed videos</label>
+            <div id="editor"></div>
+        </div>
+        <div class="row">
+            <label for="priority">Priority</label>
+            <div class="input-field">
+                <select #priority>
+                    <option value="" disabled selected>Select Priority</option>
+                    <option value="High">Urgent</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <label for="type">Type</label>
+            <div class="input-field">
+                <select #type multiple>
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="file-document">Text</option>
+                    <option value="camera">Image</option>
+                    <option value="play-box-outline">Video</option>
+                    <option value="microphone">Audio</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <label for="category">Category</label>
+            <div class="input-field">
+                <select #category>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="News">News</option>
+                    <option value="Visuals">Visuals</option>
+                    <option value="Data">Data</option>
+                    <option value="Misc">Misc</option>
+                </select>
+            </div>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorPost"></span>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="postLoading">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <a class="waves-effect waves-light btn purple white-text right" (click)="submitPost(title, priority, type, category)">Post</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+// <reference path="../../../typings/tsd.d.ts">
+
+import { Component } from 'angular2/core';
+import { RouterLink } from "angular2/router";
+import { User, authService } from '../services/authService';
+
+@Component({
+	selector: 'feeds',
+	host: {
+		class: 'col s10'
+	},
+    styleUrls: ['components/feeds/feeds.css'],
+	templateUrl: 'components/feeds/feeds.html',
+	directives: [RouterLink]
+})
+export class FeedsComponent implements OnInit {
+
+	User: User = {
+		password: {
+			email: '',
+			profileImageURL: ''
+		},
+        uid: '',
+        feed: {
+            id: '',
+            name: '',
+			userid: ''
+        }
+	}
+        
+	feeds = [];
+
+	constructor(public as: authService) {
+		this.User = this.as.getUser();
+		this.feeds = this.as.getFeeds();
+		this.as.setRoute('Feeds', null);
+		this.as.setActivePageTitle('LATEST FEEDS');
+	}
+
+	
+
+	returnMoment(timestamp) {
+		if (timestamp) {
+			return moment().to(timestamp);
+		} else {
+			return '';
+		}
+	}
+
+}

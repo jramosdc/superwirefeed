@@ -1,0 +1,48 @@
+<div class="progress blue" *ngIf="posts.length == 0">
+    <div class="indeterminate"></div>
+</div>
+<div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="User.password.email && UserID == User.feed.userid">
+    <a class="btn-floating btn-large waves-effect waves-light deep-purple" [routerLink]="['/NewPost']"><i class="large mdi mdi-plus"></i></a>
+</div>
+<div class="card-panel hoverable padding10px layout-row layout-align-space-between-center">
+    <div><string>Share Link:</string><span #domain>{{Domain + '/' + UserID}}</span></div>
+    <a class="waves-effect waves-light btn right indigo" [clipboard]="domain">Copy</a>
+    <div>
+        <a class="btn-floating waves-effect waves-light indigo"><i class="mdi mdi-thumb-down right" (click)="voteDown()"></i></a>
+        <a class="btn-floating waves-effect waves-light indigo"><i class="mdi mdi-thumb-up right" (click)="voteUp()"></i></a>
+    </div>
+</div>
+<div class="row">
+    <h3 class="col s1 nomargin"><i class="mdi mdi-magnify"></i></h3>
+    <div class="col s11 input-field nomargin">
+        <input type="text" [(ngModel)]="search" class="validate nomargin" placeholder="Search">
+    </div>
+</div>
+<div class="row">
+    <ul class="collection">
+        <li class="collection-item" *ngFor="#post of posts | orderBy: '-timestamp' | searchPostTitle: search" [ngStyle]="{'background-color': (post.priority == 'High' ? '#ff4d4d' : (post.priority == 'Medium' ? '#ffa64d' : '#4da6ff')) }">
+            <a class="btn secondary-content nobackground nopadding" [routerLink]="['/EditPost', {postid: post._id}]" *ngIf="User.password.email && UserID == User.feed.userid">
+                <i class="black-text large mdi mdi-pencil"></i>
+            </a>
+            <a class="btn secondary-content nobackground nopadding" (click)="deleteModel(post._id)" *ngIf="User.password.email && UserID == User.feed.userid"
+                style="margin-right: 20px;">
+                <i class="black-text large mdi mdi-delete"></i>
+            </a>
+            <div [routerLink]="['/ViewPost', {postid: post._id}]">
+                <i class="mdi {{'mdi-' + type}}" *ngFor="#type of post.types"></i>
+                <span class="title">{{post.title}}</span>
+            </div>
+            <div><small>{{returnMoment(post.timestamp)}}</small></div>
+        </li>
+    </ul>
+</div>
+<div id="deleteModel" class="modal">
+    <div class="modal-content">
+        <h4>Delete Post</h4>
+        <p>Do you really want to delete the Post?</p>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-light btn-flat" (click)="deletePost()">Yes</a>
+        <a class="modal-action modal-close waves-effect waves-light btn-flat">No</a>
+    </div>
+</div>

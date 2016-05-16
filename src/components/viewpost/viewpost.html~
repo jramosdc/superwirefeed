@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col s12 card padding10px">
+
+        <div class="row">
+          <div class="card panel indigo">
+            <h5 class="white-text">{{User.feed.name}}</h5>
+        </div></div>
+
+        <div class="row">
+            <h2 class="black-text">{{post.title}}</h2>
+        </div>
+
+        <div class="row">
+            <h5 class="indigo-text">Content: </h5>
+            <h5 class="black-text" [innerHTML]="post.detail"></h5>
+        </div>
+        <div class="row">
+            <div class="md-chip red"><div class="md-chip img"><span class="md-chip-span orange">P</span></div><span class="md-chip-text">{{post.priority}}</span></div>
+        </div>
+        <div class="row">
+             <div class="md-chip indigo"><div class="md-chip img"><span class="md-chip-span pink">C</span></div><span class="md-chip-text">{{post.category}}</span></div>
+        </div>
+        <div class="row">
+             <a class="btn-floating btn-large indigo" *ngFor="#type of post.types"><i class="mdi {{'mdi-' + type}}"></i></a>
+        </div>
+       
+        <div class="row">
+            <h5 class="indigo-text">{{returnMoment(post.timestamp)}}</h5>
+        </div>
+    </div>
+</div>
