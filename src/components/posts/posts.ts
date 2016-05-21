@@ -1,10 +1,10 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import { Component, Pipe, PipeTransform, OnInit, Injector } from 'angular2/core';
-import { RouterLink, RouteParams, CanActivate, ComponentInstruction, Router } from 'angular2/router';
+import { Component, Pipe, PipeTransform, OnInit, Injector } from '@angular/core';
+import { RouterLink, RouteParams, CanActivate, ComponentInstruction, Router } from '@angular/router-deprecated';
 import { User, authService } from '../services/authService';
 import { ClipboardDirective } from './clip';
-import { DatePipe } from "angular2/common";
+import { DatePipe } from "@angular/common";
 import { OrderBy } from "./orderby";
 
 @Pipe({
@@ -12,7 +12,7 @@ import { OrderBy } from "./orderby";
 })
 class SearchPostTitlePipe implements PipeTransform {
 	transform(values, args?) {
-        let [filter] = args;
+        let filter = args;
         return filter ? values.filter(value=> value.title.toLocaleLowerCase().indexOf(filter) != -1) : values;
 	}
 }

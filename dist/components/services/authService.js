@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['angular2/core'], function(exports_1, context_1) {
+System.register(['@angular/core'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -274,6 +274,7 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                     var _this = this;
                     this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', function (snaphot) {
                         var vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+                        console.log(vote);
                         if (vote) {
                             _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote - 1 }, function (err) {
                                 err ? console.log('err', err) : '';

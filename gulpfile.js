@@ -12,18 +12,19 @@ var tscConfig = require('./tsconfig.json');
 // Define Paths
 var path = {
   libjs: [
-    'node_modules/angular2/bundles/angular2-polyfills.js',
-    'node_modules/systemjs/dist/system.src.js',
-    'node_modules/rxjs/bundles/Rx.js',
-    'node_modules/angular2/bundles/angular2.dev.js',
-    'node_modules/angular2/bundles/http.dev.js',
-    'node_modules/angular2/bundles/router.dev.js',
-    'node_modules/jquery/dist/jquery.js',
-    'node_modules/materialize-css/dist/js/materialize.js',
-    'node_modules/materialize-tags/dist/js/materialize-tags.js',
-    'node_modules/firebase/lib/firebase-web.js'
+      { dist: 'lib/@angular', src: 'node_modules/@angular/**' },
+      { dist: 'lib/angular2-in-memory-web-api', src: 'node_modules/angular2-in-memory-web-api/**' },
+      { dist: 'lib/rxjs', src: 'node_modules/rxjs/**' },
+      { dist: 'lib/tinymce', src: 'node_modules/tinymce/**' }, 
+      { dist: 'lib', src: 'node_modules/es6-shim/es6-shim.min.js' },
+      { dist: 'lib', src: 'node_modules/zone.js/dist/zone.js' },
+      { dist: 'lib', src: 'node_modules/reflect-metadata/Reflect.js' },
+      { dist: 'lib', src: 'node_modules/systemjs/dist/system.src.js' },
+      { dist: 'lib', src: 'node_modules/jquery/dist/jquery.js' },
+      { dist: 'lib', src: 'node_modules/materialize-css/dist/js/materialize.js' },
+      { dist: 'lib', src: 'node_modules/materialize-tags/dist/js/materialize-tags.js' },
+      { dist: 'lib', src: 'node_modules/firebase/lib/firebase-web.js' }
   ],
-  libtinymce: 'node_modules/tinymce/**',
   libcss: [
     'node_modules/materialize-css/dist/css/materialize.css',
     'node_modules/materialize-tags/dist/css/materialize-tags.css',
@@ -41,7 +42,6 @@ var path = {
   dist: 'dist',
   distapp: 'dist/components',
   distlib: 'dist/lib',
-  distlibtinymce: 'dist/lib/tinymce',
   distfonts: 'dist/fonts'
 };
 
@@ -69,13 +69,11 @@ gulp.task('copy:css', function () {
 });
 
 // copy Libs
-gulp.task('copy:libtinymce', function () {
-  return gulp.src(path.libtinymce)
-    .pipe(gulp.dest(path.distlibtinymce));
-});
 gulp.task('copy:libjs', function () {
-  return gulp.src(path.libjs)
-    .pipe(gulp.dest(path.distlib));
+    path.libjs.forEach(function (val, indx) {
+        gulp.src(val.src)
+            .pipe(gulp.dest(path.dist + '/' + val.dist));
+    });
 });
 gulp.task('copy:libcss', function () {
   return gulp.src(path.libcss)
@@ -97,7 +95,7 @@ gulp.task('transpile', function () {
 });
 
 // Build Project
-gulp.task('build', sequence('clean', 'copy:index', 'copy:html', 'copy:css', 'copy:libtinymce', 'copy:libjs', 'copy:libcss', 'copy:fonts', 'transpile'));
+gulp.task('build', sequence('clean', 'copy:index', 'copy:html', 'copy:css', 'copy:libjs', 'copy:libcss', 'copy:fonts', 'transpile'));
 
 // Default Task
 gulp.task('default', sequence('build', ['serve', 'watch']));
@@ -107,7 +105,20 @@ gulp.task('serve', function () {
   gulp.src('dist')
     .pipe(webserver({
       livereload: true,
-      open: true
+      open: true,
+      directoryListing: {
+        enable: true,
+        path: '/index.html'
+      },
+      middleware: function(req, res, next) {
+        var fileName = url.parse(req.url);
+        fileName = fileName.href.split(fileName.search).join("");
+        var fileExists = fs.existsSync("./dist/" + fileName);
+        if (!fileExists) {
+            req.url = "/index.html";
+        }
+        return next();
+      }
     }));
 });
 

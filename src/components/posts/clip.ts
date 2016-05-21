@@ -1,11 +1,11 @@
-import {Directive,ElementRef,Input,Output,EventEmitter} from 'angular2/core';
-import Clipboard from 'clipboard';
+import {Directive,ElementRef,Input,Output,EventEmitter} from '@angular/core';
+// import Clipboard from 'clipboard';
 
 @Directive({
   selector: '[clipboard]'
 })
 export class ClipboardDirective {
-  clipboard: Clipboard;
+  clipboard: any;
   
   @Input('clipboard')
   elt:ElementRef;
@@ -26,13 +26,13 @@ export class ClipboardDirective {
       }
     });
 
-    this.clipboard.on('success', (e) => {
-      this.clipboardSuccess.emit();
-    });
+    // this.clipboard.on('success', (e) => {
+    //   this.clipboardSuccess.emit();
+    // });
 
-    this.clipboard.on('error', (e) => {
-      this.clipboardError.emit();
-    });
+    // this.clipboard.on('error', (e) => {
+    //   this.clipboardError.emit();
+    // });
   }
   
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-System.register(['angular2/core', './httpService', './authService'], function(exports_1, context_1) {
+System.register(['@angular/core', './httpService', './authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var core_1, httpService_1, authService_1;

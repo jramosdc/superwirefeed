@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['angular2/core', 'angular2/router', '../services/authService', './clip', "angular2/common", "./orderby"], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/router-deprecated', '../services/authService', './clip', "@angular/common", "./orderby"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,15 +11,15 @@ System.register(['angular2/core', 'angular2/router', '../services/authService', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1, clip_1, common_1, orderby_1;
+    var core_1, router_deprecated_1, authService_1, clip_1, common_1, orderby_1;
     var SearchPostTitlePipe, PostsComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (router_1_1) {
-                router_1 = router_1_1;
+            function (router_deprecated_1_1) {
+                router_deprecated_1 = router_deprecated_1_1;
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
@@ -38,7 +38,7 @@ System.register(['angular2/core', 'angular2/router', '../services/authService', 
                 function SearchPostTitlePipe() {
                 }
                 SearchPostTitlePipe.prototype.transform = function (values, args) {
-                    var filter = args[0];
+                    var filter = args;
                     return filter ? values.filter(function (value) { return value.title.toLocaleLowerCase().indexOf(filter) != -1; }) : values;
                 };
                 SearchPostTitlePipe = __decorate([
@@ -106,10 +106,10 @@ System.register(['angular2/core', 'angular2/router', '../services/authService', 
                         },
                         styleUrls: ['components/posts/posts.css'],
                         templateUrl: 'components/posts/posts.html',
-                        directives: [router_1.RouterLink, clip_1.ClipboardDirective],
+                        directives: [router_deprecated_1.RouterLink, clip_1.ClipboardDirective],
                         pipes: [SearchPostTitlePipe, common_1.DatePipe, orderby_1.OrderBy]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_1.RouteParams, router_1.Router])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.RouteParams, router_deprecated_1.Router])
                 ], PostsComponent);
                 return PostsComponent;
             }());

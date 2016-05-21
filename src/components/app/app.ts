@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import { Component } from 'angular2/core';
-import { RouterOutlet , RouteConfig } from "angular2/router";
+import { Component } from '@angular/core';
+import { RouterOutlet , RouteConfig } from "@angular/router-deprecated";
 import { NavbarComponent } from '../navbar/navbar';
 import { CategoriesComponent } from '../categories/categories';
 import { FeedsComponent } from '../feeds/feeds';

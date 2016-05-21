@@ -1,21 +1,17 @@
-/// <reference path="../../node_modules/angular2/typings/browser.d.ts"/>
-System.register(["angular2/core", "angular2/platform/browser", "angular2/http", "angular2/router", "./services/bootstrapServices", './app/app'], function(exports_1, context_1) {
+System.register(["@angular/platform-browser-dynamic", "@angular/http", "@angular/router-deprecated", "./services/bootstrapServices", './app/app'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var core_1, browser_1, http_1, router_1, bootstrapServices_1, app_1;
+    var platform_browser_dynamic_1, http_1, router_deprecated_1, bootstrapServices_1, app_1;
     return {
         setters:[
-            function (core_1_1) {
-                core_1 = core_1_1;
-            },
-            function (browser_1_1) {
-                browser_1 = browser_1_1;
+            function (platform_browser_dynamic_1_1) {
+                platform_browser_dynamic_1 = platform_browser_dynamic_1_1;
             },
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (router_1_1) {
-                router_1 = router_1_1;
+            function (router_deprecated_1_1) {
+                router_deprecated_1 = router_deprecated_1_1;
             },
             function (bootstrapServices_1_1) {
                 bootstrapServices_1 = bootstrapServices_1_1;
@@ -24,10 +20,9 @@ System.register(["angular2/core", "angular2/platform/browser", "angular2/http", 
                 app_1 = app_1_1;
             }],
         execute: function() {
-            browser_1.bootstrap(app_1.AppComponent, [
+            platform_browser_dynamic_1.bootstrap(app_1.AppComponent, [
                 http_1.HTTP_PROVIDERS,
-                router_1.ROUTER_PROVIDERS,
-                core_1.provide(router_1.LocationStrategy, { useClass: router_1.HashLocationStrategy }),
+                router_deprecated_1.ROUTER_PROVIDERS,
                 bootstrapServices_1.SERVICE_PROVIDER
             ]);
         }

@@ -1,5 +1,5 @@
-import {Injectable} from 'angular2/core';
-import { Http, Response, RequestOptions, Headers } from 'angular2/http'; //for http request (rest API)
+import {Injectable} from '@angular/core';
+import { Http, Response, RequestOptions, Headers } from '@angular/http'; //for http request (rest API)
 
 type customServerResponseObject =  { 'success': boolean, 'data': any, 'error': any };
 

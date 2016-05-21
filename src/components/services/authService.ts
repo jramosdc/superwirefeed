@@ -1,6 +1,6 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 
 export interface User { password: { email: string, profileImageURL: string }, uid: string, feed: { id: string, name: string, userid: string } }
 
@@ -259,7 +259,7 @@ export class authService {
 
 	voteUp(userid: string) {
 		this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', (snaphot) => {
-			let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+            let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
 			if (vote) {
 				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote + 1 }, (err) => {
 					err ? console.log('err', err) : '';
@@ -274,7 +274,8 @@ export class authService {
 
 	voteDown(userid: string) {
 		this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', (snaphot) => {
-			let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+            let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+                        console.log(vote);
 			if (vote) {
 				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote - 1 }, (err) => {
 					err ? console.log('err', err) : '';

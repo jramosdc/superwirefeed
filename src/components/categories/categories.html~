@@ -1,3 +1,0 @@
-<ul class="collection ">
-    <li class="collection-item deep-purple" [ngClass]="{active: activeCategory === category}" *ngFor="#category of categories" (click)="selectCategory(category)"> {{category}} </li>
-</ul>

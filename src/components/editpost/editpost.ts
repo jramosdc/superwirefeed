@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import { Component, OnInit } from 'angular2/core';
-import { RouterLink, Router, RouteParams } from "angular2/router";
+import { Component, OnInit } from '@angular/core';
+import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
 import { User, authService } from '../services/authService';
 
 @Component({

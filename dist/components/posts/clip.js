@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'clipboard'], function(exports_1, context_1) {
+System.register(['@angular/core'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,17 +10,15 @@ System.register(['angular2/core', 'clipboard'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, clipboard_1;
+    var core_1;
     var ClipboardDirective;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (clipboard_1_1) {
-                clipboard_1 = clipboard_1_1;
             }],
         execute: function() {
+            // import Clipboard from 'clipboard';
             ClipboardDirective = (function () {
                 function ClipboardDirective(eltRef) {
                     this.eltRef = eltRef;
@@ -29,17 +27,17 @@ System.register(['angular2/core', 'clipboard'], function(exports_1, context_1) {
                 }
                 ClipboardDirective.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.clipboard = new clipboard_1.default(this.eltRef.nativeElement, {
+                    this.clipboard = new Clipboard(this.eltRef.nativeElement, {
                         target: function () {
                             return _this.elt;
                         }
                     });
-                    this.clipboard.on('success', function (e) {
-                        _this.clipboardSuccess.emit();
-                    });
-                    this.clipboard.on('error', function (e) {
-                        _this.clipboardError.emit();
-                    });
+                    // this.clipboard.on('success', (e) => {
+                    //   this.clipboardSuccess.emit();
+                    // });
+                    // this.clipboard.on('error', (e) => {
+                    //   this.clipboardError.emit();
+                    // });
                 };
                 ClipboardDirective.prototype.ngOnDestroy = function () {
                     if (this.clipboard) {
