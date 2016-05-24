@@ -40,7 +40,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             userid: ''
                         }
                     };
-                    this.feeds = [];
                     this.User = this.as.getUser();
                     this.feeds = this.as.getFeeds();
                     this.as.setRoute('Feeds', null);

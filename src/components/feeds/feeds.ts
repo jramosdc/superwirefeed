@@ -2,6 +2,7 @@
 
 import { Component } from '@angular/core';
 import { RouterLink } from "@angular/router-deprecated";
+import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -28,7 +29,7 @@ export class FeedsComponent {
         }
 	}
         
-	feeds = [];
+	feeds: FirebaseListObservable<any[]>;
 
 	constructor(public as: authService) {
 		this.User = this.as.getUser();

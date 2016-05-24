@@ -27,7 +27,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
         execute: function() {
             ViewPostComponent = (function () {
                 function ViewPostComponent(as, router, params) {
-                    var _this = this;
                     this.as = as;
                     this.router = router;
                     this.params = params;
@@ -43,21 +42,12 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             userid: ''
                         }
                     };
-                    this.post = {
-                        title: '',
-                        detail: '',
-                        priority: '',
-                        types: [],
-                        category: ''
-                    };
                     this.User = this.as.getUser();
                     this.as.setRoute('View Post', null);
                     this.as.setActivePageTitle('View Post');
                     this.postid = this.params.get('postid');
                     if (this.postid) {
-                        this.as.getPost(this.postid, function (post) {
-                            _this.post = post;
-                        });
+                        this.post = this.as.loadPost(this.postid);
                     }
                 }
                 ViewPostComponent.prototype.ngOnInit = function () {

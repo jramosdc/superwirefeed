@@ -1,6 +1,8 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularfire2';
+import { Subject } from 'rxjs/Subject';
 
 export interface User { password: { email: string, profileImageURL: string }, uid: string, feed: { id: string, name: string, userid: string } }
 
@@ -18,8 +20,8 @@ export class authService {
 			name: '',
 			userid: ''
 		}
-	}
-
+    }
+    
 	activePage = {
 		title: ''
 	};
@@ -27,70 +29,88 @@ export class authService {
 	activeRoute: string
 	activeUserID: string
 
-	Posts = []
-	Feeds = []
+    Feeds: FirebaseListObservable<any[]>
+
+    categorySubject = new Subject();
+    
 	Categories = ['Marketing','News','Visuals','Data','Misc','All']
 
 	ref: Firebase = new Firebase("https://superwireapp.firebaseio.com");
 	domain : string = 'https://feed.superwire.io'
 
-	constructor() {
-		if (this.ref.getAuth()) {
-			this.User.uid = this.ref.getAuth().uid;
-			this.User.password.profileImageURL = this.ref.getAuth().password.profileImageURL;
-			this.User.password.email = this.ref.getAuth().password.email;
-			this.getUserFeedDetail(this.User.uid, (feed) => {
-				this.User.feed.id = feed.id;
-				this.User.feed.name = feed.name;
-				this.User.feed.userid = feed.userid;
-			});
-		}
+    constructor(private af: AngularFire) {
+        this.af.auth.subscribe((res: FirebaseAuthState) => {
+            if (res) {
+                this.User.uid = res.uid;
+                this.User.password.profileImageURL = res.password['profileImageURL']
+                this.User.password.email = res.password['email'];
+                this.getUserFeedDetail(this.User.uid).subscribe((feed) => {
+                    this.User.feed.id = feed[0]['$key'];
+                    this.User.feed.name = feed[0]['name'];
+                    this.User.feed.userid = feed[0]['owner']['userid'];
+                });
+            } else {
+                this.User.uid = '';
+				this.User.password.profileImageURL = '';
+                this.User.password.email = '';
+                this.User.feed.id = '';
+                this.User.feed.name = '';
+                this.User.feed.userid = '';
+            }
+        })
 		this.loadFeeds();
-		
 	}
 	
-	getUserFeedDetail(uid: string, cb: Function) {
-		this.ref.child('feeds').orderByChild('owner/uid').equalTo(uid).once('child_added', (snaphot) => {
-			cb({
-				id: snaphot.key(),
-				name: snaphot.val().name,
-				userid: snaphot.val().owner.userid
-			});
-		})
+    getUserFeedDetail(uid: string) {
+        return this.af.database.list('/feeds', {
+            query: {
+                orderByChild: 'owner/uid',
+                equalTo: uid
+            }
+        })
 	}
 
-	getFeedName(userid: string, cb: Function) {
-		this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', (snaphot) => {
-			cb(snaphot.val().name);
-		})
+    getFeedName(userid: string) {
+        return this.af.database.list('/feeds', {
+            query: {
+                orderByChild: 'owner/userid',
+                equalTo: userid
+            }
+        })
 	}
 
-	loadFeeds() {
-		this.ref.child('feeds').on('child_added', (snaphot) => {
-			let feed = snaphot.val();
-			feed._id = snaphot.key();
-			this.Feeds.push(feed);
-		});
+    loadFeeds() {
+        this.Feeds = this.af.database.list('/feeds');
 	}
 
-	filterFeeds(category) {
-		this.ref.child('feeds').orderByChild('category').equalTo(category).on('child_added', (snaphot) => {
-			let feed = snaphot.val();
-			feed._id = snaphot.key();
-			this.Feeds.push(feed);
-		});
+    filterFeeds(category) {
+        this.Feeds = this.af.database.list('/feeds', {
+            query: {
+                orderByChild: 'category',
+                equalTo: category
+            }
+        })
 	}
 
-	loadPosts(userid: string) {
-		this.Posts.splice(0);
-		this.ref.child('posts').orderByChild('owner/userid').equalTo(userid).on('child_added', (snaphot) => {
-			let post = snaphot.val();
-			post._id = snaphot.key();
-			this.Posts.push(post);
-		});
-		this.getFeedName(userid, (feedName) => {
-			this.setActivePageTitle(feedName);
-		})
+    loadPosts(userid: string) {
+        this.getFeedName(userid).subscribe((feed) => {
+            this.setActivePageTitle(feed[0].name);
+        });
+        return this.af.database.list('/posts', {
+            query: {
+                orderByChild: 'owner/userid',
+                equalTo: userid
+            }
+        })
+    }
+    
+    loadPost(postid: string) {
+        return this.af.database.list('/posts', {
+            query: {
+                orderByKey: true,
+                equalTo: postid
+            }
+        });
 	}
 
 	filterPosts(category) {
@@ -109,8 +129,8 @@ export class authService {
 	}
 
 	selectCategory(category: string) {
-		if (this.activeRoute === 'Feeds') {
-			this.Feeds.splice(0);
+        if (this.activeRoute === 'Feeds') {
+            // this.Feeds.splice(0);
 			if (category == 'All') {
 				this.loadFeeds();
 			} else {
@@ -146,73 +166,44 @@ export class authService {
 		return this.Feeds;
 	}
 
-	getPost(postid: string, cb: Function) {
-		this.ref.child('posts').orderByKey().equalTo(postid).once('value', (snaphot) => {
-			let post = snaphot.val()[postid];
-			post._id = postid;
-			cb(post);
-		});
-	}
-
-	getPosts() {
-		return this.Posts;
+    getPost(postid: string) {
+        return this.af.database.list('/posts', {
+            query: {
+                orderByKey: true,
+                equalTo: postid
+            }
+        });
 	}
 
 	getUser() {
 		return this.User;
 	}
 
-	login(email, password, cb) {
-		this.ref.authWithPassword({
+    login(email, password) {
+        return this.af.auth.login({
+            email: email,
+            password: password
+        });
+	}
+
+    register(email, password) {
+        return this.af.auth.createUser({
 			email: email,
 			password: password
-		}, (error, authData) => {
-			if (error) {
-				cb(error);
-			} else {
-				this.User.uid = authData.uid;
-				this.User.password.profileImageURL = authData.password.profileImageURL;
-				this.User.password.email = authData.password.email;
-                this.getUserFeedDetail(this.User.uid, (feed) => {
-                    this.User.feed.id = feed.id;
-                    this.User.feed.name = feed.name;
-                    this.User.feed.userid = feed.userid;
-                });
-				cb();
-			}
 		});
 	}
 
-	register(email, password, cb) {
-		this.ref.createUser({
-			email: email,
-			password: password
-		}, (error, authData) => {
-			if (error) {
-				cb(error);
-			} else {
-				cb(null, authData.uid);
-			}
-		});
-	}
-
-	createFeed(userid: string, name: string, description: string, category: string, registerUser: string, cb: Function) {
-		this.ref.child('feeds').push({
-			name: name,
-			description: description,
-			category: category,
-			owner: {
-				uid: registerUser,
-				userid: userid
-			},
-			timestamp: Firebase.ServerValue.TIMESTAMP
-		}, (error) => {
-			if (error) {
-				cb(error);
-			} else {
-				cb();
-			}
-		});
+    createFeed(userid: string, name: string, description: string, category: string, registerUser: string) {
+        return this.af.database.list('/feeds').push({
+            name: name,
+            description: description,
+            category: category,
+            owner: {
+                uid: registerUser,
+                userid: userid
+            },
+            timestamp: Firebase.ServerValue.TIMESTAMP
+        });
 	}
 
 	submitPost(title: string, detail: string, priority: string, types: Array<string>, category: string, cb: Function) {
@@ -298,16 +289,7 @@ export class authService {
 		});
 	}
 
-	logout(cb) {
-		this.ref.unauth((error) => {
-			if (error) {
-				cb(error);
-			} else {
-				cb();
-				this.User.uid = '';
-				this.User.password.profileImageURL = '';
-				this.User.password.email = '';
-			}
-		});
+    logout() {
+        this.af.auth.logout();
 	}
 }

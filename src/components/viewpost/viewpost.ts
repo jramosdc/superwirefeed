@@ -2,6 +2,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
+import { FirebaseObjectObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -29,13 +30,13 @@ export class ViewPostComponent implements OnInit {
     }
 
     postid: string
-    post = {
+    post: FirebaseObjectObservable<{
         title: '',
         detail: '',
         priority: '',
         types: [],
         category: ''
-    }
+    }>
 
     constructor(private as: authService, private router: Router, private params: RouteParams) {
         this.User = this.as.getUser();
@@ -43,9 +44,7 @@ export class ViewPostComponent implements OnInit {
         this.as.setActivePageTitle('View Post');
         this.postid = this.params.get('postid');
         if (this.postid) {
-            this.as.getPost(this.postid, (post) => {
-                this.post = post;
-            })
+            this.post = this.as.loadPost(this.postid);
         }
     }
 

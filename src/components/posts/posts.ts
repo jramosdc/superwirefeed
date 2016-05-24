@@ -2,6 +2,7 @@
 
 import { Component, Pipe, PipeTransform, OnInit, Injector } from '@angular/core';
 import { RouterLink, RouteParams, CanActivate, ComponentInstruction, Router } from '@angular/router-deprecated';
+import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 import { ClipboardDirective } from './clip';
 import { DatePipe } from "@angular/common";
@@ -57,15 +58,14 @@ export class PostsComponent implements OnInit {
 	UserID: string
 	search: string
 	deletePostID: string
-	posts = [];
+	posts: FirebaseListObservable<any[]>
     
 	constructor(public as: authService, public params: RouteParams, private router: Router) {
 		this.Domain = this.as.getDomain();
 		this.User = this.as.getUser();
 		this.UserID = this.params.get('userid')
-		this.as.loadPosts(this.UserID);
 		this.as.setRoute('Posts', this.UserID);
-		this.posts = this.as.getPosts();
+		this.posts = this.as.loadPosts(this.UserID);
 	}
 
 	ngOnInit() {

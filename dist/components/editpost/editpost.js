@@ -48,7 +48,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     this.as.setActivePageTitle('Edit Post');
                     this.postid = this.params.get('postid');
                     if (this.postid) {
-                        this.as.getPost(this.postid, function (post) {
+                        this.as.loadPost(this.postid).subscribe(function (post) {
                             // this.post = post;
                             $('#title').val(post.title);
                             _this.detail = post.detail;

@@ -52,21 +52,18 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     if (email.value == '' || password.value == '')
                         return;
                     this.loginLoading = true;
-                    this.as.login(email.value, password.value, function (err) {
-                        if (err) {
-                            console.log("Login Failed!", err);
-                            $('#errorLogin').html(err);
-                            _this.loginLoading = false;
-                        }
-                        else {
-                            _this.User = _this.as.getUser();
-                            email.value = '';
-                            password.value = '';
-                            console.log('User is Logged In!');
-                            $('#errorLogin').html('');
-                            $('#loginModal').closeModal();
-                            _this.loginLoading = false;
-                        }
+                    this.as.login(email.value, password.value).then(function (res) {
+                        _this.User = _this.as.getUser();
+                        email.value = '';
+                        password.value = '';
+                        console.log('User is Logged In!');
+                        $('#errorLogin').html('');
+                        $('#loginModal').closeModal();
+                        _this.loginLoading = false;
+                    }).catch(function (err) {
+                        console.log("Login Failed!", err);
+                        $('#errorLogin').html(err);
+                        _this.loginLoading = false;
                     });
                 };
                 NavbarComponent.prototype.registerModal = function () {
@@ -78,41 +75,30 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     if (email.value == '' || password.value == '')
                         return;
                     this.registerLoading = true;
-                    this.as.register(email.value, password.value, function (err, authDataUid) {
-                        if (err) {
-                            console.log("Register Failed!", err);
-                            $('#errorRegister').html(err);
-                            _this.registerLoading = false;
-                        }
-                        else {
-                            email.value = '';
-                            password.value = '';
-                            console.log('User is Registered!');
-                            $('#errorRegister').html('');
-                            _this.registerLoading = false;
-                            _this.registerUserUid = authDataUid;
-                            _this.toggleInfo('feed');
-                            setTimeout(function () {
-                                $('select').material_select();
-                            });
-                            $('#step1').removeClass('active-step');
-                            $('#step1').addClass('step-done');
-                            $('#step2').addClass('active-step');
-                        }
+                    this.as.register(email.value, password.value).then(function (res) {
+                        email.value = '';
+                        password.value = '';
+                        console.log('User is Registered!');
+                        $('#errorRegister').html('');
+                        _this.registerLoading = false;
+                        _this.registerUserUid = res.uid;
+                        _this.toggleInfo('feed');
+                        setTimeout(function () {
+                            $('select').material_select();
+                        });
+                        $('#step1').removeClass('active-step');
+                        $('#step1').addClass('step-done');
+                        $('#step2').addClass('active-step');
+                    }).catch(function (err) {
+                        console.log("Register Failed!", err);
+                        $('#errorRegister').html(err);
+                        _this.registerLoading = false;
                     });
                 };
                 NavbarComponent.prototype.logout = function () {
-                    var _this = this;
-                    this.as.logout(function (err) {
-                        if (err) {
-                            console.log("Logout Failed!", err);
-                        }
-                        else {
-                            _this.User = { password: { email: null, profileImageURL: null }, uid: null, feed: { id: '', name: '', userid: '' } };
-                            console.log('User is Logged Out!');
-                            $(".button-collapse").sideNav('hide');
-                        }
-                    });
+                    this.as.logout();
+                    console.log('User is Logged Out!');
+                    $(".button-collapse").sideNav('hide');
                 };
                 NavbarComponent.prototype.toggleInfo = function (panel) {
                     if (panel == 'user') {
@@ -129,27 +115,24 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     if (userid.value == '' || name.value == '' || description.value == '')
                         return;
                     this.createFeedLoading = true;
-                    this.as.createFeed(userid.value, name.value, description.value, category.value, this.registerUserUid, function (err) {
-                        if (err) {
-                            console.log("Create Feed Failed!", err);
-                            $('#errorFeed').html(err);
-                            _this.createFeedLoading = false;
-                        }
-                        else {
-                            userid.value = '';
-                            name.value = '';
-                            description.value = '';
-                            category.value = '';
-                            _this.toggleInfo('user');
-                            $('#step1').addClass('active-step');
-                            $('#step1').removeClass('step-done');
-                            $('#step2').removeClass('active-step');
-                            console.log('Feed is Registered!');
-                            $('#errorFeed').html('');
-                            $('#registerModal').closeModal();
-                            $('#loginModal').openModal();
-                            _this.createFeedLoading = false;
-                        }
+                    this.as.createFeed(userid.value, name.value, description.value, category.value, this.registerUserUid).then(function () {
+                        userid.value = '';
+                        name.value = '';
+                        description.value = '';
+                        category.value = '';
+                        _this.toggleInfo('user');
+                        $('#step1').addClass('active-step');
+                        $('#step1').removeClass('step-done');
+                        $('#step2').removeClass('active-step');
+                        console.log('Feed is Registered!');
+                        $('#errorFeed').html('');
+                        $('#registerModal').closeModal();
+                        $('#loginModal').openModal();
+                        _this.createFeedLoading = false;
+                    }).catch(function (err) {
+                        console.log("Create Feed Failed!", err);
+                        $('#errorFeed').html(err);
+                        _this.createFeedLoading = false;
                     });
                 };
                 NavbarComponent = __decorate([

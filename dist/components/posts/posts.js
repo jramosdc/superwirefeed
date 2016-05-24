@@ -66,13 +66,11 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                             userid: ''
                         }
                     };
-                    this.posts = [];
                     this.Domain = this.as.getDomain();
                     this.User = this.as.getUser();
                     this.UserID = this.params.get('userid');
-                    this.as.loadPosts(this.UserID);
                     this.as.setRoute('Posts', this.UserID);
-                    this.posts = this.as.getPosts();
+                    this.posts = this.as.loadPosts(this.UserID);
                 }
                 PostsComponent.prototype.ngOnInit = function () {
                     $('.modal-trigger').leanModal();
