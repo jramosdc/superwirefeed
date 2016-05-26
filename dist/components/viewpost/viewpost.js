@@ -27,6 +27,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
         execute: function() {
             ViewPostComponent = (function () {
                 function ViewPostComponent(as, router, params) {
+                    var _this = this;
                     this.as = as;
                     this.router = router;
                     this.params = params;
@@ -47,7 +48,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     this.as.setActivePageTitle('View Post');
                     this.postid = this.params.get('postid');
                     if (this.postid) {
-                        this.post = this.as.loadPost(this.postid);
+                        this.as.loadPost(this.postid).subscribe(function (post) {
+                            _this.post = post;
+                        });
                     }
                 }
                 ViewPostComponent.prototype.ngOnInit = function () {

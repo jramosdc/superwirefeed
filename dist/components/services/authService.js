@@ -110,12 +110,7 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                     });
                 };
                 authService.prototype.loadPost = function (postid) {
-                    return this.af.database.list('/posts', {
-                        query: {
-                            orderByKey: true,
-                            equalTo: postid
-                        }
-                    });
+                    return this.af.database.object('/posts/' + postid);
                 };
                 authService.prototype.filterPosts = function (category) {
                     var _this = this;

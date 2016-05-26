@@ -105,12 +105,7 @@ export class authService {
     }
     
     loadPost(postid: string) {
-        return this.af.database.list('/posts', {
-            query: {
-                orderByKey: true,
-                equalTo: postid
-            }
-        });
+        return this.af.database.object('/posts/' + postid);
 	}
 
 	filterPosts(category) {
