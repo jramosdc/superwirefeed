@@ -42,7 +42,7 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         }
                     };
                     this.activePage = {
-                        title: ''
+                        title: 'LATEST FEEDS'
                     };
                     this.categorySubject = new Subject_1.Subject();
                     this.Categories = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
@@ -54,9 +54,9 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                             _this.User.password.profileImageURL = res.password['profileImageURL'];
                             _this.User.password.email = res.password['email'];
                             _this.getUserFeedDetail(_this.User.uid).subscribe(function (feed) {
-                                _this.User.feed.id = feed[0]['$key'];
-                                _this.User.feed.name = feed[0]['name'];
-                                _this.User.feed.userid = feed[0]['owner']['userid'];
+                                _this.User.feed.id = feed[0] ? feed[0]['$key'] : '';
+                                _this.User.feed.name = feed[0] ? feed[0]['name'] : '';
+                                _this.User.feed.userid = feed[0] ? feed[0]['owner']['userid'] : '';
                             });
                         }
                         else {
@@ -183,6 +183,15 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         email: email,
                         password: password
                     });
+                };
+                authService.prototype.createUserProfile = function (uid, userid, email) {
+                    return this.af.database.object('/users/' + userid).set({
+                        uid: uid,
+                        email: email
+                    });
+                };
+                authService.prototype.getUserProfile = function (userid) {
+                    return this.af.database.object('/users/' + userid);
                 };
                 authService.prototype.createFeed = function (userid, name, description, category, registerUser) {
                     return this.af.database.list('/feeds').push({

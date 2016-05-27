@@ -28,20 +28,15 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
             NavbarComponent = (function () {
                 function NavbarComponent(as) {
                     this.as = as;
-                    this.activePage = {
-                        title: 'LATEST FEEDS'
-                    };
-                    this.userInfo = true;
-                    this.feedInfo = false;
                     this.loginLoading = false;
                     this.registerLoading = false;
-                    this.createFeedLoading = false;
                     this.User = this.as.getUser();
                     this.activePage = this.as.getActivePageTitle();
                 }
                 NavbarComponent.prototype.ngOnInit = function () {
                     $(".button-collapse").sideNav();
                     $('.modal-trigger').leanModal();
+                    // $('select').material_select();
                 };
                 NavbarComponent.prototype.loginModal = function () {
                     $(".button-collapse").sideNav('hide');
@@ -70,25 +65,25 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     $(".button-collapse").sideNav('hide');
                     $('#registerModal').openModal();
                 };
-                NavbarComponent.prototype.register = function (email, password) {
+                NavbarComponent.prototype.register = function (userid, email, password) {
                     var _this = this;
                     if (email.value == '' || password.value == '')
                         return;
                     this.registerLoading = true;
                     this.as.register(email.value, password.value).then(function (res) {
+                        _this.login(email, password);
+                        _this.as.createUserProfile(res.uid, userid.value, email.value).then(function () {
+                            console.log('Profile is Created!');
+                        }).catch(function (err) {
+                            console.log('Profile Creation Failed!', err);
+                        });
+                        userid.value = '';
                         email.value = '';
                         password.value = '';
                         console.log('User is Registered!');
                         $('#errorRegister').html('');
+                        $('#registerModal').closeModal();
                         _this.registerLoading = false;
-                        _this.registerUserUid = res.uid;
-                        _this.toggleInfo('feed');
-                        setTimeout(function () {
-                            $('select').material_select();
-                        });
-                        $('#step1').removeClass('active-step');
-                        $('#step1').addClass('step-done');
-                        $('#step2').addClass('active-step');
                     }).catch(function (err) {
                         console.log("Register Failed!", err);
                         $('#errorRegister').html(err);
@@ -99,41 +94,6 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     this.as.logout();
                     console.log('User is Logged Out!');
                     $(".button-collapse").sideNav('hide');
-                };
-                NavbarComponent.prototype.toggleInfo = function (panel) {
-                    if (panel == 'user') {
-                        this.userInfo = true;
-                        this.feedInfo = false;
-                    }
-                    else if (panel == 'feed') {
-                        this.userInfo = false;
-                        this.feedInfo = true;
-                    }
-                };
-                NavbarComponent.prototype.createFeed = function (userid, name, description, category) {
-                    var _this = this;
-                    if (userid.value == '' || name.value == '' || description.value == '')
-                        return;
-                    this.createFeedLoading = true;
-                    this.as.createFeed(userid.value, name.value, description.value, category.value, this.registerUserUid).then(function () {
-                        userid.value = '';
-                        name.value = '';
-                        description.value = '';
-                        category.value = '';
-                        _this.toggleInfo('user');
-                        $('#step1').addClass('active-step');
-                        $('#step1').removeClass('step-done');
-                        $('#step2').removeClass('active-step');
-                        console.log('Feed is Registered!');
-                        $('#errorFeed').html('');
-                        $('#registerModal').closeModal();
-                        $('#loginModal').openModal();
-                        _this.createFeedLoading = false;
-                    }).catch(function (err) {
-                        console.log("Create Feed Failed!", err);
-                        $('#errorFeed').html(err);
-                        _this.createFeedLoading = false;
-                    });
                 };
                 NavbarComponent = __decorate([
                     core_1.Component({

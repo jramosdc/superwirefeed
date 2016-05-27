@@ -23,7 +23,7 @@ export class authService {
     }
     
 	activePage = {
-		title: ''
+		title: 'LATEST FEEDS'
 	};
 	
 	activeRoute: string
@@ -45,9 +45,9 @@ export class authService {
                 this.User.password.profileImageURL = res.password['profileImageURL']
                 this.User.password.email = res.password['email'];
                 this.getUserFeedDetail(this.User.uid).subscribe((feed) => {
-                    this.User.feed.id = feed[0]['$key'];
-                    this.User.feed.name = feed[0]['name'];
-                    this.User.feed.userid = feed[0]['owner']['userid'];
+                    this.User.feed.id = feed[0] ? feed[0]['$key'] : '';
+                    this.User.feed.name = feed[0] ? feed[0]['name'] : '';
+                    this.User.feed.userid = feed[0] ? feed[0]['owner']['userid'] : '';
                 });
             } else {
                 this.User.uid = '';
@@ -174,19 +174,30 @@ export class authService {
 		return this.User;
 	}
 
-    login(email, password) {
+    login(email: string, password: string) {
         return this.af.auth.login({
             email: email,
             password: password
         });
 	}
 
-    register(email, password) {
+    register(email: string, password: string) {
         return this.af.auth.createUser({
 			email: email,
 			password: password
 		});
-	}
+    }
+
+    createUserProfile(uid: string, userid: string, email: string) {
+        return this.af.database.object('/users/' + userid).set({
+            uid: uid,
+            email: email
+        })
+    }
+
+    getUserProfile(userid: string) {
+        return this.af.database.object('/users/' + userid)
+    }
 
     createFeed(userid: string, name: string, description: string, category: string, registerUser: string) {
         return this.af.database.list('/feeds').push({

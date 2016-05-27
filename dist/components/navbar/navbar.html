@@ -26,7 +26,7 @@
             <h2 class="purple-text">Login</h2>
         </div>
         <div class="row">
-            <label for="username">Email</label>
+            <label for="email">Email</label>
             <div class="input-field">
                 <input type="text" class="validate" #email placeholder="Email" required value="smkamranqadri@yahoo.com">
             </div>
@@ -59,30 +59,25 @@
     </div>
 </div>
 <div id="registerModal" class="modal" style="width: 30% ! important">
-    <div class="mdl-stepper-horizontal-alternative">
-        <div class="mdl-stepper-step active-step" id="step1">
-            <div class="mdl-stepper-circle"><span>1</span></div>
-            <div class="mdl-stepper-title">User Information</div>
-            <div class="mdl-stepper-bar-left"></div>
-            <div class="mdl-stepper-bar-right"></div>
-        </div>
-        <div class="mdl-stepper-step" id="step2">
-            <div class="mdl-stepper-circle"><span>2</span></div>
-            <div class="mdl-stepper-title">Feed Information</div>
-            <div class="mdl-stepper-bar-left"></div>
-            <div class="mdl-stepper-bar-right"></div>
-        </div>
-    </div>
     <div class="modal-content">
-        <div class="card padding10px" *ngIf="userInfo">
+        <div class="nav-wrapper center-align">
+            <h2 class="purple-text">Register</h2>
+        </div>
+        <div class="card padding10px">
             <div class="row">
-                <label for="username">Email</label>
+                <label for="reqUserID">User ID</label>
+                <div class="input-field">
+                    <input type="text" class="validate" #regUserID placeholder="User ID" required>
+                </div>
+            </div>
+            <div class="row">
+                <label for="regEmail">Email</label>
                 <div class="input-field">
                     <input type="text" class="validate" #regEmail placeholder="Email" required>
                 </div>
             </div>
             <div class="row">
-                <label for="password">Password</label>
+                <label for="regPassword">Password</label>
                 <div class="input-field">
                     <input type="password" class="validate" #regPassword placeholder="password" required>
                 </div>
@@ -104,10 +99,10 @@
                         </div>
                     </div>
                 </div>
-                <a class="waves-effect waves-blue btn white-text" (click)="register(regEmail, regPassword)">Create</a>
+                <a class="waves-effect waves-blue btn white-text" (click)="register(regUserID, regEmail, regPassword)">Create</a>
             </div>
         </div>
-        <div class="card padding10px" *ngIf="feedInfo">
+        <!--<div class="card padding10px" *ngIf="feedInfo">
             <div class="row">
                 <label for="userid">User ID</label>
                 <div class="input-field">
@@ -165,6 +160,6 @@
                 </div>
                 <a class="waves-effect waves-purple btn white-text" (click)="createFeed(userid, name, description, category)">Create Feed</a>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>

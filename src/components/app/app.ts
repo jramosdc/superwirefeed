@@ -9,6 +9,7 @@ import { PostsComponent } from '../posts/posts';
 import { NewPostComponent } from '../newpost/newpost';
 import { EditPostComponent } from '../editpost/editpost';
 import { ViewPostComponent } from '../viewpost/viewpost';
+import { ProfileComponent } from '../profile/profile'
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -22,9 +23,10 @@ import { User, authService } from '../services/authService';
 @RouteConfig([
 	{ path: "/feeds", name: "Feeds", component: FeedsComponent, useAsDefault: true },
 	{ path: "/posts/:userid", name: "Posts", component: PostsComponent },
+    { path: "/newpost", name: "NewPost", component: NewPostComponent },
 	{ path: "/post/:postid", name: "EditPost", component: EditPostComponent },
-	{ path: "/post", name: "ViewPost", component: ViewPostComponent },
-    { path: "/newpost", name: "NewPost", component: NewPostComponent }
+    { path: "/post", name: "ViewPost", component: ViewPostComponent },
+    { path: "/profile/:userid", name: "Profile", component: ProfileComponent }
 ])	
 export class AppComponent  {
 

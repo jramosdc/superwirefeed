@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navbar', '../categories/categories', '../feeds/feeds', '../posts/posts', '../newpost/newpost', '../editpost/editpost', '../viewpost/viewpost', '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navbar', '../categories/categories', '../feeds/feeds', '../posts/posts', '../newpost/newpost', '../editpost/editpost', '../viewpost/viewpost', '../profile/profile', '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, navbar_1, categories_1, feeds_1, posts_1, newpost_1, editpost_1, viewpost_1, authService_1;
+    var core_1, router_deprecated_1, navbar_1, categories_1, feeds_1, posts_1, newpost_1, editpost_1, viewpost_1, profile_1, authService_1;
     var AppComponent;
     return {
         setters:[
@@ -41,6 +41,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
             },
             function (viewpost_1_1) {
                 viewpost_1 = viewpost_1_1;
+            },
+            function (profile_1_1) {
+                profile_1 = profile_1_1;
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
@@ -74,9 +77,10 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
                     router_deprecated_1.RouteConfig([
                         { path: "/feeds", name: "Feeds", component: feeds_1.FeedsComponent, useAsDefault: true },
                         { path: "/posts/:userid", name: "Posts", component: posts_1.PostsComponent },
+                        { path: "/newpost", name: "NewPost", component: newpost_1.NewPostComponent },
                         { path: "/post/:postid", name: "EditPost", component: editpost_1.EditPostComponent },
                         { path: "/post", name: "ViewPost", component: viewpost_1.ViewPostComponent },
-                        { path: "/newpost", name: "NewPost", component: newpost_1.NewPostComponent }
+                        { path: "/profile/:userid", name: "Profile", component: profile_1.ProfileComponent }
                     ]), 
                     __metadata('design:paramtypes', [authService_1.authService])
                 ], AppComponent);
