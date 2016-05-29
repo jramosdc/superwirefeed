@@ -71,19 +71,24 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                         return;
                     this.registerLoading = true;
                     this.as.register(email.value, password.value).then(function (res) {
-                        _this.login(email, password);
-                        _this.as.createUserProfile(res.uid, userid.value, email.value).then(function () {
-                            console.log('Profile is Created!');
+                        _this.as.login(email.value, password.value).then(function (res) {
+                            _this.as.createUserProfile(res.uid, userid.value, email.value).then(function () {
+                                console.log('Profile is Created!');
+                            }).catch(function (err) {
+                                console.log('Profile Creation Failed!', err);
+                            });
+                            userid.value = '';
+                            email.value = '';
+                            password.value = '';
+                            console.log('User is Registered & Logged In!');
+                            $('#errorRegister').html('');
+                            $('#registerModal').closeModal();
+                            _this.registerLoading = false;
                         }).catch(function (err) {
-                            console.log('Profile Creation Failed!', err);
+                            console.log("Login Failed after Registration!", err);
+                            $('#errorRegister').html(err);
+                            _this.registerLoading = false;
                         });
-                        userid.value = '';
-                        email.value = '';
-                        password.value = '';
-                        console.log('User is Registered!');
-                        $('#errorRegister').html('');
-                        $('#registerModal').closeModal();
-                        _this.registerLoading = false;
                     }).catch(function (err) {
                         console.log("Register Failed!", err);
                         $('#errorRegister').html(err);

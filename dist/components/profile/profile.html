@@ -1,1 +1,81 @@
-{{profile | json}}
+<div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="profile && User.uid === profile.uid && !editMode">
+    <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="edit()"><i class="large mdi mdi-pencil"></i></a>
+</div>
+<div class="row" *ngIf="editMode">
+    <div class="col s12 card padding10px">
+        <div class="row valign-wrapper">
+            <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
+            <h5 class="col s10 valign">{{profile.displayName || profile.email}}</h5>
+            <h5>Followers(5)</h5>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea id="bio" class="materialize-textarea"></textarea>
+                <label for="bio">Bio</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s4">
+                <input id="feedId" type="text" class="validate">
+                <label for="feedId">Feed ID</label>
+            </div>
+            <div class="input-field col s8">
+                <input id="feedName" type="text" class="validate">
+                <label for="feedName">Feed Name</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="description" type="text" class="validate">
+                <label for="description">Description</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <span class="paddingright10px">Private?</span>
+                <input type="radio" id="pyes" name="private" [value]="profile.private" />
+                <label class="paddingright10px" for="pyes">Yes</label>
+                <input type="radio" id="pno" name="private" [value]="profile.private" />
+                <label for="pno">No</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="category">
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="News">News</option>
+                    <option value="Visuals">Visuals</option>
+                    <option value="Data">Data</option>
+                    <option value="Misc">Misc</option>
+                </select>
+                <label for="category">Category</label>
+            </div>
+        </div>
+        <a class="waves-effect waves-light btn right" (click)="update()">Update</a>
+    </div>
+</div>
+<div class="row" *ngIf="!editMode && profile">
+    <div class="col s12 card padding10px">
+        <div class="row valign-wrapper">
+            <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
+            <h5 class="col s10 valign">{{profile.displayName || profile.email}}</h5>
+            <h5>Followers(5)</h5>
+        </div>
+        <div class="divider"></div>
+        <div class="row border" *ngIf="profile && profile.bio">
+            <h5>Bio:</h5>
+            <p>{{profile.bio}}</p>
+        </div>
+        <div class="row">
+            <h5>Post Count (5)</h5>
+        </div>
+        <div class="row" *ngIf="profile && profile.feedName">
+            <h5>Feed Name: {{profile.feedName}}</h5>
+        </div>
+        <div class="row" *ngIf="profile && profile.feedId">
+            <h5>Url: {{domain + '/' + profile.feedId}}</h5>
+        </div>
+    </div>
+</div>

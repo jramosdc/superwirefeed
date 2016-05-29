@@ -29,24 +29,37 @@ export class ProfileComponent implements OnInit {
         }
     }
 
+    domain: string
     userid: string
+    editMode: boolean = false
     profile: Object
 
     constructor(private as: authService, private router: Router, private params: RouteParams) {
         this.User = this.as.getUser();
         this.as.setRoute('Profile', null);
         this.as.setActivePageTitle('Profile');
+        this.domain = this.as.getDomain();
         this.userid = this.params.get('userid');
         if (this.userid) {
             this.as.getUserProfile(this.userid).subscribe((profile) => {
-                console.log(profile)
                 this.profile = profile;
             });
         }
     }
 
     ngOnInit() {
-        
+
+    }
+
+    edit() {
+        this.editMode = true;
+        setTimeout(function () {
+            $('select').material_select();
+        });
+    }
+
+    update() {
+        this.editMode = false;
     }
 
 }

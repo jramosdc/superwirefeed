@@ -43,18 +43,28 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             userid: ''
                         }
                     };
+                    this.editMode = false;
                     this.User = this.as.getUser();
                     this.as.setRoute('Profile', null);
                     this.as.setActivePageTitle('Profile');
+                    this.domain = this.as.getDomain();
                     this.userid = this.params.get('userid');
                     if (this.userid) {
                         this.as.getUserProfile(this.userid).subscribe(function (profile) {
-                            console.log(profile);
                             _this.profile = profile;
                         });
                     }
                 }
                 ProfileComponent.prototype.ngOnInit = function () {
+                };
+                ProfileComponent.prototype.edit = function () {
+                    this.editMode = true;
+                    setTimeout(function () {
+                        $('select').material_select();
+                    });
+                };
+                ProfileComponent.prototype.update = function () {
+                    this.editMode = false;
                 };
                 ProfileComponent = __decorate([
                     core_1.Component({

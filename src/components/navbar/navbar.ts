@@ -61,19 +61,24 @@ export class NavbarComponent implements OnInit {
 		if (email.value == '' || password.value == '') return
 		this.registerLoading = true;
         this.as.register(email.value, password.value).then((res) => {
-            this.login(email, password);
-            this.as.createUserProfile(res.uid, userid.value, email.value).then(() => {
-                console.log('Profile is Created!')
-            }).catch((err) => {
-                console.log('Profile Creation Failed!', err)
+            this.as.login(email.value, password.value).then((res) => {
+                this.as.createUserProfile(res.uid, userid.value, email.value).then(() => {
+                    console.log('Profile is Created!')
+                }).catch((err) => {
+                    console.log('Profile Creation Failed!', err)
+                });
+                userid.value = '';
+                email.value = '';
+                password.value = '';
+                console.log('User is Registered & Logged In!');
+                $('#errorRegister').html('');
+                $('#registerModal').closeModal();
+                this.registerLoading = false;
+            }).catch((err) => { 
+                console.log("Login Failed after Registration!", err);
+                $('#errorRegister').html(err);
+                this.registerLoading = false;
             });
-            userid.value = '';
-            email.value = '';
-            password.value = '';
-            console.log('User is Registered!');
-            $('#errorRegister').html('');
-            $('#registerModal').closeModal();
-            this.registerLoading = false;
         }).catch((err) => {
             console.log("Register Failed!", err);
             $('#errorRegister').html(err);

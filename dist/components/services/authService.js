@@ -187,7 +187,8 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                 authService.prototype.createUserProfile = function (uid, userid, email) {
                     return this.af.database.object('/users/' + userid).set({
                         uid: uid,
-                        email: email
+                        email: email,
+                        profileImageURL: this.User.password.profileImageURL
                     });
                 };
                 authService.prototype.getUserProfile = function (userid) {

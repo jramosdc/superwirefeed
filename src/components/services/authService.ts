@@ -191,7 +191,8 @@ export class authService {
     createUserProfile(uid: string, userid: string, email: string) {
         return this.af.database.object('/users/' + userid).set({
             uid: uid,
-            email: email
+            email: email,
+			profileImageURL: this.User.password.profileImageURL
         })
     }
 

@@ -9,3 +9,7 @@
 .fullHeight {
     height: 100vh;
 }
+
+.padding10px {
+    padding: 10px;
+}
