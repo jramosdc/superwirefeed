@@ -1,7 +1,7 @@
-System.register(["@angular/platform-browser-dynamic", "@angular/http", "@angular/router-deprecated", "angularfire2", "./services/bootstrapServices", './app/app'], function(exports_1, context_1) {
+System.register(["@angular/platform-browser-dynamic", "@angular/http", "@angular/common", "@angular/router-deprecated", "angularfire2", "./services/bootstrapServices", './app/app'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var platform_browser_dynamic_1, http_1, router_deprecated_1, angularfire2_1, bootstrapServices_1, app_1;
+    var platform_browser_dynamic_1, http_1, common_1, router_deprecated_1, angularfire2_1, bootstrapServices_1, app_1;
     return {
         setters:[
             function (platform_browser_dynamic_1_1) {
@@ -9,6 +9,9 @@ System.register(["@angular/platform-browser-dynamic", "@angular/http", "@angular
             },
             function (http_1_1) {
                 http_1 = http_1_1;
+            },
+            function (common_1_1) {
+                common_1 = common_1_1;
             },
             function (router_deprecated_1_1) {
                 router_deprecated_1 = router_deprecated_1_1;
@@ -25,6 +28,7 @@ System.register(["@angular/platform-browser-dynamic", "@angular/http", "@angular
         execute: function() {
             platform_browser_dynamic_1.bootstrap(app_1.AppComponent, [
                 http_1.HTTP_PROVIDERS,
+                common_1.FORM_PROVIDERS,
                 router_deprecated_1.ROUTER_PROVIDERS,
                 angularfire2_1.FIREBASE_PROVIDERS,
                 angularfire2_1.defaultFirebase('https://superwireapp.firebaseio.com'),

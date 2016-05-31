@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
             userid: ''
         }
     }
-
+    
     domain: string
     userid: string
     editMode: boolean = false
@@ -53,6 +53,10 @@ export class ProfileComponent implements OnInit {
 
     edit() {
         this.editMode = true;
+        $('#bio').val(this.profile['bio']);
+        // $('#feedId').val(this.profile['feedId']);
+        // $('#feedName').val(this.profile['feedName']);
+        // $('#description').val(this.profile['description']);
         setTimeout(function () {
             $('select').material_select();
         });

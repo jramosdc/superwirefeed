@@ -59,6 +59,10 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 };
                 ProfileComponent.prototype.edit = function () {
                     this.editMode = true;
+                    $('#bio').val(this.profile['bio']);
+                    // $('#feedId').val(this.profile['feedId']);
+                    // $('#feedName').val(this.profile['feedName']);
+                    // $('#description').val(this.profile['description']);
                     setTimeout(function () {
                         $('select').material_select();
                     });
