@@ -191,6 +191,11 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         profileImageURL: this.User.password.profileImageURL
                     });
                 };
+                authService.prototype.updateUserProfile = function (userid, profile) {
+                    // return this.af.database.object('/users/' + userid).update{
+                    console.log(profile);
+                    // }
+                };
                 authService.prototype.getUserProfile = function (userid) {
                     return this.af.database.object('/users/' + userid);
                 };

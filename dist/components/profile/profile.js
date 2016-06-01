@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router-deprecated", '@angular/common', '../services/authService', '../services/controlMessagesServices'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, authService_1;
+    var core_1, router_deprecated_1, common_1, authService_1, controlMessagesServices_1;
     var ProfileComponent;
     return {
         setters:[
@@ -21,16 +21,23 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
             function (router_deprecated_1_1) {
                 router_deprecated_1 = router_deprecated_1_1;
             },
+            function (common_1_1) {
+                common_1 = common_1_1;
+            },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
+            },
+            function (controlMessagesServices_1_1) {
+                controlMessagesServices_1 = controlMessagesServices_1_1;
             }],
         execute: function() {
             ProfileComponent = (function () {
-                function ProfileComponent(as, router, params) {
+                function ProfileComponent(as, router, params, _formBuilder) {
                     var _this = this;
                     this.as = as;
                     this.router = router;
                     this.params = params;
+                    this._formBuilder = _formBuilder;
                     this.User = {
                         password: {
                             email: '',
@@ -59,16 +66,27 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 };
                 ProfileComponent.prototype.edit = function () {
                     this.editMode = true;
-                    $('#bio').val(this.profile['bio']);
-                    // $('#feedId').val(this.profile['feedId']);
-                    // $('#feedName').val(this.profile['feedName']);
-                    // $('#description').val(this.profile['description']);
+                    this.profileForm = this._formBuilder.group({
+                        'bio': [this.profile['bio'], common_1.Validators.required],
+                        'feedId': [this.profile['feedId'], common_1.Validators.required],
+                        'feedName': [this.profile['feedName'], common_1.Validators.required],
+                        'description': [this.profile['description'], common_1.Validators.required],
+                        // 'private': [this.profile['private'], Validators.required],
+                        'category': [this.profile['category'], common_1.Validators.required]
+                    });
                     setTimeout(function () {
                         $('select').material_select();
                     });
                 };
                 ProfileComponent.prototype.update = function () {
-                    this.editMode = false;
+                    console.log(this.profileForm.error);
+                    console.log(this.profile);
+                    this.as.updateUserProfile(this.userid, this.profileForm.value); /*.then((res) => {
+                        console.log(res);
+                        this.editMode = false;
+                    }).catch((err) => {
+                        console.log(err);
+                    })*/
                 };
                 ProfileComponent = __decorate([
                     core_1.Component({
@@ -78,9 +96,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         },
                         styleUrls: ['components/profile/profile.css'],
                         templateUrl: 'components/profile/profile.html',
-                        directives: [router_deprecated_1.RouterLink]
+                        directives: [router_deprecated_1.RouterLink, controlMessagesServices_1.ControlMessages]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router, router_deprecated_1.RouteParams])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router, router_deprecated_1.RouteParams, common_1.FormBuilder])
                 ], ProfileComponent);
                 return ProfileComponent;
             }());

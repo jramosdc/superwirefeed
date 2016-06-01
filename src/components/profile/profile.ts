@@ -2,8 +2,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
+import { FormBuilder, Validators } from '@angular/common';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
+import { ControlMessages } from '../services/controlMessagesServices';
+import { ValidationService } from '../services/validationService';
 
 @Component({
     selector: 'profile',
@@ -12,7 +15,7 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html',
-    directives: [RouterLink]
+    directives: [RouterLink, ControlMessages]
 })
 export class ProfileComponent implements OnInit {
 
@@ -33,8 +36,9 @@ export class ProfileComponent implements OnInit {
     userid: string
     editMode: boolean = false
     profile: Object
-
-    constructor(private as: authService, private router: Router, private params: RouteParams) {
+    profileForm: any
+    
+    constructor(private as: authService, private router: Router, private params: RouteParams, private _formBuilder: FormBuilder) {
         this.User = this.as.getUser();
         this.as.setRoute('Profile', null);
         this.as.setActivePageTitle('Profile');
@@ -53,17 +57,28 @@ export class ProfileComponent implements OnInit {
 
     edit() {
         this.editMode = true;
-        $('#bio').val(this.profile['bio']);
-        // $('#feedId').val(this.profile['feedId']);
-        // $('#feedName').val(this.profile['feedName']);
-        // $('#description').val(this.profile['description']);
+        this.profileForm = this._formBuilder.group({
+            'bio': [this.profile['bio'], Validators.required],
+            'feedId': [this.profile['feedId'], Validators.required],
+            'feedName': [this.profile['feedName'], Validators.required],
+            'description': [this.profile['description'], Validators.required],
+            // 'private': [this.profile['private'], Validators.required],
+            'category': [this.profile['category'], Validators.required]
+        });
         setTimeout(function () {
             $('select').material_select();
         });
     }
 
     update() {
-        this.editMode = false;
+        console.log(this.profileForm.error)
+        console.log(this.profile)
+        this.as.updateUserProfile(this.userid, this.profileForm.value)/*.then((res) => {
+            console.log(res);
+            this.editMode = false;
+        }).catch((err) => {
+            console.log(err);
+        })*/
     }
 
 }

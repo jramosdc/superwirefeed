@@ -196,6 +196,12 @@ export class authService {
         })
     }
 
+	updateUserProfile(userid: string, profile: Object) {
+		// return this.af.database.object('/users/' + userid).update{
+			console.log(profile)
+		// }
+	}
+
     getUserProfile(userid: string) {
         return this.af.database.object('/users/' + userid)
     }
