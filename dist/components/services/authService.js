@@ -192,9 +192,7 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                     });
                 };
                 authService.prototype.updateUserProfile = function (userid, profile) {
-                    // return this.af.database.object('/users/' + userid).update{
-                    console.log(profile);
-                    // }
+                    return this.af.database.object('/users/' + userid).update(profile);
                 };
                 authService.prototype.getUserProfile = function (userid) {
                     return this.af.database.object('/users/' + userid);

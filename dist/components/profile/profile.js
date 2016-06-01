@@ -65,28 +65,49 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
                 ProfileComponent.prototype.ngOnInit = function () {
                 };
                 ProfileComponent.prototype.edit = function () {
+                    var _this = this;
                     this.editMode = true;
-                    this.profileForm = this._formBuilder.group({
-                        'bio': [this.profile['bio'], common_1.Validators.required],
-                        'feedId': [this.profile['feedId'], common_1.Validators.required],
-                        'feedName': [this.profile['feedName'], common_1.Validators.required],
-                        'description': [this.profile['description'], common_1.Validators.required],
-                        // 'private': [this.profile['private'], Validators.required],
-                        'category': [this.profile['category'], common_1.Validators.required]
-                    });
                     setTimeout(function () {
+                        $('#bio').val(_this.profile['bio']);
+                        $('#feedId').val(_this.profile['feedId']);
+                        $('#feedName').val(_this.profile['feedName']);
+                        $('#description').val(_this.profile['description']);
+                        if (_this.profile['private'] === 'true') {
+                            $('#pyes').prop('checked', true);
+                        }
+                        else {
+                            $('#pno').prop('checked', true);
+                        }
+                        $('#category').val(_this.profile['category']);
                         $('select').material_select();
                     });
                 };
-                ProfileComponent.prototype.update = function () {
-                    console.log(this.profileForm.error);
-                    console.log(this.profile);
-                    this.as.updateUserProfile(this.userid, this.profileForm.value); /*.then((res) => {
-                        console.log(res);
-                        this.editMode = false;
-                    }).catch((err) => {
+                ProfileComponent.prototype.update = function (bio, feedId, feedName, description, pyes, pno, category) {
+                    var _this = this;
+                    var profile = {
+                        'bio': bio.value,
+                        'feedId': feedId.value,
+                        'feedName': feedName.value,
+                        'description': description.value,
+                        'private': $(pyes).prop('checked') ? 'true' : 'false',
+                        'category': category.value
+                    };
+                    this.as.updateUserProfile(this.userid, profile).then(function (res) {
+                        var feed = {
+                            'feedName': feedName.value,
+                            'description': description.value,
+                            'private': $(pyes).prop('checked') ? 'true' : 'false',
+                            'category': category.value,
+                            'timestamp': Firebase.ServerValue.TIMESTAMP,
+                            'owner': {
+                                'uid': _this.User.uid,
+                                'userid': _this.userid
+                            }
+                        };
+                        _this.editMode = false;
+                    }).catch(function (err) {
                         console.log(err);
-                    })*/
+                    });
                 };
                 ProfileComponent = __decorate([
                     core_1.Component({

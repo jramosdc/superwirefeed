@@ -31,13 +31,12 @@ export class ProfileComponent implements OnInit {
             userid: ''
         }
     }
-    
+
     domain: string
     userid: string
     editMode: boolean = false
     profile: Object
-    profileForm: any
-    
+
     constructor(private as: authService, private router: Router, private params: RouteParams, private _formBuilder: FormBuilder) {
         this.User = this.as.getUser();
         this.as.setRoute('Profile', null);
@@ -57,28 +56,46 @@ export class ProfileComponent implements OnInit {
 
     edit() {
         this.editMode = true;
-        this.profileForm = this._formBuilder.group({
-            'bio': [this.profile['bio'], Validators.required],
-            'feedId': [this.profile['feedId'], Validators.required],
-            'feedName': [this.profile['feedName'], Validators.required],
-            'description': [this.profile['description'], Validators.required],
-            // 'private': [this.profile['private'], Validators.required],
-            'category': [this.profile['category'], Validators.required]
-        });
-        setTimeout(function () {
+        setTimeout(() => {
+            $('#bio').val(this.profile['bio']);
+            $('#feedId').val(this.profile['feedId']);
+            $('#feedName').val(this.profile['feedName']);
+            $('#description').val(this.profile['description']);
+            if (this.profile['private'] === 'true') {
+               $('#pyes').prop('checked', true);
+            } else {
+                $('#pno').prop('checked', true);
+            }
+            $('#category').val(this.profile['category']);
             $('select').material_select();
         });
     }
 
-    update() {
-        console.log(this.profileForm.error)
-        console.log(this.profile)
-        this.as.updateUserProfile(this.userid, this.profileForm.value)/*.then((res) => {
-            console.log(res);
+    update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement) {
+        let profile = {
+            'bio': bio.value,
+            'feedId': feedId.value,
+            'feedName': feedName.value,
+            'description': description.value,
+            'private': $(pyes).prop('checked') ? 'true' : 'false',
+            'category': category.value
+        };
+        this.as.updateUserProfile(this.userid, profile).then((res) => {
+            let feed = {
+                'feedName': feedName.value,
+                'description': description.value,
+                'private': $(pyes).prop('checked') ? 'true' : 'false',
+                'category': category.value,
+                'timestamp': Firebase.ServerValue.TIMESTAMP,
+                'owner': {
+                    'uid': this.User.uid,
+                    'userid': this.userid
+                }
+            }
             this.editMode = false;
         }).catch((err) => {
             console.log(err);
-        })*/
+        })
     }
 
 }
