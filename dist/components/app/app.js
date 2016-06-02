@@ -76,7 +76,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
                     }),
                     router_deprecated_1.RouteConfig([
                         { path: "/feeds", name: "Feeds", component: feeds_1.FeedsComponent, useAsDefault: true },
-                        { path: "/posts/:userid", name: "Posts", component: posts_1.PostsComponent },
+                        { path: "/posts/:feedid", name: "Posts", component: posts_1.PostsComponent },
                         { path: "/newpost", name: "NewPost", component: newpost_1.NewPostComponent },
                         { path: "/post/:postid", name: "EditPost", component: editpost_1.EditPostComponent },
                         { path: "/post", name: "ViewPost", component: viewpost_1.ViewPostComponent },

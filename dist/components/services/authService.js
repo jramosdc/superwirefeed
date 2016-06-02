@@ -86,6 +86,9 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         }
                     });
                 };
+                authService.prototype.getFeedNameByFeedID = function (feedid) {
+                    return this.af.database.object('/feeds/' + feedid);
+                };
                 authService.prototype.loadFeeds = function () {
                     this.Feeds = this.af.database.list('/feeds');
                 };
@@ -97,15 +100,15 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         }
                     });
                 };
-                authService.prototype.loadPosts = function (userid) {
+                authService.prototype.loadPosts = function (feedid) {
                     var _this = this;
-                    this.getFeedName(userid).subscribe(function (feed) {
-                        _this.setActivePageTitle(feed[0].name);
+                    this.getFeedNameByFeedID(feedid).subscribe(function (feed) {
+                        _this.setActivePageTitle(feed['feedName']);
                     });
                     return this.af.database.list('/posts', {
                         query: {
-                            orderByChild: 'owner/userid',
-                            equalTo: userid
+                            orderByChild: 'owner/feedid',
+                            equalTo: feedid
                         }
                     });
                 };
@@ -197,17 +200,8 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                 authService.prototype.getUserProfile = function (userid) {
                     return this.af.database.object('/users/' + userid);
                 };
-                authService.prototype.createFeed = function (userid, name, description, category, registerUser) {
-                    return this.af.database.list('/feeds').push({
-                        name: name,
-                        description: description,
-                        category: category,
-                        owner: {
-                            uid: registerUser,
-                            userid: userid
-                        },
-                        timestamp: Firebase.ServerValue.TIMESTAMP
-                    });
+                authService.prototype.updateFeed = function (userid, feed) {
+                    return this.af.database.object('/feeds/' + userid).update(feed);
                 };
                 authService.prototype.submitPost = function (title, detail, priority, types, category, cb) {
                     this.ref.child('posts').push({
@@ -218,7 +212,8 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         category: category,
                         owner: {
                             uid: this.User.uid,
-                            userid: this.User.feed.userid
+                            userid: this.User.feed.userid,
+                            feedid: this.User.feed.id
                         },
                         timestamp: Firebase.ServerValue.TIMESTAMP
                     }, function (error) {
@@ -239,7 +234,8 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         category: category,
                         owner: {
                             uid: this.User.uid,
-                            userid: this.User.feed.userid
+                            userid: this.User.feed.userid,
+                            feedid: this.User.feed.id
                         },
                         timestamp: Firebase.ServerValue.TIMESTAMP
                     }, function (error) {
@@ -251,9 +247,9 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         }
                     });
                 };
-                authService.prototype.voteUp = function (userid) {
+                authService.prototype.voteUp = function (feedid) {
                     var _this = this;
-                    this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', function (snaphot) {
+                    this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', function (snaphot) {
                         var vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
                         if (vote) {
                             _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote + 1 }, function (err) {
@@ -267,9 +263,9 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         }
                     });
                 };
-                authService.prototype.voteDown = function (userid) {
+                authService.prototype.voteDown = function (userfeedidid) {
                     var _this = this;
-                    this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', function (snaphot) {
+                    this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', function (snaphot) {
                         var vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
                         console.log(vote);
                         if (vote) {
@@ -285,13 +281,12 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                     });
                 };
                 authService.prototype.deletePost = function (postid) {
-                    var _this = this;
                     this.ref.child('posts').child(postid).remove(function () {
-                        _this.Posts.forEach(function (val, indx) {
-                            if (val._id === postid) {
-                                _this.Posts.splice(indx, 1);
-                            }
-                        });
+                        // this.Posts.forEach((val, indx) => {
+                        // 	if (val._id === postid) {
+                        // 		this.Posts.splice(indx, 1);
+                        // 	}
+                        // });
                     });
                 };
                 authService.prototype.logout = function () {

@@ -68,9 +68,9 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     };
                     this.Domain = this.as.getDomain();
                     this.User = this.as.getUser();
-                    this.UserID = this.params.get('userid');
-                    this.as.setRoute('Posts', this.UserID);
-                    this.posts = this.as.loadPosts(this.UserID);
+                    this.FeedID = this.params.get('feedid');
+                    this.as.setRoute('Posts', this.FeedID);
+                    this.posts = this.as.loadPosts(this.FeedID);
                 }
                 PostsComponent.prototype.ngOnInit = function () {
                     $('.modal-trigger').leanModal();
@@ -83,10 +83,10 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     this.as.deletePost(this.deletePostID);
                 };
                 PostsComponent.prototype.voteUp = function () {
-                    this.as.voteUp(this.UserID);
+                    this.as.voteUp(this.FeedID);
                 };
                 PostsComponent.prototype.voteDown = function () {
-                    this.as.voteDown(this.UserID);
+                    this.as.voteDown(this.FeedID);
                 };
                 PostsComponent.prototype.returnMoment = function (timestamp) {
                     if (timestamp) {

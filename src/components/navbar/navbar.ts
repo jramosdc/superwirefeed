@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router-deprecated';
+import { RouterLink, Router } from '@angular/router-deprecated';
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
 	loginLoading: boolean = false
     registerLoading: boolean = false
     
-	constructor(public as: authService) {
+	constructor(public as: authService, private router: Router) {
 		this.User = this.as.getUser();
 		this.activePage = this.as.getActivePageTitle();
 	}
@@ -67,10 +67,11 @@ export class NavbarComponent implements OnInit {
                 }).catch((err) => {
                     console.log('Profile Creation Failed!', err)
                 });
+                this.router.navigate(['/Profile', { userid: userid.value }]);
+                console.log('User is Registered & Logged In!');
                 userid.value = '';
                 email.value = '';
                 password.value = '';
-                console.log('User is Registered & Logged In!');
                 $('#errorRegister').html('');
                 $('#registerModal').closeModal();
                 this.registerLoading = false;

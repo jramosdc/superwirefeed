@@ -92,10 +92,15 @@ export class ProfileComponent implements OnInit {
                     'userid': this.userid
                 }
             }
-            this.editMode = false;
+            this.as.updateFeed(feedId.value, feed).then((res) => {
+                this.editMode = false;
+                console.log('Profile and Feed Updated.');
+            }).catch((err) => {
+                console.log(err);
+            })
         }).catch((err) => {
             console.log(err);
-        })
+        });
     }
 
 }

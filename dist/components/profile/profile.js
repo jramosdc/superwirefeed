@@ -104,7 +104,12 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
                                 'userid': _this.userid
                             }
                         };
-                        _this.editMode = false;
+                        _this.as.updateFeed(feedId.value, feed).then(function (res) {
+                            _this.editMode = false;
+                            console.log('Profile and Feed Updated.');
+                        }).catch(function (err) {
+                            console.log(err);
+                        });
                     }).catch(function (err) {
                         console.log(err);
                     });

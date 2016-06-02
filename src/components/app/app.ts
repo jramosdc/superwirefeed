@@ -22,7 +22,7 @@ import { User, authService } from '../services/authService';
 })
 @RouteConfig([
 	{ path: "/feeds", name: "Feeds", component: FeedsComponent, useAsDefault: true },
-	{ path: "/posts/:userid", name: "Posts", component: PostsComponent },
+	{ path: "/posts/:feedid", name: "Posts", component: PostsComponent },
     { path: "/newpost", name: "NewPost", component: NewPostComponent },
 	{ path: "/post/:postid", name: "EditPost", component: EditPostComponent },
     { path: "/post", name: "ViewPost", component: ViewPostComponent },

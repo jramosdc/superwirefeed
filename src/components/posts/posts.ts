@@ -55,7 +55,7 @@ export class PostsComponent implements OnInit {
 	}
 
 	Domain: string
-	UserID: string
+	FeedID: string
 	search: string
 	deletePostID: string
 	posts: FirebaseListObservable<any[]>
@@ -63,9 +63,9 @@ export class PostsComponent implements OnInit {
 	constructor(public as: authService, public params: RouteParams, private router: Router) {
 		this.Domain = this.as.getDomain();
 		this.User = this.as.getUser();
-		this.UserID = this.params.get('userid')
-		this.as.setRoute('Posts', this.UserID);
-		this.posts = this.as.loadPosts(this.UserID);
+		this.FeedID = this.params.get('feedid')
+		this.as.setRoute('Posts', this.FeedID);
+		this.posts = this.as.loadPosts(this.FeedID);
 	}
 
 	ngOnInit() {
@@ -82,11 +82,11 @@ export class PostsComponent implements OnInit {
 	}
 
 	voteUp() {
-		this.as.voteUp(this.UserID);
+		this.as.voteUp(this.FeedID);
 	}
 
 	voteDown() {
-		this.as.voteDown(this.UserID);
+		this.as.voteDown(this.FeedID);
 	}
 
 	returnMoment(timestamp) {

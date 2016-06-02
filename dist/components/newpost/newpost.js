@@ -85,7 +85,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             console.log('Post is Submitted!');
                             $('#errorPost').html('');
                             _this.postLoading = false;
-                            _this.router.navigate(['/Posts', { userid: _this.User.feed.userid }]);
+                            _this.router.navigate(['/Posts', { feedid: _this.User.feed.id }]);
                         }
                     });
                 };

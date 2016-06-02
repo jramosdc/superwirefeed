@@ -79,6 +79,10 @@ export class authService {
         })
 	}
 
+	getFeedNameByFeedID(feedid: string) {
+        return this.af.database.object('/feeds/' + feedid)
+	}
+
     loadFeeds() {
         this.Feeds = this.af.database.list('/feeds');
 	}
@@ -92,14 +96,14 @@ export class authService {
         })
 	}
 
-    loadPosts(userid: string) {
-        this.getFeedName(userid).subscribe((feed) => {
-            this.setActivePageTitle(feed[0].name);
+    loadPosts(feedid: string) {
+        this.getFeedNameByFeedID(feedid).subscribe((feed) => {
+            this.setActivePageTitle(feed['feedName']);
         });
         return this.af.database.list('/posts', {
             query: {
-                orderByChild: 'owner/userid',
-                equalTo: userid
+                orderByChild: 'owner/feedid',
+                equalTo: feedid
             }
         })
     }
@@ -204,17 +208,8 @@ export class authService {
         return this.af.database.object('/users/' + userid)
     }
 
-    createFeed(userid: string, name: string, description: string, category: string, registerUser: string) {
-        return this.af.database.list('/feeds').push({
-            name: name,
-            description: description,
-            category: category,
-            owner: {
-                uid: registerUser,
-                userid: userid
-            },
-            timestamp: Firebase.ServerValue.TIMESTAMP
-        });
+    updateFeed(userid: string, feed: Object) {
+        return this.af.database.object('/feeds/' + userid).update(feed);
 	}
 
 	submitPost(title: string, detail: string, priority: string, types: Array<string>, category: string, cb: Function) {
@@ -226,7 +221,8 @@ export class authService {
 			category: category,
 			owner: {
 				uid: this.User.uid,
-				userid: this.User.feed.userid
+				userid: this.User.feed.userid,
+				feedid: this.User.feed.id
 			},
 			timestamp: Firebase.ServerValue.TIMESTAMP
 		}, (error) => {
@@ -247,7 +243,8 @@ export class authService {
 			category: category,
 			owner: {
 				uid: this.User.uid,
-				userid: this.User.feed.userid
+				userid: this.User.feed.userid,
+				feedid: this.User.feed.id
 			},
 			timestamp: Firebase.ServerValue.TIMESTAMP
 		}, (error) => {
@@ -259,8 +256,8 @@ export class authService {
 		});
 	}
 
-	voteUp(userid: string) {
-		this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', (snaphot) => {
+	voteUp(feedid: string) {
+		this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', (snaphot) => {
             let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
 			if (vote) {
 				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote + 1 }, (err) => {
@@ -274,8 +271,8 @@ export class authService {
 		})
 	}
 
-	voteDown(userid: string) {
-		this.ref.child('feeds').orderByChild('owner/userid').equalTo(userid).once('child_added', (snaphot) => {
+	voteDown(userfeedidid: string) {
+		this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', (snaphot) => {
             let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
                         console.log(vote);
 			if (vote) {
@@ -292,11 +289,11 @@ export class authService {
 
 	deletePost(postid: string) {
 		this.ref.child('posts').child(postid).remove(() => {
-			this.Posts.forEach((val, indx) => {
-				if (val._id === postid) {
-					this.Posts.splice(indx, 1);
-				}
-			});
+			// this.Posts.forEach((val, indx) => {
+			// 	if (val._id === postid) {
+			// 		this.Posts.splice(indx, 1);
+			// 	}
+			// });
 		});
 	}
 

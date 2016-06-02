@@ -94,7 +94,7 @@ export class EditPostComponent implements OnInit {
                 console.log('Post is Updated!');
                 $('#errorPost').html('');
                 this.postLoading = false;
-                this.router.navigate(['/Posts', { userid: this.User.feed.userid }]);
+                this.router.navigate(['/Posts', { feedid: this.User.feed.id }]);
             }
         });
     }

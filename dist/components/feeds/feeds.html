@@ -2,17 +2,19 @@
       <div class="indeterminate"></div>
 </div>
 <div class="row">
-    <div class="col l3 s12" *ngFor="let feed of feeds | async" [routerLink]="['/Posts', { userid: feed.owner.userid }]">
+    <div class="col l3 s12" *ngFor="let feed of feeds | async">
         <div class="card deep-purple lighten-1">
-            <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
-                {{returnMoment(feed.timestamp)}}
-            </div>
-            <div class="card-content white-text">
-                <span class="card-title">{{feed.name}}</span>
-                <p>{{feed.description}}</p> 
+            <div [routerLink]="['/Posts', { feedid: feed.$key }]">
+                <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
+                    {{returnMoment(feed.timestamp)}}
+                </div>
+                <div class="card-content white-text">
+                    <span class="card-title">{{feed.feedName}}</span>
+                    <p>{{feed.description}}</p> 
+                </div>
             </div>
             <div class="card-action pink lighten-2 layout-row layout-align-space-between-center">
-                <span class="white-text">@{{feed.owner.userid}}</span>
+                <span class="white-text" [routerLink]="['/Profile', { userid: feed.owner.userid }]">@{{feed.owner.userid}}</span>
                 <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
                 <a class="btn secondary-content nobackground nopadding" *ngIf="User.password.email && UserID == User.feed.userid"
                 style="margin-right: 20px;">

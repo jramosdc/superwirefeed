@@ -26,8 +26,9 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
             }],
         execute: function() {
             NavbarComponent = (function () {
-                function NavbarComponent(as) {
+                function NavbarComponent(as, router) {
                     this.as = as;
+                    this.router = router;
                     this.loginLoading = false;
                     this.registerLoading = false;
                     this.User = this.as.getUser();
@@ -77,10 +78,11 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                             }).catch(function (err) {
                                 console.log('Profile Creation Failed!', err);
                             });
+                            _this.router.navigate(['/Profile', { userid: userid.value }]);
+                            console.log('User is Registered & Logged In!');
                             userid.value = '';
                             email.value = '';
                             password.value = '';
-                            console.log('User is Registered & Logged In!');
                             $('#errorRegister').html('');
                             $('#registerModal').closeModal();
                             _this.registerLoading = false;
@@ -108,7 +110,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                         templateUrl: 'components/navbar/navbar.html',
                         directives: [router_deprecated_1.RouterLink]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router])
                 ], NavbarComponent);
                 return NavbarComponent;
             }());
