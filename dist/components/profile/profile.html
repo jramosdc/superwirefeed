@@ -53,7 +53,25 @@
                 <label for="category">Category</label>
             </div>
         </div>
-        <button class="waves-effect waves-light btn right" (click)="update(bio, feedId, feedName, description, pyes, pno, category)">Update</button>
+        <div class="row center-align">
+            <span class="red-text" id="errorProfile"></span>
+        </div>
+        <div class="row">
+            <div class="preloader-wrapper small active" *ngIf="profileLoading">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="waves-effect waves-light btn right" (click)="update(bio, feedId, feedName, description, pyes, pno, category)">Update</button>
+        </div>
     </form>
 </div>
 <div class="row" *ngIf="!editMode && profile">

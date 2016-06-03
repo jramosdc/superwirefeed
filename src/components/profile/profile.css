@@ -5,30 +5,3 @@
 .paddingright10px {
     padding-right: 10px;
 }
-
-.border {
-    border: 1 solid grey;
-}
-
-.layout {
-    display: flex
-}
-
-.layout-row {
-    display: flex;
-    flex-direction: row;
-}
-
-.layout-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.layout-flex {
-    flex-grow: 0;
-}
-
-.layout-align-space-between-center {
-    justify-content: space-between;
-    align-items: center;
-}

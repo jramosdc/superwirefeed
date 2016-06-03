@@ -1,12 +1,8 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
-import { FormBuilder, Validators } from '@angular/common';
-import { FirebaseListObservable } from 'angularfire2';
+import { RouteParams } from "@angular/router-deprecated";
 import { User, authService } from '../services/authService';
-import { ControlMessages } from '../services/controlMessagesServices';
-import { ValidationService } from '../services/validationService';
 
 @Component({
     selector: 'profile',
@@ -15,7 +11,7 @@ import { ValidationService } from '../services/validationService';
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html',
-    directives: [RouterLink, ControlMessages]
+    directives: []
 })
 export class ProfileComponent implements OnInit {
 
@@ -35,9 +31,10 @@ export class ProfileComponent implements OnInit {
     domain: string
     userid: string
     editMode: boolean = false
+    profileLoading: boolean = false
     profile: Object
 
-    constructor(private as: authService, private router: Router, private params: RouteParams, private _formBuilder: FormBuilder) {
+    constructor(private as: authService, private params: RouteParams) {
         this.User = this.as.getUser();
         this.as.setRoute('Profile', null);
         this.as.setActivePageTitle('Profile');
@@ -72,6 +69,8 @@ export class ProfileComponent implements OnInit {
     }
 
     update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement) {
+        if (bio.value === '' || feedId .value === '' || feedName.value === '' || description.value === '' || category.value === '' ) return
+        this.profileLoading = true;
         let profile = {
             'bio': bio.value,
             'feedId': feedId.value,
@@ -94,12 +93,16 @@ export class ProfileComponent implements OnInit {
             }
             this.as.updateFeed(feedId.value, feed).then((res) => {
                 this.editMode = false;
+                this.profileLoading = false;
+                $('#errorProfile').html('');                
                 console.log('Profile and Feed Updated.');
             }).catch((err) => {
-                console.log(err);
+                console.log('Feed Update Failed!', err);
+                $('#errorProfile').html(err);
             })
         }).catch((err) => {
-            console.log(err);
+            console.log('Profile Update Failed!', err);
+            $('#errorProfile').html(err);
         });
     }
 

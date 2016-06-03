@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '@angular/common', '../services/authService', '../services/controlMessagesServices'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router-deprecated", '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, common_1, authService_1, controlMessagesServices_1;
+    var core_1, router_deprecated_1, authService_1;
     var ProfileComponent;
     return {
         setters:[
@@ -21,23 +21,15 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
             function (router_deprecated_1_1) {
                 router_deprecated_1 = router_deprecated_1_1;
             },
-            function (common_1_1) {
-                common_1 = common_1_1;
-            },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
-            },
-            function (controlMessagesServices_1_1) {
-                controlMessagesServices_1 = controlMessagesServices_1_1;
             }],
         execute: function() {
             ProfileComponent = (function () {
-                function ProfileComponent(as, router, params, _formBuilder) {
+                function ProfileComponent(as, params) {
                     var _this = this;
                     this.as = as;
-                    this.router = router;
                     this.params = params;
-                    this._formBuilder = _formBuilder;
                     this.User = {
                         password: {
                             email: '',
@@ -51,6 +43,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
                         }
                     };
                     this.editMode = false;
+                    this.profileLoading = false;
                     this.User = this.as.getUser();
                     this.as.setRoute('Profile', null);
                     this.as.setActivePageTitle('Profile');
@@ -84,6 +77,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
                 };
                 ProfileComponent.prototype.update = function (bio, feedId, feedName, description, pyes, pno, category) {
                     var _this = this;
+                    if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '')
+                        return;
+                    this.profileLoading = true;
                     var profile = {
                         'bio': bio.value,
                         'feedId': feedId.value,
@@ -106,12 +102,16 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
                         };
                         _this.as.updateFeed(feedId.value, feed).then(function (res) {
                             _this.editMode = false;
+                            _this.profileLoading = false;
+                            $('#errorProfile').html('');
                             console.log('Profile and Feed Updated.');
                         }).catch(function (err) {
-                            console.log(err);
+                            console.log('Feed Update Failed!', err);
+                            $('#errorProfile').html(err);
                         });
                     }).catch(function (err) {
-                        console.log(err);
+                        console.log('Profile Update Failed!', err);
+                        $('#errorProfile').html(err);
                     });
                 };
                 ProfileComponent = __decorate([
@@ -122,9 +122,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '@angular/common
                         },
                         styleUrls: ['components/profile/profile.css'],
                         templateUrl: 'components/profile/profile.html',
-                        directives: [router_deprecated_1.RouterLink, controlMessagesServices_1.ControlMessages]
+                        directives: []
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router, router_deprecated_1.RouteParams, common_1.FormBuilder])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.RouteParams])
                 ], ProfileComponent);
                 return ProfileComponent;
             }());
