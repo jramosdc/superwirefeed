@@ -33,6 +33,7 @@ export class ProfileComponent implements OnInit {
     editMode: boolean = false
     profileLoading: boolean = false
     profile: Object
+    deleteLoading: boolean
 
     constructor(private as: authService, private params: RouteParams) {
         this.User = this.as.getUser();
@@ -48,7 +49,7 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        $('.modal-trigger').leanModal();
     }
 
     edit() {
@@ -104,6 +105,30 @@ export class ProfileComponent implements OnInit {
             console.log('Profile Update Failed!', err);
             $('#errorProfile').html(err);
         });
+    }
+
+    confirmDelete() {
+        $('#confirmDeleteModel').openModal();
+    }
+
+    delete(answer: string) {
+        this.deleteLoading = true;
+        if (answer === 'yes') {
+            this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).then(res => {
+                console.log('User, Profile and Feed Deleted!')
+                $('#errorDelete').html('');
+                $('#confirmDeleteModel').closeModal();
+                this.deleteLoading = false;
+            }).catch(err => {
+                $('#errorDelete').html(err);
+                $('#confirmDeleteModel').closeModal();
+                this.deleteLoading = false;
+            })
+        } else {
+            $('#errorDelete').html('');
+            $('#confirmDeleteModel').closeModal();
+            this.deleteLoading = false;
+        }
     }
 
 }

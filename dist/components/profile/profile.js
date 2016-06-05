@@ -56,6 +56,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     }
                 }
                 ProfileComponent.prototype.ngOnInit = function () {
+                    $('.modal-trigger').leanModal();
                 };
                 ProfileComponent.prototype.edit = function () {
                     var _this = this;
@@ -113,6 +114,30 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         console.log('Profile Update Failed!', err);
                         $('#errorProfile').html(err);
                     });
+                };
+                ProfileComponent.prototype.confirmDelete = function () {
+                    $('#confirmDeleteModel').openModal();
+                };
+                ProfileComponent.prototype.delete = function (answer) {
+                    var _this = this;
+                    this.deleteLoading = true;
+                    if (answer === 'yes') {
+                        this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).then(function (res) {
+                            console.log('User, Profile and Feed Deleted!');
+                            $('#errorDelete').html('');
+                            $('#confirmDeleteModel').closeModal();
+                            _this.deleteLoading = false;
+                        }).catch(function (err) {
+                            $('#errorDelete').html(err);
+                            $('#confirmDeleteModel').closeModal();
+                            _this.deleteLoading = false;
+                        });
+                    }
+                    else {
+                        $('#errorDelete').html('');
+                        $('#confirmDeleteModel').closeModal();
+                        this.deleteLoading = false;
+                    }
                 };
                 ProfileComponent = __decorate([
                     core_1.Component({

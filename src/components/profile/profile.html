@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <button class="waves-effect waves-light btn left" (click)="confirmDelete(feedId)">Delete</button>
+            <button class="waves-effect waves-light btn left" (click)="confirmDelete()">Delete</button>
             <button class="waves-effect waves-light btn right" (click)="update(bio, feedId, feedName, description, pyes, pno, category)">Update</button>
         </div>
     </form>
@@ -101,8 +101,11 @@
 <div id="confirmDeleteModel" class="modal" style="width: 40% ! important">
     <div class="modal-content">
         <div class="row">
-            <h3>Do you really want to Delete this Feed?</h3>
-            <h4>Note: It wil also delete your profile and user account.</h4>
+            <h4>Do you really want to Delete this Feed?</h4>
+            <h6>Note: It wil also delete your profile and user account.</h6>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorDelete"></span>
         </div>
         <div class="modal-footer">
             <div class="preloader-wrapper small active" *ngIf="deleteLoading">
@@ -118,7 +121,8 @@
                     </div>
                 </div>
             </div>
-            <a class="waves-effect waves-blue btn white-text" (click)="delete()">Delete</a>
+            <a class="waves-effect waves-blue btn white-text right" (click)="delete('yes')">Yes</a>
+            <a class="waves-effect waves-blue btn white-text left" (click)="delete('no')">No</a>
         </div>
     </div>
 </div>

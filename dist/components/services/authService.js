@@ -288,6 +288,12 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         // });
                     });
                 };
+                authService.prototype.deleteAll = function (feedid, userid, uid) {
+                    var _this = this;
+                    return this.af.object('/users/' + userid).remove().then(function (res) {
+                        return _this.af.object('/feeds/' + feedid).remove();
+                    });
+                };
                 authService.prototype.logout = function () {
                     this.af.auth.logout();
                 };

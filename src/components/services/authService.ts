@@ -296,6 +296,12 @@ export class authService {
 		});
 	}
 
+	deleteAll(feedid: string, userid: string, uid: string) {
+		return this.af.object('/users/' + userid).remove().then(res => {
+			return this.af.object('/feeds/' + feedid).remove();
+		});
+	}
+
     logout() {
         this.af.auth.logout();
 	}
