@@ -70,6 +70,7 @@
                     </div>
                 </div>
             </div>
+            <button class="waves-effect waves-light btn left" (click)="confirmDelete(feedId)">Delete</button>
             <button class="waves-effect waves-light btn right" (click)="update(bio, feedId, feedName, description, pyes, pno, category)">Update</button>
         </div>
     </form>
@@ -94,6 +95,30 @@
         </div>
         <div class="row" *ngIf="profile && profile.feedId">
             <h5>Url: {{domain + '/' + profile.feedId}}</h5>
+        </div>
+    </div>
+</div>
+<div id="confirmDeleteModel" class="modal" style="width: 40% ! important">
+    <div class="modal-content">
+        <div class="row">
+            <h3>Do you really want to Delete this Feed?</h3>
+            <h4>Note: It wil also delete your profile and user account.</h4>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="deleteLoading">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <a class="waves-effect waves-blue btn white-text" (click)="delete()">Delete</a>
         </div>
     </div>
 </div>

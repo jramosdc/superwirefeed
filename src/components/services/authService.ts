@@ -257,7 +257,7 @@ export class authService {
 	}
 
 	voteUp(feedid: string) {
-		this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', (snaphot) => {
+		this.ref.child('feeds').child(feedid).once('value', (snaphot) => {
             let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
 			if (vote) {
 				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote + 1 }, (err) => {
@@ -271,10 +271,9 @@ export class authService {
 		})
 	}
 
-	voteDown(userfeedidid: string) {
-		this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', (snaphot) => {
+	voteDown(feedid: string) {
+		this.ref.child('feeds').child(feedid).once('value', (snaphot) => {
             let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
-                        console.log(vote);
 			if (vote) {
 				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote - 1 }, (err) => {
 					err ? console.log('err', err) : '';

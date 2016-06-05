@@ -249,7 +249,7 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                 };
                 authService.prototype.voteUp = function (feedid) {
                     var _this = this;
-                    this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', function (snaphot) {
+                    this.ref.child('feeds').child(feedid).once('value', function (snaphot) {
                         var vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
                         if (vote) {
                             _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote + 1 }, function (err) {
@@ -263,11 +263,10 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         }
                     });
                 };
-                authService.prototype.voteDown = function (userfeedidid) {
+                authService.prototype.voteDown = function (feedid) {
                     var _this = this;
-                    this.ref.child('feeds').orderByChild('owner/feedid').equalTo(feedid).once('child_added', function (snaphot) {
+                    this.ref.child('feeds').child(feedid).once('value', function (snaphot) {
                         var vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
-                        console.log(vote);
                         if (vote) {
                             _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote - 1 }, function (err) {
                                 err ? console.log('err', err) : '';

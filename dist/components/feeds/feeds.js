@@ -26,8 +26,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
             }],
         execute: function() {
             FeedsComponent = (function () {
-                function FeedsComponent(as) {
+                function FeedsComponent(as, router) {
                     this.as = as;
+                    this.router = router;
                     this.User = {
                         password: {
                             email: '',
@@ -40,11 +41,29 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             userid: ''
                         }
                     };
+                    this.emailLoading = false;
                     this.User = this.as.getUser();
                     this.feeds = this.as.getFeeds();
                     this.as.setRoute('Feeds', null);
                     this.as.setActivePageTitle('LATEST FEEDS');
                 }
+                FeedsComponent.prototype.ngOnInit = function () {
+                    $('.modal-trigger').leanModal();
+                };
+                FeedsComponent.prototype.loadPosts = function (feed) {
+                    if (feed['private'] === 'true') {
+                        $('#emailModel').openModal();
+                    }
+                    else {
+                        this.router.navigate(['/Posts', { feedid: feed['$key'] }]);
+                    }
+                };
+                FeedsComponent.prototype.checkEmail = function (email) {
+                    this.emailLoading = true;
+                    $('#errorEmail').html('');
+                    $('#emailModel').closeModal();
+                    this.emailLoading = false;
+                };
                 FeedsComponent.prototype.returnMoment = function (timestamp) {
                     if (timestamp) {
                         return moment().to(timestamp);
@@ -63,7 +82,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         templateUrl: 'components/feeds/feeds.html',
                         directives: [router_deprecated_1.RouterLink]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router])
                 ], FeedsComponent);
                 return FeedsComponent;
             }());
