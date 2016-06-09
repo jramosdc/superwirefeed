@@ -59,6 +59,7 @@ export class ProfileComponent implements OnInit {
     edit() {
         this.editMode = true;
         setTimeout(() => {
+            $('select').material_select();
             $('#bio').val(this.profile['bio']);
             $('#feedId').val(this.profile['feedId']);
             $('#feedName').val(this.profile['feedName']);
@@ -69,14 +70,16 @@ export class ProfileComponent implements OnInit {
                 $('#pno').prop('checked', true);
             }
             $('#category').val(this.profile['category']);
-            this.profile['authEmail'].forEach(val => {
-                this.authList.push(val);
-            });
-            this.profile['postCategories'].forEach(val => {
-                this.postCategoryList.push(val);
-            });
-            $('select').material_select();
-            $('#postcategories').materialtags('refresh');
+            if (this.profile['authEmail']) {
+                this.profile['authEmail'].forEach(val => {
+                    this.authList.push(val);
+                });
+            }
+            if (this.profile['postCategories']) {
+                this.profile['postCategories'].forEach(val => {
+                    this.postCategoryList.push(val);
+                });
+            }
         });
     }
 

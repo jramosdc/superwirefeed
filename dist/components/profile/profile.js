@@ -67,6 +67,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     var _this = this;
                     this.editMode = true;
                     setTimeout(function () {
+                        $('select').material_select();
                         $('#bio').val(_this.profile['bio']);
                         $('#feedId').val(_this.profile['feedId']);
                         $('#feedName').val(_this.profile['feedName']);
@@ -78,14 +79,16 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             $('#pno').prop('checked', true);
                         }
                         $('#category').val(_this.profile['category']);
-                        _this.profile['authEmail'].forEach(function (val) {
-                            _this.authList.push(val);
-                        });
-                        _this.profile['postCategories'].forEach(function (val) {
-                            _this.postCategoryList.push(val);
-                        });
-                        $('select').material_select();
-                        $('#postcategories').materialtags('refresh');
+                        if (_this.profile['authEmail']) {
+                            _this.profile['authEmail'].forEach(function (val) {
+                                _this.authList.push(val);
+                            });
+                        }
+                        if (_this.profile['postCategories']) {
+                            _this.profile['postCategories'].forEach(function (val) {
+                                _this.postCategoryList.push(val);
+                            });
+                        }
                     });
                 };
                 ProfileComponent.prototype.update = function (bio, feedId, feedName, description, pyes, pno, category) {
