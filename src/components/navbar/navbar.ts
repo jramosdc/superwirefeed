@@ -58,11 +58,11 @@ export class NavbarComponent implements OnInit {
 	}
 
 	register(userid: HTMLInputElement, email: HTMLInputElement, password: HTMLInputElement) {
-		if (email.value == '' || password.value == '') return
+		if (userid.value == '' || email.value == '' || password.value == '') return
 		this.registerLoading = true;
         this.as.register(email.value, password.value).then((res) => {
             this.as.login(email.value, password.value).then((res) => {
-                this.as.createUserProfile(res.uid, userid.value, email.value).then(() => {
+                this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value).then(() => {
                     console.log('Profile is Created!')
                 }).catch((err) => {
                     console.log('Profile Creation Failed!', err)

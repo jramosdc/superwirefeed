@@ -30,8 +30,6 @@ export class FeedsComponent implements OnInit {
 	}
         
 	feeds: FirebaseListObservable<any[]>;
-	
-	emailLoading: Boolean = false;
 
 	constructor(public as: authService, private router: Router) {
 		this.User = this.as.getUser();
@@ -41,24 +39,9 @@ export class FeedsComponent implements OnInit {
 	}
 	
 	ngOnInit() {
-        $('.modal-trigger').leanModal();
-	}
-
-	loadPosts(feed: Object) {
-		if (feed['private'] === 'true') {
-			$('#emailModel').openModal();
-		} else {
-			this.router.navigate(['/Posts', { feedid: feed['$key'] }]);
-		}
+        
 	}
 	
-	checkEmail(email: HTMLInputElement) {
-		this.emailLoading = true;
-		$('#errorEmail').html('');
-		$('#emailModel').closeModal();
-		this.emailLoading = false;
-	}
-
 	returnMoment(timestamp) {
 		if (timestamp) {
 			return moment().to(timestamp);

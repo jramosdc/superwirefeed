@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col l3 s12" *ngFor="let feed of feeds | async">
         <div class="card deep-purple lighten-1">
-            <div (click)="loadPosts(feed)">
+            <div [routerLink]="['/Posts', { feedid: feed.$key }]">
                 <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
                     {{returnMoment(feed.timestamp)}}
                 </div>
@@ -18,38 +18,6 @@
                 <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
                 <i class="white-text mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
             </div>
-        </div>
-    </div>
-</div>
-<div id="emailModel" class="modal" style="width: 40% ! important">
-    <div class="modal-content">
-        <div class="nav-wrapper center-align">
-            <h2 class="purple-text">Authorized Email?</h2>
-        </div>
-        <div class="row">
-            <label for="email">Email</label>
-            <div class="input-field">
-                <input type="text" class="validate" #email required value="">
-            </div>
-        </div>
-        <div class="row center-align">
-            <span class="red-text" id="errorEmail"></span>
-        </div>
-        <div class="modal-footer">
-            <div class="preloader-wrapper small active" *ngIf="emailLoading">
-                <div class="spinner-layer spinner-blue-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <a class="waves-effect waves-blue btn white-text" (click)="checkEmail(email)">Load</a>
         </div>
     </div>
 </div>

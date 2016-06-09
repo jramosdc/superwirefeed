@@ -26,10 +26,11 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
             }],
         execute: function() {
             ProfileComponent = (function () {
-                function ProfileComponent(as, params) {
+                function ProfileComponent(as, params, router) {
                     var _this = this;
                     this.as = as;
                     this.params = params;
+                    this.router = router;
                     this.User = {
                         password: {
                             email: '',
@@ -44,6 +45,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     };
                     this.editMode = false;
                     this.profileLoading = false;
+                    this.authList = [];
+                    this.authNew = [];
                     this.User = this.as.getUser();
                     this.as.setRoute('Profile', null);
                     this.as.setActivePageTitle('Profile');
@@ -73,6 +76,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             $('#pno').prop('checked', true);
                         }
                         $('#category').val(_this.profile['category']);
+                        _this.profile['authEmail'].forEach(function (val) {
+                            _this.authList.push(val);
+                        });
                         $('select').material_select();
                     });
                 };
@@ -81,13 +87,16 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '')
                         return;
                     this.profileLoading = true;
+                    $.merge(this.authList, this.authNew);
+                    this.authNew.splice(0);
                     var profile = {
                         'bio': bio.value,
-                        'feedId': feedId.value,
+                        'feedId': feedId.value.toLowerCase(),
                         'feedName': feedName.value,
                         'description': description.value,
                         'private': $(pyes).prop('checked') ? 'true' : 'false',
-                        'category': category.value
+                        'category': category.value,
+                        'authEmail': this.authList
                     };
                     this.as.updateUserProfile(this.userid, profile).then(function (res) {
                         var feed = {
@@ -95,16 +104,18 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             'description': description.value,
                             'private': $(pyes).prop('checked') ? 'true' : 'false',
                             'category': category.value,
+                            'authEmail': _this.authList,
                             'timestamp': Firebase.ServerValue.TIMESTAMP,
                             'owner': {
                                 'uid': _this.User.uid,
                                 'userid': _this.userid
                             }
                         };
-                        _this.as.updateFeed(feedId.value, feed).then(function (res) {
+                        _this.as.updateFeed(feedId.value.toLowerCase(), feed).then(function (res) {
                             _this.editMode = false;
                             _this.profileLoading = false;
                             $('#errorProfile').html('');
+                            _this.authList.splice(0);
                             console.log('Profile and Feed Updated.');
                         }).catch(function (err) {
                             console.log('Feed Update Failed!', err);
@@ -122,15 +133,12 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     var _this = this;
                     this.deleteLoading = true;
                     if (answer === 'yes') {
-                        this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).then(function (res) {
+                        this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).subscribe(function (res) {
                             console.log('User, Profile and Feed Deleted!');
                             $('#errorDelete').html('');
                             $('#confirmDeleteModel').closeModal();
                             _this.deleteLoading = false;
-                        }).catch(function (err) {
-                            $('#errorDelete').html(err);
-                            $('#confirmDeleteModel').closeModal();
-                            _this.deleteLoading = false;
+                            _this.router.navigate(['/Feeds']);
                         });
                     }
                     else {
@@ -138,6 +146,10 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         $('#confirmDeleteModel').closeModal();
                         this.deleteLoading = false;
                     }
+                };
+                ProfileComponent.prototype.addauthemail = function (email) {
+                    this.authNew.push(email.value);
+                    email.value = '';
                 };
                 ProfileComponent = __decorate([
                     core_1.Component({
@@ -149,7 +161,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         templateUrl: 'components/profile/profile.html',
                         directives: []
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.RouteParams])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.RouteParams, router_deprecated_1.Router])
                 ], ProfileComponent);
                 return ProfileComponent;
             }());

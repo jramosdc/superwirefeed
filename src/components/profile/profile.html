@@ -53,6 +53,25 @@
                 <label for="category">Category</label>
             </div>
         </div>
+        <div class="row">
+            <div class="input-field col s11">
+                <input id="authemail" #authemail type="text" class="validate">
+                <label for="authemail">Add Authorized Email</label>
+            </div>
+            <div class="col s1">
+                <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="addauthemail(authemail)"><i class="large mdi mdi-plus"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <ui class="col s12 collection">
+                <li class="coolection-item" *ngFor="let email of authList">
+                    {{email}}
+                </li>
+                <li class="coolection-item" *ngFor="let email of authNew">
+                    {{email}}
+                </li>
+            </ui>
+        </div>
         <div class="row center-align">
             <span class="red-text" id="errorProfile"></span>
         </div>

@@ -100,6 +100,13 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                         }
                     });
                 };
+                authService.prototype.checkEmail = function (feedid, email) {
+                    return this.af.database.object('/feeds/' + feedid + '/authEmail').map(function (emails) {
+                        return emails.filter(function (eMail) {
+                            return eMail === email;
+                        });
+                    });
+                };
                 authService.prototype.loadPosts = function (feedid) {
                     var _this = this;
                     this.getFeedNameByFeedID(feedid).subscribe(function (feed) {
@@ -290,8 +297,17 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                 };
                 authService.prototype.deleteAll = function (feedid, userid, uid) {
                     var _this = this;
-                    return this.af.object('/users/' + userid).remove().then(function (res) {
-                        return _this.af.object('/feeds/' + feedid).remove();
+                    return this.af.database.list('/posts', {
+                        query: {
+                            orderByChild: 'owner/userid',
+                            equalTo: userid
+                        }
+                    }).map(function (res) {
+                        return _this.af.object('/feeds/' + feedid).remove().then(function (res) {
+                            return _this.af.object('/users/' + userid).remove().then(function (res) {
+                                // return this.af.auth.remove(this.af.auth); 
+                            });
+                        });
                     });
                 };
                 authService.prototype.logout = function () {

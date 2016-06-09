@@ -96,6 +96,14 @@ export class authService {
         })
 	}
 
+	checkEmail(feedid: string, email: string) {
+		return this.af.database.object('/feeds/' + feedid + '/authEmail').map(emails => {
+			return emails.filter(eMail => {
+				return eMail === email;
+			})
+		})
+	}
+
     loadPosts(feedid: string) {
         this.getFeedNameByFeedID(feedid).subscribe((feed) => {
             this.setActivePageTitle(feed['feedName']);
@@ -297,9 +305,18 @@ export class authService {
 	}
 
 	deleteAll(feedid: string, userid: string, uid: string) {
-		return this.af.object('/users/' + userid).remove().then(res => {
-			return this.af.object('/feeds/' + feedid).remove();
-		});
+		return this.af.database.list('/posts', {
+			query: {
+				orderByChild: 'owner/userid',
+				equalTo: userid
+			}
+		}).map(res => {
+			return this.af.object('/feeds/' + feedid).remove().then(res => {
+				return this.af.object('/users/' + userid).remove().then(res => {
+					// return this.af.auth.remove(this.af.auth); 
+				 })
+			});
+		})
 	}
 
     logout() {

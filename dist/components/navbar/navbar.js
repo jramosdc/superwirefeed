@@ -68,12 +68,12 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                 };
                 NavbarComponent.prototype.register = function (userid, email, password) {
                     var _this = this;
-                    if (email.value == '' || password.value == '')
+                    if (userid.value == '' || email.value == '' || password.value == '')
                         return;
                     this.registerLoading = true;
                     this.as.register(email.value, password.value).then(function (res) {
                         _this.as.login(email.value, password.value).then(function (res) {
-                            _this.as.createUserProfile(res.uid, userid.value, email.value).then(function () {
+                            _this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value).then(function () {
                                 console.log('Profile is Created!');
                             }).catch(function (err) {
                                 console.log('Profile Creation Failed!', err);

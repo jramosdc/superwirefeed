@@ -29,7 +29,7 @@ class SearchPostTitlePipe implements PipeTransform {
 	pipes: [SearchPostTitlePipe, DatePipe, OrderBy]
 })
 // @CanActivate((next: ComponentInstruction, prev: ComponentInstruction) => {
-// 	let injector = Injector.resolveAndCreate([authService]);
+// 	let injector = Injector//.resolveAndCreate([authService]);
 // 	let as : authService = injector.get(authService);
 // 	return new Promise((resolve, reject) => {
 // 		let userid: string = next.params.userid;
@@ -59,17 +59,41 @@ export class PostsComponent implements OnInit {
 	search: string
 	deletePostID: string
 	posts: FirebaseListObservable<any[]>
+	emailLoading: Boolean = false
     
 	constructor(public as: authService, public params: RouteParams, private router: Router) {
 		this.Domain = this.as.getDomain();
 		this.User = this.as.getUser();
 		this.FeedID = this.params.get('feedid')
 		this.as.setRoute('Posts', this.FeedID);
-		this.posts = this.as.loadPosts(this.FeedID);
+		
 	}
 
 	ngOnInit() {
-		$('.modal-trigger').leanModal();
+		this.as.getFeedNameByFeedID(this.FeedID).subscribe(feed => {
+			this.as.setActivePageTitle(feed.feedName);
+			if (feed.private === 'true') {
+				$('#emailModel').openModal({ dismissible: false });
+			} else {
+				this.posts = this.as.loadPosts(this.FeedID);
+			}
+		});
+	}
+
+	checkEmail(email: HTMLInputElement) {
+		this.emailLoading = true;
+		this.as.checkEmail(this.FeedID, email.value).subscribe(res => {
+			if (res.length > 0) {
+				this.posts = this.as.loadPosts(this.FeedID);
+				$('#emailModel').closeModal();
+				$('#errorEmail').html('');
+				this.emailLoading = false;
+			} else {
+				$('#errorEmail').html('Not a vaild Email!');
+				this.emailLoading = false;
+			}
+		})
+		
 	}
 	
 	deleteModel(postid) {

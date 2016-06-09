@@ -66,14 +66,39 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                             userid: ''
                         }
                     };
+                    this.emailLoading = false;
                     this.Domain = this.as.getDomain();
                     this.User = this.as.getUser();
                     this.FeedID = this.params.get('feedid');
                     this.as.setRoute('Posts', this.FeedID);
-                    this.posts = this.as.loadPosts(this.FeedID);
                 }
                 PostsComponent.prototype.ngOnInit = function () {
-                    $('.modal-trigger').leanModal();
+                    var _this = this;
+                    this.as.getFeedNameByFeedID(this.FeedID).subscribe(function (feed) {
+                        _this.as.setActivePageTitle(feed.feedName);
+                        if (feed.private === 'true') {
+                            $('#emailModel').openModal({ dismissible: false });
+                        }
+                        else {
+                            _this.posts = _this.as.loadPosts(_this.FeedID);
+                        }
+                    });
+                };
+                PostsComponent.prototype.checkEmail = function (email) {
+                    var _this = this;
+                    this.emailLoading = true;
+                    this.as.checkEmail(this.FeedID, email.value).subscribe(function (res) {
+                        if (res.length > 0) {
+                            _this.posts = _this.as.loadPosts(_this.FeedID);
+                            $('#emailModel').closeModal();
+                            $('#errorEmail').html('');
+                            _this.emailLoading = false;
+                        }
+                        else {
+                            $('#errorEmail').html('Not a vaild Email!');
+                            _this.emailLoading = false;
+                        }
+                    });
                 };
                 PostsComponent.prototype.deleteModel = function (postid) {
                     this.deletePostID = postid;
