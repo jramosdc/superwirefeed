@@ -47,6 +47,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     this.profileLoading = false;
                     this.authList = [];
                     this.authNew = [];
+                    this.postCategoryList = [];
+                    this.postCategoryNew = [];
                     this.User = this.as.getUser();
                     this.as.setRoute('Profile', null);
                     this.as.setActivePageTitle('Profile');
@@ -79,7 +81,11 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         _this.profile['authEmail'].forEach(function (val) {
                             _this.authList.push(val);
                         });
+                        _this.profile['postCategories'].forEach(function (val) {
+                            _this.postCategoryList.push(val);
+                        });
                         $('select').material_select();
+                        $('#postcategories').materialtags('refresh');
                     });
                 };
                 ProfileComponent.prototype.update = function (bio, feedId, feedName, description, pyes, pno, category) {
@@ -88,7 +94,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         return;
                     this.profileLoading = true;
                     $.merge(this.authList, this.authNew);
+                    $.merge(this.postCategoryList, this.postCategoryNew);
                     this.authNew.splice(0);
+                    this.postCategoryNew.splice(0);
                     var profile = {
                         'bio': bio.value,
                         'feedId': feedId.value.toLowerCase(),
@@ -96,7 +104,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         'description': description.value,
                         'private': $(pyes).prop('checked') ? 'true' : 'false',
                         'category': category.value,
-                        'authEmail': this.authList
+                        'authEmail': this.authList,
+                        'postCategories': this.postCategoryList
                     };
                     this.as.updateUserProfile(this.userid, profile).then(function (res) {
                         var feed = {
@@ -105,6 +114,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             'private': $(pyes).prop('checked') ? 'true' : 'false',
                             'category': category.value,
                             'authEmail': _this.authList,
+                            'postCategories': _this.postCategoryList,
                             'timestamp': Firebase.ServerValue.TIMESTAMP,
                             'owner': {
                                 'uid': _this.User.uid,
@@ -116,6 +126,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             _this.profileLoading = false;
                             $('#errorProfile').html('');
                             _this.authList.splice(0);
+                            _this.postCategoryList.splice(0);
                             console.log('Profile and Feed Updated.');
                         }).catch(function (err) {
                             console.log('Feed Update Failed!', err);
@@ -147,9 +158,32 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         this.deleteLoading = false;
                     }
                 };
-                ProfileComponent.prototype.addauthemail = function (email) {
+                ProfileComponent.prototype.addAuthEmail = function (email) {
                     this.authNew.push(email.value);
                     email.value = '';
+                };
+                ProfileComponent.prototype.addPostCategory = function (postCategory) {
+                    if (postCategory.value === '')
+                        return;
+                    if ((this.postCategoryList.length + this.postCategoryNew.length) < 4) {
+                        this.postCategoryNew.push(postCategory.value);
+                        postCategory.value = '';
+                    }
+                    else {
+                        $('#errorPostCategory').html('Not Allow more then four!');
+                    }
+                };
+                ProfileComponent.prototype.removePostCategory = function (type, category) {
+                    if (type === 'new') {
+                        this.postCategoryNew = $.grep(this.postCategoryNew, function (val) {
+                            return val != category;
+                        });
+                    }
+                    else if (type === 'list') {
+                        this.postCategoryList = $.grep(this.postCategoryList, function (val) {
+                            return val != category;
+                        });
+                    }
                 };
                 ProfileComponent = __decorate([
                     core_1.Component({

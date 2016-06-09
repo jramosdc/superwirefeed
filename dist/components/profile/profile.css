@@ -5,3 +5,13 @@
 .paddingright10px {
     padding-right: 10px;
 }
+
+.layout-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.layout-align-space-between-center {
+    justify-content: space-between;
+    align-items: center;
+}

@@ -33,9 +33,11 @@ export class ProfileComponent implements OnInit {
     editMode: boolean = false
     profileLoading: boolean = false
     profile: Object
+    deleteLoading: boolean
     authList: Array<string> = []
     authNew: Array<string> = []
-    deleteLoading: boolean
+    postCategoryList: Array<string> = []
+    postCategoryNew: Array<string> = []
 
     constructor(private as: authService, private params: RouteParams, private router: Router) {
         this.User = this.as.getUser();
@@ -70,7 +72,11 @@ export class ProfileComponent implements OnInit {
             this.profile['authEmail'].forEach(val => {
                 this.authList.push(val);
             });
+            this.profile['postCategories'].forEach(val => {
+                this.postCategoryList.push(val);
+            });
             $('select').material_select();
+            $('#postcategories').materialtags('refresh');
         });
     }
 
@@ -78,7 +84,9 @@ export class ProfileComponent implements OnInit {
         if (bio.value === '' || feedId .value === '' || feedName.value === '' || description.value === '' || category.value === '' ) return
         this.profileLoading = true;
         $.merge(this.authList, this.authNew)
+        $.merge(this.postCategoryList, this.postCategoryNew)
         this.authNew.splice(0);
+        this.postCategoryNew.splice(0);
         let profile = {
             'bio': bio.value,
             'feedId': feedId.value.toLowerCase(),
@@ -86,7 +94,8 @@ export class ProfileComponent implements OnInit {
             'description': description.value,
             'private': $(pyes).prop('checked') ? 'true' : 'false',
             'category': category.value,
-            'authEmail': this.authList
+            'authEmail': this.authList,
+            'postCategories': this.postCategoryList
         };
         this.as.updateUserProfile(this.userid, profile).then((res) => {
             let feed = {
@@ -95,6 +104,7 @@ export class ProfileComponent implements OnInit {
                 'private': $(pyes).prop('checked') ? 'true' : 'false',
                 'category': category.value,
                 'authEmail': this.authList,
+                'postCategories': this.postCategoryList,
                 'timestamp': Firebase.ServerValue.TIMESTAMP,
                 'owner': {
                     'uid': this.User.uid,
@@ -106,6 +116,7 @@ export class ProfileComponent implements OnInit {
                 this.profileLoading = false;
                 $('#errorProfile').html('');
                 this.authList.splice(0);
+                this.postCategoryList.splice(0);
                 console.log('Profile and Feed Updated.');
             }).catch((err) => {
                 console.log('Feed Update Failed!', err);
@@ -138,9 +149,31 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    addauthemail(email: HTMLInputElement) {
+    addAuthEmail(email: HTMLInputElement) {
         this.authNew.push(email.value);
         email.value = '';
+    }
+
+    addPostCategory(postCategory: HTMLInputElement) {
+        if (postCategory.value === '') return
+        if ((this.postCategoryList.length + this.postCategoryNew.length) < 4) {
+            this.postCategoryNew.push(postCategory.value);
+            postCategory.value = '';
+        } else {
+            $('#errorPostCategory').html('Not Allow more then four!');
+        }
+    }
+
+    removePostCategory(type: string, category: string) {
+        if (type === 'new') {
+            this.postCategoryNew = $.grep(this.postCategoryNew, val => {
+                return val != category;
+            })
+        } else if (type === 'list') {
+            this.postCategoryList = $.grep(this.postCategoryList, val => {
+                return val != category;
+            })
+        } 
     }
 
 }

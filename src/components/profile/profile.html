@@ -55,11 +55,33 @@
         </div>
         <div class="row">
             <div class="input-field col s11">
-                <input id="authemail" #authemail type="text" class="validate">
+                <input id="postcategory" #postCategory type="text" class="validate">
+                <label for="postcategory">Add Post Category</label>
+            </div>
+            <div class="col s1">
+                <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="addPostCategory(postCategory)"><i class="large mdi mdi-plus"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="chip" *ngFor="let category of postCategoryList">
+                {{category}}
+                <i class="mdi mdi-close" (click)="removePostCategory('list', category)"></i>
+            </div>
+            <div class="chip" *ngFor="let category of postCategoryNew">
+                {{category}}
+                <i class="mdi mdi-close" (click)="removePostCategory('new', category)"></i>
+            </div>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorPostCategory"></span>
+        </div>
+        <div class="row">
+            <div class="input-field col s11">
+                <input id="authemail" #authEmail type="text" class="validate">
                 <label for="authemail">Add Authorized Email</label>
             </div>
             <div class="col s1">
-                <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="addauthemail(authemail)"><i class="large mdi mdi-plus"></i></a>
+                <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="addAuthEmail(authEmail)"><i class="large mdi mdi-plus"></i></a>
             </div>
         </div>
         <div class="row">
@@ -76,21 +98,23 @@
             <span class="red-text" id="errorProfile"></span>
         </div>
         <div class="row">
-            <div class="preloader-wrapper small active" *ngIf="profileLoading">
-                <div class="spinner-layer spinner-green-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
+            <div class="col s12 layout-row layout-align-space-between-center">
+                <button class="waves-effect waves-light btn" (click)="confirmDelete()">Delete</button>
+                <div class="preloader-wrapper small active" *ngIf="profileLoading">
+                    <div class="spinner-layer spinner-green-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
                     </div>
                 </div>
+                <button class="waves-effect waves-light btn" (click)="update(bio, feedId, feedName, description, pyes, pno, category)">Update</button>
             </div>
-            <button class="waves-effect waves-light btn left" (click)="confirmDelete()">Delete</button>
-            <button class="waves-effect waves-light btn right" (click)="update(bio, feedId, feedName, description, pyes, pno, category)">Update</button>
         </div>
     </form>
 </div>
