@@ -61,7 +61,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     }
                 }
                 ProfileComponent.prototype.ngOnInit = function () {
-                    $('.modal-trigger').leanModal();
                 };
                 ProfileComponent.prototype.edit = function () {
                     var _this = this;
@@ -97,8 +96,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         return;
                     this.profileLoading = true;
                     $.merge(this.authList, this.authNew);
-                    $.merge(this.postCategoryList, this.postCategoryNew);
                     this.authNew.splice(0);
+                    $.merge(this.postCategoryList, this.postCategoryNew);
                     this.postCategoryNew.splice(0);
                     var profile = {
                         'bio': bio.value,

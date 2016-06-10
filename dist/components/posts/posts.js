@@ -76,8 +76,13 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     var _this = this;
                     this.as.getFeedNameByFeedID(this.FeedID).subscribe(function (feed) {
                         _this.as.setActivePageTitle(feed.feedName);
-                        if (feed.private === 'true') {
-                            $('#emailModel').openModal({ dismissible: false });
+                        if (feed.private === 'true' && feed.owner.uid !== _this.User.uid) {
+                            if (sessionStorage['email']) {
+                                _this.checkEmail(sessionStorage['email']);
+                            }
+                            else {
+                                $('#emailModel').openModal({ dismissible: false });
+                            }
                         }
                         else {
                             _this.posts = _this.as.loadPosts(_this.FeedID);
@@ -90,6 +95,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     this.as.checkEmail(this.FeedID, email.value).subscribe(function (res) {
                         if (res.length > 0) {
                             _this.posts = _this.as.loadPosts(_this.FeedID);
+                            sessionStorage['email'] = email;
                             $('#emailModel').closeModal();
                             $('#errorEmail').html('');
                             _this.emailLoading = false;

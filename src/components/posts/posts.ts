@@ -55,7 +55,8 @@ export class PostsComponent implements OnInit {
 	}
 
 	Domain: string
-	FeedID: string
+    FeedID: string
+    userEmail: HTMLInputElement
 	search: string
 	deletePostID: string
 	posts: FirebaseListObservable<any[]>
@@ -72,8 +73,12 @@ export class PostsComponent implements OnInit {
 	ngOnInit() {
 		this.as.getFeedNameByFeedID(this.FeedID).subscribe(feed => {
 			this.as.setActivePageTitle(feed.feedName);
-			if (feed.private === 'true') {
-				$('#emailModel').openModal({ dismissible: false });
+            if (feed.private === 'true' && feed.owner.uid !== this.User.uid) {
+                if (sessionStorage['email']) {
+                    this.checkEmail(sessionStorage['email']);
+                } else {
+                    $('#emailModel').openModal({ dismissible: false });
+                }
 			} else {
 				this.posts = this.as.loadPosts(this.FeedID);
 			}
@@ -84,7 +89,8 @@ export class PostsComponent implements OnInit {
 		this.emailLoading = true;
 		this.as.checkEmail(this.FeedID, email.value).subscribe(res => {
 			if (res.length > 0) {
-				this.posts = this.as.loadPosts(this.FeedID);
+                this.posts = this.as.loadPosts(this.FeedID);
+                sessionStorage['email'] = email;
 				$('#emailModel').closeModal();
 				$('#errorEmail').html('');
 				this.emailLoading = false;

@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        $('.modal-trigger').leanModal();
+        
     }
 
     edit() {
@@ -87,8 +87,8 @@ export class ProfileComponent implements OnInit {
         if (bio.value === '' || feedId .value === '' || feedName.value === '' || description.value === '' || category.value === '' ) return
         this.profileLoading = true;
         $.merge(this.authList, this.authNew)
-        $.merge(this.postCategoryList, this.postCategoryNew)
         this.authNew.splice(0);
+        $.merge(this.postCategoryList, this.postCategoryNew)
         this.postCategoryNew.splice(0);
         let profile = {
             'bio': bio.value,
