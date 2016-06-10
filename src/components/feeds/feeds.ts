@@ -1,9 +1,10 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { RouterLink, Router } from "@angular/router-deprecated";
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
+import { SearchCategory } from '../pipes/searchCategory';
 
 @Component({
 	selector: 'feeds',
@@ -12,7 +13,8 @@ import { User, authService } from '../services/authService';
 	},
     styleUrls: ['components/feeds/feeds.css'],
 	templateUrl: 'components/feeds/feeds.html',
-	directives: [RouterLink]
+	directives: [RouterLink],
+	pipes: [SearchCategory]
 })
 export class FeedsComponent implements OnInit {
 

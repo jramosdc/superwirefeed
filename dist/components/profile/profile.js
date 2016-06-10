@@ -66,7 +66,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     var _this = this;
                     this.editMode = true;
                     setTimeout(function () {
-                        $('select').material_select();
                         $('#bio').val(_this.profile['bio']);
                         $('#feedId').val(_this.profile['feedId']);
                         $('#feedName').val(_this.profile['feedName']);
@@ -78,6 +77,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             $('#pno').prop('checked', true);
                         }
                         $('#category').val(_this.profile['category']);
+                        $('select').material_select();
                         if (_this.profile['authEmail']) {
                             _this.profile['authEmail'].forEach(function (val) {
                                 _this.authList.push(val);

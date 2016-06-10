@@ -28,9 +28,10 @@ export class NewPostComponent implements OnInit {
         }
     }
 
-    detail: string    
-    postLoading: boolean
-
+    detail: string;
+    postLoading: boolean;
+    categories: Array<string> = [];
+    
     constructor(private as: authService, private router: Router) {
         this.User = this.as.getUser();
         this.as.setRoute('New Post', null);
@@ -38,6 +39,21 @@ export class NewPostComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(feed => {
+            console.log(feed['postCategories'])
+            if (feed['postCategories']) {
+                feed['postCategories'].forEach( (val: string) => {
+                    this.categories.push(val); 
+                    // console.log(val)
+                    // $('#category').append(``
+                    //     $("<option></option>")
+                    //     .attr("value",val)
+                    //     .text(val)
+                    // )
+                    // $('select').material_select();
+                });
+            }
+        })
         $('select').material_select();
         tinymce.remove();
         tinymce.init({

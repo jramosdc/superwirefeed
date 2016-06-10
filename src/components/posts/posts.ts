@@ -1,22 +1,14 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, Pipe, PipeTransform, OnInit, Injector } from '@angular/core';
+import { DatePipe } from "@angular/common";
 import { RouterLink, RouteParams, CanActivate, ComponentInstruction, Router } from '@angular/router-deprecated';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
-import { ClipboardDirective } from './clip';
-import { DatePipe } from "@angular/common";
-import { OrderBy } from "./orderby";
-
-@Pipe({
-	name: 'searchPostTitle'
-})
-class SearchPostTitlePipe implements PipeTransform {
-	transform(values, args?) {
-        let filter = args;
-        return filter ? values.filter(value=> value.title.toLocaleLowerCase().indexOf(filter) != -1) : values;
-	}
-}
+import { ClipboardDirective } from '../directives/clip';
+import { OrderBy } from "../pipes/orderby";
+import { SearchPostTitlePipe } from '../pipes/searchPostTitle';
+import { SearchCategory } from '../pipes/searchCategory';
 
 @Component({
 	selector: 'posts',
@@ -26,7 +18,7 @@ class SearchPostTitlePipe implements PipeTransform {
     styleUrls: ['components/posts/posts.css'],
 	templateUrl: 'components/posts/posts.html',
 	directives: [RouterLink, ClipboardDirective],
-	pipes: [SearchPostTitlePipe, DatePipe, OrderBy]
+	pipes: [SearchPostTitlePipe, DatePipe, OrderBy, SearchCategory]
 })
 // @CanActivate((next: ComponentInstruction, prev: ComponentInstruction) => {
 // 	let injector = Injector//.resolveAndCreate([authService]);
@@ -59,7 +51,7 @@ export class PostsComponent implements OnInit {
     userEmail: HTMLInputElement
     search: string
     activeCategory: string;
-    categories: Array<string> = ['ALL']
+    categories: Array<string> = ['All']
     deletePostID: string
 	posts: FirebaseListObservable<any[]>
 	emailLoading: Boolean = false
@@ -77,7 +69,7 @@ export class PostsComponent implements OnInit {
             this.as.setActivePageTitle(feed.feedName);
             if (feed['postCategories']) {
                 feed['postCategories'].forEach( (val: string) => {
-                    this.categories.push(val.toUpperCase());
+                    this.categories.push(val);
                 });
             }
             if (feed.private === 'true' && feed.owner.uid !== this.User.uid) {

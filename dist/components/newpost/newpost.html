@@ -42,14 +42,10 @@
         </div>
         <div class="row">
             <label for="category">Category</label>
-            <div class="input-field">
-                <select #category>
+            <div class="input-field" >
+                <select class="browser-default" id="category" #category>
                     <option value="" disabled selected>Select Category</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="News">News</option>
-                    <option value="Visuals">Visuals</option>
-                    <option value="Data">Data</option>
-                    <option value="Misc">Misc</option>
+                    <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
                 </select>
             </div>
         </div>

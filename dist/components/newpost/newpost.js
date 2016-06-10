@@ -41,12 +41,28 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             userid: ''
                         }
                     };
+                    this.categories = [];
                     this.User = this.as.getUser();
                     this.as.setRoute('New Post', null);
                     this.as.setActivePageTitle('New Post');
                 }
                 NewPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
+                    this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(function (feed) {
+                        console.log(feed['postCategories']);
+                        if (feed['postCategories']) {
+                            feed['postCategories'].forEach(function (val) {
+                                _this.categories.push(val);
+                                // console.log(val)
+                                // $('#category').append(``
+                                //     $("<option></option>")
+                                //     .attr("value",val)
+                                //     .text(val)
+                                // )
+                                // $('select').material_select();
+                            });
+                        }
+                    });
                     $('select').material_select();
                     tinymce.remove();
                     tinymce.init({

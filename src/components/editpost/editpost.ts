@@ -28,16 +28,20 @@ export class EditPostComponent implements OnInit {
         }
     }
 
-    detail: string
-    postid: string
-    UserID: string
-    postLoading: boolean
+    detail: string;
+    postid: string;
+    UserID: string;
+    postLoading: boolean;
+    categories: Array<string> = [];
 
     constructor(private as: authService, private router: Router, private params: RouteParams) {
         this.User = this.as.getUser();
         this.as.setRoute('Edit Post', null);
         this.as.setActivePageTitle('Edit Post');
         this.postid = this.params.get('postid');
+    }
+
+    ngOnInit() {
         if (this.postid) {
             this.as.loadPost(this.postid).subscribe((post) => {
                 // this.post = post;
@@ -51,9 +55,14 @@ export class EditPostComponent implements OnInit {
                 this.UserID = post.owner.userid;
             })
         }
-    }
-
-    ngOnInit() {
+        this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(feed => {
+            console.log(feed['postCategories'])
+            if (feed['postCategories']) {
+                feed['postCategories'].forEach( (val: string) => {
+                    this.categories.push(val); 
+                });
+            }
+        })
         $('select').material_select();
         tinymce.remove();
         tinymce.init({

@@ -59,7 +59,6 @@ export class ProfileComponent implements OnInit {
     edit() {
         this.editMode = true;
         setTimeout(() => {
-            $('select').material_select();
             $('#bio').val(this.profile['bio']);
             $('#feedId').val(this.profile['feedId']);
             $('#feedName').val(this.profile['feedName']);
@@ -70,6 +69,7 @@ export class ProfileComponent implements OnInit {
                 $('#pno').prop('checked', true);
             }
             $('#category').val(this.profile['category']);
+            $('select').material_select();
             if (this.profile['authEmail']) {
                 this.profile['authEmail'].forEach(val => {
                     this.authList.push(val);

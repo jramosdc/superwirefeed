@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', '@angular/router-deprecated', '../services/authService', './clip', "@angular/common", "./orderby"], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/common", '@angular/router-deprecated', '../services/authService', '../directives/clip', "../pipes/orderby", '../pipes/searchPostTitle', '../pipes/searchCategory'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,12 +11,15 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, authService_1, clip_1, common_1, orderby_1;
-    var SearchPostTitlePipe, PostsComponent;
+    var core_1, common_1, router_deprecated_1, authService_1, clip_1, orderby_1, searchPostTitle_1, searchCategory_1;
+    var PostsComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (common_1_1) {
+                common_1 = common_1_1;
             },
             function (router_deprecated_1_1) {
                 router_deprecated_1 = router_deprecated_1_1;
@@ -27,28 +30,16 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
             function (clip_1_1) {
                 clip_1 = clip_1_1;
             },
-            function (common_1_1) {
-                common_1 = common_1_1;
-            },
             function (orderby_1_1) {
                 orderby_1 = orderby_1_1;
+            },
+            function (searchPostTitle_1_1) {
+                searchPostTitle_1 = searchPostTitle_1_1;
+            },
+            function (searchCategory_1_1) {
+                searchCategory_1 = searchCategory_1_1;
             }],
         execute: function() {
-            SearchPostTitlePipe = (function () {
-                function SearchPostTitlePipe() {
-                }
-                SearchPostTitlePipe.prototype.transform = function (values, args) {
-                    var filter = args;
-                    return filter ? values.filter(function (value) { return value.title.toLocaleLowerCase().indexOf(filter) != -1; }) : values;
-                };
-                SearchPostTitlePipe = __decorate([
-                    core_1.Pipe({
-                        name: 'searchPostTitle'
-                    }), 
-                    __metadata('design:paramtypes', [])
-                ], SearchPostTitlePipe);
-                return SearchPostTitlePipe;
-            }());
             PostsComponent = (function () {
                 function PostsComponent(as, params, router) {
                     this.as = as;
@@ -66,7 +57,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                             userid: ''
                         }
                     };
-                    this.categories = ['ALL'];
+                    this.categories = ['All'];
                     this.emailLoading = false;
                     this.Domain = this.as.getDomain();
                     this.User = this.as.getUser();
@@ -79,7 +70,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                         _this.as.setActivePageTitle(feed.feedName);
                         if (feed['postCategories']) {
                             feed['postCategories'].forEach(function (val) {
-                                _this.categories.push(val.toUpperCase());
+                                _this.categories.push(val);
                             });
                         }
                         if (feed.private === 'true' && feed.owner.uid !== _this.User.uid) {
@@ -142,7 +133,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                         styleUrls: ['components/posts/posts.css'],
                         templateUrl: 'components/posts/posts.html',
                         directives: [router_deprecated_1.RouterLink, clip_1.ClipboardDirective],
-                        pipes: [SearchPostTitlePipe, common_1.DatePipe, orderby_1.OrderBy]
+                        pipes: [searchPostTitle_1.SearchPostTitlePipe, common_1.DatePipe, orderby_1.OrderBy, searchCategory_1.SearchCategory]
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.RouteParams, router_deprecated_1.Router])
                 ], PostsComponent);
