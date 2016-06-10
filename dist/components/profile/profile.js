@@ -191,7 +191,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     core_1.Component({
                         selector: 'profile',
                         host: {
-                            class: 'col s10'
+                            class: 'col s12'
                         },
                         styleUrls: ['components/profile/profile.css'],
                         templateUrl: 'components/profile/profile.html',

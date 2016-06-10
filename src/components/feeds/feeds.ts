@@ -8,7 +8,7 @@ import { User, authService } from '../services/authService';
 @Component({
 	selector: 'feeds',
 	host: {
-		class: 'col s10'
+		class: 'col s12'
 	},
     styleUrls: ['components/feeds/feeds.css'],
 	templateUrl: 'components/feeds/feeds.html',
@@ -29,7 +29,9 @@ export class FeedsComponent implements OnInit {
         }
 	}
         
-	feeds: FirebaseListObservable<any[]>;
+    feeds: FirebaseListObservable<any[]>;
+    activeCategory: string;
+    categories = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
 
 	constructor(public as: authService, private router: Router) {
 		this.User = this.as.getUser();

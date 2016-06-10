@@ -7,7 +7,7 @@ import { User, authService } from '../services/authService';
 @Component({
     selector: 'editpost',
     host: {
-        class: 'col s10'
+        class: 'col s12'
     },
     styleUrls: ['components/editpost/editpost.css'],
     templateUrl: 'components/editpost/editpost.html',

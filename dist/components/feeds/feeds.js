@@ -41,6 +41,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             userid: ''
                         }
                     };
+                    this.categories = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
                     this.User = this.as.getUser();
                     this.feeds = this.as.getFeeds();
                     this.as.setRoute('Feeds', null);
@@ -60,7 +61,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     core_1.Component({
                         selector: 'feeds',
                         host: {
-                            class: 'col s10'
+                            class: 'col s12'
                         },
                         styleUrls: ['components/feeds/feeds.css'],
                         templateUrl: 'components/feeds/feeds.html',

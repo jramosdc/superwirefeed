@@ -93,7 +93,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     core_1.Component({
                         selector: 'newpost',
                         host: {
-                            class: 'col s10'
+                            class: 'col s12'
                         },
                         styleUrls: ['components/newpost/newpost.css'],
                         templateUrl: 'components/newpost/newpost.html',

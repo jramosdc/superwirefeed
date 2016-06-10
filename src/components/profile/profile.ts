@@ -7,7 +7,7 @@ import { User, authService } from '../services/authService';
 @Component({
     selector: 'profile',
     host: {
-        class: 'col s10'
+        class: 'col s12'
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html',

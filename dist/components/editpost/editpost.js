@@ -113,7 +113,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     core_1.Component({
                         selector: 'editpost',
                         host: {
-                            class: 'col s10'
+                            class: 'col s12'
                         },
                         styleUrls: ['components/editpost/editpost.css'],
                         templateUrl: 'components/editpost/editpost.html',

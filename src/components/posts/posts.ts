@@ -21,7 +21,7 @@ class SearchPostTitlePipe implements PipeTransform {
 @Component({
 	selector: 'posts',
 	host: {
-		class: 'col s10'
+		class: 'col s12'
 	},
     styleUrls: ['components/posts/posts.css'],
 	templateUrl: 'components/posts/posts.html',
@@ -57,8 +57,10 @@ export class PostsComponent implements OnInit {
 	Domain: string
     FeedID: string
     userEmail: HTMLInputElement
-	search: string
-	deletePostID: string
+    search: string
+    activeCategory: string;
+    categories: Array<string> = ['ALL']
+    deletePostID: string
 	posts: FirebaseListObservable<any[]>
 	emailLoading: Boolean = false
     
@@ -72,7 +74,12 @@ export class PostsComponent implements OnInit {
 
 	ngOnInit() {
 		this.as.getFeedNameByFeedID(this.FeedID).subscribe(feed => {
-			this.as.setActivePageTitle(feed.feedName);
+            this.as.setActivePageTitle(feed.feedName);
+            if (feed['postCategories']) {
+                feed['postCategories'].forEach( (val: string) => {
+                    this.categories.push(val.toUpperCase());
+                });
+            }
             if (feed.private === 'true' && feed.owner.uid !== this.User.uid) {
                 if (sessionStorage['email']) {
                     this.checkEmail(sessionStorage['email']);

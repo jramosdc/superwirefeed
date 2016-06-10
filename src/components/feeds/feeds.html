@@ -2,7 +2,12 @@
     <div class="indeterminate"></div>
 </div>
 <div class="row">
-    <div class="col l3 s12" *ngFor="let feed of feeds | async">
+    <div class="col s2">
+        <ul class="collection">
+            <li class="collection-item" [ngClass]="{active: activeCategory === category}" *ngFor="let category of categories" (click)="activeCategory = category"> {{category}} </li>
+        </ul>
+    </div>
+    <div class="col l3 s10" *ngFor="let feed of feeds | async">
         <div class="card deep-purple lighten-1">
             <div [routerLink]="['/Posts', { feedid: feed.$key }]">
                 <div class="right white-text" style="position: relative; top: 10px; right: 15px;">

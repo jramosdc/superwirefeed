@@ -66,6 +66,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                             userid: ''
                         }
                     };
+                    this.categories = ['ALL'];
                     this.emailLoading = false;
                     this.Domain = this.as.getDomain();
                     this.User = this.as.getUser();
@@ -76,6 +77,11 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     var _this = this;
                     this.as.getFeedNameByFeedID(this.FeedID).subscribe(function (feed) {
                         _this.as.setActivePageTitle(feed.feedName);
+                        if (feed['postCategories']) {
+                            feed['postCategories'].forEach(function (val) {
+                                _this.categories.push(val.toUpperCase());
+                            });
+                        }
                         if (feed.private === 'true' && feed.owner.uid !== _this.User.uid) {
                             if (sessionStorage['email']) {
                                 _this.checkEmail(sessionStorage['email']);
@@ -131,7 +137,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     core_1.Component({
                         selector: 'posts',
                         host: {
-                            class: 'col s10'
+                            class: 'col s12'
                         },
                         styleUrls: ['components/posts/posts.css'],
                         templateUrl: 'components/posts/posts.html',

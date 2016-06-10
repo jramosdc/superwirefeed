@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navbar', '../categories/categories', '../feeds/feeds', '../posts/posts', '../newpost/newpost', '../editpost/editpost', '../viewpost/viewpost', '../profile/profile', '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navbar', '../feeds/feeds', '../posts/posts', '../newpost/newpost', '../editpost/editpost', '../viewpost/viewpost', '../profile/profile', '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, navbar_1, categories_1, feeds_1, posts_1, newpost_1, editpost_1, viewpost_1, profile_1, authService_1;
+    var core_1, router_deprecated_1, navbar_1, feeds_1, posts_1, newpost_1, editpost_1, viewpost_1, profile_1, authService_1;
     var AppComponent;
     return {
         setters:[
@@ -23,9 +23,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
             },
             function (navbar_1_1) {
                 navbar_1 = navbar_1_1;
-            },
-            function (categories_1_1) {
-                categories_1 = categories_1_1;
             },
             function (feeds_1_1) {
                 feeds_1 = feeds_1_1;
@@ -72,7 +69,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
                         host: {},
                         styleUrls: ['components/app/app.css'],
                         templateUrl: 'components/app/app.html',
-                        directives: [router_deprecated_1.RouterOutlet, navbar_1.NavbarComponent, categories_1.CategoriesComponent]
+                        directives: [router_deprecated_1.RouterOutlet, navbar_1.NavbarComponent]
                     }),
                     router_deprecated_1.RouteConfig([
                         { path: "/feeds", name: "Feeds", component: feeds_1.FeedsComponent, useAsDefault: true },

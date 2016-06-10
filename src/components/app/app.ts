@@ -3,7 +3,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet , RouteConfig } from "@angular/router-deprecated";
 import { NavbarComponent } from '../navbar/navbar';
-import { CategoriesComponent } from '../categories/categories';
 import { FeedsComponent } from '../feeds/feeds';
 import { PostsComponent } from '../posts/posts';
 import { NewPostComponent } from '../newpost/newpost';
@@ -15,10 +14,9 @@ import { User, authService } from '../services/authService';
 @Component({
 	selector: 'ng2-app',
 	host: {},
-        styleUrls: ['components/app/app.css'],
+    styleUrls: ['components/app/app.css'],
 	templateUrl: 'components/app/app.html',
-	directives: [RouterOutlet, NavbarComponent, CategoriesComponent]
-        
+	directives: [RouterOutlet, NavbarComponent]
 })
 @RouteConfig([
 	{ path: "/feeds", name: "Feeds", component: FeedsComponent, useAsDefault: true },
