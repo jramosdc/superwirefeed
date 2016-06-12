@@ -14,12 +14,12 @@
                     {{returnMoment(feed.timestamp)}}
                 </div>
                 <div class="card-content white-text">
-                    <span class="card-title">{{feed.feedName}}</span>
+                    <span style="cursor:pointer" class="card-title">{{feed.feedName}}</span>
                     <p>{{feed.description}}</p>
                 </div>
             </div>
             <div class="card-action pink lighten-2 layout-row layout-align-space-between-center">
-                <span class="white-text" [routerLink]="['/Profile', { userid: feed.owner.userid }]">@{{feed.owner.userid}}</span>
+                <span style="cursor:pointer" class="white-text" [routerLink]="['/Profile', { userid: feed.owner.userid }]">@{{feed.owner.userid}}</span>
                 <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
                 <i class="white-text mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
             </div>
