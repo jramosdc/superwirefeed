@@ -43,7 +43,7 @@ export class FeedsComponent implements OnInit {
 	}
 	
 	ngOnInit() {
-        
+        $('ul.tabs').tabs();
 	}
 	
 	returnMoment(timestamp) {
