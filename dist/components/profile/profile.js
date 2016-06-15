@@ -61,6 +61,12 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     }
                 }
                 ProfileComponent.prototype.ngOnInit = function () {
+                    $(window).scroll(function () {
+                        space = $(window).innerHeight() - $('.fab').offsetTop + $('.fab').offsetHeight;
+                        if (space < 200) {
+                            $('.fab').css('margin-bottom', '150px');
+                        }
+                    });
                 };
                 ProfileComponent.prototype.edit = function () {
                     var _this = this;

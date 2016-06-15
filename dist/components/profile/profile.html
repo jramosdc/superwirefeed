@@ -1,5 +1,45 @@
-<div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="profile && User.uid === profile.uid && !editMode">
+<div class="row" *ngIf="!editMode && profile">
+<div class="col s12 card padding10px">
+    <div class="jumbo"></div>
+    <div class="container icons">
+         <div class="big-icon"><img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12"></div>
+         <div class="rate" *ngIf="!editMode && profile">
+			<a class="star-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-star"></i></a>
+			<a class="like-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-thumb-up"></i></a>
+		</div>
+		<div class="add" *ngIf="profile && User.uid === profile.uid && !editMode">
     <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="edit()"><i class="large mdi mdi-pencil"></i></a>
+        </div>
+	</div>
+	<div class="details">
+		<h3>{{profile.displayName || profile.email}}</h3>
+		<div  *ngIf="profile && profile.feedName">
+            <h5>{{profile.feedName}}</h5> </div>
+            <div  *ngIf="profile && profile.feedId">
+            <a href="{{domain + '/' + profile.feedId}}">{{domain + '/' + profile.feedId}}</a>
+        </div>
+	</div>
+	<div class="container bio" *ngIf="profile && profile.bio">
+			<div class="title">
+				<h6>Biography</h6>
+			</div>
+			<div class="content" *ngIf="profile && profile.bio">
+				<p>{{profile.bio}}</p>
+			</div>
+			<hr />
+	</div>
+</div>
+<div class="fixed-action-btn fab" style="bottom: 45px; right: 24px;">
+    	<a class="btn-floating btn-large red">
+      		<i class="large mdi mdi-chevron-down"></i>
+		</a>
+    	<ul>
+      		<li><a class="btn-floating orange"><i class="mdi mdi-thumb-up"></i></a></li>
+			<li><a class="btn-floating green"><i class="mdi mdi-star"></i></a></li>
+			<li><a class="btn-floating blue"><i class="mdi mdi-open-in-new"></i></a></li>
+			<li><a class="btn-floating purple" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()"><i class="mdi mdi-pencil"></i></a></li>
+		</ul>
+  	</div>
 </div>
 <div class="row" *ngIf="editMode">
     <form class="col s12 card padding10px">
@@ -118,29 +158,125 @@
         </div>
     </form>
 </div>
-<div class="row" *ngIf="!editMode && profile">
-    <div class="col s12 card padding10px">
+</div>
+<div class="row" *ngIf="editMode">
+    <form class="col s12 card padding10px">
         <div class="row valign-wrapper">
             <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
             <h5 class="col s10 valign">{{profile.displayName || profile.email}}</h5>
             <h5>Followers(5)</h5>
         </div>
         <div class="divider"></div>
-        <div class="row border" *ngIf="profile && profile.bio">
-            <h5>Bio:</h5>
-            <p>{{profile.bio}}</p>
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea id="bio" #bio class="materialize-textarea"></textarea>
+                <label for="bio">Bio</label>
+            </div>
         </div>
         <div class="row">
-            <h5>Post Count (5)</h5>
+            <div class="input-field col s4">
+                <input id="feedId" #feedId type="text" class="validate">
+                <label for="feedId">Feed ID</label>
+            </div>
+            <div class="input-field col s8">
+                <input id="feedName" #feedName type="text" class="validate">
+                <label for="feedName">Feed Name</label>
+            </div>
         </div>
-        <div class="row" *ngIf="profile && profile.feedName">
-            <h5>Feed Name: {{profile.feedName}}</h5>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="description" #description type="text" class="validate">
+                <label for="description">Description</label>
+            </div>
         </div>
-        <div class="row" *ngIf="profile && profile.feedId">
-            <h5>Url: {{domain + '/' + profile.feedId}}</h5>
+        <div class="row">
+            <div class="col s12">
+                <span class="paddingright10px">Private?</span>
+                <input type="radio" id="pyes" #pyes name="private" />
+                <label class="paddingright10px" for="pyes">Yes</label>
+                <input type="radio" id="pno" #pno name="private" />
+                <label for="pno">No</label>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="category" #category>
+                    <option disabled selected>Select Category</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="News">News</option>
+                    <option value="Visuals">Visuals</option>
+                    <option value="Data">Data</option>
+                    <option value="Misc">Misc</option>
+                </select>
+                <label for="category">Category</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s11">
+                <input id="postcategory" #postCategory type="text" class="validate">
+                <label for="postcategory">Add Post Category</label>
+            </div>
+            <div class="col s1">
+                <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="addPostCategory(postCategory)"><i class="large mdi mdi-plus"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="chip" *ngFor="let category of postCategoryList">
+                {{category}}
+                <i class="mdi mdi-close" (click)="removePostCategory('list', category)"></i>
+            </div>
+            <div class="chip" *ngFor="let category of postCategoryNew">
+                {{category}}
+                <i class="mdi mdi-close" (click)="removePostCategory('new', category)"></i>
+            </div>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorPostCategory"></span>
+        </div>
+        <div class="row">
+            <div class="input-field col s11">
+                <input id="authemail" #authEmail type="text" class="validate">
+                <label for="authemail">Add Authorized Email</label>
+            </div>
+            <div class="col s1">
+                <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="addAuthEmail(authEmail)"><i class="large mdi mdi-plus"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <ui class="col s12 collection">
+                <li class="coolection-item" *ngFor="let email of authList">
+                    {{email}}
+                </li>
+                <li class="coolection-item" *ngFor="let email of authNew">
+                    {{email}}
+                </li>
+            </ui>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorProfile"></span>
+        </div>
+        <div class="row">
+            <div class="col s12 layout-row layout-align-space-between-center">
+                <button class="waves-effect waves-light btn" (click)="confirmDelete()">Delete</button>
+                <div class="preloader-wrapper small active" *ngIf="profileLoading">
+                    <div class="spinner-layer spinner-green-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="waves-effect waves-light btn" (click)="update(bio, feedId, feedName, description, pyes, pno, category)">Update</button>
+            </div>
+        </div>
+    </form>
 </div>
+
 <div id="confirmDeleteModel" class="modal" style="width: 40% ! important">
     <div class="modal-content">
         <div class="row">

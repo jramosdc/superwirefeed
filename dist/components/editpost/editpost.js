@@ -50,21 +50,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 }
                 EditPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    if (this.postid) {
-                        this.as.loadPost(this.postid).subscribe(function (post) {
-                            // this.post = post;
-                            $('#title').val(post.title);
-                            _this.detail = post.detail;
-                            tinymce.activeEditor.setContent(post.detail);
-                            $('#priority').val(post.priority);
-                            $('#type').val(post.types);
-                            $('#categories').val(post.category);
-                            $('select').material_select();
-                            _this.UserID = post.owner.userid;
-                        });
-                    }
                     this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(function (feed) {
-                        console.log(feed['postCategories']);
+                        _this.categories.splice(0);
                         if (feed['postCategories']) {
                             feed['postCategories'].forEach(function (val) {
                                 _this.categories.push(val);
@@ -91,6 +78,20 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             });
                         }
                     });
+                    if (this.postid) {
+                        this.as.loadPost(this.postid).subscribe(function (post) {
+                            setTimeout(function () {
+                                $('#title').val(post.title);
+                                this.detail = post.detail;
+                                tinymce.activeEditor.setContent(post.detail);
+                                $('#priority').val(post.priority);
+                                $('#type').val(post.types);
+                                $('#categories').val(post.category);
+                                $('select').material_select();
+                                this.UserID = post.owner.userid;
+                            });
+                        });
+                    }
                     console.log('ng init');
                 };
                 EditPostComponent.prototype.updatePost = function (title, priority, type, category) {

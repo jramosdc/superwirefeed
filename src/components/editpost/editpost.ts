@@ -42,21 +42,8 @@ export class EditPostComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.postid) {
-            this.as.loadPost(this.postid).subscribe((post) => {
-                // this.post = post;
-                $('#title').val(post.title);
-                this.detail = post.detail;
-                tinymce.activeEditor.setContent(post.detail);
-                $('#priority').val(post.priority);
-                $('#type').val(post.types);
-                $('#categories').val(post.category);
-                $('select').material_select();
-                this.UserID = post.owner.userid;
-            })
-        }
         this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(feed => {
-            console.log(feed['postCategories'])
+            this.categories.splice(0);
             if (feed['postCategories']) {
                 feed['postCategories'].forEach( (val: string) => {
                     this.categories.push(val); 
@@ -83,6 +70,20 @@ export class EditPostComponent implements OnInit {
                 });
             }
         });
+        if (this.postid) {
+            this.as.loadPost(this.postid).subscribe((post) => {
+                setTimeout(function() {
+                    $('#title').val(post.title);
+                    this.detail = post.detail;
+                    tinymce.activeEditor.setContent(post.detail);
+                    $('#priority').val(post.priority);
+                    $('#type').val(post.types);
+                    $('#categories').val(post.category);
+                    $('select').material_select();
+                    this.UserID = post.owner.userid;    
+                });
+            })
+        }
         console.log('ng init');
     }
 

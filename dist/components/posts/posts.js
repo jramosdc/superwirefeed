@@ -68,6 +68,7 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                     var _this = this;
                     this.as.getFeedNameByFeedID(this.FeedID).subscribe(function (feed) {
                         _this.as.setActivePageTitle(feed.feedName);
+                        _this.categories.splice(0);
                         if (feed['postCategories']) {
                             feed['postCategories'].forEach(function (val) {
                                 _this.categories.push(val);

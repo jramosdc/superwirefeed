@@ -51,6 +51,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     this.as.setActivePageTitle('LATEST FEEDS');
                 }
                 FeedsComponent.prototype.ngOnInit = function () {
+                    $('ul.tabs').tabs();
                 };
                 FeedsComponent.prototype.returnMoment = function (timestamp) {
                     if (timestamp) {

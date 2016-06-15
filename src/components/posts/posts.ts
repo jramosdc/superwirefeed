@@ -61,12 +61,12 @@ export class PostsComponent implements OnInit {
 		this.User = this.as.getUser();
 		this.FeedID = this.params.get('feedid')
 		this.as.setRoute('Posts', this.FeedID);
-		
 	}
 
 	ngOnInit() {
 		this.as.getFeedNameByFeedID(this.FeedID).subscribe(feed => {
             this.as.setActivePageTitle(feed.feedName);
+			this.categories.splice(0);
             if (feed['postCategories']) {
                 feed['postCategories'].forEach( (val: string) => {
                     this.categories.push(val);
