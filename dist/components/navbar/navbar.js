@@ -26,9 +26,10 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
             }],
         execute: function() {
             NavbarComponent = (function () {
-                function NavbarComponent(as, router) {
+                function NavbarComponent(as, router, ngzone) {
                     this.as = as;
                     this.router = router;
+                    this.ngzone = ngzone;
                     this.loginLoading = false;
                     this.registerLoading = false;
                     this.User = this.as.getUser();
@@ -71,21 +72,21 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     if (userid.value == '' || email.value == '' || password.value == '')
                         return;
                     this.registerLoading = true;
-                    this.as.register(email.value, password.value).then(function (res) {
-                        _this.as.login(email.value, password.value).then(function (res) {
-                            _this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value).then(function () {
+                    this.as.register(email.value.toLowerCase(), password.value).then(function (res) {
+                        _this.as.login(email.value.toLowerCase(), password.value).then(function (res) {
+                            _this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value.toLowerCase()).then(function () {
                                 console.log('Profile is Created!');
+                                console.log('User is Registered & Logged In!');
+                                _this.router.root.navigate(['/Profile', { userid: userid.value.toLowerCase() }]);
+                                userid.value = '';
+                                email.value = '';
+                                password.value = '';
+                                $('#errorRegister').html('');
+                                $('#registerModal').closeModal();
+                                _this.registerLoading = false;
                             }).catch(function (err) {
                                 console.log('Profile Creation Failed!', err);
                             });
-                            _this.router.navigate(['/Profile', { userid: userid.value }]);
-                            console.log('User is Registered & Logged In!');
-                            userid.value = '';
-                            email.value = '';
-                            password.value = '';
-                            $('#errorRegister').html('');
-                            $('#registerModal').closeModal();
-                            _this.registerLoading = false;
                         }).catch(function (err) {
                             console.log("Login Failed after Registration!", err);
                             $('#errorRegister').html(err);
@@ -110,7 +111,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                         templateUrl: 'components/navbar/navbar.html',
                         directives: [router_deprecated_1.RouterLink]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router, core_1.NgZone])
                 ], NavbarComponent);
                 return NavbarComponent;
             }());

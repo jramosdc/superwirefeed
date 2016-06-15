@@ -59,22 +59,22 @@ export class NavbarComponent implements OnInit {
 
 	register(userid: HTMLInputElement, email: HTMLInputElement, password: HTMLInputElement) {
 		if (userid.value == '' || email.value == '' || password.value == '') return
-		this.registerLoading = true;
-        this.as.register(email.value, password.value).then((res) => {
-            this.as.login(email.value, password.value).then((res) => {
-                this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value).then(() => {
+        this.registerLoading = true;
+        this.as.register(email.value.toLowerCase(), password.value).then((res) => {
+            this.as.login(email.value.toLowerCase(), password.value).then((res) => {
+                this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value.toLowerCase()).then(() => {
                     console.log('Profile is Created!')
+                    console.log('User is Registered & Logged In!');
+                    this.router.root.navigate(['/Profile', { userid: userid.value.toLowerCase() }]);
+                    userid.value = '';
+                    email.value = '';
+                    password.value = '';
+                    $('#errorRegister').html('');
+                    $('#registerModal').closeModal();
+                    this.registerLoading = false;
                 }).catch((err) => {
                     console.log('Profile Creation Failed!', err)
                 });
-                this.router.navigate(['/Profile', { userid: userid.value }]);
-                console.log('User is Registered & Logged In!');
-                userid.value = '';
-                email.value = '';
-                password.value = '';
-                $('#errorRegister').html('');
-                $('#registerModal').closeModal();
-                this.registerLoading = false;
             }).catch((err) => { 
                 console.log("Login Failed after Registration!", err);
                 $('#errorRegister').html(err);

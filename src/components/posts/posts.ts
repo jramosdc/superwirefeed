@@ -84,9 +84,9 @@ export class PostsComponent implements OnInit {
 		});
 	}
 
-	checkEmail(email: HTMLInputElement) {
+	checkEmail(email: string) {
 		this.emailLoading = true;
-		this.as.checkEmail(this.FeedID, email.value).subscribe(res => {
+		this.as.checkEmail(this.FeedID, email).subscribe(res => {
 			if (res.length > 0) {
                 this.posts = this.as.loadPosts(this.FeedID);
                 sessionStorage['email'] = email;

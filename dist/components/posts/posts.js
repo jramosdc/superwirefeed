@@ -90,7 +90,7 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                 PostsComponent.prototype.checkEmail = function (email) {
                     var _this = this;
                     this.emailLoading = true;
-                    this.as.checkEmail(this.FeedID, email.value).subscribe(function (res) {
+                    this.as.checkEmail(this.FeedID, email).subscribe(function (res) {
                         if (res.length > 0) {
                             _this.posts = _this.as.loadPosts(_this.FeedID);
                             sessionStorage['email'] = email;
