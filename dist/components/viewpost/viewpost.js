@@ -67,7 +67,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     core_1.Component({
                         selector: 'viewpost',
                         host: {
-                            class: 'col s10'
+                            class: 'col s12'
                         },
                         styleUrls: ['components/viewpost/viewpost.css'],
                         templateUrl: 'components/viewpost/viewpost.html',

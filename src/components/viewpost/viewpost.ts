@@ -8,7 +8,7 @@ import { User, authService } from '../services/authService';
 @Component({
     selector: 'viewpost',
     host: {
-        class: 'col s10'
+        class: 'col s12'
     },
     styleUrls: ['components/viewpost/viewpost.css'],
     templateUrl: 'components/viewpost/viewpost.html',
