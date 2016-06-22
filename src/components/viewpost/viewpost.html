@@ -3,7 +3,7 @@
 
         <div class="row">
           <div class="card panel indigo">
-            <h5 class="white-text">{{post.owner.userid}}</h5>
+            <h5 class="white-text" [routerLink]="['/Profile', { userid: post.owner.userid}]">@{{post.owner.userid}}</h5>
         </div></div>
 
         <div class="row">
