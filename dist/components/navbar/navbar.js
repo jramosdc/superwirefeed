@@ -26,10 +26,9 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
             }],
         execute: function() {
             NavbarComponent = (function () {
-                function NavbarComponent(as, router, ngzone) {
+                function NavbarComponent(as, router) {
                     this.as = as;
                     this.router = router;
-                    this.ngzone = ngzone;
                     this.loginLoading = false;
                     this.registerLoading = false;
                     this.User = this.as.getUser();
@@ -111,7 +110,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                         templateUrl: 'components/navbar/navbar.html',
                         directives: [router_deprecated_1.RouterLink]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router, core_1.NgZone])
+                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router])
                 ], NavbarComponent);
                 return NavbarComponent;
             }());
