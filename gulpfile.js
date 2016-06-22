@@ -25,6 +25,8 @@ var path = {
       { dist: 'lib', src: 'node_modules/jquery/dist/jquery.js' },
       { dist: 'lib', src: 'node_modules/materialize-css/dist/js/materialize.js' },
       { dist: 'lib', src: 'node_modules/materialize-tags/dist/js/materialize-tags.js' },
+      { dist: 'lib', src: 'node_modules/linkifyjs/dist/linkify.js' },
+      { dist: 'lib', src: 'node_modules/linkifyjs/dist/linkify-jquery.js' },
       { dist: 'lib', src: 'node_modules/firebase/lib/firebase-web.js' }
   ],
   libcss: [

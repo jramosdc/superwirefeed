@@ -40,17 +40,9 @@ export class NewPostComponent implements OnInit {
 
     ngOnInit() {
         this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(feed => {
-            console.log(feed['postCategories'])
             if (feed['postCategories']) {
                 feed['postCategories'].forEach( (val: string) => {
-                    this.categories.push(val); 
-                    // console.log(val)
-                    // $('#category').append(``
-                    //     $("<option></option>")
-                    //     .attr("value",val)
-                    //     .text(val)
-                    // )
-                    // $('select').material_select();
+                    this.categories.push(val);
                 });
             }
         })
@@ -73,25 +65,40 @@ export class NewPostComponent implements OnInit {
         });
     }
 
-    submitPost(title: HTMLInputElement, priority: HTMLSelectElement, type: HTMLSelectElement, category: HTMLSelectElement) {
-		if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '') return
+    submitPost(title: HTMLInputElement, priority: HTMLSelectElement, type: HTMLSelectElement, category: HTMLSelectElement, pdfLink: HTMLInputElement, gsheetLink: HTMLInputElement) {
+		if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '' || pdfLink.value == '' || gsheetLink.value == '' ) return
         this.postLoading = true;
-        this.as.submitPost(title.value, this.detail, priority.value, $(type).val(), category.value, (err) => {
-            if (err) {
-                console.log("Post Submit Failed!", err);
-                $('#errorPost').html(err);
-                this.postLoading = false;
-            } else {
-                title.value = '';
-                this.detail = '';
-                priority.value = '';
-                type.value = '';
-                category.value = '';
-                console.log('Post is Submitted!');
-                $('#errorPost').html('');
-                this.postLoading = false;
-                this.router.navigate(['/Posts', { feedid: this.User.feed.id }]);
-            }
+        let post = {
+            title: title.value,
+			detail: this.detail,
+			priority: priority.value,
+			types: $(type).val(),
+            category: category.value,
+            pdfLink: pdfLink.value,
+            gsheetLink: gsheetLink.value,
+			owner: {
+				uid: this.User.uid,
+				userid: this.User.feed.userid,
+				feedid: this.User.feed.id
+			},
+			timestamp: Firebase.ServerValue.TIMESTAMP
+        }
+        this.as.submitPost(post).then(res => {
+            title.value = '';
+            this.detail = '';
+            priority.value = '';
+            type.value = '';
+            category.value = '';
+            pdfLink.value = '';
+            gsheetLink.value = '';
+            console.log('Post is Submitted!');
+            $('#errorPost').html('');
+            this.postLoading = false;
+            this.router.navigate(['/Posts', { feedid: this.User.feed.id }]);
+        }).catch(err => {
+            console.log("Post Submit Failed!", err);
+            $('#errorPost').html(err);
+            this.postLoading = false;
         });
     }
 

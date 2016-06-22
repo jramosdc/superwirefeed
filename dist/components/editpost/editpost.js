@@ -50,14 +50,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 }
                 EditPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(function (feed) {
-                        _this.categories.splice(0);
-                        if (feed['postCategories']) {
-                            feed['postCategories'].forEach(function (val) {
-                                _this.categories.push(val);
-                            });
-                        }
-                    });
                     $('select').material_select();
                     tinymce.remove();
                     tinymce.init({
@@ -74,7 +66,19 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                                 _this.detail = editor.getContent();
                             });
                             editor.on('init', function (e) {
-                                console.log('tiny init');
+                                // console.log('tiny init');
+                            });
+                        }
+                    });
+                    // console.log('ng init');
+                };
+                EditPostComponent.prototype.ngAfterViewInit = function () {
+                    var _this = this;
+                    this.as.getFeedNameByFeedID(this.User.feed.id).subscribe(function (feed) {
+                        _this.categories.splice(0);
+                        if (feed['postCategories']) {
+                            feed['postCategories'].forEach(function (val) {
+                                _this.categories.push(val);
                             });
                         }
                     });
@@ -82,40 +86,51 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         this.as.loadPost(this.postid).subscribe(function (post) {
                             setTimeout(function () {
                                 $('#title').val(post.title);
-                                this.detail = post.detail;
+                                _this.detail = post.detail;
                                 tinymce.activeEditor.setContent(post.detail);
                                 $('#priority').val(post.priority);
                                 $('#type').val(post.types);
                                 $('#categories').val(post.category);
+                                $('#pdfLink').val(post.pdfLink);
+                                $('#gsheetLink').val(post.gsheetLink);
                                 $('select').material_select();
-                                this.UserID = post.owner.userid;
+                                _this.UserID = post.owner.userid;
                             });
                         });
                     }
-                    console.log('ng init');
+                    // console.log('after view');        
                 };
-                EditPostComponent.prototype.updatePost = function (title, priority, type, category) {
+                EditPostComponent.prototype.updatePost = function (title, priority, type, category, pdfLink, gsheetLink) {
                     var _this = this;
-                    if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '')
+                    if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '' || pdfLink.value == '' || gsheetLink.value == '')
                         return;
                     this.postLoading = true;
-                    this.as.updatePost(this.postid, title.value, this.detail, priority.value, $(type).val(), category.value, function (err) {
-                        if (err) {
-                            console.log("Post Update Failed!", err);
-                            $('#errorPost').html(err);
-                            _this.postLoading = false;
-                        }
-                        else {
-                            title.value = '';
-                            _this.detail = '';
-                            priority.value = '';
-                            type.value = '';
-                            category.value = '';
-                            console.log('Post is Updated!');
-                            $('#errorPost').html('');
-                            _this.postLoading = false;
-                            _this.router.navigate(['/Posts', { feedid: _this.User.feed.id }]);
-                        }
+                    var post = {
+                        title: title.value,
+                        detail: this.detail,
+                        priority: priority.value,
+                        types: $(type).val(),
+                        category: category.value,
+                        pdfLink: pdfLink.value,
+                        gsheetLink: gsheetLink.value,
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    };
+                    this.as.updatePost(this.postid, post).then(function (res) {
+                        title.value = '';
+                        _this.detail = '';
+                        priority.value = '';
+                        type.value = '';
+                        category.value = '';
+                        pdfLink.value = '';
+                        gsheetLink.value = '';
+                        console.log('Post is Updated!');
+                        $('#errorPost').html('');
+                        _this.postLoading = false;
+                        _this.router.navigate(['/Posts', { feedid: _this.User.feed.id }]);
+                    }).catch(function (err) {
+                        console.log("Post Update Failed!", err);
+                        $('#errorPost').html(err);
+                        _this.postLoading = false;
                     });
                 };
                 EditPostComponent = __decorate([

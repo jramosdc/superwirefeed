@@ -24,6 +24,12 @@
              <a class="btn-floating btn-large indigo" *ngFor="let type of post.types"><i class="mdi {{'mdi-' + type}}"></i></a>
         </div>
         <div class="row">
+            <h5 class="black-text linkify"><span class="indigo-text">PDF Link: </span>{{post.pdfLink}}</h5>
+        </div>
+        <div class="row">
+            <h5 class="black-text linkify"><span class="indigo-text">Google Spread Sheet Link: </span>{{post.gsheetLink}}</h5>
+        </div>
+        <div class="row">
             <h5 class="indigo-text">{{returnMoment(post.timestamp)}}</h5>
         </div>
     </div>

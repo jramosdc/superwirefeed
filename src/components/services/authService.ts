@@ -220,48 +220,12 @@ export class authService {
         return this.af.database.object('/feeds/' + userid).update(feed);
 	}
 
-	submitPost(title: string, detail: string, priority: string, types: Array<string>, category: string, cb: Function) {
-		this.ref.child('posts').push({
-			title: title,
-			detail: detail,
-			priority: priority,
-			types: types,
-			category: category,
-			owner: {
-				uid: this.User.uid,
-				userid: this.User.feed.userid,
-				feedid: this.User.feed.id
-			},
-			timestamp: Firebase.ServerValue.TIMESTAMP
-		}, (error) => {
-			if (error) {
-				cb(error);
-			} else {
-				cb();
-			}
-		});
+	submitPost(post: Object) {
+		return this.af.database.list('/posts').push(post);
 	}
 
-	updatePost(postid:string, title: string, detail: string, priority: string, types: Array<string>, category: string, cb: Function) {
-		this.ref.child('posts').child(postid).update({
-			title: title,
-			detail: detail,
-			priority: priority,
-			types: types,
-			category: category,
-			owner: {
-				uid: this.User.uid,
-				userid: this.User.feed.userid,
-				feedid: this.User.feed.id
-			},
-			timestamp: Firebase.ServerValue.TIMESTAMP
-		}, (error) => {
-			if (error) {
-				cb(error);
-			} else {
-				cb();
-			}
-		});
+	updatePost(postid: string, post: Object) {
+		return this.af.database.object('/posts/' + postid).update(post);
 	}
 
 	voteUp(feedid: string) {

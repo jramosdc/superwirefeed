@@ -49,6 +49,18 @@
                 </select>
             </div>
         </div>
+        <div class="row">
+            <label for="pdfLink">Pdf Link</label>
+            <div class="input-field">
+                <input type="text" class="validate" #pdfLink placeholder="Pdf Link">
+            </div>
+        </div>
+        <div class="row">
+            <label for="gsheetLink">Google Spread Sheet Link</label>
+            <div class="input-field">
+                <input type="text" class="validate" #gsheetLink placeholder="Google Spread Sheet Link">
+            </div>
+        </div>
         <div class="row center-align">
             <span class="red-text" id="errorPost"></span>
         </div>
@@ -66,7 +78,7 @@
                     </div>
                 </div>
             </div>
-            <a class="waves-effect waves-light btn purple white-text right" (click)="submitPost(title, priority, type, category)">Post</a>
+            <a class="waves-effect waves-light btn purple white-text right" (click)="submitPost(title, priority, type, category, pdfLink, gsheetLink)">Post</a>
         </div>
     </div>
 </div>

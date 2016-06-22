@@ -49,17 +49,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 NewPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
                     this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(function (feed) {
-                        console.log(feed['postCategories']);
                         if (feed['postCategories']) {
                             feed['postCategories'].forEach(function (val) {
                                 _this.categories.push(val);
-                                // console.log(val)
-                                // $('#category').append(``
-                                //     $("<option></option>")
-                                //     .attr("value",val)
-                                //     .text(val)
-                                // )
-                                // $('select').material_select();
                             });
                         }
                     });
@@ -81,28 +73,42 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         }
                     });
                 };
-                NewPostComponent.prototype.submitPost = function (title, priority, type, category) {
+                NewPostComponent.prototype.submitPost = function (title, priority, type, category, pdfLink, gsheetLink) {
                     var _this = this;
-                    if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '')
+                    if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '' || pdfLink.value == '' || gsheetLink.value == '')
                         return;
                     this.postLoading = true;
-                    this.as.submitPost(title.value, this.detail, priority.value, $(type).val(), category.value, function (err) {
-                        if (err) {
-                            console.log("Post Submit Failed!", err);
-                            $('#errorPost').html(err);
-                            _this.postLoading = false;
-                        }
-                        else {
-                            title.value = '';
-                            _this.detail = '';
-                            priority.value = '';
-                            type.value = '';
-                            category.value = '';
-                            console.log('Post is Submitted!');
-                            $('#errorPost').html('');
-                            _this.postLoading = false;
-                            _this.router.navigate(['/Posts', { feedid: _this.User.feed.id }]);
-                        }
+                    var post = {
+                        title: title.value,
+                        detail: this.detail,
+                        priority: priority.value,
+                        types: $(type).val(),
+                        category: category.value,
+                        pdfLink: pdfLink.value,
+                        gsheetLink: gsheetLink.value,
+                        owner: {
+                            uid: this.User.uid,
+                            userid: this.User.feed.userid,
+                            feedid: this.User.feed.id
+                        },
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    };
+                    this.as.submitPost(post).then(function (res) {
+                        title.value = '';
+                        _this.detail = '';
+                        priority.value = '';
+                        type.value = '';
+                        category.value = '';
+                        pdfLink.value = '';
+                        gsheetLink.value = '';
+                        console.log('Post is Submitted!');
+                        $('#errorPost').html('');
+                        _this.postLoading = false;
+                        _this.router.navigate(['/Posts', { feedid: _this.User.feed.id }]);
+                    }).catch(function (err) {
+                        console.log("Post Submit Failed!", err);
+                        $('#errorPost').html(err);
+                        _this.postLoading = false;
                     });
                 };
                 NewPostComponent = __decorate([

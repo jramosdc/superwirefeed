@@ -210,49 +210,11 @@ System.register(['@angular/core', 'angularfire2', 'rxjs/Subject'], function(expo
                 authService.prototype.updateFeed = function (userid, feed) {
                     return this.af.database.object('/feeds/' + userid).update(feed);
                 };
-                authService.prototype.submitPost = function (title, detail, priority, types, category, cb) {
-                    this.ref.child('posts').push({
-                        title: title,
-                        detail: detail,
-                        priority: priority,
-                        types: types,
-                        category: category,
-                        owner: {
-                            uid: this.User.uid,
-                            userid: this.User.feed.userid,
-                            feedid: this.User.feed.id
-                        },
-                        timestamp: Firebase.ServerValue.TIMESTAMP
-                    }, function (error) {
-                        if (error) {
-                            cb(error);
-                        }
-                        else {
-                            cb();
-                        }
-                    });
+                authService.prototype.submitPost = function (post) {
+                    return this.af.database.list('/posts').push(post);
                 };
-                authService.prototype.updatePost = function (postid, title, detail, priority, types, category, cb) {
-                    this.ref.child('posts').child(postid).update({
-                        title: title,
-                        detail: detail,
-                        priority: priority,
-                        types: types,
-                        category: category,
-                        owner: {
-                            uid: this.User.uid,
-                            userid: this.User.feed.userid,
-                            feedid: this.User.feed.id
-                        },
-                        timestamp: Firebase.ServerValue.TIMESTAMP
-                    }, function (error) {
-                        if (error) {
-                            cb(error);
-                        }
-                        else {
-                            cb();
-                        }
-                    });
+                authService.prototype.updatePost = function (postid, post) {
+                    return this.af.database.object('/posts/' + postid).update(post);
                 };
                 authService.prototype.voteUp = function (feedid) {
                     var _this = this;

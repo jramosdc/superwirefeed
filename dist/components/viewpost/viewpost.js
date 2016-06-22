@@ -50,11 +50,12 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     if (this.postid) {
                         this.as.loadPost(this.postid).subscribe(function (post) {
                             _this.post = post;
+                            setTimeout(function () {
+                                $('.linkify').linkify();
+                            });
                         });
                     }
                 }
-                ViewPostComponent.prototype.ngOnInit = function () {
-                };
                 ViewPostComponent.prototype.returnMoment = function (timestamp) {
                     if (timestamp) {
                         return moment().to(timestamp);

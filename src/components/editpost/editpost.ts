@@ -1,6 +1,6 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
 import { User, authService } from '../services/authService';
 
@@ -13,7 +13,7 @@ import { User, authService } from '../services/authService';
     templateUrl: 'components/editpost/editpost.html',
     directives: [RouterLink]
 })
-export class EditPostComponent implements OnInit {
+export class EditPostComponent implements OnInit, AfterViewInit {
 
     User: User = {
         password: {
@@ -42,14 +42,6 @@ export class EditPostComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(feed => {
-            this.categories.splice(0);
-            if (feed['postCategories']) {
-                feed['postCategories'].forEach( (val: string) => {
-                    this.categories.push(val); 
-                });
-            }
-        })
         $('select').material_select();
         tinymce.remove();
         tinymce.init({
@@ -66,46 +58,70 @@ export class EditPostComponent implements OnInit {
                     this.detail = editor.getContent();
                 });
                 editor.on('init', (e) => {
-                    console.log('tiny init');
+                    // console.log('tiny init');
                 });
             }
         });
+        // console.log('ng init');
+    }
+
+    ngAfterViewInit() {
+        this.as.getFeedNameByFeedID(this.User.feed.id).subscribe(feed => {
+            this.categories.splice(0);
+            if (feed['postCategories']) {
+                feed['postCategories'].forEach((val: string) => {
+                    this.categories.push(val); 
+                });
+            }
+        })
         if (this.postid) {
             this.as.loadPost(this.postid).subscribe((post) => {
-                setTimeout(function() {
+                setTimeout( () => {
                     $('#title').val(post.title);
                     this.detail = post.detail;
                     tinymce.activeEditor.setContent(post.detail);
                     $('#priority').val(post.priority);
                     $('#type').val(post.types);
                     $('#categories').val(post.category);
+                    $('#pdfLink').val(post.pdfLink);
+                    $('#gsheetLink').val(post.gsheetLink);
                     $('select').material_select();
                     this.UserID = post.owner.userid;    
                 });
             })
         }
-        console.log('ng init');
+        // console.log('after view');        
     }
 
-    updatePost(title: HTMLInputElement, priority: HTMLSelectElement, type: HTMLSelectElement, category: HTMLSelectElement) {
-		if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '') return
+    updatePost(title: HTMLInputElement, priority: HTMLSelectElement, type: HTMLSelectElement, category: HTMLSelectElement, pdfLink: HTMLInputElement, gsheetLink: HTMLInputElement) {
+		if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '' || pdfLink.value == '' || gsheetLink.value == '' ) return
         this.postLoading = true;
-        this.as.updatePost(this.postid, title.value, this.detail, priority.value, $(type).val(), category.value, (err) => {
-            if (err) {
-                console.log("Post Update Failed!", err);
-                $('#errorPost').html(err);
-                this.postLoading = false;
-            } else {
-                title.value = '';
-                this.detail = '';
-                priority.value = '';
-                type.value = '';
-                category.value = '';
-                console.log('Post is Updated!');
-                $('#errorPost').html('');
-                this.postLoading = false;
-                this.router.navigate(['/Posts', { feedid: this.User.feed.id }]);
-            }
+        let post = {
+            title: title.value,
+			detail: this.detail,
+			priority: priority.value,
+			types: $(type).val(),
+            category: category.value,
+            pdfLink: pdfLink.value,
+            gsheetLink: gsheetLink.value,
+			timestamp: Firebase.ServerValue.TIMESTAMP
+        }
+        this.as.updatePost(this.postid, post).then(res => {
+            title.value = '';
+            this.detail = '';
+            priority.value = '';
+            type.value = '';
+            category.value = '';
+            pdfLink.value = '';
+            gsheetLink.value = '';
+            console.log('Post is Updated!');
+            $('#errorPost').html('');
+            this.postLoading = false;
+            this.router.navigate(['/Posts', { feedid: this.User.feed.id }]);
+        }).catch(err => {
+            console.log("Post Update Failed!", err);
+            $('#errorPost').html(err);
+            this.postLoading = false;
         });
     }
 

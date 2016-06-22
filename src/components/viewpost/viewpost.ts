@@ -1,6 +1,6 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
 import { FirebaseObjectObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
@@ -14,7 +14,7 @@ import { User, authService } from '../services/authService';
     templateUrl: 'components/viewpost/viewpost.html',
     directives: [RouterLink]
 })
-export class ViewPostComponent implements OnInit {
+export class ViewPostComponent {
 
     User: User = {
         password: {
@@ -40,14 +40,13 @@ export class ViewPostComponent implements OnInit {
         if (this.postid) {
             this.as.loadPost(this.postid).subscribe((post) => { 
                 this.post = post;
+                setTimeout(function() {
+                    $('.linkify').linkify();
+                });
             });
         }
     }
 
-    ngOnInit() {
-        
-    }
-    
     returnMoment(timestamp) {
 		if (timestamp) {
 			return moment().to(timestamp);

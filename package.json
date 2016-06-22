@@ -29,6 +29,7 @@
     "es6-shim": "^0.35.0",
     "firebase": "^2.4.2",
     "jquery": "^2.2.4",
+    "linkifyjs": "^2.0.3",
     "materialize-css": "^0.97.5",
     "materialize-tags": "~1.0.0",
     "mdi": "^1.5.54",
