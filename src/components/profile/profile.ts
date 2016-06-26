@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { RouteParams, Router } from "@angular/router-deprecated";
+import { RouterLink, RouteParams, Router } from "@angular/router-deprecated";
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -11,7 +11,7 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html',
-    directives: []
+    directives: [ RouterLink ]
 })
 export class ProfileComponent implements OnInit {
 

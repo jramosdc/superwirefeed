@@ -189,7 +189,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         },
                         styleUrls: ['components/profile/profile.css'],
                         templateUrl: 'components/profile/profile.html',
-                        directives: []
+                        directives: [router_deprecated_1.RouterLink]
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.RouteParams, router_deprecated_1.Router])
                 ], ProfileComponent);

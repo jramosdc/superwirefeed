@@ -42,6 +42,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                 NavbarComponent.prototype.navigate = function () {
                     if (this.activeFeed['id']) {
                         this.router.navigate(['\Posts', { feedid: this.activeFeed['id'] }]);
+                        this.as.setActiveFeedID('');
                     }
                     else {
                         this.router.navigate(['\Feeds']);

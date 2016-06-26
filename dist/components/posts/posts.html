@@ -9,10 +9,10 @@
     </div>
     <div class="col s10">
         <div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="User.password.email && FeedID == User.feed.id">
-            <a class="btn-floating btn-large waves-effect waves-light deep-purple" [routerLink]="['/NewPost']"><i class="large mdi mdi-plus"></i></a>
+            <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="navigate('new')"><i class="large mdi mdi-plus"></i></a>
         </div>
         <div class="card-panel hoverable padding10px layout-row layout-align-space-between-center">
-            <div><string>Share Link:&nbsp;</string><span #domain>{{Domain + '/' + FeedID}}</span></div>
+            <div><string>Share Link:&nbsp;</string><span #domain>{{Domain + '/posts/' + FeedID}}</span></div>
             <a class="waves-effect waves-light btn right indigo" [clipboard]="domain">Copy</a>
             <div>
                 <a class="btn-floating waves-effect waves-light indigo"><i class="mdi mdi-thumb-down right" (click)="voteDown()"></i></a>
@@ -28,14 +28,14 @@
         <div class="row">
             <ul class="collection" *ngIf="posts">
                 <li class="collection-item" *ngFor="let post of posts | async | orderBy: ['-timestamp'] | searchPostTitle: search | searchCategory: activeCategory" [ngStyle]="{'background-color': (post.priority == 'High' ? '#ff4d4d' : (post.priority == 'Medium' ? '#ffa64d' : '#4da6ff')) }">
-                    <a class="btn secondary-content nobackground nopadding" [routerLink]="['/EditPost', {postid: post.$key}]" *ngIf="User.password.email && FeedID == User.feed.id">
+                    <a class="btn secondary-content nobackground nopadding" (click)="navigate('edit', post.$key)" *ngIf="User.password.email && FeedID == User.feed.id">
                         <i class="black-text large mdi mdi-pencil"></i>
                     </a>
                     <a class="btn secondary-content nobackground nopadding" (click)="deleteModel(post.$key)" *ngIf="User.password.email && FeedID == User.feed.id"
                         style="margin-right: 20px;">
                         <i class="black-text large mdi mdi-delete"></i>
                     </a>
-                    <div [routerLink]="['/ViewPost', {postid: post.$key}]">
+                    <div (click)="navigate('view', post.$key)">
                         <i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
                         <span class="title">{{post.title}}</span>
                     </div>

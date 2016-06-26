@@ -33,6 +33,7 @@ export class NavbarComponent implements OnInit {
     navigate() {
         if (this.activeFeed['id']) {
             this.router.navigate(['\Posts', { feedid: this.activeFeed['id'] }]);
+            this.as.setActiveFeedID('');
         } else {
             this.router.navigate(['\Feeds']);
         }

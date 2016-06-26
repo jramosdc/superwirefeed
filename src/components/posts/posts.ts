@@ -48,7 +48,6 @@ export class PostsComponent implements OnInit {
 		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
 		this.FeedID = this.params.get('feedid')
-		this.as.setActiveFeedID(this.FeedID);
 	}
 
 	ngOnInit() {
@@ -71,6 +70,19 @@ export class PostsComponent implements OnInit {
 				this.posts = this.as.loadPosts(this.FeedID);
 			}
 		});
+	}
+
+	navigate(type: string, id: string) {
+		if (type === 'new') {
+			this.router.navigate(['\NewPost']);
+			this.as.setActiveFeedID(this.FeedID);
+		} else if (type === 'edit') {
+			this.router.navigate(['\NewPost', { postid: id }]);
+			this.as.setActiveFeedID(this.FeedID);
+		} else if (type === 'view') {
+			this.router.navigate(['\ViewPost', { postid: id }]);
+			this.as.setActiveFeedID(this.FeedID);
+		}
 	}
 
 	checkEmail(email: string) {

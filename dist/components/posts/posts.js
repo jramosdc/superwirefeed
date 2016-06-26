@@ -51,7 +51,6 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.FeedID = this.params.get('feedid');
-                    this.as.setActiveFeedID(this.FeedID);
                 }
                 PostsComponent.prototype.ngOnInit = function () {
                     var _this = this;
@@ -76,6 +75,20 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                             _this.posts = _this.as.loadPosts(_this.FeedID);
                         }
                     });
+                };
+                PostsComponent.prototype.navigate = function (type, id) {
+                    if (type === 'new') {
+                        this.router.navigate(['\NewPost']);
+                        this.as.setActiveFeedID(this.FeedID);
+                    }
+                    else if (type === 'edit') {
+                        this.router.navigate(['\NewPost', { postid: id }]);
+                        this.as.setActiveFeedID(this.FeedID);
+                    }
+                    else if (type === 'view') {
+                        this.router.navigate(['\ViewPost', { postid: id }]);
+                        this.as.setActiveFeedID(this.FeedID);
+                    }
                 };
                 PostsComponent.prototype.checkEmail = function (email) {
                     var _this = this;

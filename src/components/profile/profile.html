@@ -17,7 +17,7 @@
                 <h5>{{profile.feedName}}</h5>
             </div>
             <div *ngIf="profile && profile.feedId">
-                <a href="{{domain + '/' + profile.feedId}}">{{domain + '/' + profile.feedId}}</a>
+                <a [routerLink]="['\Posts', { feedid: profile.feedId }]">{{domain + '/posts/' + profile.feedId}}</a>
             </div>
         </div>
         <div class="container bio" *ngIf="profile && profile.bio">
