@@ -32,22 +32,10 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 function FeedsComponent(as, router) {
                     this.as = as;
                     this.router = router;
-                    this.User = {
-                        password: {
-                            email: '',
-                            profileImageURL: ''
-                        },
-                        uid: '',
-                        feed: {
-                            id: '',
-                            name: '',
-                            userid: ''
-                        }
-                    };
-                    this.categories = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.feeds = this.as.getFeeds();
-                    this.as.setRoute('Feeds', null);
+                    this.categories = this.as.getCategories();
                     this.as.setActivePageTitle('LATEST FEEDS');
                 }
                 FeedsComponent.prototype.ngOnInit = function () {

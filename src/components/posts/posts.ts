@@ -1,6 +1,6 @@
 // <reference path="../../../typings/tsd.d.ts">
 
-import { Component, Pipe, PipeTransform, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { DatePipe } from "@angular/common";
 import { RouterLink, RouteParams, CanActivate, ComponentInstruction, Router } from '@angular/router-deprecated';
 import { FirebaseListObservable } from 'angularfire2';
@@ -33,40 +33,29 @@ import { SearchCategory } from '../pipes/searchCategory';
 // })
 export class PostsComponent implements OnInit {
 
-	User: User = {
-		password: {
-			email: '',
-			profileImageURL: ''
-		},
-        uid: '',
-        feed: {
-            id: '',
-            name: '',
-			userid: ''
-        }
-	}
-
+	User: User;
 	Domain: string
     FeedID: string
-    userEmail: HTMLInputElement
     search: string
     activeCategory: string;
-    categories: Array<string> = ['All']
+    categories: Array<string> = [];
     deletePostID: string
 	posts: FirebaseListObservable<any[]>
 	emailLoading: Boolean = false
     
 	constructor(public as: authService, public params: RouteParams, private router: Router) {
 		this.Domain = this.as.getDomain();
+		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
 		this.FeedID = this.params.get('feedid')
-		this.as.setRoute('Posts', this.FeedID);
+		this.as.setActiveFeedID(this.FeedID);
 	}
 
 	ngOnInit() {
 		this.as.getFeedNameByFeedID(this.FeedID).subscribe(feed => {
             this.as.setActivePageTitle(feed.feedName);
 			this.categories.splice(0);
+			this.categories.push('All');
             if (feed['postCategories']) {
                 feed['postCategories'].forEach( (val: string) => {
                     this.categories.push(val);
@@ -99,6 +88,12 @@ export class PostsComponent implements OnInit {
 			}
 		})
 		
+	}
+
+	closeEmail() {
+		$('#errorEmail').html('');
+		$('#emailModel').closeModal();
+		this.router.navigate(['/Feeds']);
 	}
 	
 	deleteModel(postid) {

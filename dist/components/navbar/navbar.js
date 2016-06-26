@@ -31,13 +31,21 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                     this.router = router;
                     this.loginLoading = false;
                     this.registerLoading = false;
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.activePage = this.as.getActivePageTitle();
+                    this.activeFeed = this.as.getActiveFeed();
                 }
                 NavbarComponent.prototype.ngOnInit = function () {
                     $(".button-collapse").sideNav();
-                    $('.modal-trigger').leanModal();
-                    // $('select').material_select();
+                };
+                NavbarComponent.prototype.navigate = function () {
+                    if (this.activeFeed['id']) {
+                        this.router.navigate(['\Posts', { feedid: this.activeFeed['id'] }]);
+                    }
+                    else {
+                        this.router.navigate(['\Feeds']);
+                    }
                 };
                 NavbarComponent.prototype.loginModal = function () {
                     $(".button-collapse").sideNav('hide');

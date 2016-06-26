@@ -15,19 +15,28 @@ export class NavbarComponent implements OnInit {
 
 	User: User
 	activePage: Object
+	activeFeed: Object
 	loginLoading: boolean = false
     registerLoading: boolean = false
     
 	constructor(public as: authService, private router: Router) {
+		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
-		this.activePage = this.as.getActivePageTitle();
+        this.activePage = this.as.getActivePageTitle();
+        this.activeFeed = this.as.getActiveFeed();
 	}
 
 	ngOnInit() {
         $(".button-collapse").sideNav();
-        $('.modal-trigger').leanModal();
-        // $('select').material_select();
-	}
+    }
+    
+    navigate() {
+        if (this.activeFeed['id']) {
+            this.router.navigate(['\Posts', { feedid: this.activeFeed['id'] }]);
+        } else {
+            this.router.navigate(['\Feeds']);
+        }
+    }
 
 	loginModal() {
         $(".button-collapse").sideNav('hide');
@@ -92,29 +101,5 @@ export class NavbarComponent implements OnInit {
         console.log('User is Logged Out!');
         $(".button-collapse").sideNav('hide');
 	}
-
-	// createFeed(userid: HTMLInputElement, name: HTMLInputElement, description: HTMLInputElement, category: HTMLSelectElement) {
-	// 	if (userid.value == '' || name.value == '' || description.value == '') return
-	// 	this.createFeedLoading = true;
-    //     this.as.createFeed(userid.value, name.value, description.value, category.value, this.registerUserUid).then(() => {
-    //         userid.value = '';
-    //         name.value = '';
-    //         description.value = '';
-    //         category.value = '';
-    //         this.toggleInfo('user');
-    //         $('#step1').addClass('active-step');
-    //         $('#step1').removeClass('step-done');
-    //         $('#step2').removeClass('active-step');
-    //         console.log('Feed is Registered!');
-    //         $('#errorFeed').html('');
-    //         $('#registerModal').closeModal();
-    //         $('#loginModal').openModal();
-    //         this.createFeedLoading = false;
-    //     }).catch((err) => {
-    //         console.log("Create Feed Failed!", err);
-    //         $('#errorFeed').html(err);
-    //         this.createFeedLoading = false;
-	// 	});
-	// }
 
 }

@@ -28,20 +28,10 @@ import { User, authService } from '../services/authService';
 ])	
 export class AppComponent  {
 
-	User: User = {
-		password: {
-			email: '',
-			profileImageURL: ''
-		},
-		uid: '',
-		feed: {
-			id: '',
-			name: '',
-			userid: ''
-		}
-	}
+	User: User;
 
-	constructor(public as: authService) {
+	constructor(private as: authService) {
+		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
 	}
 

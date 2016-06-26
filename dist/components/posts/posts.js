@@ -45,30 +45,20 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                     this.as = as;
                     this.params = params;
                     this.router = router;
-                    this.User = {
-                        password: {
-                            email: '',
-                            profileImageURL: ''
-                        },
-                        uid: '',
-                        feed: {
-                            id: '',
-                            name: '',
-                            userid: ''
-                        }
-                    };
-                    this.categories = ['All'];
+                    this.categories = [];
                     this.emailLoading = false;
                     this.Domain = this.as.getDomain();
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.FeedID = this.params.get('feedid');
-                    this.as.setRoute('Posts', this.FeedID);
+                    this.as.setActiveFeedID(this.FeedID);
                 }
                 PostsComponent.prototype.ngOnInit = function () {
                     var _this = this;
                     this.as.getFeedNameByFeedID(this.FeedID).subscribe(function (feed) {
                         _this.as.setActivePageTitle(feed.feedName);
                         _this.categories.splice(0);
+                        _this.categories.push('All');
                         if (feed['postCategories']) {
                             feed['postCategories'].forEach(function (val) {
                                 _this.categories.push(val);
@@ -103,6 +93,11 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                             _this.emailLoading = false;
                         }
                     });
+                };
+                PostsComponent.prototype.closeEmail = function () {
+                    $('#errorEmail').html('');
+                    $('#emailModel').closeModal();
+                    this.router.navigate(['/Feeds']);
                 };
                 PostsComponent.prototype.deleteModel = function (postid) {
                     this.deletePostID = postid;

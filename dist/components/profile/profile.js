@@ -31,26 +31,14 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     this.as = as;
                     this.params = params;
                     this.router = router;
-                    this.User = {
-                        password: {
-                            email: '',
-                            profileImageURL: ''
-                        },
-                        uid: '',
-                        feed: {
-                            id: '',
-                            name: '',
-                            userid: ''
-                        }
-                    };
                     this.editMode = false;
                     this.profileLoading = false;
                     this.authList = [];
                     this.authNew = [];
                     this.postCategoryList = [];
                     this.postCategoryNew = [];
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
-                    this.as.setRoute('Profile', null);
                     this.as.setActivePageTitle('Profile');
                     this.domain = this.as.getDomain();
                     this.userid = this.params.get('userid');

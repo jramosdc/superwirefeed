@@ -31,20 +31,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     this.as = as;
                     this.router = router;
                     this.params = params;
-                    this.User = {
-                        password: {
-                            email: '',
-                            profileImageURL: ''
-                        },
-                        uid: '',
-                        feed: {
-                            id: '',
-                            name: '',
-                            userid: ''
-                        }
-                    };
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
-                    this.as.setRoute('View Post', null);
                     this.as.setActivePageTitle('View Post');
                     this.postid = this.params.get('postid');
                     if (this.postid) {

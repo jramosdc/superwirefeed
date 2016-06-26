@@ -49,18 +49,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
             AppComponent = (function () {
                 function AppComponent(as) {
                     this.as = as;
-                    this.User = {
-                        password: {
-                            email: '',
-                            profileImageURL: ''
-                        },
-                        uid: '',
-                        feed: {
-                            id: '',
-                            name: '',
-                            userid: ''
-                        }
-                    };
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                 }
                 AppComponent = __decorate([

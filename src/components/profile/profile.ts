@@ -15,19 +15,7 @@ import { User, authService } from '../services/authService';
 })
 export class ProfileComponent implements OnInit {
 
-    User: User = {
-        password: {
-            email: '',
-            profileImageURL: ''
-        },
-        uid: '',
-        feed: {
-            id: '',
-            name: '',
-            userid: ''
-        }
-    }
-
+    User: User;
     domain: string
     userid: string
     editMode: boolean = false
@@ -40,8 +28,8 @@ export class ProfileComponent implements OnInit {
     postCategoryNew: Array<string> = []
 
     constructor(private as: authService, private params: RouteParams, private router: Router) {
+        this.User = this.as.emptyUser();
         this.User = this.as.getUser();
-        this.as.setRoute('Profile', null);
         this.as.setActivePageTitle('Profile');
         this.domain = this.as.getDomain();
         this.userid = this.params.get('userid');
@@ -59,7 +47,6 @@ export class ProfileComponent implements OnInit {
 				$('.fab').css('margin-bottom', '150px');
 			}
 		});
-        
     }
 
     edit() {

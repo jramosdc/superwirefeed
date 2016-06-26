@@ -29,32 +29,14 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 function NewPostComponent(as, router) {
                     this.as = as;
                     this.router = router;
-                    this.User = {
-                        password: {
-                            email: '',
-                            profileImageURL: ''
-                        },
-                        uid: '',
-                        feed: {
-                            id: '',
-                            name: '',
-                            userid: ''
-                        }
-                    };
                     this.categories = [];
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
-                    this.as.setRoute('New Post', null);
+                    this.categories = this.as.getPostCategories();
                     this.as.setActivePageTitle('New Post');
                 }
                 NewPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(function (feed) {
-                        if (feed['postCategories']) {
-                            feed['postCategories'].forEach(function (val) {
-                                _this.categories.push(val);
-                            });
-                        }
-                    });
                     $('select').material_select();
                     tinymce.remove();
                     tinymce.init({

@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class SearchPostTitlePipe implements PipeTransform {
 	transform(values, args?) {
-        let filter = args;
-        return filter ? values.filter(value=> value.title.toLocaleLowerCase().indexOf(filter) != -1) : values;
+		let filter = args;
+		return filter ? values.filter(value => value.title.toLocaleLowerCase().indexOf(filter) != -1) : values;
 	}
 }

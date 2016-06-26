@@ -15,37 +15,19 @@ import { User, authService } from '../services/authService';
 })
 export class NewPostComponent implements OnInit {
 
-    User: User = {
-        password: {
-            email: '',
-            profileImageURL: ''
-        },
-        uid: '',
-        feed: {
-            id: '',
-            name: '',
-            userid: ''
-        }
-    }
-
+    User: User;
     detail: string;
     postLoading: boolean;
     categories: Array<string> = [];
     
     constructor(private as: authService, private router: Router) {
+        this.User = this.as.emptyUser();
         this.User = this.as.getUser();
-        this.as.setRoute('New Post', null);
+        this.categories = this.as.getPostCategories();
         this.as.setActivePageTitle('New Post');
     }
 
     ngOnInit() {
-        this.as.getFeedNameByFeedID(this.as.getUser().feed.id).subscribe(feed => {
-            if (feed['postCategories']) {
-                feed['postCategories'].forEach( (val: string) => {
-                    this.categories.push(val);
-                });
-            }
-        })
         $('select').material_select();
         tinymce.remove();
         tinymce.init({

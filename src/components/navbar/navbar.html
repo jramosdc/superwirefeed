@@ -1,7 +1,7 @@
 <nav class="nav-wrapper pink">
     <div style="padding-left: 10px">
         <a data-activates="mobile-demo" class="button-collapse"><i class="mdi mdi-menu"></i></a>
-        <a [routerLink]="['/Feeds']" class="brand-logo">{{activePage.title}}</a>
+        <a (click)="navigate()" class="brand-logo">{{activePage.title}}</a>
     </div>
     <ul class="right hide-on-med-and-down">
         <li><a (click)="loginModal()" *ngIf="!User.password.email">Login</a></li>
@@ -102,64 +102,5 @@
                 <a class="waves-effect waves-blue btn white-text" (click)="register(regUserID, regEmail, regPassword)">Create</a>
             </div>
         </div>
-        <!--<div class="card padding10px" *ngIf="feedInfo">
-            <div class="row">
-                <label for="userid">User ID</label>
-                <div class="input-field">
-                    <input type="text" class="validate" #userid placeholder="User ID" required>
-                </div>
-            </div>
-            <div class="row">
-                <label for="username">Feed Name</label>
-                <div class="input-field">
-                    <input type="text" class="validate" #name placeholder="Name" required>
-                </div>
-            </div>
-            <div class="row">
-                <label for="password">Description</label>
-                <div class="input-field">
-                    <input type="text" class="validate" #description placeholder="Description" required>
-                </div>
-            </div>
-            <div class="row center-align">
-                <span class="red-text" id="errorFeed"></span>
-            </div>
-            <div class="row">
-                <label for="category">Category</label>
-                <div class="input-field">
-                    <select #category>
-                        <option value="" disabled selected>Select Category</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="News">News</option>
-                        <option value="Visuals">Visuals</option>
-                        <option value="Data">Data</option>
-                        <option value="Misc">Misc</option>
-                    </select>
-                </div>
-            </div>
-
-             <div class="row">
-             <label for="tags">Topics you will cover (add only 4)</label>
-             <div class="input-field">
-             <input type="text" value="news,data" data-role="materialtags" />
-            </div>
-            </div>
-            <div class="modal-footer">
-                <div class="preloader-wrapper small active" *ngIf="createFeedLoading">
-                    <div class="spinner-layer spinner-blue-only">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="gap-patch">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="circle-clipper right">
-                            <div class="circle"></div>
-                        </div>
-                    </div>
-                </div>
-                <a class="waves-effect waves-purple btn white-text" (click)="createFeed(userid, name, description, category)">Create Feed</a>
-            </div>
-        </div>-->
     </div>
 </div>

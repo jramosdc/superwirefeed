@@ -30,21 +30,10 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     this.as = as;
                     this.router = router;
                     this.params = params;
-                    this.User = {
-                        password: {
-                            email: '',
-                            profileImageURL: ''
-                        },
-                        uid: '',
-                        feed: {
-                            id: '',
-                            name: '',
-                            userid: ''
-                        }
-                    };
                     this.categories = [];
+                    this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
-                    this.as.setRoute('Edit Post', null);
+                    this.categories = this.as.getPostCategories();
                     this.as.setActivePageTitle('Edit Post');
                     this.postid = this.params.get('postid');
                 }
@@ -74,14 +63,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 };
                 EditPostComponent.prototype.ngAfterViewInit = function () {
                     var _this = this;
-                    this.as.getFeedNameByFeedID(this.User.feed.id).subscribe(function (feed) {
-                        _this.categories.splice(0);
-                        if (feed['postCategories']) {
-                            feed['postCategories'].forEach(function (val) {
-                                _this.categories.push(val);
-                            });
-                        }
-                    });
                     if (this.postid) {
                         this.as.loadPost(this.postid).subscribe(function (post) {
                             setTimeout(function () {
@@ -98,7 +79,6 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             });
                         });
                     }
-                    // console.log('after view');        
                 };
                 EditPostComponent.prototype.updatePost = function (title, priority, type, category, pdfLink, gsheetLink) {
                     var _this = this;

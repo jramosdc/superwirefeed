@@ -15,19 +15,7 @@ import { User, authService } from '../services/authService';
 })
 export class EditPostComponent implements OnInit, AfterViewInit {
 
-    User: User = {
-        password: {
-            email: '',
-            profileImageURL: ''
-        },
-        uid: '',
-        feed: {
-            id: '',
-            name: '',
-            userid: ''
-        }
-    }
-
+    User: User;
     detail: string;
     postid: string;
     UserID: string;
@@ -35,8 +23,9 @@ export class EditPostComponent implements OnInit, AfterViewInit {
     categories: Array<string> = [];
 
     constructor(private as: authService, private router: Router, private params: RouteParams) {
+        this.User = this.as.emptyUser();
         this.User = this.as.getUser();
-        this.as.setRoute('Edit Post', null);
+        this.categories = this.as.getPostCategories();
         this.as.setActivePageTitle('Edit Post');
         this.postid = this.params.get('postid');
     }
@@ -66,14 +55,6 @@ export class EditPostComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.as.getFeedNameByFeedID(this.User.feed.id).subscribe(feed => {
-            this.categories.splice(0);
-            if (feed['postCategories']) {
-                feed['postCategories'].forEach((val: string) => {
-                    this.categories.push(val); 
-                });
-            }
-        })
         if (this.postid) {
             this.as.loadPost(this.postid).subscribe((post) => {
                 setTimeout( () => {
@@ -90,7 +71,6 @@ export class EditPostComponent implements OnInit, AfterViewInit {
                 });
             })
         }
-        // console.log('after view');        
     }
 
     updatePost(title: HTMLInputElement, priority: HTMLSelectElement, type: HTMLSelectElement, category: HTMLSelectElement, pdfLink: HTMLInputElement, gsheetLink: HTMLInputElement) {

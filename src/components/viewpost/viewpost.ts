@@ -16,25 +16,13 @@ import { User, authService } from '../services/authService';
 })
 export class ViewPostComponent {
 
-    User: User = {
-        password: {
-            email: '',
-            profileImageURL: ''
-        },
-        uid: '',
-        feed: {
-            id: '',
-            name: '',
-            userid: ''
-        }
-    }
-
+    User: User;
     postid: string
     post: FirebaseObjectObservable<{}>
 
     constructor(private as: authService, private router: Router, private params: RouteParams) {
+        this.User = this.as.emptyUser();
         this.User = this.as.getUser();
-        this.as.setRoute('View Post', null);
         this.as.setActivePageTitle('View Post');
         this.postid = this.params.get('postid');
         if (this.postid) {
