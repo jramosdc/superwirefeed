@@ -64,8 +64,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
                         { path: "/feeds", name: "Feeds", component: feeds_1.FeedsComponent, useAsDefault: true },
                         { path: "/posts/:feedid", name: "Posts", component: posts_1.PostsComponent },
                         { path: "/newpost", name: "NewPost", component: newpost_1.NewPostComponent },
-                        { path: "/post/:postid", name: "EditPost", component: editpost_1.EditPostComponent },
-                        { path: "/post", name: "ViewPost", component: viewpost_1.ViewPostComponent },
+                        { path: "/editpost/:postid", name: "EditPost", component: editpost_1.EditPostComponent },
+                        { path: "/post/:postid", name: "ViewPost", component: viewpost_1.ViewPostComponent },
                         { path: "/profile/:userid", name: "Profile", component: profile_1.ProfileComponent }
                     ]), 
                     __metadata('design:paramtypes', [authService_1.authService])

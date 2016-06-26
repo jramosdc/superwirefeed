@@ -22,8 +22,8 @@ import { User, authService } from '../services/authService';
 	{ path: "/feeds", name: "Feeds", component: FeedsComponent, useAsDefault: true },
 	{ path: "/posts/:feedid", name: "Posts", component: PostsComponent },
     { path: "/newpost", name: "NewPost", component: NewPostComponent },
-	{ path: "/post/:postid", name: "EditPost", component: EditPostComponent },
-    { path: "/post", name: "ViewPost", component: ViewPostComponent },
+	{ path: "/editpost/:postid", name: "EditPost", component: EditPostComponent },
+    { path: "/post/:postid", name: "ViewPost", component: ViewPostComponent },
     { path: "/profile/:userid", name: "Profile", component: ProfileComponent }
 ])	
 export class AppComponent  {
