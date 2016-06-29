@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '../services/authService', '../pipes/searchCategory'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router-deprecated", '../services/authService', '../pipes/searchCategory', "../pipes/orderby"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, authService_1, searchCategory_1;
+    var core_1, router_deprecated_1, authService_1, searchCategory_1, orderby_1;
     var FeedsComponent;
     return {
         setters:[
@@ -26,6 +26,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
             },
             function (searchCategory_1_1) {
                 searchCategory_1 = searchCategory_1_1;
+            },
+            function (orderby_1_1) {
+                orderby_1 = orderby_1_1;
             }],
         execute: function() {
             FeedsComponent = (function () {
@@ -58,7 +61,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         styleUrls: ['components/feeds/feeds.css'],
                         templateUrl: 'components/feeds/feeds.html',
                         directives: [router_deprecated_1.RouterLink],
-                        pipes: [searchCategory_1.SearchCategory]
+                        pipes: [searchCategory_1.SearchCategory, orderby_1.OrderBy]
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router])
                 ], FeedsComponent);
