@@ -74,7 +74,7 @@ export class EditPostComponent implements OnInit, AfterViewInit {
     }
 
     updatePost(title: HTMLInputElement, priority: HTMLSelectElement, type: HTMLSelectElement, category: HTMLSelectElement, pdfLink: HTMLInputElement, gsheetLink: HTMLInputElement) {
-		if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '' || pdfLink.value == '' || gsheetLink.value == '' ) return
+		if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '') return
         this.postLoading = true;
         let post = {
             title: title.value,
@@ -82,8 +82,8 @@ export class EditPostComponent implements OnInit, AfterViewInit {
 			priority: priority.value,
 			types: $(type).val(),
             category: category.value,
-            pdfLink: pdfLink.value,
-            gsheetLink: gsheetLink.value,
+            pdfLink: pdfLink.value ? pdfLink.value : '',
+            gsheetLink: gsheetLink.value ? gsheetLink.value : '',
 			timestamp: Firebase.ServerValue.TIMESTAMP
         }
         this.as.updatePost(this.postid, post).then(res => {

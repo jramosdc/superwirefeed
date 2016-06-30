@@ -82,7 +82,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                 };
                 EditPostComponent.prototype.updatePost = function (title, priority, type, category, pdfLink, gsheetLink) {
                     var _this = this;
-                    if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '' || pdfLink.value == '' || gsheetLink.value == '')
+                    if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '')
                         return;
                     this.postLoading = true;
                     var post = {
@@ -91,8 +91,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         priority: priority.value,
                         types: $(type).val(),
                         category: category.value,
-                        pdfLink: pdfLink.value,
-                        gsheetLink: gsheetLink.value,
+                        pdfLink: pdfLink.value ? pdfLink.value : '',
+                        gsheetLink: gsheetLink.value ? gsheetLink.value : '',
                         timestamp: Firebase.ServerValue.TIMESTAMP
                     };
                     this.as.updatePost(this.postid, post).then(function (res) {
