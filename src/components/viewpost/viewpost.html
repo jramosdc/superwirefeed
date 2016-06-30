@@ -23,11 +23,11 @@
         <div class="row">
              <a class="btn-floating btn-large indigo" *ngFor="let type of post.types"><i class="mdi {{'mdi-' + type}}"></i></a>
         </div>
-        <div class="row">
-            <h5 class="black-text linkify"><span class="indigo-text">PDF Link: </span>{{post.pdfLink}}</h5>
+        <div class="row" *ngIf="post.pdfLink">
+           <a href="{{post.pdfLink}}" target="_blank" class="btn-floating btn-large blue"><i class="mdi mdi-file-pdf"></i></a>
         </div>
-        <div class="row">
-            <h5 class="black-text linkify"><span class="indigo-text">Google Spread Sheet Link: </span>{{post.gsheetLink}}</h5>
+        <div class="row" *ngIf="post.gsheetLink">
+           <a href="{{post.gsheetLink}}" target="_blank" class="btn-floating btn-large blue"><i class="mdi mdi-file-pdf"></i></a>
         </div>
         <div class="row">
             <h5 class="indigo-text">{{returnMoment(post.timestamp)}}</h5>
