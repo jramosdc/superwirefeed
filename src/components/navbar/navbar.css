@@ -6,3 +6,12 @@
 .padding10px {
     padding: 10px;
 }
+
+@media only screen and (max-width: 500px) {
+    #loginModal {
+          width: 90% ! important;
+    }
+    #registerModal {
+          width: 90% ! important;
+    } 
+}    
