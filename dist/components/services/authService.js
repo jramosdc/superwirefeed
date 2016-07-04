@@ -41,10 +41,10 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                             _this.User.password.profileImageURL = res.password['profileImageURL'];
                             _this.User.password.email = res.password['email'];
                             _this.getUserFeedDetail(_this.User.uid).subscribe(function (feed) {
-                                _this.User.feed.id = feed[0] ? feed[0]['$key'] : '';
-                                _this.User.feed.name = feed[0] ? feed[0]['name'] : '';
-                                _this.User.feed.userid = feed[0] ? feed[0]['owner']['userid'] : '';
-                                if (feed[0]['postCategories']) {
+                                _this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
+                                _this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
+                                _this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+                                if (feed[0] && feed[0]['postCategories']) {
                                     _this.postCategories.splice(0);
                                     feed[0]['postCategories'].forEach(function (val) {
                                         _this.postCategories.push(val);
@@ -78,9 +78,9 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                     };
                 };
                 authService.prototype.getUserFeedDetail = function (uid) {
-                    return this.af.database.list('/feeds', {
+                    return this.af.database.list('/users', {
                         query: {
-                            orderByChild: 'owner/uid',
+                            orderByChild: 'uid',
                             equalTo: uid
                         }
                     });

@@ -29,10 +29,10 @@ export class authService {
                 this.User.password.profileImageURL = res.password['profileImageURL']
                 this.User.password.email = res.password['email'];
                 this.getUserFeedDetail(this.User.uid).subscribe( feed => {
-                    this.User.feed.id = feed[0] ? feed[0]['$key'] : '';
-                    this.User.feed.name = feed[0] ? feed[0]['name'] : '';
-                    this.User.feed.userid = feed[0] ? feed[0]['owner']['userid'] : '';
-					if (feed[0]['postCategories']) {
+                    this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
+                    this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
+                    this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+					if (feed[0] && feed[0]['postCategories']) {
 						this.postCategories.splice(0);
 						feed[0]['postCategories'].forEach( val => {
 							this.postCategories.push(val);
@@ -67,9 +67,9 @@ export class authService {
 	}
 
     getUserFeedDetail(uid: string) {
-        return this.af.database.list('/feeds', {
+        return this.af.database.list('/users', {
             query: {
-                orderByChild: 'owner/uid',
+                orderByChild: 'uid',
                 equalTo: uid
             }
         })
