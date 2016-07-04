@@ -77,7 +77,7 @@ export class PostsComponent implements OnInit {
 			this.router.navigate(['\NewPost']);
 			this.as.setActiveFeedID(this.FeedID);
 		} else if (type === 'edit') {
-			this.router.navigate(['\NewPost', { postid: id }]);
+			this.router.navigate(['\EditPost', { postid: id }]);
 			this.as.setActiveFeedID(this.FeedID);
 		} else if (type === 'view') {
 			this.router.navigate(['\ViewPost', { postid: id }]);
