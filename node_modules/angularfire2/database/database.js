@@ -17,34 +17,34 @@ var firebase_list_factory_1 = require('../utils/firebase_list_factory');
 var firebase_object_factory_1 = require('../utils/firebase_object_factory');
 var utils = require('../utils/utils');
 var FirebaseDatabase = (function () {
-    function FirebaseDatabase(fbUrl) {
-        this.fbUrl = fbUrl;
+    function FirebaseDatabase(fbConfig) {
+        this.fbConfig = fbConfig;
     }
     FirebaseDatabase.prototype.list = function (urlOrRef, opts) {
         var _this = this;
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: function () { return firebase_list_factory_1.FirebaseListFactory(getAbsUrl(_this.fbUrl, urlOrRef), opts); },
+            isUrl: function () { return firebase_list_factory_1.FirebaseListFactory(getAbsUrl(_this.fbConfig, urlOrRef), opts); },
             isRef: function () { return firebase_list_factory_1.FirebaseListFactory(urlOrRef); }
         });
     };
     FirebaseDatabase.prototype.object = function (urlOrRef, opts) {
         var _this = this;
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: function () { return firebase_object_factory_1.FirebaseObjectFactory(getAbsUrl(_this.fbUrl, urlOrRef), opts); },
+            isUrl: function () { return firebase_object_factory_1.FirebaseObjectFactory(getAbsUrl(_this.fbConfig, urlOrRef), opts); },
             isRef: function () { return firebase_object_factory_1.FirebaseObjectFactory(urlOrRef); }
         });
     };
     FirebaseDatabase = __decorate([
         core_1.Injectable(),
-        __param(0, core_1.Inject(tokens_1.FirebaseUrl)), 
-        __metadata('design:paramtypes', [String])
+        __param(0, core_1.Inject(tokens_1.FirebaseConfig)), 
+        __metadata('design:paramtypes', [Object])
     ], FirebaseDatabase);
     return FirebaseDatabase;
 }());
 exports.FirebaseDatabase = FirebaseDatabase;
 function getAbsUrl(root, url) {
     if (!(/^[a-z]+:\/\/.*/.test(url))) {
-        url = root + url;
+        url = root.databaseURL + '/' + utils.stripLeadingSlash(url);
     }
     return url;
 }

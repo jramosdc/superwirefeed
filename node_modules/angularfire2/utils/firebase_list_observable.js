@@ -23,28 +23,29 @@ var FirebaseListObservable = (function (_super) {
         if (!this._ref) {
             throw new Error('No ref specified for this Observable!');
         }
-        return this._ref.ref().push(val);
+        this._ref.ref;
+        return this._ref.ref.push(val);
     };
     FirebaseListObservable.prototype.update = function (item, value) {
         var _this = this;
         return this._checkOperationCases(item, {
-            stringCase: function () { return _this._ref.ref().child(item).update(value); },
+            stringCase: function () { return _this._ref.ref.child(item).update(value); },
             firebaseCase: function () { return item.update(value); },
-            snapshotCase: function () { return item.ref().update(value); },
-            unwrappedSnapshotCase: function () { return _this._ref.ref().child(item.$key).update(value); }
+            snapshotCase: function () { return item.ref.update(value); },
+            unwrappedSnapshotCase: function () { return _this._ref.ref.child(item.$key).update(value); }
         });
     };
     FirebaseListObservable.prototype.remove = function (item) {
         var _this = this;
         if (item === void 0) { item = null; }
         if (!item) {
-            return this._ref.ref().remove();
+            return this._ref.ref.remove();
         }
         return this._checkOperationCases(item, {
-            stringCase: function () { return _this._ref.ref().child(item).remove(); },
+            stringCase: function () { return _this._ref.ref.child(item).remove(); },
             firebaseCase: function () { return item.remove(); },
-            snapshotCase: function () { return item.ref().remove(); },
-            unwrappedSnapshotCase: function () { return _this._ref.ref().child(item.$key).remove(); }
+            snapshotCase: function () { return item.ref.remove(); },
+            unwrappedSnapshotCase: function () { return _this._ref.ref.child(item.$key).remove(); }
         });
     };
     FirebaseListObservable.prototype._checkOperationCases = function (item, cases) {

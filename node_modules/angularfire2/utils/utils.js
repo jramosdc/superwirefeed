@@ -8,11 +8,11 @@ function isString(value) {
 }
 exports.isString = isString;
 function isFirebaseRef(value) {
-    return value instanceof Firebase;
+    return typeof value.set === 'function';
 }
 exports.isFirebaseRef = isFirebaseRef;
 function isFirebaseDataSnapshot(value) {
-    return typeof value.key === 'function';
+    return typeof value.exportVal === 'function';
 }
 exports.isFirebaseDataSnapshot = isFirebaseDataSnapshot;
 function isAFUnwrappedSnapshot(value) {
@@ -30,6 +30,17 @@ function isEmptyObject(obj) {
     return Object.keys(obj).length === 0 && JSON.stringify(obj) === JSON.stringify({});
 }
 exports.isEmptyObject = isEmptyObject;
+function unwrapMapFn(snapshot) {
+    var unwrapped = isPresent(snapshot.val()) ? snapshot.val() : { $value: null };
+    if ((/string|number|boolean/).test(typeof unwrapped)) {
+        unwrapped = {
+            $value: unwrapped
+        };
+    }
+    unwrapped.$key = snapshot.ref.key;
+    return unwrapped;
+}
+exports.unwrapMapFn = unwrapMapFn;
 function checkForUrlOrFirebaseRef(urlOrRef, cases) {
     if (isString(urlOrRef)) {
         return cases.isUrl();
@@ -43,4 +54,22 @@ function checkForUrlOrFirebaseRef(urlOrRef, cases) {
     throw new Error('Provide a url or a Firebase database reference');
 }
 exports.checkForUrlOrFirebaseRef = checkForUrlOrFirebaseRef;
+function stripTrailingSlash(value) {
+    if (value.substring(value.length - 1, value.length) === '/') {
+        return value.substring(0, value.length - 1);
+    }
+    else {
+        return value;
+    }
+}
+exports.stripTrailingSlash = stripTrailingSlash;
+function stripLeadingSlash(value) {
+    if (value.substring(0, 1) === '/') {
+        return value.substring(1, value.length);
+    }
+    else {
+        return value;
+    }
+}
+exports.stripLeadingSlash = stripLeadingSlash;
 //# sourceMappingURL=utils.js.map

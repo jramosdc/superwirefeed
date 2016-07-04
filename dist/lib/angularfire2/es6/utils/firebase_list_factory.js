@@ -1,5 +1,5 @@
 import { FirebaseListObservable } from './firebase_list_observable';
-import * as Firebase from 'firebase';
+import { database } from 'firebase';
 import * as utils from './utils';
 import { observeQuery } from './query_observable';
 import 'rxjs/add/operator/mergeMap';
@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 export function FirebaseListFactory(absoluteUrlOrDbRef, { preserveSnapshot, query = {} } = {}) {
     let ref;
     utils.checkForUrlOrFirebaseRef(absoluteUrlOrDbRef, {
-        isUrl: () => ref = new Firebase(absoluteUrlOrDbRef),
+        isUrl: () => ref = database().refFromURL(absoluteUrlOrDbRef),
         isRef: () => ref = absoluteUrlOrDbRef,
         isQuery: () => ref = absoluteUrlOrDbRef,
     });
@@ -73,17 +73,15 @@ function firebaseListObservable(ref, { preserveSnapshot } = {}) {
         let hasInitialLoad = false;
         ref.once('value', (snap) => {
             hasInitialLoad = true;
-            obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
-        }, err => {
-            if (err) {
-                obs.error(err);
-                obs.complete();
-            }
+            obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
+        }).catch(err => {
+            obs.error(err);
+            obs.complete();
         });
         ref.on('child_added', (child, prevKey) => {
             arr = onChildAdded(arr, child, prevKey);
             if (hasInitialLoad) {
-                obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
+                obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
             }
         }, err => {
             if (err) {
@@ -94,7 +92,7 @@ function firebaseListObservable(ref, { preserveSnapshot } = {}) {
         ref.on('child_removed', (child) => {
             arr = onChildRemoved(arr, child);
             if (hasInitialLoad) {
-                obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
+                obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
             }
         }, err => {
             if (err) {
@@ -105,7 +103,7 @@ function firebaseListObservable(ref, { preserveSnapshot } = {}) {
         ref.on('child_changed', (child, prevKey) => {
             arr = onChildChanged(arr, child, prevKey);
             if (hasInitialLoad) {
-                obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
+                obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
             }
         }, err => {
             if (err) {
@@ -117,16 +115,6 @@ function firebaseListObservable(ref, { preserveSnapshot } = {}) {
     });
     return listObs;
 }
-export function unwrapMapFn(snapshot) {
-    var unwrapped = snapshot.val();
-    if ((/string|number|boolean/).test(typeof unwrapped)) {
-        unwrapped = {
-            $value: unwrapped
-        };
-    }
-    unwrapped.$key = snapshot.key();
-    return unwrapped;
-}
 export function onChildAdded(arr, child, prevKey) {
     if (!arr.length) {
         return [child];
@@ -136,7 +124,7 @@ export function onChildAdded(arr, child, prevKey) {
             accumulator.push(child);
         }
         accumulator.push(curr);
-        if (prevKey && prevKey === curr.key()) {
+        if (prevKey && prevKey === curr.key) {
             accumulator.push(child);
         }
         return accumulator;
@@ -146,29 +134,29 @@ export function onChildChanged(arr, child, prevKey) {
     return arr.reduce((accumulator, val, i) => {
         if (!prevKey && i == 0) {
             accumulator.push(child);
-            if (val.key() !== child.key()) {
+            if (val.key !== child.key) {
                 accumulator.push(val);
             }
         }
-        else if (val.key() === prevKey) {
+        else if (val.key === prevKey) {
             accumulator.push(val);
             accumulator.push(child);
         }
-        else if (val.key() !== child.key()) {
+        else if (val.key !== child.key) {
             accumulator.push(val);
         }
         return accumulator;
     }, []);
 }
 export function onChildRemoved(arr, child) {
-    return arr.filter(c => c.key() !== child.key());
+    return arr.filter(c => c.key !== child.key);
 }
 export function onChildUpdated(arr, child, prevKey) {
     return arr.map((v, i, arr) => {
         if (!prevKey && !i) {
             return child;
         }
-        else if (i > 0 && arr[i - 1].key() === prevKey) {
+        else if (i > 0 && arr[i - 1].key === prevKey) {
             return child;
         }
         else {

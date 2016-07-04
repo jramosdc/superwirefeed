@@ -114,7 +114,9 @@ export class PostsComponent implements OnInit {
 	}
 
 	deletePost() {
-		this.as.deletePost(this.deletePostID);
+		this.as.deletePost(this.deletePostID).then(res => {
+			console.log('Post Deleted!');
+		});
 	}
 
 	voteUp() {

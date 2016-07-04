@@ -26,41 +26,56 @@ var AuthProviders = exports.AuthProviders;
 })(exports.AuthMethods || (exports.AuthMethods = {}));
 var AuthMethods = exports.AuthMethods;
 ;
-function authDataToAuthState(authData) {
-    var auth = authData.auth, uid = authData.uid, provider = authData.provider, github = authData.github, twitter = authData.twitter, facebook = authData.facebook, google = authData.google, password = authData.password, anonymous = authData.anonymous;
-    var authState = { auth: auth, uid: uid, expires: authData.expires, provider: null };
-    switch (provider) {
-        case 'github':
-            authState.github = github;
+function authDataToAuthState(authData, providerData) {
+    if (!authData)
+        return null;
+    var providerId;
+    var uid = authData.uid;
+    var authState = { auth: authData, uid: uid, provider: null };
+    if (authData.isAnonymous) {
+        providerId = 'anonymous';
+        authState.provider = AuthProviders.Anonymous;
+        authState.anonymous = true;
+        return authState;
+    }
+    else {
+        providerId = authData.providerData[0].providerId;
+    }
+    switch (providerId) {
+        case 'github.com':
+            authState.github = providerData;
             authState.provider = AuthProviders.Github;
             break;
-        case 'twitter':
-            authState.twitter = twitter;
+        case 'twitter.com':
+            authState.twitter = providerData;
             authState.provider = AuthProviders.Twitter;
             break;
-        case 'facebook':
-            authState.facebook = facebook;
+        case 'facebook.com':
+            authState.facebook = providerData;
             authState.provider = AuthProviders.Facebook;
             break;
-        case 'google':
-            authState.google = google;
+        case 'google.com':
+            authState.google = providerData;
             authState.provider = AuthProviders.Google;
             break;
         case 'password':
-            authState.password = password;
             authState.provider = AuthProviders.Password;
-            break;
-        case 'anonymous':
-            authState.anonymous = anonymous;
-            authState.provider = AuthProviders.Anonymous;
             break;
         case 'custom':
             authState.provider = AuthProviders.Custom;
             break;
         default:
-            throw new Error("Unsupported firebase auth provider " + provider);
+            throw new Error("Unsupported firebase auth provider " + providerId);
     }
     return authState;
 }
 exports.authDataToAuthState = authDataToAuthState;
+function stripProviderId(providerId) {
+    var providerStripped = /(.*)\.com$/.exec(providerId);
+    if (providerStripped && providerStripped.length === 2) {
+        return providerStripped[1];
+    }
+    return null;
+}
+exports.stripProviderId = stripProviderId;
 //# sourceMappingURL=auth_backend.js.map

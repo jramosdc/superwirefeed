@@ -26,7 +26,7 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                 function authService(af) {
                     var _this = this;
                     this.af = af;
-                    this.ref = new Firebase("https://superwireapp.firebaseio.com");
+                    // ref: Firebase = new firebase("https://superwireapp.firebaseio.com");
                     this.domain = 'https://feed.superwire.io';
                     this.activePage = { title: '' };
                     this.activeFeed = {
@@ -175,15 +175,15 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                 };
                 authService.prototype.voteUp = function (feedid) {
                     var _this = this;
-                    this.ref.child('feeds').child(feedid).once('value', function (snaphot) {
-                        var vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+                    this.af.database.object('/feeds/' + feedid + '/likes').take(1).subscribe(function (snapshot) {
+                        var vote = snapshot.$value ? snapshot.$value : '';
                         if (vote) {
-                            _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote + 1 }, function (err) {
+                            _this.af.database.object('/feeds/' + feedid).update({ 'likes': vote + 1 }).catch(function (err) {
                                 err ? console.log('err', err) : '';
                             });
                         }
                         else {
-                            _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': 1 }, function (err) {
+                            _this.af.database.object('/feeds/' + feedid).update({ 'likes': 1 }).catch(function (err) {
                                 err ? console.log('err', err) : '';
                             });
                         }
@@ -191,22 +191,22 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                 };
                 authService.prototype.voteDown = function (feedid) {
                     var _this = this;
-                    this.ref.child('feeds').child(feedid).once('value', function (snaphot) {
-                        var vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+                    this.af.database.object('/feeds/' + feedid + '/likes').take(1).subscribe(function (snapshot) {
+                        var vote = snapshot.$value ? snapshot.$value : '';
                         if (vote) {
-                            _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote - 1 }, function (err) {
+                            _this.af.database.object('/feeds/' + feedid).update({ 'likes': vote - 1 }).catch(function (err) {
                                 err ? console.log('err', err) : '';
                             });
                         }
                         else {
-                            _this.ref.child('feeds').child(snaphot.key()).update({ 'likes': 0 }, function (err) {
+                            _this.af.database.object('/feeds/' + feedid).update({ 'likes': 0 }).catch(function (err) {
                                 err ? console.log('err', err) : '';
                             });
                         }
                     });
                 };
                 authService.prototype.deletePost = function (postid) {
-                    this.ref.child('posts').child(postid).remove();
+                    return this.af.database.object('/posts/' + postid).remove();
                 };
                 authService.prototype.deleteAll = function (feedid, userid, uid) {
                     var _this = this;

@@ -1,6 +1,6 @@
 "use strict";
 var firebase_list_observable_1 = require('./firebase_list_observable');
-var Firebase = require('firebase');
+var firebase_1 = require('firebase');
 var utils = require('./utils');
 var query_observable_1 = require('./query_observable');
 require('rxjs/add/operator/mergeMap');
@@ -9,7 +9,7 @@ function FirebaseListFactory(absoluteUrlOrDbRef, _a) {
     var _b = _a === void 0 ? {} : _a, preserveSnapshot = _b.preserveSnapshot, _c = _b.query, query = _c === void 0 ? {} : _c;
     var ref;
     utils.checkForUrlOrFirebaseRef(absoluteUrlOrDbRef, {
-        isUrl: function () { return ref = new Firebase(absoluteUrlOrDbRef); },
+        isUrl: function () { return ref = firebase_1.database().refFromURL(absoluteUrlOrDbRef); },
         isRef: function () { return ref = absoluteUrlOrDbRef; },
         isQuery: function () { return ref = absoluteUrlOrDbRef; },
     });
@@ -77,17 +77,15 @@ function firebaseListObservable(ref, _a) {
         var hasInitialLoad = false;
         ref.once('value', function (snap) {
             hasInitialLoad = true;
-            obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
-        }, function (err) {
-            if (err) {
-                obs.error(err);
-                obs.complete();
-            }
+            obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
+        }).catch(function (err) {
+            obs.error(err);
+            obs.complete();
         });
         ref.on('child_added', function (child, prevKey) {
             arr = onChildAdded(arr, child, prevKey);
             if (hasInitialLoad) {
-                obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
+                obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
             }
         }, function (err) {
             if (err) {
@@ -98,7 +96,7 @@ function firebaseListObservable(ref, _a) {
         ref.on('child_removed', function (child) {
             arr = onChildRemoved(arr, child);
             if (hasInitialLoad) {
-                obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
+                obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
             }
         }, function (err) {
             if (err) {
@@ -109,7 +107,7 @@ function firebaseListObservable(ref, _a) {
         ref.on('child_changed', function (child, prevKey) {
             arr = onChildChanged(arr, child, prevKey);
             if (hasInitialLoad) {
-                obs.next(preserveSnapshot ? arr : arr.map(unwrapMapFn));
+                obs.next(preserveSnapshot ? arr : arr.map(utils.unwrapMapFn));
             }
         }, function (err) {
             if (err) {
@@ -121,17 +119,6 @@ function firebaseListObservable(ref, _a) {
     });
     return listObs;
 }
-function unwrapMapFn(snapshot) {
-    var unwrapped = snapshot.val();
-    if ((/string|number|boolean/).test(typeof unwrapped)) {
-        unwrapped = {
-            $value: unwrapped
-        };
-    }
-    unwrapped.$key = snapshot.key();
-    return unwrapped;
-}
-exports.unwrapMapFn = unwrapMapFn;
 function onChildAdded(arr, child, prevKey) {
     if (!arr.length) {
         return [child];
@@ -141,7 +128,7 @@ function onChildAdded(arr, child, prevKey) {
             accumulator.push(child);
         }
         accumulator.push(curr);
-        if (prevKey && prevKey === curr.key()) {
+        if (prevKey && prevKey === curr.key) {
             accumulator.push(child);
         }
         return accumulator;
@@ -152,15 +139,15 @@ function onChildChanged(arr, child, prevKey) {
     return arr.reduce(function (accumulator, val, i) {
         if (!prevKey && i == 0) {
             accumulator.push(child);
-            if (val.key() !== child.key()) {
+            if (val.key !== child.key) {
                 accumulator.push(val);
             }
         }
-        else if (val.key() === prevKey) {
+        else if (val.key === prevKey) {
             accumulator.push(val);
             accumulator.push(child);
         }
-        else if (val.key() !== child.key()) {
+        else if (val.key !== child.key) {
             accumulator.push(val);
         }
         return accumulator;
@@ -168,7 +155,7 @@ function onChildChanged(arr, child, prevKey) {
 }
 exports.onChildChanged = onChildChanged;
 function onChildRemoved(arr, child) {
-    return arr.filter(function (c) { return c.key() !== child.key(); });
+    return arr.filter(function (c) { return c.key !== child.key; });
 }
 exports.onChildRemoved = onChildRemoved;
 function onChildUpdated(arr, child, prevKey) {
@@ -176,7 +163,7 @@ function onChildUpdated(arr, child, prevKey) {
         if (!prevKey && !i) {
             return child;
         }
-        else if (i > 0 && arr[i - 1].key() === prevKey) {
+        else if (i > 0 && arr[i - 1].key === prevKey) {
             return child;
         }
         else {

@@ -11,35 +11,35 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { Inject, Injectable } from '@angular/core';
-import { FirebaseUrl } from '../tokens';
+import { FirebaseConfig } from '../tokens';
 import { FirebaseListFactory } from '../utils/firebase_list_factory';
 import { FirebaseObjectFactory } from '../utils/firebase_object_factory';
 import * as utils from '../utils/utils';
 export let FirebaseDatabase = class FirebaseDatabase {
-    constructor(fbUrl) {
-        this.fbUrl = fbUrl;
+    constructor(fbConfig) {
+        this.fbConfig = fbConfig;
     }
     list(urlOrRef, opts) {
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: () => FirebaseListFactory(getAbsUrl(this.fbUrl, urlOrRef), opts),
+            isUrl: () => FirebaseListFactory(getAbsUrl(this.fbConfig, urlOrRef), opts),
             isRef: () => FirebaseListFactory(urlOrRef)
         });
     }
     object(urlOrRef, opts) {
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: () => FirebaseObjectFactory(getAbsUrl(this.fbUrl, urlOrRef), opts),
+            isUrl: () => FirebaseObjectFactory(getAbsUrl(this.fbConfig, urlOrRef), opts),
             isRef: () => FirebaseObjectFactory(urlOrRef)
         });
     }
 };
 FirebaseDatabase = __decorate([
     Injectable(),
-    __param(0, Inject(FirebaseUrl)), 
-    __metadata('design:paramtypes', [String])
+    __param(0, Inject(FirebaseConfig)), 
+    __metadata('design:paramtypes', [Object])
 ], FirebaseDatabase);
 function getAbsUrl(root, url) {
     if (!(/^[a-z]+:\/\/.*/.test(url))) {
-        url = root + url;
+        url = root.databaseURL + '/' + utils.stripLeadingSlash(url);
     }
     return url;
 }

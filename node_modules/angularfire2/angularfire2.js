@@ -13,9 +13,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require('@angular/core');
 var auth_1 = require('./providers/auth');
-exports.FirebaseAuth = auth_1.FirebaseAuth;
+exports.AngularFireAuth = auth_1.AngularFireAuth;
 exports.firebaseAuthConfig = auth_1.firebaseAuthConfig;
-var Firebase = require('firebase');
+exports.FirebaseAuth = auth_1.FirebaseAuth;
+var firebase_1 = require('firebase');
 var firebase_list_observable_1 = require('./utils/firebase_list_observable');
 exports.FirebaseListObservable = firebase_list_observable_1.FirebaseListObservable;
 var firebase_object_observable_1 = require('./utils/firebase_object_observable');
@@ -24,7 +25,9 @@ var firebase_list_factory_1 = require('./utils/firebase_list_factory');
 exports.FirebaseListFactory = firebase_list_factory_1.FirebaseListFactory;
 var firebase_object_factory_1 = require('./utils/firebase_object_factory');
 exports.FirebaseObjectFactory = firebase_object_factory_1.FirebaseObjectFactory;
+var utils = require('./utils/utils');
 var tokens_1 = require('./tokens');
+exports.WindowLocation = tokens_1.WindowLocation;
 var auth_backend_1 = require('./providers/auth_backend');
 exports.AuthMethods = auth_backend_1.AuthMethods;
 exports.AuthProviders = auth_backend_1.AuthProviders;
@@ -36,47 +39,58 @@ var AngularFire = (function () {
         this.fbUrl = fbUrl;
         this.auth = auth;
         this.database = database;
-        this.list = database.list.bind(database);
-        this.object = database.object.bind(database);
     }
     AngularFire = __decorate([
         core_1.Injectable(),
-        __param(0, core_1.Inject(tokens_1.FirebaseUrl)), 
-        __metadata('design:paramtypes', [String, auth_1.FirebaseAuth, database_1.FirebaseDatabase])
+        __param(0, core_1.Inject(tokens_1.FirebaseConfig)), 
+        __metadata('design:paramtypes', [String, auth_1.AngularFireAuth, database_1.FirebaseDatabase])
     ], AngularFire);
     return AngularFire;
 }());
 exports.AngularFire = AngularFire;
-function getAbsUrl(root, url) {
-    if (!(/^[a-z]+:\/\/.*/.test(url))) {
-        url = root + url;
-    }
-    return url;
-}
 exports.COMMON_PROVIDERS = [
-    core_1.provide(tokens_1.FirebaseRef, {
-        useFactory: function (url) { return new Firebase(url); },
-        deps: [tokens_1.FirebaseUrl] }),
-    auth_1.FirebaseAuth,
+    core_1.provide(auth_1.FirebaseAuth, {
+        useExisting: auth_1.AngularFireAuth
+    }),
+    {
+        provide: tokens_1.FirebaseApp,
+        useFactory: _getFirebase,
+        deps: [tokens_1.FirebaseConfig]
+    },
+    auth_1.AngularFireAuth,
     AngularFire,
     database_1.FirebaseDatabase
 ];
+function _getFirebase(config) {
+    return firebase_1.initializeApp(config);
+}
 exports.FIREBASE_PROVIDERS = [
     exports.COMMON_PROVIDERS,
-    core_1.provide(auth_backend_1.AuthBackend, {
-        useFactory: function (ref) { return new firebase_sdk_auth_backend_1.FirebaseSdkAuthBackend(ref, false); },
-        deps: [tokens_1.FirebaseRef]
-    })
+    {
+        provide: auth_backend_1.AuthBackend,
+        useFactory: _getAuthBackend,
+        deps: [tokens_1.FirebaseApp]
+    },
+    {
+        provide: tokens_1.WindowLocation,
+        useValue: window.location
+    },
 ];
-exports.defaultFirebase = function (url) {
-    return core_1.provide(tokens_1.FirebaseUrl, {
-        useValue: url
+function _getAuthBackend(app) {
+    return new firebase_sdk_auth_backend_1.FirebaseSdkAuthBackend(app, false);
+}
+exports.defaultFirebase = function (config) {
+    config.databaseURL = utils.stripTrailingSlash(config.databaseURL);
+    return core_1.provide(tokens_1.FirebaseConfig, {
+        useValue: config
     });
 };
 var tokens_2 = require('./tokens');
-exports.FirebaseUrl = tokens_2.FirebaseUrl;
-exports.FirebaseRef = tokens_2.FirebaseRef;
+exports.FirebaseConfig = tokens_2.FirebaseConfig;
+exports.FirebaseApp = tokens_2.FirebaseApp;
 exports.FirebaseAuthConfig = tokens_2.FirebaseAuthConfig;
+exports.FirebaseRef = tokens_2.FirebaseRef;
+exports.FirebaseUrl = tokens_2.FirebaseUrl;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     providers: exports.FIREBASE_PROVIDERS

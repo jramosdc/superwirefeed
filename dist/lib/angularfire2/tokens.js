@@ -1,6 +1,9 @@
 "use strict";
 var core_1 = require('@angular/core');
-exports.FirebaseUrl = new core_1.OpaqueToken('FirebaseUrl');
-exports.FirebaseRef = new core_1.OpaqueToken('FirebaseRef');
+exports.FirebaseConfig = new core_1.OpaqueToken('FirebaseUrl');
+exports.FirebaseApp = new core_1.OpaqueToken('FirebaseApp');
 exports.FirebaseAuthConfig = new core_1.OpaqueToken('FirebaseAuthConfig');
+exports.WindowLocation = new core_1.OpaqueToken('WindowLocation');
+exports.FirebaseRef = exports.FirebaseApp;
+exports.FirebaseUrl = exports.FirebaseConfig;
 //# sourceMappingURL=tokens.js.map

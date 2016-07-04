@@ -82,7 +82,7 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                         this.as.setActiveFeedID(this.FeedID);
                     }
                     else if (type === 'edit') {
-                        this.router.navigate(['\NewPost', { postid: id }]);
+                        this.router.navigate(['\EditPost', { postid: id }]);
                         this.as.setActiveFeedID(this.FeedID);
                     }
                     else if (type === 'view') {
@@ -117,7 +117,9 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                     $('#deleteModel').openModal();
                 };
                 PostsComponent.prototype.deletePost = function () {
-                    this.as.deletePost(this.deletePostID);
+                    this.as.deletePost(this.deletePostID).then(function (res) {
+                        console.log('Post Deleted!');
+                    });
                 };
                 PostsComponent.prototype.voteUp = function () {
                     this.as.voteUp(this.FeedID);

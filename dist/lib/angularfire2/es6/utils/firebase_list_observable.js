@@ -16,25 +16,26 @@ export class FirebaseListObservable extends Observable {
         if (!this._ref) {
             throw new Error('No ref specified for this Observable!');
         }
-        return this._ref.ref().push(val);
+        this._ref.ref;
+        return this._ref.ref.push(val);
     }
     update(item, value) {
         return this._checkOperationCases(item, {
-            stringCase: () => this._ref.ref().child(item).update(value),
+            stringCase: () => this._ref.ref.child(item).update(value),
             firebaseCase: () => item.update(value),
-            snapshotCase: () => item.ref().update(value),
-            unwrappedSnapshotCase: () => this._ref.ref().child(item.$key).update(value)
+            snapshotCase: () => item.ref.update(value),
+            unwrappedSnapshotCase: () => this._ref.ref.child(item.$key).update(value)
         });
     }
     remove(item = null) {
         if (!item) {
-            return this._ref.ref().remove();
+            return this._ref.ref.remove();
         }
         return this._checkOperationCases(item, {
-            stringCase: () => this._ref.ref().child(item).remove(),
+            stringCase: () => this._ref.ref.child(item).remove(),
             firebaseCase: () => item.remove(),
-            snapshotCase: () => item.ref().remove(),
-            unwrappedSnapshotCase: () => this._ref.ref().child(item.$key).remove()
+            snapshotCase: () => item.ref.remove(),
+            unwrappedSnapshotCase: () => this._ref.ref.child(item.$key).remove()
         });
     }
     _checkOperationCases(item, cases) {

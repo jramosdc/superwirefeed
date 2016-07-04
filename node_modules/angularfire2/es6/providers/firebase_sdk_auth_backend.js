@@ -11,111 +11,86 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { Injectable, Inject } from '@angular/core';
-import { AuthBackend, AuthProviders, authDataToAuthState } from './auth_backend';
-import { FirebaseRef } from '../tokens';
-import { isPresent } from '../utils/utils';
-import * as Firebase from 'firebase';
+import { Observable } from 'rxjs/Observable';
+import { authDataToAuthState, AuthBackend, AuthProviders } from './auth_backend';
+import { FirebaseApp } from '../tokens';
+import { auth } from 'firebase';
+const { FacebookAuthProvider, GithubAuthProvider, GoogleAuthProvider, TwitterAuthProvider } = auth;
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/fromPromise';
 export let FirebaseSdkAuthBackend = class FirebaseSdkAuthBackend extends AuthBackend {
-    constructor(_fbRef, _webWorkerMode = false) {
+    constructor(_fbApp, _webWorkerMode = false) {
         super();
-        this._fbRef = _fbRef;
         this._webWorkerMode = _webWorkerMode;
+        this._fbAuth = _fbApp.auth();
     }
     createUser(creds) {
-        return new Promise((resolve, reject) => {
-            this._fbRef.createUser(creds, (err, authData) => {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    resolve(authData);
-                }
-            });
-        });
-    }
-    onAuth(onComplete) {
-        this._fbRef.onAuth(onComplete);
+        return Promise.resolve(this._fbAuth.createUserWithEmailAndPassword(creds.email, creds.password))
+            .then((user) => authDataToAuthState(user));
     }
     getAuth() {
-        return this._fbRef.getAuth();
+        return authDataToAuthState(this._fbAuth.currentUser);
+    }
+    onAuth() {
+        return Observable.create((observer) => {
+            return this._fbAuth.onAuthStateChanged(observer);
+        })
+            .map((user) => {
+            if (!user)
+                return null;
+            return authDataToAuthState(user);
+        });
     }
     unauth() {
-        this._fbRef.unauth();
+        Promise.resolve(this._fbAuth.signOut());
     }
-    authWithCustomToken(token, options) {
-        let p = new Promise((res, rej) => {
-            this._fbRef.authWithCustomToken(token, this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    authWithCustomToken(token) {
+        return Promise.resolve(this._fbAuth.signInWithCustomToken(token))
+            .then((user) => authDataToAuthState(user));
     }
-    authAnonymously(options) {
-        let p = new Promise((res, rej) => {
-            this._fbRef.authAnonymously(this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    authAnonymously() {
+        return Promise.resolve(this._fbAuth.signInAnonymously())
+            .then((user) => authDataToAuthState(user));
     }
-    authWithPassword(credentials, options) {
-        let p = new Promise((res, rej) => {
-            this._fbRef.authWithPassword(credentials, this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    authWithPassword(creds) {
+        return Promise.resolve(this._fbAuth.signInWithEmailAndPassword(creds.email, creds.password))
+            .then((user) => authDataToAuthState(user));
     }
     authWithOAuthPopup(provider, options) {
-        let p = new Promise((res, rej) => {
-            this._fbRef.authWithOAuthPopup(this._providerToString(provider), this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+        var providerFromFirebase = this._enumToAuthProvider(provider);
+        if (options.scope) {
+            options.scope.forEach(scope => providerFromFirebase.addScope(scope));
+        }
+        return Promise.resolve(this._fbAuth.signInWithPopup(providerFromFirebase));
     }
     authWithOAuthRedirect(provider, options) {
-        let p = new Promise((res, rej) => {
-            this._fbRef.authWithOAuthRedirect(this._providerToString(provider), this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+        return Promise.resolve(this._fbAuth.signInWithRedirect(this._enumToAuthProvider(provider)));
     }
-    authWithOAuthToken(provider, credentialsObj, options) {
-        let p = new Promise((res, rej) => {
-            let credentials = isPresent(credentialsObj.token)
-                ? credentialsObj.token
-                : credentialsObj;
-            this._fbRef.authWithOAuthToken(this._providerToString(provider), credentials, this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    authWithOAuthToken(credential) {
+        return Promise.resolve(this._fbAuth.signInWithCredential(credential))
+            .then((user) => authDataToAuthState(user));
     }
-    _handleFirebaseCb(res, rej, options) {
-        return (err, auth) => {
-            if (err) {
-                return rej(err);
-            }
-            else {
-                if (!this._webWorkerMode)
-                    return res(authDataToAuthState(auth));
-                else {
-                    if (isPresent(options) && isPresent(options.remember)) {
-                        auth.remember = options.remember;
-                    }
-                    return res(auth);
-                }
-            }
-        };
+    getRedirectResult() {
+        return Observable.fromPromise(Promise.resolve(this._fbAuth.getRedirectResult()));
     }
-    _providerToString(provider) {
-        switch (provider) {
+    _enumToAuthProvider(providerId) {
+        switch (providerId) {
             case AuthProviders.Github:
-                return 'github';
+                return new GithubAuthProvider();
             case AuthProviders.Twitter:
-                return 'twitter';
+                return new TwitterAuthProvider();
             case AuthProviders.Facebook:
-                return 'facebook';
+                return new FacebookAuthProvider();
             case AuthProviders.Google:
-                return 'google';
+                return new GoogleAuthProvider();
             default:
-                throw new Error(`Unsupported firebase auth provider ${provider}`);
+                throw new Error(`Unsupported firebase auth provider ${providerId}`);
         }
     }
 };
 FirebaseSdkAuthBackend = __decorate([
     Injectable(),
-    __param(0, Inject(FirebaseRef)), 
-    __metadata('design:paramtypes', [Firebase, Object])
+    __param(0, Inject(FirebaseApp)), 
+    __metadata('design:paramtypes', [Object, Object])
 ], FirebaseSdkAuthBackend);
 //# sourceMappingURL=firebase_sdk_auth_backend.js.map

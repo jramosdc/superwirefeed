@@ -11,22 +11,47 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { Inject, provide, Injectable, Optional } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { FirebaseAuthConfig } from '../tokens';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/skip';
+import 'rxjs/add/observable/of';
+import { FirebaseAuthConfig, WindowLocation } from '../tokens';
 import { isPresent } from '../utils/utils';
-import { AuthBackend, AuthMethods, authDataToAuthState } from './auth_backend';
+import { authDataToAuthState, AuthBackend, AuthMethods, stripProviderId } from './auth_backend';
 const kBufferSize = 1;
 export const firebaseAuthConfig = (config) => {
     return provide(FirebaseAuthConfig, {
         useValue: config
     });
 };
-export let FirebaseAuth = class FirebaseAuth extends ReplaySubject {
-    constructor(_authBackend, _config) {
+export let AngularFireAuth = class AngularFireAuth extends ReplaySubject {
+    constructor(_authBackend, loc, _config) {
         super(kBufferSize);
         this._authBackend = _authBackend;
         this._config = _config;
-        this._authBackend.onAuth((authData) => this._emitAuthData(authData));
+        this._credentialCache = {};
+        let firstPass = true;
+        this._authBackend.onAuth()
+            .mergeMap((authState) => {
+            if (firstPass) {
+                firstPass = false;
+                if (['http:', 'https:'].indexOf(loc.protocol) > -1) {
+                    return this._authBackend.getRedirectResult()
+                        .map((userCredential) => {
+                        if (userCredential && userCredential.credential) {
+                            authState = attachCredentialToAuthState(authState, userCredential.credential, userCredential.credential.provider);
+                            this._credentialCache[userCredential.credential.provider] = userCredential.credential;
+                        }
+                        return authState;
+                    });
+                }
+            }
+            return Observable.of(authState);
+        })
+            .subscribe((authData) => this._emitAuthData(authData));
     }
     login(obj1, obj2) {
         let config = null;
@@ -65,25 +90,31 @@ export let FirebaseAuth = class FirebaseAuth extends ReplaySubject {
         }
         switch (config.method) {
             case AuthMethods.Popup:
-                return this._authBackend.authWithOAuthPopup(config.provider, this._scrubConfig(config));
+                return this._authBackend.authWithOAuthPopup(config.provider, this._scrubConfig(config))
+                    .then((userCredential) => {
+                    this._credentialCache[userCredential.credential.provider] = userCredential.credential;
+                    return authDataToAuthState(userCredential.user, userCredential.credential);
+                });
             case AuthMethods.Redirect:
                 return this._authBackend.authWithOAuthRedirect(config.provider, this._scrubConfig(config));
             case AuthMethods.Anonymous:
                 return this._authBackend.authAnonymously(this._scrubConfig(config));
             case AuthMethods.Password:
-                return this._authBackend.authWithPassword(credentials, this._scrubConfig(config, false));
+                return this._authBackend.authWithPassword(credentials);
             case AuthMethods.OAuthToken:
-                return this._authBackend.authWithOAuthToken(config.provider, credentials, this._scrubConfig(config));
+                return this._authBackend.authWithOAuthToken(credentials, this._scrubConfig(config));
             case AuthMethods.CustomToken:
-                return this._authBackend.authWithCustomToken(credentials.token, this._scrubConfig(config, false));
+                return this._authBackend.authWithCustomToken(credentials);
         }
     }
     logout() {
-        if (this._authBackend.getAuth() !== null) {
-            this._authBackend.unauth();
-        }
+        this._authBackend.unauth();
     }
     getAuth() {
+        console.warn(`WARNING: the getAuth() API has changed behavior since adding support for Firebase 3.
+    This will return null for the initial value when the page loads, even if the user is actually logged in.
+    Please observe the actual authState asynchronously by subscribing to the auth service: af.auth.subscribe().
+    The getAuth method will be removed in future releases`);
         return this._authBackend.getAuth();
     }
     createUser(credentials) {
@@ -95,9 +126,9 @@ export let FirebaseAuth = class FirebaseAuth extends ReplaySubject {
         return Object.assign({}, this._config, config);
     }
     _reject(msg) {
-        return new Promise((res, rej) => {
+        return (new Promise((res, rej) => {
             return rej(msg);
-        });
+        }));
     }
     _scrubConfig(config, scrubProvider = true) {
         let scrubbed = Object.assign({}, config);
@@ -112,14 +143,30 @@ export let FirebaseAuth = class FirebaseAuth extends ReplaySubject {
             this.next(null);
         }
         else {
-            this.next(authDataToAuthState(authData));
+            if (authData.auth && authData.auth.providerData && authData.auth.providerData[0]) {
+                let providerId = authData.auth.providerData[0].providerId;
+                let providerCredential = this._credentialCache[providerId];
+                if (providerCredential) {
+                    authData = attachCredentialToAuthState(authData, providerCredential, providerId);
+                }
+            }
+            this.next(authData);
         }
     }
 };
-FirebaseAuth = __decorate([
+AngularFireAuth = __decorate([
     Injectable(),
-    __param(1, Optional()),
-    __param(1, Inject(FirebaseAuthConfig)), 
-    __metadata('design:paramtypes', [AuthBackend, Object])
-], FirebaseAuth);
+    __param(1, Inject(WindowLocation)),
+    __param(2, Optional()),
+    __param(2, Inject(FirebaseAuthConfig)), 
+    __metadata('design:paramtypes', [AuthBackend, Location, Object])
+], AngularFireAuth);
+function attachCredentialToAuthState(authState, credential, providerId) {
+    if (!authState)
+        return authState;
+    authState[stripProviderId(providerId)] = credential;
+    return authState;
+}
+export class FirebaseAuth extends AngularFireAuth {
+}
 //# sourceMappingURL=auth.js.map

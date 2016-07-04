@@ -9,7 +9,7 @@ export interface User { password: { email: string, profileImageURL: string }, ui
 @Injectable()
 export class authService {
 
-	ref: Firebase = new Firebase("https://superwireapp.firebaseio.com");
+	// ref: Firebase = new firebase("https://superwireapp.firebaseio.com");
 	domain: string = 'https://feed.superwire.io'
 	User: User;
 	activePage: Object = { title: ''};
@@ -187,37 +187,37 @@ export class authService {
 	}
 
 	voteUp(feedid: string) {
-		this.ref.child('feeds').child(feedid).once('value', (snaphot) => {
-            let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+		this.af.database.object('/feeds/' + feedid + '/likes').take(1).subscribe(snapshot => {
+			let vote = snapshot.$value ? snapshot.$value : '';
 			if (vote) {
-				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote + 1 }, (err) => {
+				this.af.database.object('/feeds/' + feedid).update({ 'likes': vote + 1 }).catch(err => {
 					err ? console.log('err', err) : '';
-				})
+				});
 			} else {
-				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': 1 }, (err) => {
+				this.af.database.object('/feeds/' + feedid).update({ 'likes': 1 }).catch(err => {
 					err ? console.log('err', err) : '';
-				})
+				});
 			}
-		})
+		});
 	}
 
 	voteDown(feedid: string) {
-		this.ref.child('feeds').child(feedid).once('value', (snaphot) => {
-            let vote = snaphot.val() ? snaphot.val().likes ? snaphot.val().likes : '' : '';
+		this.af.database.object('/feeds/' + feedid + '/likes').take(1).subscribe(snapshot => {
+			let vote = snapshot.$value ? snapshot.$value : '';
 			if (vote) {
-				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': vote - 1 }, (err) => {
+				this.af.database.object('/feeds/' + feedid).update({ 'likes': vote - 1 }).catch(err => {
 					err ? console.log('err', err) : '';
-				})
+				});
 			} else {
-				this.ref.child('feeds').child(snaphot.key()).update({ 'likes': 0 }, (err) => {
+				this.af.database.object('/feeds/' + feedid).update({ 'likes': 0 }).catch(err => {
 					err ? console.log('err', err) : '';
-				})
+				});
 			}
-		})
+		});
 	}
 
 	deletePost(postid: string) {
-		this.ref.child('posts').child(postid).remove();
+		return this.af.database.object('/posts/' + postid).remove();
 	}
 
 	deleteAll(feedid: string, userid: string, uid: string) {

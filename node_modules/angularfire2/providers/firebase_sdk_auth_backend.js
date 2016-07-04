@@ -17,121 +17,89 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require('@angular/core');
+var Observable_1 = require('rxjs/Observable');
 var auth_backend_1 = require('./auth_backend');
 var tokens_1 = require('../tokens');
-var utils_1 = require('../utils/utils');
-var Firebase = require('firebase');
+var firebase_1 = require('firebase');
+var FacebookAuthProvider = firebase_1.auth.FacebookAuthProvider, GithubAuthProvider = firebase_1.auth.GithubAuthProvider, GoogleAuthProvider = firebase_1.auth.GoogleAuthProvider, TwitterAuthProvider = firebase_1.auth.TwitterAuthProvider;
+require('rxjs/add/operator/map');
+require('rxjs/add/observable/fromPromise');
 var FirebaseSdkAuthBackend = (function (_super) {
     __extends(FirebaseSdkAuthBackend, _super);
-    function FirebaseSdkAuthBackend(_fbRef, _webWorkerMode) {
+    function FirebaseSdkAuthBackend(_fbApp, _webWorkerMode) {
         if (_webWorkerMode === void 0) { _webWorkerMode = false; }
         _super.call(this);
-        this._fbRef = _fbRef;
         this._webWorkerMode = _webWorkerMode;
+        this._fbAuth = _fbApp.auth();
     }
     FirebaseSdkAuthBackend.prototype.createUser = function (creds) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this._fbRef.createUser(creds, function (err, authData) {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    resolve(authData);
-                }
-            });
-        });
-    };
-    FirebaseSdkAuthBackend.prototype.onAuth = function (onComplete) {
-        this._fbRef.onAuth(onComplete);
+        return Promise.resolve(this._fbAuth.createUserWithEmailAndPassword(creds.email, creds.password))
+            .then(function (user) { return auth_backend_1.authDataToAuthState(user); });
     };
     FirebaseSdkAuthBackend.prototype.getAuth = function () {
-        return this._fbRef.getAuth();
+        return auth_backend_1.authDataToAuthState(this._fbAuth.currentUser);
+    };
+    FirebaseSdkAuthBackend.prototype.onAuth = function () {
+        var _this = this;
+        return Observable_1.Observable.create(function (observer) {
+            return _this._fbAuth.onAuthStateChanged(observer);
+        })
+            .map(function (user) {
+            if (!user)
+                return null;
+            return auth_backend_1.authDataToAuthState(user);
+        });
     };
     FirebaseSdkAuthBackend.prototype.unauth = function () {
-        this._fbRef.unauth();
+        Promise.resolve(this._fbAuth.signOut());
     };
-    FirebaseSdkAuthBackend.prototype.authWithCustomToken = function (token, options) {
-        var _this = this;
-        var p = new Promise(function (res, rej) {
-            _this._fbRef.authWithCustomToken(token, _this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    FirebaseSdkAuthBackend.prototype.authWithCustomToken = function (token) {
+        return Promise.resolve(this._fbAuth.signInWithCustomToken(token))
+            .then(function (user) { return auth_backend_1.authDataToAuthState(user); });
     };
-    FirebaseSdkAuthBackend.prototype.authAnonymously = function (options) {
-        var _this = this;
-        var p = new Promise(function (res, rej) {
-            _this._fbRef.authAnonymously(_this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    FirebaseSdkAuthBackend.prototype.authAnonymously = function () {
+        return Promise.resolve(this._fbAuth.signInAnonymously())
+            .then(function (user) { return auth_backend_1.authDataToAuthState(user); });
     };
-    FirebaseSdkAuthBackend.prototype.authWithPassword = function (credentials, options) {
-        var _this = this;
-        var p = new Promise(function (res, rej) {
-            _this._fbRef.authWithPassword(credentials, _this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    FirebaseSdkAuthBackend.prototype.authWithPassword = function (creds) {
+        return Promise.resolve(this._fbAuth.signInWithEmailAndPassword(creds.email, creds.password))
+            .then(function (user) { return auth_backend_1.authDataToAuthState(user); });
     };
     FirebaseSdkAuthBackend.prototype.authWithOAuthPopup = function (provider, options) {
-        var _this = this;
-        var p = new Promise(function (res, rej) {
-            _this._fbRef.authWithOAuthPopup(_this._providerToString(provider), _this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+        var providerFromFirebase = this._enumToAuthProvider(provider);
+        if (options.scope) {
+            options.scope.forEach(function (scope) { return providerFromFirebase.addScope(scope); });
+        }
+        return Promise.resolve(this._fbAuth.signInWithPopup(providerFromFirebase));
     };
     FirebaseSdkAuthBackend.prototype.authWithOAuthRedirect = function (provider, options) {
-        var _this = this;
-        var p = new Promise(function (res, rej) {
-            _this._fbRef.authWithOAuthRedirect(_this._providerToString(provider), _this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+        return Promise.resolve(this._fbAuth.signInWithRedirect(this._enumToAuthProvider(provider)));
     };
-    FirebaseSdkAuthBackend.prototype.authWithOAuthToken = function (provider, credentialsObj, options) {
-        var _this = this;
-        var p = new Promise(function (res, rej) {
-            var credentials = utils_1.isPresent(credentialsObj.token)
-                ? credentialsObj.token
-                : credentialsObj;
-            _this._fbRef.authWithOAuthToken(_this._providerToString(provider), credentials, _this._handleFirebaseCb(res, rej, options), options);
-        });
-        return p;
+    FirebaseSdkAuthBackend.prototype.authWithOAuthToken = function (credential) {
+        return Promise.resolve(this._fbAuth.signInWithCredential(credential))
+            .then(function (user) { return auth_backend_1.authDataToAuthState(user); });
     };
-    FirebaseSdkAuthBackend.prototype._handleFirebaseCb = function (res, rej, options) {
-        var _this = this;
-        return function (err, auth) {
-            if (err) {
-                return rej(err);
-            }
-            else {
-                if (!_this._webWorkerMode)
-                    return res(auth_backend_1.authDataToAuthState(auth));
-                else {
-                    if (utils_1.isPresent(options) && utils_1.isPresent(options.remember)) {
-                        auth.remember = options.remember;
-                    }
-                    return res(auth);
-                }
-            }
-        };
+    FirebaseSdkAuthBackend.prototype.getRedirectResult = function () {
+        return Observable_1.Observable.fromPromise(Promise.resolve(this._fbAuth.getRedirectResult()));
     };
-    FirebaseSdkAuthBackend.prototype._providerToString = function (provider) {
-        switch (provider) {
+    FirebaseSdkAuthBackend.prototype._enumToAuthProvider = function (providerId) {
+        switch (providerId) {
             case auth_backend_1.AuthProviders.Github:
-                return 'github';
+                return new GithubAuthProvider();
             case auth_backend_1.AuthProviders.Twitter:
-                return 'twitter';
+                return new TwitterAuthProvider();
             case auth_backend_1.AuthProviders.Facebook:
-                return 'facebook';
+                return new FacebookAuthProvider();
             case auth_backend_1.AuthProviders.Google:
-                return 'google';
+                return new GoogleAuthProvider();
             default:
-                throw new Error("Unsupported firebase auth provider " + provider);
+                throw new Error("Unsupported firebase auth provider " + providerId);
         }
     };
     FirebaseSdkAuthBackend = __decorate([
         core_1.Injectable(),
-        __param(0, core_1.Inject(tokens_1.FirebaseRef)), 
-        __metadata('design:paramtypes', [Firebase, Object])
+        __param(0, core_1.Inject(tokens_1.FirebaseApp)), 
+        __metadata('design:paramtypes', [Object, Object])
     ], FirebaseSdkAuthBackend);
     return FirebaseSdkAuthBackend;
 }(auth_backend_1.AuthBackend));

@@ -11,13 +11,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { Inject, Injectable, provide } from '@angular/core';
-import { FirebaseAuth, firebaseAuthConfig } from './providers/auth';
-import * as Firebase from 'firebase';
+import { AngularFireAuth, firebaseAuthConfig, FirebaseAuth } from './providers/auth';
+import { initializeApp } from 'firebase';
 import { FirebaseListObservable } from './utils/firebase_list_observable';
 import { FirebaseObjectObservable } from './utils/firebase_object_observable';
 import { FirebaseListFactory } from './utils/firebase_list_factory';
 import { FirebaseObjectFactory } from './utils/firebase_object_factory';
-import { FirebaseUrl, FirebaseRef } from './tokens';
+import * as utils from './utils/utils';
+import { FirebaseConfig, FirebaseApp, WindowLocation } from './tokens';
 import { AuthBackend, AuthMethods, AuthProviders } from './providers/auth_backend';
 import { FirebaseSdkAuthBackend } from './providers/firebase_sdk_auth_backend';
 import { FirebaseDatabase } from './database/database';
@@ -26,43 +27,52 @@ export let AngularFire = class AngularFire {
         this.fbUrl = fbUrl;
         this.auth = auth;
         this.database = database;
-        this.list = database.list.bind(database);
-        this.object = database.object.bind(database);
     }
 };
 AngularFire = __decorate([
     Injectable(),
-    __param(0, Inject(FirebaseUrl)), 
-    __metadata('design:paramtypes', [String, FirebaseAuth, FirebaseDatabase])
+    __param(0, Inject(FirebaseConfig)), 
+    __metadata('design:paramtypes', [String, AngularFireAuth, FirebaseDatabase])
 ], AngularFire);
-function getAbsUrl(root, url) {
-    if (!(/^[a-z]+:\/\/.*/.test(url))) {
-        url = root + url;
-    }
-    return url;
-}
 export const COMMON_PROVIDERS = [
-    provide(FirebaseRef, {
-        useFactory: (url) => new Firebase(url),
-        deps: [FirebaseUrl] }),
-    FirebaseAuth,
+    provide(FirebaseAuth, {
+        useExisting: AngularFireAuth
+    }),
+    {
+        provide: FirebaseApp,
+        useFactory: _getFirebase,
+        deps: [FirebaseConfig]
+    },
+    AngularFireAuth,
     AngularFire,
     FirebaseDatabase
 ];
+function _getFirebase(config) {
+    return initializeApp(config);
+}
 export const FIREBASE_PROVIDERS = [
     COMMON_PROVIDERS,
-    provide(AuthBackend, {
-        useFactory: (ref) => new FirebaseSdkAuthBackend(ref, false),
-        deps: [FirebaseRef]
-    })
+    {
+        provide: AuthBackend,
+        useFactory: _getAuthBackend,
+        deps: [FirebaseApp]
+    },
+    {
+        provide: WindowLocation,
+        useValue: window.location
+    },
 ];
-export const defaultFirebase = (url) => {
-    return provide(FirebaseUrl, {
-        useValue: url
+function _getAuthBackend(app) {
+    return new FirebaseSdkAuthBackend(app, false);
+}
+export const defaultFirebase = (config) => {
+    config.databaseURL = utils.stripTrailingSlash(config.databaseURL);
+    return provide(FirebaseConfig, {
+        useValue: config
     });
 };
-export { FirebaseAuth, FirebaseDatabase, FirebaseListObservable, FirebaseObjectObservable, FirebaseListFactory, FirebaseObjectFactory, firebaseAuthConfig, AuthMethods, AuthProviders };
-export { FirebaseUrl, FirebaseRef, FirebaseAuthConfig } from './tokens';
+export { AngularFireAuth, FirebaseAuth, FirebaseDatabase, FirebaseListObservable, FirebaseObjectObservable, FirebaseListFactory, FirebaseObjectFactory, firebaseAuthConfig, AuthMethods, AuthProviders, WindowLocation };
+export { FirebaseConfig, FirebaseApp, FirebaseAuthConfig, FirebaseRef, FirebaseUrl } from './tokens';
 export default {
     providers: FIREBASE_PROVIDERS
 };

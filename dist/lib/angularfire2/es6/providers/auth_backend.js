@@ -21,40 +21,54 @@ export var AuthMethods;
     AuthMethods[AuthMethods["CustomToken"] = 5] = "CustomToken";
 })(AuthMethods || (AuthMethods = {}));
 ;
-export function authDataToAuthState(authData) {
-    let { auth, uid, provider, github, twitter, facebook, google, password, anonymous } = authData;
-    let authState = { auth, uid, expires: authData.expires, provider: null };
-    switch (provider) {
-        case 'github':
-            authState.github = github;
+export function authDataToAuthState(authData, providerData) {
+    if (!authData)
+        return null;
+    let providerId;
+    let { uid } = authData;
+    let authState = { auth: authData, uid, provider: null };
+    if (authData.isAnonymous) {
+        providerId = 'anonymous';
+        authState.provider = AuthProviders.Anonymous;
+        authState.anonymous = true;
+        return authState;
+    }
+    else {
+        providerId = authData.providerData[0].providerId;
+    }
+    switch (providerId) {
+        case 'github.com':
+            authState.github = providerData;
             authState.provider = AuthProviders.Github;
             break;
-        case 'twitter':
-            authState.twitter = twitter;
+        case 'twitter.com':
+            authState.twitter = providerData;
             authState.provider = AuthProviders.Twitter;
             break;
-        case 'facebook':
-            authState.facebook = facebook;
+        case 'facebook.com':
+            authState.facebook = providerData;
             authState.provider = AuthProviders.Facebook;
             break;
-        case 'google':
-            authState.google = google;
+        case 'google.com':
+            authState.google = providerData;
             authState.provider = AuthProviders.Google;
             break;
         case 'password':
-            authState.password = password;
             authState.provider = AuthProviders.Password;
-            break;
-        case 'anonymous':
-            authState.anonymous = anonymous;
-            authState.provider = AuthProviders.Anonymous;
             break;
         case 'custom':
             authState.provider = AuthProviders.Custom;
             break;
         default:
-            throw new Error(`Unsupported firebase auth provider ${provider}`);
+            throw new Error(`Unsupported firebase auth provider ${providerId}`);
     }
     return authState;
+}
+export function stripProviderId(providerId) {
+    let providerStripped = /(.*)\.com$/.exec(providerId);
+    if (providerStripped && providerStripped.length === 2) {
+        return providerStripped[1];
+    }
+    return null;
 }
 //# sourceMappingURL=auth_backend.js.map
