@@ -1,3 +1,5 @@
+// <reference path="../../../typings/index.d.ts">
+
 import {provide} from '@angular/core';
 
 import {httpService} from './httpService'

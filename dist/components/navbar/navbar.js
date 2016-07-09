@@ -1,4 +1,4 @@
-// <reference path="../../../typings/tsd.d.ts">
+// <reference path="../../../typings/index.d.ts">
 System.register(['@angular/core', '@angular/router', '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -85,7 +85,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                             _this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value.toLowerCase()).then(function () {
                                 console.log('Profile is Created!');
                                 console.log('User is Registered & Logged In!');
-                                _this.router.root.navigate(['/Profile', { userid: userid.value.toLowerCase() }]);
+                                _this.router.navigate(['/profile', userid.value.toLowerCase()]);
                                 userid.value = '';
                                 email.value = '';
                                 password.value = '';

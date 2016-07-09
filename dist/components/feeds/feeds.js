@@ -1,4 +1,4 @@
-// <reference path="../../../typings/tsd.d.ts">
+// <reference path="../../../typings/index.d.ts">
 System.register(['@angular/core', "@angular/router", '../services/authService', '../pipes/searchCategory', "../pipes/orderby"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;

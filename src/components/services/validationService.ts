@@ -1,3 +1,5 @@
+// <reference path="../../../typings/index.d.ts">
+
 export class ValidationService {
      
   static getValidatorErrorMessage(code: string) {

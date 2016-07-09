@@ -1,3 +1,4 @@
+// <reference path="../../../typings/index.d.ts">
 System.register(['@angular/core', './httpService', './authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;

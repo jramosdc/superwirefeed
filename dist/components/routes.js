@@ -1,3 +1,4 @@
+// <reference path="../../typings/index.d.ts">
 System.register(['@angular/router', './feeds/feeds', './posts/posts', './newpost/newpost', './editpost/editpost', './viewpost/viewpost', './profile/profile'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;

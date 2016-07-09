@@ -1,4 +1,4 @@
-// <reference path="../../../typings/tsd.d.ts">
+// <reference path="../../../typings/index.d.ts">
 
 import { Component, OnInit } from '@angular/core';
 import { ROUTER_DIRECTIVES, Router } from '@angular/router';
@@ -75,7 +75,7 @@ export class NavbarComponent implements OnInit {
                 this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value.toLowerCase()).then(() => {
                     console.log('Profile is Created!')
                     console.log('User is Registered & Logged In!');
-                    this.router.root.navigate(['/Profile', { userid: userid.value.toLowerCase() }]);
+                    this.router.navigate(['/profile', userid.value.toLowerCase()]);
                     userid.value = '';
                     email.value = '';
                     password.value = '';

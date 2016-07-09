@@ -1,4 +1,6 @@
-import {Directive,ElementRef,Input,Output,EventEmitter} from '@angular/core';
+// <reference path="../../../typings/index.d.ts">
+
+import {Directive, ElementRef, Input, Output, EventEmitter} from '@angular/core';
 // import Clipboard from 'clipboard';
 
 @Directive({
@@ -22,7 +24,7 @@ export class ClipboardDirective {
   ngOnInit() {
     this.clipboard = new Clipboard(this.eltRef.nativeElement, {
       target: () => {
-        return this.elt;
+        return <any>this.elt;
       }
     });
 

@@ -1,4 +1,4 @@
-// <reference path="../../../typings/tsd.d.ts">
+// <reference path="../../../typings/index.d.ts">
 
 import { Component, OnInit } from '@angular/core';
 import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from "@angular/router";

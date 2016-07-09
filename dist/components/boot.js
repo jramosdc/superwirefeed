@@ -1,3 +1,4 @@
+// <reference path="../../typings/index.d.ts">
 System.register(["@angular/platform-browser-dynamic", "@angular/core", "@angular/http", "@angular/common", "angularfire2", './routes', "./services/bootstrapServices", './app/app'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;

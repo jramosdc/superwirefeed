@@ -1,3 +1,5 @@
+// <reference path="../../../typings/index.d.ts">
+
 import { Component, Host } from '@angular/core';
 import { NgFormModel } from '@angular/common';
 import { ValidationService } from './validationService';

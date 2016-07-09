@@ -1,4 +1,4 @@
-// <reference path="../../../typings/tsd.d.ts">
+// <reference path="../../../typings/index.d.ts">
 
 import { Component, OnInit, Injector } from '@angular/core';
 import { DatePipe } from "@angular/common";

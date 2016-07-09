@@ -1,3 +1,5 @@
+// <reference path="../../typings/index.d.ts">
+
 import { provideRouter, RouterConfig }  from '@angular/router';
 
 import { FeedsComponent } from './feeds/feeds';

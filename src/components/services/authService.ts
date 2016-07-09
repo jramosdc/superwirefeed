@@ -1,4 +1,4 @@
-// <reference path="../../../typings/tsd.d.ts">
+// <reference path="../../../typings/index.d.ts">
 
 import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularfire2';
