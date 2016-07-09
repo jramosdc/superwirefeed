@@ -1,0 +1,11 @@
+{
+  "name": "feedApp",
+  "dependencies": {},
+  "globalDependencies": {
+    "core-js": "registry:dt/core-js#0.0.0+20160602141332",
+    "firebase": "registry:dt/firebase#2.4.1+20160412125105",
+    "jasmine": "registry:dt/jasmine#2.2.0+20160621224255",
+    "jquery": "registry:dt/jquery#1.10.0+20160704162008",
+    "node": "registry:dt/node#6.0.0+20160709063457"
+  }
+}

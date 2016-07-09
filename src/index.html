@@ -7,7 +7,7 @@
     <title>SuperWire</title>
     <!-- Library for Supporting ES2015 Features -->
     <!-- If Browser not support ES2015 -->
-    <!-- <script src="lib/es6-shim.min.js"></script> -->
+     <script src="lib/shim.min.js"></script> 
     <!-- Library for Zones  -->
     <script src="lib/zone.js"></script>
     <!-- Library for Reflect Metadata  -->
@@ -38,6 +38,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.5/clipboard.min.js"></script>
     <!-- Configuration of SystemJS -->
     <script>
+        
         // map tells the System loader where to look for things
         var map = {
             'components': 'components',
@@ -56,22 +57,32 @@
             'angularfire2': { main: 'angularfire2.js', defaultExtension: 'js' },
         };
 
-        var packageNames = [
-            '@angular/common',
-            '@angular/compiler',
-            '@angular/core',
-            '@angular/http',
-            '@angular/platform-browser',
-            '@angular/platform-browser-dynamic',
-            '@angular/router-deprecated',
-            '@angular/testing',
-            '@angular/upgrade',
+        var ngPackageNames = [
+            'common',
+            'compiler',
+            'core',
+            'forms',
+            'http',
+            'platform-browser',
+            'platform-browser-dynamic',
+            'router',
+            'router-deprecated',
         ];
 
-        // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
-        packageNames.forEach(function (pkgName) {
-            packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
-        });
+         // Individual files (~300 requests):
+        function packIndex(pkgName) {
+            packages['@angular/' + pkgName] = { main: 'index.js', defaultExtension: 'js' };
+        }
+        // Bundled (~40 requests):
+        function packUmd(pkgName) {
+            packages['@angular/' + pkgName] = { main: '/bundles/' + pkgName + '.umd.js', defaultExtension: 'js' };
+        }
+
+        // Most environments should use UMD; some (Karma) need the individual index files
+        var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
+        
+        // Add package entries for angular packages
+        ngPackageNames.forEach(setPackageConfig);
 
         var config = {
             map: map,
@@ -79,7 +90,9 @@
         }
 
         System.config(config);
+
         System.import('components').catch(function(err){ console.error(err); });
+
     </script>
 </head>
 
