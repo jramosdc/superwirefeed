@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/common", '@angular/router-deprecated', '../services/authService', '../directives/clip', "../pipes/orderby", '../pipes/searchPostTitle', '../pipes/searchCategory'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/common", '@angular/router', '../services/authService', '../directives/clip', "../pipes/orderby", '../pipes/searchPostTitle', '../pipes/searchCategory'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, router_deprecated_1, authService_1, clip_1, orderby_1, searchPostTitle_1, searchCategory_1;
+    var core_1, common_1, router_1, authService_1, clip_1, orderby_1, searchPostTitle_1, searchCategory_1;
     var PostsComponent;
     return {
         setters:[
@@ -21,8 +21,8 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
             function (common_1_1) {
                 common_1 = common_1_1;
             },
-            function (router_deprecated_1_1) {
-                router_deprecated_1 = router_deprecated_1_1;
+            function (router_1_1) {
+                router_1 = router_1_1;
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
@@ -41,16 +41,19 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
             }],
         execute: function() {
             PostsComponent = (function () {
-                function PostsComponent(as, params, router) {
+                function PostsComponent(as, route, router) {
+                    var _this = this;
                     this.as = as;
-                    this.params = params;
+                    this.route = route;
                     this.router = router;
                     this.categories = [];
                     this.emailLoading = false;
                     this.Domain = this.as.getDomain();
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
-                    this.FeedID = this.params.get('feedid');
+                    this.route.params.subscribe(function (params) {
+                        _this.FeedID = params['feedid'];
+                    });
                 }
                 PostsComponent.prototype.ngOnInit = function () {
                     var _this = this;
@@ -78,15 +81,15 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                 };
                 PostsComponent.prototype.navigate = function (type, id) {
                     if (type === 'new') {
-                        this.router.navigate(['\NewPost']);
+                        this.router.navigate(['\newpost']);
                         this.as.setActiveFeedID(this.FeedID);
                     }
                     else if (type === 'edit') {
-                        this.router.navigate(['\EditPost', { postid: id }]);
+                        this.router.navigate(['\editpost', id]);
                         this.as.setActiveFeedID(this.FeedID);
                     }
                     else if (type === 'view') {
-                        this.router.navigate(['\ViewPost', { postid: id }]);
+                        this.router.navigate(['\post', id]);
                         this.as.setActiveFeedID(this.FeedID);
                     }
                 };
@@ -110,7 +113,7 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                 PostsComponent.prototype.closeEmail = function () {
                     $('#errorEmail').html('');
                     $('#emailModel').closeModal();
-                    this.router.navigate(['/Feeds']);
+                    this.router.navigate(['/feeds']);
                 };
                 PostsComponent.prototype.deleteModel = function (postid) {
                     this.deletePostID = postid;
@@ -143,10 +146,10 @@ System.register(['@angular/core', "@angular/common", '@angular/router-deprecated
                         },
                         styleUrls: ['components/posts/posts.css'],
                         templateUrl: 'components/posts/posts.html',
-                        directives: [router_deprecated_1.RouterLink, clip_1.ClipboardDirective],
+                        directives: [router_1.ROUTER_DIRECTIVES, clip_1.ClipboardDirective],
                         pipes: [searchPostTitle_1.SearchPostTitlePipe, common_1.DatePipe, orderby_1.OrderBy, searchCategory_1.SearchCategory]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.RouteParams, router_deprecated_1.Router])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.ActivatedRoute, router_1.Router])
                 ], PostsComponent);
                 return PostsComponent;
             }());

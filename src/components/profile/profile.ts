@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouteParams, Router } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -11,7 +11,7 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html',
-    directives: [RouterLink]
+    directives: [ROUTER_DIRECTIVES]
 })
 export class ProfileComponent implements OnInit {
 
@@ -27,17 +27,19 @@ export class ProfileComponent implements OnInit {
     postCategoryList: Array<string> = []
     postCategoryNew: Array<string> = []
 
-    constructor(private as: authService, private params: RouteParams, private router: Router) {
+    constructor(private as: authService, private route: ActivatedRoute, private router: Router) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.as.setActivePageTitle('Profile');
         this.domain = this.as.getDomain();
-        this.userid = this.params.get('userid');
-        if (this.userid) {
-            this.as.getUserProfile(this.userid).subscribe((profile) => {
-                this.profile = profile;
-            });
-        }
+        this.route.params.subscribe(params => {
+            this.userid = params['userid'];
+            if (this.userid) {
+                this.as.getUserProfile(this.userid).subscribe((profile) => {
+                    this.profile = profile;
+                });
+            }
+        });
     }
 
     ngOnInit() {
@@ -136,7 +138,7 @@ export class ProfileComponent implements OnInit {
                 $('#errorDelete').html('');
                 $('#confirmDeleteModel').closeModal();
                 this.deleteLoading = false;
-                this.router.navigate(['/Feeds']);
+                this.router.navigate(['/feeds']);
             }).catch(err => {
                 console.log('Delete All Failed: ', err);
                 $('#errorDelete').html(err);

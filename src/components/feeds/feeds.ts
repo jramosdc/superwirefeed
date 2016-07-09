@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router } from "@angular/router";
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 import { SearchCategory } from '../pipes/searchCategory';
@@ -14,8 +14,8 @@ import { OrderBy } from "../pipes/orderby";
 	},
     styleUrls: ['components/feeds/feeds.css'],
 	templateUrl: 'components/feeds/feeds.html',
-	directives: [ RouterLink ],
-	pipes: [ SearchCategory, OrderBy ]
+	directives: [ROUTER_DIRECTIVES],
+	pipes: [SearchCategory, OrderBy]
 })
 export class FeedsComponent implements OnInit {
 

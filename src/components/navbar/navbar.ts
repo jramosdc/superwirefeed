@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router } from '@angular/router-deprecated';
+import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -9,7 +9,7 @@ import { User, authService } from '../services/authService';
 	host: {},
     styleUrls: ['components/navbar/navbar.css'],
 	templateUrl: 'components/navbar/navbar.html',
-	directives: [RouterLink]
+	directives: [ROUTER_DIRECTIVES]
 })
 export class NavbarComponent implements OnInit {
 
@@ -32,10 +32,10 @@ export class NavbarComponent implements OnInit {
     
     navigate() {
         if (this.activeFeed['id']) {
-            this.router.navigate(['\Posts', { feedid: this.activeFeed['id'] }]);
+            this.router.navigate(['\posts', this.activeFeed['id']]);
             this.as.setActiveFeedID('');
         } else {
-            this.router.navigate(['\Feeds']);
+            this.router.navigate(['feeds']);
         }
     }
 

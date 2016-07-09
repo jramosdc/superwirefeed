@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from "@angular/router";
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -11,7 +11,7 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/editpost/editpost.css'],
     templateUrl: 'components/editpost/editpost.html',
-    directives: [RouterLink]
+    directives: [ROUTER_DIRECTIVES]
 })
 export class EditPostComponent implements OnInit, AfterViewInit {
 
@@ -22,12 +22,14 @@ export class EditPostComponent implements OnInit, AfterViewInit {
     postLoading: boolean;
     categories: Array<string> = [];
 
-    constructor(private as: authService, private router: Router, private params: RouteParams) {
+    constructor(private as: authService, private router: Router, private route: ActivatedRoute) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.categories = this.as.getPostCategories();
         this.as.setActivePageTitle('Edit Post');
-        this.postid = this.params.get('postid');
+        this.route.params.subscribe(params => {
+            this.postid = params['postid'];
+        });
     }
 
     ngOnInit() {
@@ -97,7 +99,7 @@ export class EditPostComponent implements OnInit, AfterViewInit {
             console.log('Post is Updated!');
             $('#errorPost').html('');
             this.postLoading = false;
-            this.router.navigate(['/Posts', { feedid: this.User.feed.id }]);
+            this.router.navigate(['/posts', this.User.feed.id]);
         }).catch(err => {
             console.log("Post Update Failed!", err);
             $('#errorPost').html(err);

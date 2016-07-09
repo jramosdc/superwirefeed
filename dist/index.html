@@ -38,6 +38,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.5/clipboard.min.js"></script>
     <!-- Configuration of SystemJS -->
     <script>
+        
         // map tells the System loader where to look for things
         var map = {
             'components': 'components',
@@ -79,6 +80,7 @@
 
         // Most environments should use UMD; some (Karma) need the individual index files
         var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
+        
         // Add package entries for angular packages
         ngPackageNames.forEach(setPackageConfig);
 
@@ -88,7 +90,9 @@
         }
 
         System.config(config);
+
         System.import('components').catch(function(err){ console.error(err); });
+
     </script>
 </head>
 

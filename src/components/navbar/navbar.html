@@ -6,16 +6,16 @@
     <ul class="right hide-on-med-and-down">
         <li><a (click)="loginModal()" *ngIf="!User.password.email">Login</a></li>
         <li><a (click)="registerModal()" *ngIf="!User.password.email">Create feed</a></li>
-        <li class="valign-wrapper" *ngIf="User.password.profileImageURL" [routerLink]="['/Profile', { userid: User.feed.userid}]"><img [src]="User.password.profileImageURL" class="valign avatar circle" alt="User Profile Image"></li>
-        <li *ngIf="User.password.email && !User.password.profileImageURL" [routerLink]="['/Profile', { userid: User.feed.userid}]"><i class="mdi mdi-account valign avatar circle"></i></li>
-        <li [routerLink]="['/Profile', { userid: User.feed.userid}]">{{User.password.email}}</li>
+        <li class="valign-wrapper" *ngIf="User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]"><img [src]="User.password.profileImageURL" class="valign avatar circle" alt="User Profile Image"></li>
+        <li *ngIf="User.password.email && !User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]"><i class="mdi mdi-account valign avatar circle"></i></li>
+        <li [routerLink]="['/profile', User.feed.userid]">{{User.password.email}}</li>
         <li><a (click)="logout()" *ngIf="User.password.email">Logout</a></li>
     </ul>
     <ul class="side-nav" id="mobile-demo">
         <li><a class="blue-text" (click)="loginModal()" *ngIf="!User.password.email">Login</a></li>
         <li><a class="blue-text" (click)="registerModal()" *ngIf="!User.password.email">Create feed</a></li>
         <li>
-            <a class="valign-wrapper" [routerLink]="['/Profile', { userid: User.feed.userid}]">
+            <a class="valign-wrapper" [routerLink]="['/profile', User.feed.userid]">
                 <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="circle avatar left" alt="User Profile Image">
                 <i *ngIf="User.password.email && !User.password.profileImageURL" class="blue-text mdi mdi-account valign avatar circle left"></i>
                 <span class="blue-text center-align right">{{User.password.email}}</span>

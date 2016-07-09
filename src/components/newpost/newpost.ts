@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -11,7 +11,7 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/newpost/newpost.css'],
     templateUrl: 'components/newpost/newpost.html',
-    directives: [RouterLink]
+    directives: [ROUTER_DIRECTIVES]
 })
 export class NewPostComponent implements OnInit {
 
@@ -76,7 +76,7 @@ export class NewPostComponent implements OnInit {
             console.log('Post is Submitted!');
             $('#errorPost').html('');
             this.postLoading = false;
-            this.router.navigate(['/Posts', { feedid: this.User.feed.id }]);
+            this.router.navigate(['/Posts', this.User.feed.id]);
         }).catch(err => {
             console.log("Post Submit Failed!", err);
             $('#errorPost').html(err);

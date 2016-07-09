@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router", '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,15 +11,15 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, authService_1;
+    var core_1, router_1, authService_1;
     var NewPostComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (router_deprecated_1_1) {
-                router_deprecated_1 = router_deprecated_1_1;
+            function (router_1_1) {
+                router_1 = router_1_1;
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
@@ -86,7 +86,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         console.log('Post is Submitted!');
                         $('#errorPost').html('');
                         _this.postLoading = false;
-                        _this.router.navigate(['/Posts', { feedid: _this.User.feed.id }]);
+                        _this.router.navigate(['/Posts', _this.User.feed.id]);
                     }).catch(function (err) {
                         console.log("Post Submit Failed!", err);
                         $('#errorPost').html(err);
@@ -101,9 +101,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         },
                         styleUrls: ['components/newpost/newpost.css'],
                         templateUrl: 'components/newpost/newpost.html',
-                        directives: [router_deprecated_1.RouterLink]
+                        directives: [router_1.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router])
                 ], NewPostComponent);
                 return NewPostComponent;
             }());

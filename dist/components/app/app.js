@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navbar', '../feeds/feeds', '../posts/posts', '../newpost/newpost', '../editpost/editpost', '../viewpost/viewpost', '../profile/profile', '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router", '../navbar/navbar', '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,36 +11,18 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, navbar_1, feeds_1, posts_1, newpost_1, editpost_1, viewpost_1, profile_1, authService_1;
+    var core_1, router_1, navbar_1, authService_1;
     var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (router_deprecated_1_1) {
-                router_deprecated_1 = router_deprecated_1_1;
+            function (router_1_1) {
+                router_1 = router_1_1;
             },
             function (navbar_1_1) {
                 navbar_1 = navbar_1_1;
-            },
-            function (feeds_1_1) {
-                feeds_1 = feeds_1_1;
-            },
-            function (posts_1_1) {
-                posts_1 = posts_1_1;
-            },
-            function (newpost_1_1) {
-                newpost_1 = newpost_1_1;
-            },
-            function (editpost_1_1) {
-                editpost_1 = editpost_1_1;
-            },
-            function (viewpost_1_1) {
-                viewpost_1 = viewpost_1_1;
-            },
-            function (profile_1_1) {
-                profile_1 = profile_1_1;
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
@@ -58,16 +40,8 @@ System.register(['@angular/core', "@angular/router-deprecated", '../navbar/navba
                         host: {},
                         styleUrls: ['components/app/app.css'],
                         templateUrl: 'components/app/app.html',
-                        directives: [router_deprecated_1.RouterOutlet, navbar_1.NavbarComponent]
-                    }),
-                    router_deprecated_1.RouteConfig([
-                        { path: "/feeds", name: "Feeds", component: feeds_1.FeedsComponent, useAsDefault: true },
-                        { path: "/posts/:feedid", name: "Posts", component: posts_1.PostsComponent },
-                        { path: "/newpost", name: "NewPost", component: newpost_1.NewPostComponent },
-                        { path: "/editpost/:postid", name: "EditPost", component: editpost_1.EditPostComponent },
-                        { path: "/post/:postid", name: "ViewPost", component: viewpost_1.ViewPostComponent },
-                        { path: "/profile/:userid", name: "Profile", component: profile_1.ProfileComponent }
-                    ]), 
+                        directives: [router_1.ROUTER_DIRECTIVES, navbar_1.NavbarComponent]
+                    }), 
                     __metadata('design:paramtypes', [authService_1.authService])
                 ], AppComponent);
                 return AppComponent;

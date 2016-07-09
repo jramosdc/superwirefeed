@@ -2,7 +2,7 @@
 
 import { Component, OnInit, Injector } from '@angular/core';
 import { DatePipe } from "@angular/common";
-import { RouterLink, RouteParams, CanActivate, ComponentInstruction, Router } from '@angular/router-deprecated';
+import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 import { ClipboardDirective } from '../directives/clip';
@@ -17,20 +17,9 @@ import { SearchCategory } from '../pipes/searchCategory';
 	},
     styleUrls: ['components/posts/posts.css'],
 	templateUrl: 'components/posts/posts.html',
-	directives: [RouterLink, ClipboardDirective],
+	directives: [ROUTER_DIRECTIVES, ClipboardDirective],
 	pipes: [SearchPostTitlePipe, DatePipe, OrderBy, SearchCategory]
 })
-// @CanActivate((next: ComponentInstruction, prev: ComponentInstruction) => {
-// 	let injector = Injector//.resolveAndCreate([authService]);
-// 	let as : authService = injector.get(authService);
-// 	return new Promise((resolve, reject) => {
-// 		let userid: string = next.params.userid;
-// 		as.getFeedName(userid, (feedName) => {
-// 			as.setActivePageTitle(feedName);
-// 			resolve(true);
-// 		});
-// 	});
-// })
 export class PostsComponent implements OnInit {
 
 	User: User;
@@ -43,11 +32,13 @@ export class PostsComponent implements OnInit {
 	posts: FirebaseListObservable<any[]>
 	emailLoading: Boolean = false
     
-	constructor(public as: authService, public params: RouteParams, private router: Router) {
+	constructor(public as: authService, public route: ActivatedRoute, private router: Router) {
 		this.Domain = this.as.getDomain();
 		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
-		this.FeedID = this.params.get('feedid')
+		this.route.params.subscribe(params => {
+			this.FeedID = params['feedid'];
+		});
 	}
 
 	ngOnInit() {
@@ -74,13 +65,13 @@ export class PostsComponent implements OnInit {
 
 	navigate(type: string, id: string) {
 		if (type === 'new') {
-			this.router.navigate(['\NewPost']);
+			this.router.navigate(['\newpost']);
 			this.as.setActiveFeedID(this.FeedID);
 		} else if (type === 'edit') {
-			this.router.navigate(['\EditPost', { postid: id }]);
+			this.router.navigate(['\editpost', id]);
 			this.as.setActiveFeedID(this.FeedID);
 		} else if (type === 'view') {
-			this.router.navigate(['\ViewPost', { postid: id }]);
+			this.router.navigate(['\post', id]);
 			this.as.setActiveFeedID(this.FeedID);
 		}
 	}
@@ -105,7 +96,7 @@ export class PostsComponent implements OnInit {
 	closeEmail() {
 		$('#errorEmail').html('');
 		$('#emailModel').closeModal();
-		this.router.navigate(['/Feeds']);
+		this.router.navigate(['/feeds']);
 	}
 	
 	deleteModel(postid) {

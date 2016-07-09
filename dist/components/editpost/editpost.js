@@ -1,5 +1,5 @@
 // <reference path="../../../typings/tsd.d.ts">
-System.register(['@angular/core', "@angular/router-deprecated", '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router", '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,31 +11,34 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, authService_1;
+    var core_1, router_1, authService_1;
     var EditPostComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (router_deprecated_1_1) {
-                router_deprecated_1 = router_deprecated_1_1;
+            function (router_1_1) {
+                router_1 = router_1_1;
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
             }],
         execute: function() {
             EditPostComponent = (function () {
-                function EditPostComponent(as, router, params) {
+                function EditPostComponent(as, router, route) {
+                    var _this = this;
                     this.as = as;
                     this.router = router;
-                    this.params = params;
+                    this.route = route;
                     this.categories = [];
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.categories = this.as.getPostCategories();
                     this.as.setActivePageTitle('Edit Post');
-                    this.postid = this.params.get('postid');
+                    this.route.params.subscribe(function (params) {
+                        _this.postid = params['postid'];
+                    });
                 }
                 EditPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
@@ -106,7 +109,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         console.log('Post is Updated!');
                         $('#errorPost').html('');
                         _this.postLoading = false;
-                        _this.router.navigate(['/Posts', { feedid: _this.User.feed.id }]);
+                        _this.router.navigate(['/posts', _this.User.feed.id]);
                     }).catch(function (err) {
                         console.log("Post Update Failed!", err);
                         $('#errorPost').html(err);
@@ -121,9 +124,9 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         },
                         styleUrls: ['components/editpost/editpost.css'],
                         templateUrl: 'components/editpost/editpost.html',
-                        directives: [router_deprecated_1.RouterLink]
+                        directives: [router_1.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_deprecated_1.Router, router_deprecated_1.RouteParams])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute])
                 ], EditPostComponent);
                 return EditPostComponent;
             }());

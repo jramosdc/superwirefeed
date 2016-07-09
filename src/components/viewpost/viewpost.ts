@@ -1,7 +1,7 @@
 // <reference path="../../../typings/tsd.d.ts">
 
 import { Component } from '@angular/core';
-import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from "@angular/router";
 import { FirebaseObjectObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 
@@ -12,7 +12,7 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/viewpost/viewpost.css'],
     templateUrl: 'components/viewpost/viewpost.html',
-    directives: [RouterLink]
+    directives: [ROUTER_DIRECTIVES]
 })
 export class ViewPostComponent {
 
@@ -20,27 +20,29 @@ export class ViewPostComponent {
     postid: string
     post: FirebaseObjectObservable<{}>
 
-    constructor(private as: authService, private router: Router, private params: RouteParams) {
+    constructor(private as: authService, private router: Router, private route: ActivatedRoute) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.as.setActivePageTitle('View Post');
-        this.postid = this.params.get('postid');
-        if (this.postid) {
-            this.as.loadPost(this.postid).subscribe((post) => { 
-                this.post = post;
-                setTimeout(function() {
-                    $('.linkify').linkify();
+        this.route.params.subscribe(params => {
+            this.postid = params['postid'];
+            if (this.postid) {
+                this.as.loadPost(this.postid).subscribe((post) => {
+                    this.post = post;
+                    setTimeout(function () {
+                        $('.linkify').linkify();
+                    });
                 });
-            });
-        }
+            }
+        });
     }
 
     returnMoment(timestamp) {
-		if (timestamp) {
-			return moment().to(timestamp);
-		} else {
-			return ''
-		}
+        if (timestamp) {
+            return moment().to(timestamp);
+        } else {
+            return ''
+        }
     }
 
 }
