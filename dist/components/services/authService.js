@@ -38,8 +38,8 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                     this.af.auth.subscribe(function (res) {
                         if (res) {
                             _this.User.uid = res.uid;
-                            _this.User.password.profileImageURL = res.password['profileImageURL'];
-                            _this.User.password.email = res.password['email'];
+                            _this.User.password.profileImageURL = res.auth['photoURL'];
+                            _this.User.password.email = res.auth['email'];
                             _this.getUserFeedDetail(_this.User.uid).subscribe(function (feed) {
                                 _this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
                                 _this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';

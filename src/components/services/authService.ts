@@ -26,8 +26,8 @@ export class authService {
         this.af.auth.subscribe((res: FirebaseAuthState) => {
             if (res) {
                 this.User.uid = res.uid;
-                this.User.password.profileImageURL = res.password['photoURL']
-                this.User.password.email = res.password['email'];
+                this.User.password.profileImageURL = res.auth['photoURL']
+                this.User.password.email = res.auth['email'];
                 this.getUserFeedDetail(this.User.uid).subscribe( feed => {
                     this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
                     this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';

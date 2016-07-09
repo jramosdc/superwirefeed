@@ -13,9 +13,9 @@
     <ul class="side-nav" id="mobile-demo">
         <li><a class="blue-text" (click)="loginModal()" *ngIf="!User.password.email">Login</a></li>
         <li><a class="blue-text" (click)="registerModal()" *ngIf="!User.password.email">Create feed</a></li>
-        <li *ngIf="User.password.profileImageURL" class="valign-wrapper" [routerLink]="['/Profile', { userid: User.feed.userid}]">
-            <img [src]="User.password.profileImageURL" class="circle avatar" alt="User Profile Image">
-            <span class="blue-text">{{User.password.email}}</span>
+        <li class="valign-wrapper" [routerLink]="['/Profile', { userid: User.feed.userid}]">
+            <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="circle avatar" alt="User Profile Image">
+            <a class="blue-text center-align">{{User.password.email}}</a>
         </li>
         <li><a class="pink-text text-accent-1 center-align" (click)="logout()" *ngIf="User.password.email">Logout</a></li>
     </ul>

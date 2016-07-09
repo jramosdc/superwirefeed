@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
             this.loginLoading = false;
         }).catch((err) => {
             console.log("Login Failed!", err);
-            $('#errorLogin').html(err);
+            $('#errorLogin').html(err['message']);
             this.loginLoading = false;
 		});
 	}

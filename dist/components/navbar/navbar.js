@@ -67,7 +67,7 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                         _this.loginLoading = false;
                     }).catch(function (err) {
                         console.log("Login Failed!", err);
-                        $('#errorLogin').html(err);
+                        $('#errorLogin').html(err['message']);
                         _this.loginLoading = false;
                     });
                 };
