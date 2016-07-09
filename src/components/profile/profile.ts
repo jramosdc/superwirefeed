@@ -11,7 +11,7 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html',
-    directives: [ RouterLink ]
+    directives: [RouterLink]
 })
 export class ProfileComponent implements OnInit {
 
@@ -41,12 +41,12 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        $(window).scroll(function() {
-			let space = $(window).innerHeight() - $('.fab').offsetTop + $('.fab').offsetHeight;
-			if(space < 200){
-				$('.fab').css('margin-bottom', '150px');
-			}
-		});
+        $(window).scroll(function () {
+            let space = $(window).innerHeight() - $('.fab').offsetTop + $('.fab').offsetHeight;
+            if (space < 200) {
+                $('.fab').css('margin-bottom', '150px');
+            }
+        });
     }
 
     edit() {
@@ -57,7 +57,7 @@ export class ProfileComponent implements OnInit {
             $('#feedName').val(this.profile['feedName']);
             $('#description').val(this.profile['description']);
             if (this.profile['private'] === 'true') {
-               $('#pyes').prop('checked', true);
+                $('#pyes').prop('checked', true);
             } else {
                 $('#pno').prop('checked', true);
             }
@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit {
     }
 
     update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement) {
-        if (bio.value === '' || feedId .value === '' || feedName.value === '' || description.value === '' || category.value === '' ) return
+        if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '') return
         this.profileLoading = true;
         $.merge(this.authList, this.authNew)
         this.authNew.splice(0);
@@ -101,7 +101,7 @@ export class ProfileComponent implements OnInit {
                 'category': category.value,
                 'authEmail': this.authList,
                 'postCategories': this.postCategoryList,
-                'timestamp': Firebase.ServerValue.TIMESTAMP,
+                'timestamp': firebase.database.ServerValue.TIMESTAMP,
                 'owner': {
                     'uid': this.User.uid,
                     'userid': this.userid
@@ -131,12 +131,16 @@ export class ProfileComponent implements OnInit {
     delete(answer: string) {
         this.deleteLoading = true;
         if (answer === 'yes') {
-            this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).subscribe(res => {
+            this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).then(res => {
                 console.log('User, Profile and Feed Deleted!')
                 $('#errorDelete').html('');
                 $('#confirmDeleteModel').closeModal();
                 this.deleteLoading = false;
                 this.router.navigate(['/Feeds']);
+            }).catch(err => {
+                console.log('Delete All Failed: ', err);
+                $('#errorDelete').html(err);
+                this.deleteLoading = false;
             })
         } else {
             $('#errorDelete').html('');
@@ -169,7 +173,7 @@ export class ProfileComponent implements OnInit {
             this.postCategoryList = $.grep(this.postCategoryList, val => {
                 return val != category;
             })
-        } 
+        }
     }
 
 }

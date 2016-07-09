@@ -93,7 +93,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                         category: category.value,
                         pdfLink: pdfLink.value ? pdfLink.value : '',
                         gsheetLink: gsheetLink.value ? gsheetLink.value : '',
-                        timestamp: Firebase.ServerValue.TIMESTAMP
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
                     };
                     this.as.updatePost(this.postid, post).then(function (res) {
                         title.value = '';

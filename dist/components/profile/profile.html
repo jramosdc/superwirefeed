@@ -2,7 +2,8 @@
     <div class="col s12 card padding10px">
         <div class="jumbo"></div>
         <div class="container icons">
-            <div class="big-icon"><img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12"></div>
+            <div class="big-icon" *ngIf="profile.profileImageURL"><img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12"></div>
+            <div class="big-icon" *ngIf="profile.email && !profile.profileImageURL"><i class="black-text mdi mdi-account circle col s12" style="font-size: 10em;"></i></div>
             <div class="rate" *ngIf="!editMode && profile">
                 <a class="star-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-star"></i></a>
                 <a class="like-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-thumb-up"></i></a>
@@ -169,22 +170,24 @@
         <div class="row center-align">
             <span class="red-text" id="errorDelete"></span>
         </div>
-        <div class="modal-footer">
-            <div class="preloader-wrapper small active" *ngIf="deleteLoading">
-                <div class="spinner-layer spinner-blue-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
+        <div class="row">
+            <div class="col s12 layout-row layout-align-space-between-center">
+                <a class="waves-effect waves-blue btn white-text" (click)="delete('yes')">Yes</a>
+                <div class="preloader-wrapper small active" *ngIf="deleteLoading">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
                     </div>
                 </div>
+                <a class="waves-effect waves-blue btn white-text" (click)="delete('no')">No</a>
             </div>
-            <a class="waves-effect waves-blue btn white-text right" (click)="delete('yes')">Yes</a>
-            <a class="waves-effect waves-blue btn white-text left" (click)="delete('no')">No</a>
         </div>
     </div>
 </div>

@@ -63,7 +63,7 @@ export class NewPostComponent implements OnInit {
 				userid: this.User.feed.userid,
 				feedid: this.User.feed.id
 			},
-			timestamp: Firebase.ServerValue.TIMESTAMP
+			timestamp: firebase.database.ServerValue.TIMESTAMP
         }
         this.as.submitPost(post).then(res => {
             title.value = '';

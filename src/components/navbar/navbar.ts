@@ -87,12 +87,12 @@ export class NavbarComponent implements OnInit {
                 });
             }).catch((err) => { 
                 console.log("Login Failed after Registration!", err);
-                $('#errorRegister').html(err);
+                $('#errorRegister').html(err['message']);
                 this.registerLoading = false;
             });
         }).catch((err) => {
             console.log("Register Failed!", err);
-            $('#errorRegister').html(err);
+            $('#errorRegister').html(err['message']);
             this.registerLoading = false;
 		});
 	}

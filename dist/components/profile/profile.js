@@ -111,7 +111,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             'category': category.value,
                             'authEmail': _this.authList,
                             'postCategories': _this.postCategoryList,
-                            'timestamp': Firebase.ServerValue.TIMESTAMP,
+                            'timestamp': firebase.database.ServerValue.TIMESTAMP,
                             'owner': {
                                 'uid': _this.User.uid,
                                 'userid': _this.userid
@@ -140,12 +140,16 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                     var _this = this;
                     this.deleteLoading = true;
                     if (answer === 'yes') {
-                        this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).subscribe(function (res) {
+                        this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).then(function (res) {
                             console.log('User, Profile and Feed Deleted!');
                             $('#errorDelete').html('');
                             $('#confirmDeleteModel').closeModal();
                             _this.deleteLoading = false;
                             _this.router.navigate(['/Feeds']);
+                        }).catch(function (err) {
+                            console.log('Delete All Failed: ', err);
+                            $('#errorDelete').html(err);
+                            _this.deleteLoading = false;
                         });
                     }
                     else {

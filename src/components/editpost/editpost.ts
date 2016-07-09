@@ -84,7 +84,7 @@ export class EditPostComponent implements OnInit, AfterViewInit {
             category: category.value,
             pdfLink: pdfLink.value ? pdfLink.value : '',
             gsheetLink: gsheetLink.value ? gsheetLink.value : '',
-			timestamp: Firebase.ServerValue.TIMESTAMP
+			timestamp: firebase.database.ServerValue.TIMESTAMP
         }
         this.as.updatePost(this.postid, post).then(res => {
             title.value = '';

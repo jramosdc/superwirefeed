@@ -12,7 +12,7 @@ export class authService {
 	// ref: Firebase = new firebase("https://superwireapp.firebaseio.com");
 	domain: string = 'https://feed.superwire.io'
 	User: User;
-	activePage: Object = { title: ''};
+	activePage: Object = { title: '' };
 	activeFeed: Object = {
 		id: null
 	};
@@ -28,13 +28,13 @@ export class authService {
                 this.User.uid = res.uid;
                 this.User.password.profileImageURL = res.auth['photoURL']
                 this.User.password.email = res.auth['email'];
-                this.getUserFeedDetail(this.User.uid).subscribe( feed => {
+                this.getUserFeedDetail(this.User.uid).subscribe(feed => {
                     this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
                     this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
                     this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
 					if (feed[0] && feed[0]['postCategories']) {
 						this.postCategories.splice(0);
-						feed[0]['postCategories'].forEach( val => {
+						feed[0]['postCategories'].forEach(val => {
 							this.postCategories.push(val);
 						});
 					}
@@ -114,7 +114,7 @@ export class authService {
 	getActiveFeed() {
 		return this.activeFeed;
 	}
-	
+
 	loadFeeds() {
         this.Feeds = this.af.database.list('/feeds');
 	}
@@ -221,17 +221,25 @@ export class authService {
 	}
 
 	deleteAll(feedid: string, userid: string, uid: string) {
-		return this.af.database.list('/posts', {
-			query: {
-				orderByChild: 'owner/userid',
-				equalTo: userid
-			}
-		}).map(res => {
-			return this.af.object('/feeds/' + feedid).remove().then(res => {
-				return this.af.object('/users/' + userid).remove().then(res => {
-					// return this.af.auth.remove(this.af.auth); 
+		return new Promise((resolve, reject) => {
+			this.af.database.list('/posts', {
+				query: {
+					orderByChild: 'owner/userid',
+					equalTo: userid
+				}
+			}).map(posts => {
+				return posts.map(post => {
+					this.deletePost(post.$key).catch(reject);
 				})
-			});
+			}).subscribe(res => {
+				this.af.database.object('/feeds/' + feedid).remove().then(res => {
+					this.af.database.object('/users/' + userid).remove().then(res => {
+						this.af.auth.logout();
+						resolve();
+						// return this.af.auth.remove(this.af.auth);
+					}).catch(reject);
+				}).catch(reject);
+			})
 		})
 	}
 

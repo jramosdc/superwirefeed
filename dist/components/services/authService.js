@@ -210,16 +210,24 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                 };
                 authService.prototype.deleteAll = function (feedid, userid, uid) {
                     var _this = this;
-                    return this.af.database.list('/posts', {
-                        query: {
-                            orderByChild: 'owner/userid',
-                            equalTo: userid
-                        }
-                    }).map(function (res) {
-                        return _this.af.object('/feeds/' + feedid).remove().then(function (res) {
-                            return _this.af.object('/users/' + userid).remove().then(function (res) {
-                                // return this.af.auth.remove(this.af.auth); 
+                    return new Promise(function (resolve, reject) {
+                        _this.af.database.list('/posts', {
+                            query: {
+                                orderByChild: 'owner/userid',
+                                equalTo: userid
+                            }
+                        }).map(function (posts) {
+                            return posts.map(function (post) {
+                                _this.deletePost(post.$key).catch(reject);
                             });
+                        }).subscribe(function (res) {
+                            _this.af.database.object('/feeds/' + feedid).remove().then(function (res) {
+                                _this.af.database.object('/users/' + userid).remove().then(function (res) {
+                                    _this.af.auth.logout();
+                                    resolve();
+                                    // return this.af.auth.remove(this.af.auth);
+                                }).catch(reject);
+                            }).catch(reject);
                         });
                     });
                 };

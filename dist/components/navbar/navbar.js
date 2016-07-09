@@ -97,12 +97,12 @@ System.register(['@angular/core', '@angular/router-deprecated', '../services/aut
                             });
                         }).catch(function (err) {
                             console.log("Login Failed after Registration!", err);
-                            $('#errorRegister').html(err);
+                            $('#errorRegister').html(err['message']);
                             _this.registerLoading = false;
                         });
                     }).catch(function (err) {
                         console.log("Register Failed!", err);
-                        $('#errorRegister').html(err);
+                        $('#errorRegister').html(err['message']);
                         _this.registerLoading = false;
                     });
                 };

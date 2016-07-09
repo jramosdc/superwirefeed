@@ -73,7 +73,7 @@ System.register(['@angular/core', "@angular/router-deprecated", '../services/aut
                             userid: this.User.feed.userid,
                             feedid: this.User.feed.id
                         },
-                        timestamp: Firebase.ServerValue.TIMESTAMP
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
                     };
                     this.as.submitPost(post).then(function (res) {
                         title.value = '';
