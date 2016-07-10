@@ -79,11 +79,12 @@
         }
 
         // Most environments should use UMD; some (Karma) need the individual index files
-        var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
+        var setPackageConfig = packIndex;
+        // var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
         
         // Add package entries for angular packages
         ngPackageNames.forEach(setPackageConfig);
-
+        console.log(packages)
         var config = {
             map: map,
             packages: packages
