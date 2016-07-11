@@ -26,9 +26,15 @@ export class NavbarComponent implements OnInit {
         this.activeFeed = this.as.getActiveFeed();
 	}
 
+
 	ngOnInit() {
-        $(".button-collapse").sideNav();
+        $(".button-collapse").sideNav({
+      menuWidth: 200, 
+      edge: 'right', 
+      closeOnClick: true 
+    });
     }
+
     
     navigate() {
         if (this.activeFeed['id']) {

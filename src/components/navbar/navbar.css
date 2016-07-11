@@ -9,9 +9,9 @@
 
 @media only screen and (max-width: 500px) {
     #loginModal {
-          width: 90% ! important;
+          width: 90%;
     }
     #registerModal {
-          width: 90% ! important;
+          width: 90%;
     } 
 }    
