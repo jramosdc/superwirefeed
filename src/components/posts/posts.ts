@@ -61,6 +61,7 @@ export class PostsComponent implements OnInit {
 				this.posts = this.as.loadPosts(this.FeedID);
 			}
 		});
+	    $('ul.tabs').tabs();
 	}
 
 	navigate(type: string, id: string) {
