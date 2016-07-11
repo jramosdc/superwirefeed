@@ -2,6 +2,16 @@
     padding: 10px;
 }
 
+.posttitle {
+  border-bottom: 1px solid #ddd;
+}
+
+p { word-wrap:break-word;
+}
+
+.collapsible-body {
+   background-color:#fcfcfc;
+} 
 
 .md-chip {
   display: inline-block;

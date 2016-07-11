@@ -31,6 +31,8 @@ export class ViewPostComponent {
                     this.post = post;
                     setTimeout(function () {
                         $('.linkify').linkify();
+                        $('.collapsible').collapsible({accordion : false});
+                        $("img").addClass("responsive-img");
                     });
                 });
             }
