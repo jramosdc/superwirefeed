@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', "@angular/router", '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/platform-browser', '@angular/core', "@angular/router", '../services/authService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,10 +11,13 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1;
+    var platform_browser_1, core_1, router_1, authService_1;
     var ViewPostComponent;
     return {
         setters:[
+            function (platform_browser_1_1) {
+                platform_browser_1 = platform_browser_1_1;
+            },
             function (core_1_1) {
                 core_1 = core_1_1;
             },
@@ -26,7 +29,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
             }],
         execute: function() {
             ViewPostComponent = (function () {
-                function ViewPostComponent(as, router, route) {
+                function ViewPostComponent(as, router, route, sanitizer) {
                     var _this = this;
                     this.as = as;
                     this.router = router;
@@ -39,8 +42,12 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         if (_this.postid) {
                             _this.as.loadPost(_this.postid).subscribe(function (post) {
                                 _this.post = post;
+                                _this.post['purl'] = sanitizer.bypassSecurityTrustResourceUrl(post.pdfLink);
+                                _this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
                                 setTimeout(function () {
                                     $('.linkify').linkify();
+                                    $('.collapsible').collapsible({ accordion: false });
+                                    $("img").addClass("responsive-img");
                                 });
                             });
                         }
@@ -64,7 +71,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         templateUrl: 'components/viewpost/viewpost.html',
                         directives: [router_1.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute, platform_browser_1.DomSanitizationService])
                 ], ViewPostComponent);
                 return ViewPostComponent;
             }());

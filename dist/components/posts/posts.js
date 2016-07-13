@@ -78,6 +78,7 @@ System.register(['@angular/core', "@angular/common", '@angular/router', '../serv
                             _this.posts = _this.as.loadPosts(_this.FeedID);
                         }
                     });
+                    $('ul.tabs').tabs();
                 };
                 PostsComponent.prototype.navigate = function (type, id) {
                     if (type === 'new') {

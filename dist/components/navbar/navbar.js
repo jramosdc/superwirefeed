@@ -37,7 +37,11 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                     this.activeFeed = this.as.getActiveFeed();
                 }
                 NavbarComponent.prototype.ngOnInit = function () {
-                    $(".button-collapse").sideNav();
+                    $(".button-collapse").sideNav({
+                        menuWidth: 200,
+                        edge: 'right',
+                        closeOnClick: true
+                    });
                 };
                 NavbarComponent.prototype.navigate = function () {
                     if (this.activeFeed['id']) {

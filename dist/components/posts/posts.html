@@ -2,9 +2,9 @@
     <div class="indeterminate"></div>
 </div>
 <div class="row">
-    <div class="col s2">
-        <ul class="collection">
-            <li class="collection-item" [ngClass]="{active: activeCategory === category}" *ngFor="let category of categories" (click)="activeCategory = category"> {{category}} </li>
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s2" *ngFor="let category of categories" (click)="activeCategory = category"><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
         </ul>
     </div>
     <div class="col s10">
@@ -55,7 +55,7 @@
         <a class="modal-action modal-close waves-effect waves-light btn-flat">No</a>
     </div>
 </div>
-<div id="emailModel" class="modal" style="width: 40% ! important">
+<div id="emailModel" class="modal" style="width: 40%">
     <div class="modal-content">
         <div class="nav-wrapper center-align">
             <h2 class="purple-text">Authorized Email?</h2>

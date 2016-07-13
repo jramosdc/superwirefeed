@@ -1,5 +1,6 @@
 // <reference path="../../../typings/index.d.ts">
 
+import { SafeResourceUrl, DomSanitizationService } from '@angular/platform-browser';
 import { Component } from '@angular/core';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from "@angular/router";
 import { FirebaseObjectObservable } from 'angularfire2';
@@ -20,7 +21,7 @@ export class ViewPostComponent {
     postid: string
     post: FirebaseObjectObservable<{}>
 
-    constructor(private as: authService, private router: Router, private route: ActivatedRoute) {
+    constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizationService) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.as.setActivePageTitle('View Post');
@@ -29,6 +30,8 @@ export class ViewPostComponent {
             if (this.postid) {
                 this.as.loadPost(this.postid).subscribe((post) => {
                     this.post = post;
+                    this.post['purl'] = sanitizer.bypassSecurityTrustResourceUrl(post.pdfLink);
+                    this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
                     setTimeout(function () {
                         $('.linkify').linkify();
                         $('.collapsible').collapsible({accordion : false});
