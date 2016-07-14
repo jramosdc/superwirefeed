@@ -28,21 +28,27 @@
     </ul>
     </div>
 </nav>
-<div id="loginModal" class="modal" style="width: 30%">
-    <div class="modal-content">
+<div id="loginModal" class="modal" >
+    <form class="modal-content" novalidate #f="ngForm" (submit)="login(f.value)">
         <div class="nav-wrapper center-align">
             <h2 class="purple-text">Login</h2>
         </div>
         <div class="row">
             <label for="email">Email</label>
             <div class="input-field">
-                <input type="text" class="validate" #email placeholder="Email" required>
+                <input type="email" class="validate" #email="ngModel" name="email" [(ngModel)]="e" placeholder="Email" required pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9]{2,4})?">
+                <small class="invalid-test" [hidden]="email.valid || (email.pristine && !f._submitted)">
+                    Email is required and format should be <i>john@doe.com</i>.
+                </small>
             </div>
         </div>
         <div class="row">
             <label for="password">Password</label>
             <div class="input-field">
-                <input type="password" class="validate" #password placeholder="password" required>
+                <input type="password" class="validate" #password="ngModel" name="password" [(ngModel)]="p" placeholder="password" required minlength="6">
+                <small class="invalid-test" [hidden]="password.valid || (password.pristine && !f._submitted)">
+                    Password is required (minimum 6 characters).
+                </small>
             </div>
         </div>
         <div class="row center-align">
@@ -62,12 +68,12 @@
                     </div>
                 </div>
             </div>
-            <a class="waves-effect waves-blue btn white-text" (click)="login(email, password)">Login</a>
+            <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!f.valid">Login</button>
         </div>
-    </div>
+    </form>
 </div>
 <div id="registerModal" class="modal" style="width: 30%">
-    <div class="modal-content">
+    <form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value)">
         <div class="nav-wrapper center-align">
             <h2 class="purple-text">Register</h2>
         </div>
@@ -75,19 +81,28 @@
             <div class="row">
                 <label for="reqUserID">User ID</label>
                 <div class="input-field">
-                    <input type="text" class="validate" #regUserID placeholder="User ID" required>
+                    <input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" placeholder="User ID" required>
+                    <small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !f._submitted)">
+                        Name is required.
+                    </small>
                 </div>
             </div>
             <div class="row">
                 <label for="regEmail">Email</label>
                 <div class="input-field">
-                    <input type="text" class="validate" #regEmail placeholder="Email" required>
+                    <input type="text" class="validate" #regEmail="ngModel" name="email" [(ngModel)]="e" placeholder="Email" required pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9]{2,4})?">
+                    <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
+                        Email is required and format should be <i>john@doe.com</i>.
+                    </small>
                 </div>
             </div>
             <div class="row">
                 <label for="regPassword">Password</label>
                 <div class="input-field">
-                    <input type="password" class="validate" #regPassword placeholder="password" required>
+                    <input type="password" class="validate" #regPassword="ngModel" name="password" [(ngModel)]="p" placeholder="password" required minlength="6">
+                    <small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !f._submitted)">
+                        Password is required (minimum 6 characters).
+                    </small>
                 </div>
             </div>
             <div class="row center-align">
@@ -107,8 +122,8 @@
                         </div>
                     </div>
                 </div>
-                <a class="waves-effect waves-blue btn white-text" (click)="register(regUserID, regEmail, regPassword)">Create</a>
+                <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!f.valid">Create</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>

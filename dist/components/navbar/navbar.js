@@ -56,15 +56,13 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                     $(".button-collapse").sideNav('hide');
                     $('#loginModal').openModal();
                 };
-                NavbarComponent.prototype.login = function (email, password) {
+                NavbarComponent.prototype.login = function (user) {
                     var _this = this;
-                    if (email.value == '' || password.value == '')
-                        return;
                     this.loginLoading = true;
-                    this.as.login(email.value, password.value).then(function (res) {
+                    this.as.login(user.email, user.password).then(function (res) {
                         _this.User = _this.as.getUser();
-                        email.value = '';
-                        password.value = '';
+                        user.email = '';
+                        user.password = '';
                         console.log('User is Logged In!');
                         $('#errorLogin').html('');
                         $('#loginModal').closeModal();
@@ -79,22 +77,20 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                     $(".button-collapse").sideNav('hide');
                     $('#registerModal').openModal();
                 };
-                NavbarComponent.prototype.register = function (userid, email, password) {
+                NavbarComponent.prototype.register = function (user) {
                     var _this = this;
-                    if (userid.value == '' || email.value == '' || password.value == '')
-                        return;
                     this.registerLoading = true;
-                    this.as.register(email.value.toLowerCase(), password.value).then(function (res) {
-                        _this.as.login(email.value.toLowerCase(), password.value).then(function (res) {
-                            _this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value.toLowerCase()).then(function () {
+                    this.as.register(user.email.toLowerCase(), user.password).then(function (res) {
+                        _this.as.login(user.email.toLowerCase(), user.password).then(function (res) {
+                            _this.as.createUserProfile(res.uid, user.name.toLowerCase(), user.email.toLowerCase()).then(function () {
                                 console.log('Profile is Created!');
                                 console.log('User is Registered & Logged In!');
-                                _this.router.navigate(['/profile', userid.value.toLowerCase()]);
-                                userid.value = '';
-                                email.value = '';
-                                password.value = '';
+                                _this.router.navigate(['/profile', user.name.toLowerCase()]);
+                                user.name = '';
+                                user.email = '';
+                                user.password = '';
                                 $('#errorRegister').html('');
-                                $('#registerModal').closeModal();
+                                // $('#registerModal').closeModal();
                                 _this.registerLoading = false;
                             }).catch(function (err) {
                                 console.log('Profile Creation Failed!', err);

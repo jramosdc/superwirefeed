@@ -3,7 +3,7 @@
 import { bootstrap } from "@angular/platform-browser-dynamic";
 import { enableProdMode } from "@angular/core";
 import { HTTP_PROVIDERS } from "@angular/http";
-import { FORM_PROVIDERS } from "@angular/common";
+import { disableDeprecatedForms, provideForms } from '@angular/forms';
 import { FIREBASE_PROVIDERS, defaultFirebase, AuthMethods, AuthProviders, firebaseAuthConfig } from "angularfire2";
 
 import { APP_ROUTER_PROVIDERS } from './routes';
@@ -15,7 +15,8 @@ enableProdMode();
 
 bootstrap(AppComponent, [
     HTTP_PROVIDERS,
-    FORM_PROVIDERS,
+    disableDeprecatedForms(),
+    provideForms(),
     FIREBASE_PROVIDERS,
     defaultFirebase({
         apiKey: "AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo",

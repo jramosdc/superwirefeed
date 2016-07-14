@@ -7,6 +7,10 @@
     padding: 10px;
 }
 
+.invalid-test {
+    color: red;
+}
+
 @media only screen and (max-width: 500px) {
     #loginModal {
           width: 90%;

@@ -13,11 +13,11 @@ import { User, authService } from '../services/authService';
 })
 export class NavbarComponent implements OnInit {
 
-	User: User
-	activePage: Object
-	activeFeed: Object
-	loginLoading: boolean = false
-    registerLoading: boolean = false
+    User: User;
+    activePage: Object;
+	activeFeed: Object;
+    loginLoading: boolean = false;
+    registerLoading: boolean = false;
     
 	constructor(public as: authService, private router: Router) {
 		this.User = this.as.emptyUser();
@@ -25,7 +25,6 @@ export class NavbarComponent implements OnInit {
         this.activePage = this.as.getActivePageTitle();
         this.activeFeed = this.as.getActiveFeed();
 	}
-
 
 	ngOnInit() {
         $(".button-collapse").sideNav({
@@ -50,13 +49,12 @@ export class NavbarComponent implements OnInit {
 		$('#loginModal').openModal();
 	}
 
-	login(email: HTMLInputElement, password: HTMLInputElement) {
-		if (email.value == '' || password.value == '') return
+    login(user) {
 		this.loginLoading = true;
-        this.as.login(email.value, password.value).then((res) => {
+        this.as.login(user.email, user.password).then((res) => {
             this.User = this.as.getUser();
-            email.value = '';
-            password.value = '';
+            user.email = '';
+            user.password = '';
             console.log('User is Logged In!');
             $('#errorLogin').html('');
             $('#loginModal').closeModal();
@@ -73,20 +71,19 @@ export class NavbarComponent implements OnInit {
 		$('#registerModal').openModal();
 	}
 
-	register(userid: HTMLInputElement, email: HTMLInputElement, password: HTMLInputElement) {
-		if (userid.value == '' || email.value == '' || password.value == '') return
-        this.registerLoading = true;
-        this.as.register(email.value.toLowerCase(), password.value).then((res) => {
-            this.as.login(email.value.toLowerCase(), password.value).then((res) => {
-                this.as.createUserProfile(res.uid, userid.value.toLowerCase(), email.value.toLowerCase()).then(() => {
+	register(user) {
+		this.registerLoading = true;
+        this.as.register(user.email.toLowerCase(), user.password).then((res) => {
+            this.as.login(user.email.toLowerCase(), user.password).then((res) => {
+                this.as.createUserProfile(res.uid, user.name.toLowerCase(), user.email.toLowerCase()).then(() => {
                     console.log('Profile is Created!')
                     console.log('User is Registered & Logged In!');
-                    this.router.navigate(['/profile', userid.value.toLowerCase()]);
-                    userid.value = '';
-                    email.value = '';
-                    password.value = '';
+                    this.router.navigate(['/profile', user.name.toLowerCase()]);
+                    user.name = '';
+                    user.email = '';
+                    user.password = '';
                     $('#errorRegister').html('');
-                    $('#registerModal').closeModal();
+                    // $('#registerModal').closeModal();
                     this.registerLoading = false;
                 }).catch((err) => {
                     console.log('Profile Creation Failed!', err)

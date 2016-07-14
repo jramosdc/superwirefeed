@@ -12,7 +12,7 @@ import { OrderBy } from "../pipes/orderby";
 	host: {
 		class: 'col s12'
 	},
-    styleUrls: ['components/feeds/feeds.css'],
+	styleUrls: ['components/feeds/feeds.css'],
 	templateUrl: 'components/feeds/feeds.html',
 	directives: [ROUTER_DIRECTIVES],
 	pipes: [SearchCategory, OrderBy]
@@ -20,9 +20,9 @@ import { OrderBy } from "../pipes/orderby";
 export class FeedsComponent implements OnInit {
 
 	User: User;
-    feeds: FirebaseListObservable<any[]>;
-    activeCategory: string;
-    categories: Array<string>
+	feeds: FirebaseListObservable<any[]>;
+	activeCategory: string;
+	categories: Array<string>
 
 	constructor(public as: authService, private router: Router) {
 		this.User = this.as.emptyUser();
@@ -31,11 +31,11 @@ export class FeedsComponent implements OnInit {
 		this.categories = this.as.getCategories();
 		this.as.setActivePageTitle('LATEST FEEDS');
 	}
-	
+
 	ngOnInit() {
-        $('ul.tabs').tabs();
+		$('ul.tabs').tabs();
 	}
-	
+
 	returnMoment(timestamp) {
 		if (timestamp) {
 			return moment().to(timestamp);
