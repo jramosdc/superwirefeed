@@ -28,7 +28,7 @@ export class NewPostComponent implements OnInit {
     }
 
     ngOnInit() {
-        $('select').material_select();
+        // $('select').material_select();
         tinymce.remove();
         tinymce.init({
             selector: '#editor',
@@ -47,17 +47,20 @@ export class NewPostComponent implements OnInit {
         });
     }
 
-    submitPost(title: HTMLInputElement, priority: HTMLSelectElement, type: HTMLSelectElement, category: HTMLSelectElement, pdfLink: HTMLInputElement, gsheetLink: HTMLInputElement) {
-		if (title.value == '' || this.detail == '' || priority.value == '' || $(type).val() == '' ) return
+    submitPost(event, newpost) {
+        console.log(newpost.value)
+        event.preventDefault();
+        console.log(newpost.valid)
+		if (!newpost.valid) return
         this.postLoading = true;
         let post = {
-            title: title.value,
-			detail: this.detail,
-			priority: priority.value,
-			types: $(type).val(),
-            category: category.value,
-            pdfLink: pdfLink.value ? pdfLink.value : '',
-            gsheetLink: gsheetLink.value ? gsheetLink.value : '',
+            title: newpost.title,
+			detail: newpost.detail,
+			priority: newpost.priority,
+			types: newpost.type,
+            category: newpost.category,
+            pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
+            gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
 			owner: {
 				uid: this.User.uid,
 				userid: this.User.feed.userid,
@@ -66,13 +69,6 @@ export class NewPostComponent implements OnInit {
 			timestamp: firebase.database.ServerValue.TIMESTAMP
         }
         this.as.submitPost(post).then(res => {
-            title.value = '';
-            this.detail = '';
-            priority.value = '';
-            type.value = '';
-            category.value = '';
-            pdfLink.value = '';
-            gsheetLink.value = '';
             console.log('Post is Submitted!');
             $('#errorPost').html('');
             this.postLoading = false;

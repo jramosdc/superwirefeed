@@ -1,61 +1,79 @@
 <div class="row">
-    <div class="col s12 card padding10px">
+    <form class="col s12 card padding10px" novalidate #f="ngForm" (ngsubmit)="submitPost($event, f)">
         <div class="row">
             <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name}}</a><a href="#" class="active">New Post</a>
             </div>
         </div>
+        <small>{{f.value | json}}</small>
+        <small>{{f.valid}}</small>
         <div class="row">
             <label for="title">Title</label>
             <div class="input-field">
-                <input type="text" class="validate" #title placeholder="Title">
+                <input type="text" class="validate" #title="ngModel" name="title" [(ngModel)]="t" placeholder="Title" required>
+                <small class="invalid-test" [hidden]="title.valid || (title.pristine && !f._submitted)">
+                    Title is required.
+                </small>
             </div>
         </div>
         <div class="row">
             <label for="editor">Add text, links, images, embed videos</label>
+            <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="detail" placeholder="Detail" required>
             <div id="editor"></div>
+            <small class="invalid-test" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
+                Detail is required.
+            </small>
         </div>
         <div class="row">
             <label for="priority">Priority</label>
             <div class="input-field">
-                <select #priority>
+                <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="p" required>
                     <option value="" disabled selected>Select Priority</option>
                     <option value="High">Urgent</option>
                     <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
                 </select>
+                <small class="invalid-test" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
+                    Priority is required.
+                </small>
             </div>
         </div>
         <div class="row">
             <label for="type">Type</label>
             <div class="input-field">
-                <select #type multiple>
+                <select class="browser-default" #type="ngModel" multiple name="type" [(ngModel)]="ty" required style="height: 80pt;">
                     <option value="" disabled selected>Select Type</option>
                     <option value="file-document">Text</option>
                     <option value="camera">Image</option>
                     <option value="play-box-outline">Video</option>
                     <option value="microphone">Audio</option>
                 </select>
+                <small class="invalid-test" [hidden]="type.valid || (type.pristine && !f._submitted)">
+                    Type is required.
+                </small>
             </div>
         </div>
         <div class="row">
             <label for="category">Category</label>
             <div class="input-field">
-                <select class="browser-default" id="category" #category>
+                <select class="browser-default" id="category" #category="ngModel" name="category" [(ngModel)]="c" required>
                     <option value="" disabled selected>Select Category</option>
                     <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
                 </select>
+                <small class="invalid-test" [hidden]="category.valid || (category.pristine && !f._submitted)">
+                    Category is required.
+                </small>
             </div>
         </div>
         <div class="row">
             <label for="pdfLink">Pdf Link</label>
             <div class="input-field">
-                <input type="text" class="validate" #pdfLink placeholder="Pdf Link">
+                <input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pl" placeholder="Pdf Link">
             </div>
         </div>
         <div class="row">
             <label for="gsheetLink">Google Spread Sheet Link</label>
             <div class="input-field">
-                <input type="text" class="validate" #gsheetLink placeholder="Google Spread Sheet Link">
+                <input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl"  placeholder="Google Spread Sheet Link">
             </div>
         </div>
         <div class="row center-align">
@@ -75,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <a class="waves-effect waves-light btn purple white-text right" (click)="submitPost(title, priority, type, category, pdfLink, gsheetLink)">Post</a>
+            <button type="submit" class="waves-effect waves-light btn purple white-text right">Post</button>
         </div>
-    </div>
+    </form>
 </div>

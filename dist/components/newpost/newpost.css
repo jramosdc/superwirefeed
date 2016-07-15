@@ -2,6 +2,10 @@
     padding: 10px;
 }
 
+.invalid-test {
+    color: red;
+}
+
 .md {
   position: absolute;
   left: 50%;
