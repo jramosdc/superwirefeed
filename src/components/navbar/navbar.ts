@@ -53,8 +53,6 @@ export class NavbarComponent implements OnInit {
 		this.loginLoading = true;
         this.as.login(user.email, user.password).then((res) => {
             this.User = this.as.getUser();
-            user.email = '';
-            user.password = '';
             console.log('User is Logged In!');
             $('#errorLogin').html('');
             $('#loginModal').closeModal();
@@ -79,11 +77,8 @@ export class NavbarComponent implements OnInit {
                     console.log('Profile is Created!')
                     console.log('User is Registered & Logged In!');
                     this.router.navigate(['/profile', user.name.toLowerCase()]);
-                    user.name = '';
-                    user.email = '';
-                    user.password = '';
                     $('#errorRegister').html('');
-                    // $('#registerModal').closeModal();
+                    $('#registerModal').closeModal();
                     this.registerLoading = false;
                 }).catch((err) => {
                     console.log('Profile Creation Failed!', err)

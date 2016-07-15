@@ -1,11 +1,8 @@
 <div class="row">
     <div class="col s12 card padding10px">
         <div class="row">
-
-
-  <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name}}</a><a href="#" class="active">New Post</a>
-   </div>
-
+            <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name}}</a><a href="#" class="active">New Post</a>
+            </div>
         </div>
         <div class="row">
             <label for="title">Title</label>
@@ -42,7 +39,7 @@
         </div>
         <div class="row">
             <label for="category">Category</label>
-            <div class="input-field" >
+            <div class="input-field">
                 <select class="browser-default" id="category" #category>
                     <option value="" disabled selected>Select Category</option>
                     <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
