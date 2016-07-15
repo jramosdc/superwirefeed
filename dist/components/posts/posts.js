@@ -82,15 +82,15 @@ System.register(['@angular/core', "@angular/common", '@angular/router', '../serv
                 };
                 PostsComponent.prototype.navigate = function (type, id) {
                     if (type === 'new') {
-                        this.router.navigate(['\newpost']);
+                        this.router.navigate(['newpost']);
                         this.as.setActiveFeedID(this.FeedID);
                     }
                     else if (type === 'edit') {
-                        this.router.navigate(['\editpost', id]);
+                        this.router.navigate(['editpost', id]);
                         this.as.setActiveFeedID(this.FeedID);
                     }
                     else if (type === 'view') {
-                        this.router.navigate(['\post', id]);
+                        this.router.navigate(['post', id]);
                         this.as.setActiveFeedID(this.FeedID);
                     }
                 };

@@ -76,7 +76,7 @@ export class NewPostComponent implements OnInit {
             console.log('Post is Submitted!');
             $('#errorPost').html('');
             this.postLoading = false;
-            this.router.navigate(['/Posts', this.User.feed.id]);
+            this.router.navigate(['posts', this.User.feed.id]);
         }).catch(err => {
             console.log("Post Submit Failed!", err);
             $('#errorPost').html(err);

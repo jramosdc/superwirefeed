@@ -86,7 +86,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         console.log('Post is Submitted!');
                         $('#errorPost').html('');
                         _this.postLoading = false;
-                        _this.router.navigate(['/Posts', _this.User.feed.id]);
+                        _this.router.navigate(['posts', _this.User.feed.id]);
                     }).catch(function (err) {
                         console.log("Post Submit Failed!", err);
                         $('#errorPost').html(err);

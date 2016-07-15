@@ -7,7 +7,7 @@
             <li class="tab col s2" *ngFor="let category of categories" (click)="activeCategory = category"><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
         </ul>
     </div>
-    <div class="col s10">
+    <div class="col s12">
         <div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="User.password.email && FeedID == User.feed.id">
             <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="navigate('new')"><i class="large mdi mdi-plus"></i></a>
         </div>
