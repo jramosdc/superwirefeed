@@ -19,7 +19,7 @@ export class NewPostComponent implements OnInit {
     detail: string;
     postLoading: boolean;
     categories: Array<string> = [];
-    
+
     constructor(private as: authService, private router: Router) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
@@ -47,37 +47,35 @@ export class NewPostComponent implements OnInit {
         });
     }
 
-    submitPost(event, newpost) {
-        console.log(newpost.value)
-        event.preventDefault();
-        console.log(newpost.valid)
-		if (!newpost.valid) return
-        this.postLoading = true;
-        let post = {
-            title: newpost.title,
-			detail: newpost.detail,
-			priority: newpost.priority,
-			types: newpost.type,
-            category: newpost.category,
-            pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
-            gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
-			owner: {
-				uid: this.User.uid,
-				userid: this.User.feed.userid,
-				feedid: this.User.feed.id
-			},
-			timestamp: firebase.database.ServerValue.TIMESTAMP
-        }
-        this.as.submitPost(post).then(res => {
-            console.log('Post is Submitted!');
-            $('#errorPost').html('');
-            this.postLoading = false;
-            this.router.navigate(['posts', this.User.feed.id]);
-        }).catch(err => {
-            console.log("Post Submit Failed!", err);
-            $('#errorPost').html(err);
-            this.postLoading = false;
-        });
+    submitPost(valid, newpost) {
+      event.preventDefault();
+      if (!valid) { return; }
+      this.postLoading = true;
+      let post = {
+        title: newpost.title,
+        detail: newpost.detail,
+        priority: newpost.priority,
+        types: newpost.type,
+        category: newpost.category,
+        pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
+        gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
+        owner: {
+          uid: this.User.uid,
+          userid: this.User.feed.userid,
+          feedid: this.User.feed.id
+        },
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }
+      this.as.submitPost(post).then(res => {
+        console.log('Post is Submitted!');
+        $('#errorPost').html('');
+        this.postLoading = false;
+        this.router.navigate(['posts', this.User.feed.id]);
+      }).catch(err => {
+        console.log('Post Submit Failed!', err);
+        $('#errorPost').html(err);
+        this.postLoading = false;
+      });
     }
 
 }

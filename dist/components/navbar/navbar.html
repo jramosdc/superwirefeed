@@ -36,7 +36,7 @@
         <div class="row">
             <label for="email">Email</label>
             <div class="input-field">
-                <input type="email" class="validate" #email="ngModel" name="email" [(ngModel)]="e" placeholder="Email" required pattern=".+\@.+\..+">
+                <input type="email" class="validate" #email="ngModel" name="email" [ngModel]="e" placeholder="Email" required pattern=".+\@.+\..+">
                 <small class="invalid-test" [hidden]="email.valid || (email.pristine && !l._submitted)">
                     Email is required and format should be <i>john@doe.com</i>.
                 </small>
@@ -45,7 +45,7 @@
         <div class="row">
             <label for="password">Password</label>
             <div class="input-field">
-                <input type="password" class="validate" #password="ngModel" name="password" [(ngModel)]="p" placeholder="password" required minlength="6">
+                <input type="password" class="validate" #password="ngModel" name="password" [ngModel]="p" placeholder="password" required minlength="6">
                 <small class="invalid-test" [hidden]="password.valid || (password.pristine && !l._submitted)">
                     Password is required (minimum 6 characters).
                 </small>
@@ -90,7 +90,7 @@
             <div class="row">
                 <label for="regEmail">Email</label>
                 <div class="input-field">
-                    <input type="text" class="validate" #regEmail="ngModel" name="email" [(ngModel)]="e" placeholder="Email" required pattern=".+\@.+\..+">
+                    <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" placeholder="Email" required pattern=".+\@.+\..+">
                     <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
                         Email is required and format should be <i>john@doe.com</i>.
                     </small>
@@ -99,7 +99,7 @@
             <div class="row">
                 <label for="regPassword">Password</label>
                 <div class="input-field">
-                    <input type="password" class="validate" #regPassword="ngModel" name="password" [(ngModel)]="p" placeholder="password" required minlength="6">
+                    <input type="password" class="validate" #regPassword="ngModel" name="password" [ngModel]="p" placeholder="password" required minlength="6">
                     <small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !f._submitted)">
                         Password is required (minimum 6 characters).
                     </small>

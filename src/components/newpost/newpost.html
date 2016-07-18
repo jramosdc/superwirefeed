@@ -1,16 +1,16 @@
 <div class="row">
-    <form class="col s12 card padding10px" novalidate #f="ngForm" (ngsubmit)="submitPost($event, f)">
+    <form class="col s12 card padding10px" novalidate #f="ngForm" (ngSubmit)="submitPost(f.valid, f.value)">
         <div class="row">
             <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name}}</a><a href="#" class="active">New Post</a>
             </div>
         </div>
-        <small>{{f.value | json}}</small>
-        <small>{{f.valid}}</small>
+        <!--<small>{{f | json}}</small>
+        -->
         <div class="row">
             <label for="title">Title</label>
             <div class="input-field">
                 <input type="text" class="validate" #title="ngModel" name="title" [(ngModel)]="t" placeholder="Title" required>
-                <small class="invalid-test" [hidden]="title.valid || (title.pristine && !f._submitted)">
+                <small class="red-text" [hidden]="title.valid || (title.pristine && !f._submitted)">
                     Title is required.
                 </small>
             </div>
@@ -19,7 +19,7 @@
             <label for="editor">Add text, links, images, embed videos</label>
             <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="detail" placeholder="Detail" required>
             <div id="editor"></div>
-            <small class="invalid-test" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
+            <small class="red-text" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
                 Detail is required.
             </small>
         </div>
@@ -32,7 +32,7 @@
                     <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
                 </select>
-                <small class="invalid-test" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
+                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
                     Priority is required.
                 </small>
             </div>
@@ -47,7 +47,7 @@
                     <option value="play-box-outline">Video</option>
                     <option value="microphone">Audio</option>
                 </select>
-                <small class="invalid-test" [hidden]="type.valid || (type.pristine && !f._submitted)">
+                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">
                     Type is required.
                 </small>
             </div>
@@ -59,7 +59,7 @@
                     <option value="" disabled selected>Select Category</option>
                     <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
                 </select>
-                <small class="invalid-test" [hidden]="category.valid || (category.pristine && !f._submitted)">
+                <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">
                     Category is required.
                 </small>
             </div>

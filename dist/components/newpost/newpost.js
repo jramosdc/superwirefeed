@@ -55,13 +55,12 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         }
                     });
                 };
-                NewPostComponent.prototype.submitPost = function (event, newpost) {
+                NewPostComponent.prototype.submitPost = function (valid, newpost) {
                     var _this = this;
-                    console.log(newpost.value);
                     event.preventDefault();
-                    console.log(newpost.valid);
-                    if (!newpost.valid)
+                    if (!valid) {
                         return;
+                    }
                     this.postLoading = true;
                     var post = {
                         title: newpost.title,
@@ -84,7 +83,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         _this.postLoading = false;
                         _this.router.navigate(['posts', _this.User.feed.id]);
                     }).catch(function (err) {
-                        console.log("Post Submit Failed!", err);
+                        console.log('Post Submit Failed!', err);
                         $('#errorPost').html(err);
                         _this.postLoading = false;
                     });
