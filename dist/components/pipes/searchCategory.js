@@ -24,7 +24,8 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 }
                 SearchCategory.prototype.transform = function (values, args) {
                     var filter = args;
-                    return filter === 'All' ? values : filter ? values.filter(function (value) { return value.category.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) != -1; }) : values;
+                    return filter === 'All' ? values :
+                        filter ? values.filter(function (value) { return value.category.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1; }) : values;
                 };
                 SearchCategory = __decorate([
                     core_1.Pipe({

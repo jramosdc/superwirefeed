@@ -24,7 +24,7 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 }
                 SearchPostTitlePipe.prototype.transform = function (values, args) {
                     var filter = args;
-                    return filter ? values.filter(function (value) { return value.title.toLocaleLowerCase().indexOf(filter) != -1; }) : values;
+                    return filter ? values.filter(function (value) { return value.title.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1; }) : values;
                 };
                 SearchPostTitlePipe = __decorate([
                     core_1.Pipe({
