@@ -105,6 +105,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                     this.as.logout();
                     console.log('User is Logged Out!');
                     $(".button-collapse").sideNav('hide');
+                    this.router.navigate(['feeds']);
                 };
                 NavbarComponent = __decorate([
                     core_1.Component({

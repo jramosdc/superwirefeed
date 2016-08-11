@@ -98,6 +98,7 @@ export class NavbarComponent implements OnInit {
     this.as.logout();
     console.log('User is Logged Out!');
     $(".button-collapse").sideNav('hide');
+    this.router.navigate(['feeds']);
   }
 
 }
