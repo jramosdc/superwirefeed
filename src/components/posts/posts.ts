@@ -5,7 +5,6 @@ import { DatePipe } from "@angular/common";
 import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
-import { ClipboardDirective } from '../directives/clip';
 import { OrderBy } from "../pipes/orderby";
 import { SearchPostTitlePipe } from '../pipes/searchPostTitle';
 import { SearchCategory } from '../pipes/searchCategory';
@@ -17,7 +16,6 @@ import { SearchCategory } from '../pipes/searchCategory';
 	},
     styleUrls: ['components/posts/posts.css'],
 	templateUrl: 'components/posts/posts.html',
-	directives: [ROUTER_DIRECTIVES, ClipboardDirective],
 	pipes: [SearchPostTitlePipe, DatePipe, OrderBy, SearchCategory]
 })
 export class PostsComponent implements OnInit {

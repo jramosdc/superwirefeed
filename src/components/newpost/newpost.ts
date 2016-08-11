@@ -1,7 +1,7 @@
 // <reference path="../../../typings/index.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -10,8 +10,7 @@ import { User, authService } from '../services/authService';
         class: 'col s12'
     },
     styleUrls: ['components/newpost/newpost.css'],
-    templateUrl: 'components/newpost/newpost.html',
-    directives: [ROUTER_DIRECTIVES]
+    templateUrl: 'components/newpost/newpost.html'
 })
 export class NewPostComponent implements OnInit {
 

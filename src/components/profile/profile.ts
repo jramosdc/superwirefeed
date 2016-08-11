@@ -11,8 +11,7 @@ import {ImageCropperComponent, Bounds, CropperSettings} from 'ng2-img-cropper';
         class: 'col s12'
     },
     styleUrls: ['components/profile/profile.css'],
-    templateUrl: 'components/profile/profile.html',
-    directives: [ROUTER_DIRECTIVES, ImageCropperComponent]
+    templateUrl: 'components/profile/profile.html'
 })
 export class ProfileComponent extends Type implements OnInit {
 

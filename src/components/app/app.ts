@@ -1,7 +1,6 @@
 // <reference path="../../../typings/index.d.ts">
 
 import { Component } from '@angular/core';
-import { ROUTER_DIRECTIVES } from "@angular/router";
 
 import { NavbarComponent } from '../navbar/navbar';
 import { User, authService } from '../services/authService';
@@ -10,8 +9,7 @@ import { User, authService } from '../services/authService';
 	selector: 'ng2-app',
 	host: {},
 	styleUrls: ['components/app/app.css'],
-	templateUrl: 'components/app/app.html',
-	directives: [ROUTER_DIRECTIVES, NavbarComponent]
+	templateUrl: 'components/app/app.html'
 })
 export class AppComponent {
 

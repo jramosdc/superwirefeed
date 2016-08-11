@@ -2,18 +2,18 @@
   "_args": [
     [
       "tinymce@^4.3.11",
-      "/home/mkamran/Downloads/projects/superwire"
+      "/home/uqutub/Documents/Docx/Projects/superwire"
     ]
   ],
   "_from": "tinymce@>=4.3.11 <5.0.0",
-  "_id": "tinymce@4.4.0",
+  "_id": "tinymce@4.4.1",
   "_inCache": true,
   "_installable": true,
   "_location": "/tinymce",
   "_nodeVersion": "5.11.1",
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/tinymce-4.4.0.tgz_1467283058835_0.8819341158960015"
+    "tmp": "tmp/tinymce-4.4.1.tgz_1469527487002_0.7330783300567418"
   },
   "_npmUser": {
     "email": "is-accounts@ephox.com",
@@ -32,11 +32,11 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.4.0.tgz",
-  "_shasum": "03543be08336da04bac3a414534bda955d26cdb0",
+  "_resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.4.1.tgz",
+  "_shasum": "c39037add71b0ae4226e29bf7d55be1f92435dcd",
   "_shrinkwrap": null,
   "_spec": "tinymce@^4.3.11",
-  "_where": "/home/mkamran/Downloads/projects/superwire",
+  "_where": "/home/uqutub/Documents/Docx/Projects/superwire",
   "bugs": {
     "url": "http://www.tinymce.com/develop/bugtracker.php"
   },
@@ -45,8 +45,8 @@
   "devDependencies": {},
   "directories": {},
   "dist": {
-    "shasum": "03543be08336da04bac3a414534bda955d26cdb0",
-    "tarball": "https://registry.npmjs.org/tinymce/-/tinymce-4.4.0.tgz"
+    "shasum": "c39037add71b0ae4226e29bf7d55be1f92435dcd",
+    "tarball": "https://registry.npmjs.org/tinymce/-/tinymce-4.4.1.tgz"
   },
   "keywords": [
     "editor",
@@ -71,5 +71,5 @@
   "optionalDependencies": {},
   "readme": "ERROR: No README data found!",
   "scripts": {},
-  "version": "4.4.0"
+  "version": "4.4.1"
 }

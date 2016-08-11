@@ -2,7 +2,7 @@
   "_args": [
     [
       "angularfire2@^2.0.0-beta.3-0930330",
-      "/home/mkamran/Downloads/projects/superwire"
+      "/home/uqutub/Documents/Docx/Projects/superwire"
     ]
   ],
   "_from": "angularfire2@>=2.0.0-beta.3-0930330 <3.0.0",
@@ -36,7 +36,7 @@
   "_shasum": "c041d6ead4037530b497522a87ebcc32b7f3878d",
   "_shrinkwrap": null,
   "_spec": "angularfire2@^2.0.0-beta.3-0930330",
-  "_where": "/home/mkamran/Downloads/projects/superwire",
+  "_where": "/home/uqutub/Documents/Docx/Projects/superwire",
   "author": {
     "name": "jeffbcross"
   },

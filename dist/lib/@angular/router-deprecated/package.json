@@ -2,7 +2,7 @@
   "_args": [
     [
       "@angular/router-deprecated@2.0.0-rc.2",
-      "/home/mkamran/Downloads/projects/superwire"
+      "/home/uqutub/Documents/Docx/Projects/superwire"
     ]
   ],
   "_from": "@angular/router-deprecated@2.0.0-rc.2",
@@ -36,7 +36,7 @@
   "_shasum": "6ffdf75f6090a48e9f084a15aa75e7ce1389be53",
   "_shrinkwrap": null,
   "_spec": "@angular/router-deprecated@2.0.0-rc.2",
-  "_where": "/home/mkamran/Downloads/projects/superwire",
+  "_where": "/home/uqutub/Documents/Docx/Projects/superwire",
   "author": {
     "name": "angular"
   },

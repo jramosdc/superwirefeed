@@ -95,8 +95,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                             class: 'col s12'
                         },
                         styleUrls: ['components/newpost/newpost.css'],
-                        templateUrl: 'components/newpost/newpost.html',
-                        directives: [router_1.ROUTER_DIRECTIVES]
+                        templateUrl: 'components/newpost/newpost.html'
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.Router])
                 ], NewPostComponent);

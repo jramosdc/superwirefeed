@@ -112,6 +112,7 @@ gulp.task('serve', function () {
     .pipe(webserver({
       livereload: true,
       open: true,
+      port: 9089,
       directoryListing: {
         enable: true,
         path: '/index.html'

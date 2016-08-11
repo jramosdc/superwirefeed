@@ -112,8 +112,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                         selector: 'navbar',
                         host: {},
                         styleUrls: ['components/navbar/navbar.css'],
-                        templateUrl: 'components/navbar/navbar.html',
-                        directives: [router_1.ROUTER_DIRECTIVES]
+                        templateUrl: 'components/navbar/navbar.html'
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.Router])
                 ], NavbarComponent);

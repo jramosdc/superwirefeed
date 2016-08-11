@@ -1,15 +1,14 @@
 // <reference path="../../../typings/index.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
 
 @Component({
   selector: 'navbar',
   host: {},
   styleUrls: ['components/navbar/navbar.css'],
-  templateUrl: 'components/navbar/navbar.html',
-  directives: [ROUTER_DIRECTIVES]
+  templateUrl: 'components/navbar/navbar.html'
 })
 export class NavbarComponent implements OnInit {
 

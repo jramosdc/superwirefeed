@@ -60,7 +60,6 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         },
                         styleUrls: ['components/feeds/feeds.css'],
                         templateUrl: 'components/feeds/feeds.html',
-                        directives: [router_1.ROUTER_DIRECTIVES],
                         pipes: [searchCategory_1.SearchCategory, orderby_1.OrderBy]
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.Router])

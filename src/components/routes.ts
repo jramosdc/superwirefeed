@@ -1,6 +1,6 @@
 // <reference path="../../typings/index.d.ts">
 
-import { provideRouter, RouterConfig }  from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { FeedsComponent } from './feeds/feeds';
 import { PostsComponent } from './posts/posts';
@@ -9,7 +9,7 @@ import { EditPostComponent } from './editpost/editpost';
 import { ViewPostComponent } from './viewpost/viewpost';
 import { ProfileComponent } from './profile/profile';
 
-const routes: RouterConfig = [
+export const AppRoutes: Routes = [
   { path: "feeds", component: FeedsComponent },
   { path: "newpost", component: NewPostComponent },
   { path: "posts/:feedid", component: PostsComponent },
@@ -19,6 +19,4 @@ const routes: RouterConfig = [
   { path: "", redirectTo: "feeds", terminal: true }
 ];
 
-export const APP_ROUTER_PROVIDERS = [
-  provideRouter(routes)
-];
+export const ApplicationComponents = [FeedsComponent, PostsComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent];

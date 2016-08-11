@@ -68,8 +68,7 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
                             class: 'col s12'
                         },
                         styleUrls: ['components/viewpost/viewpost.css'],
-                        templateUrl: 'components/viewpost/viewpost.html',
-                        directives: [router_1.ROUTER_DIRECTIVES]
+                        templateUrl: 'components/viewpost/viewpost.html'
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute, platform_browser_1.DomSanitizationService])
                 ], ViewPostComponent);

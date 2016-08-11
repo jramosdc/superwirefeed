@@ -105,8 +105,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                             class: 'col s12'
                         },
                         styleUrls: ['components/editpost/editpost.css'],
-                        templateUrl: 'components/editpost/editpost.html',
-                        directives: [router_1.ROUTER_DIRECTIVES]
+                        templateUrl: 'components/editpost/editpost.html'
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute])
                 ], EditPostComponent);

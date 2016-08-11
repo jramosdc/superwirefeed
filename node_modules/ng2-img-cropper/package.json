@@ -1,11 +1,11 @@
 {
   "_args": [
     [
-      "ng2-img-cropper",
+      "ng2-img-cropper@^0.5.1",
       "/home/uqutub/Documents/Docx/Projects/superwire"
     ]
   ],
-  "_from": "ng2-img-cropper@latest",
+  "_from": "ng2-img-cropper@>=0.5.1 <0.6.0",
   "_id": "ng2-img-cropper@0.5.1",
   "_inCache": true,
   "_installable": true,
@@ -23,11 +23,11 @@
   "_phantomChildren": {},
   "_requested": {
     "name": "ng2-img-cropper",
-    "raw": "ng2-img-cropper",
-    "rawSpec": "",
+    "raw": "ng2-img-cropper@^0.5.1",
+    "rawSpec": "^0.5.1",
     "scope": null,
-    "spec": "latest",
-    "type": "tag"
+    "spec": ">=0.5.1 <0.6.0",
+    "type": "range"
   },
   "_requiredBy": [
     "/"
@@ -35,7 +35,7 @@
   "_resolved": "https://registry.npmjs.org/ng2-img-cropper/-/ng2-img-cropper-0.5.1.tgz",
   "_shasum": "27c73288137772c9e758c9b8145b28b0da6ee79b",
   "_shrinkwrap": null,
-  "_spec": "ng2-img-cropper",
+  "_spec": "ng2-img-cropper@^0.5.1",
   "_where": "/home/uqutub/Documents/Docx/Projects/superwire",
   "author": {
     "name": "Cornel Stefanache"

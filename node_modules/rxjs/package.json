@@ -2,7 +2,7 @@
   "_args": [
     [
       "rxjs@5.0.0-beta.6",
-      "/home/mkamran/Downloads/projects/superwire"
+      "/home/uqutub/Documents/Docx/Projects/superwire"
     ]
   ],
   "_from": "rxjs@5.0.0-beta.6",
@@ -36,7 +36,7 @@
   "_shasum": "cb6dc46d6ddfedfeefc9b15dafd09c34a4370d23",
   "_shrinkwrap": null,
   "_spec": "rxjs@5.0.0-beta.6",
-  "_where": "/home/mkamran/Downloads/projects/superwire",
+  "_where": "/home/uqutub/Documents/Docx/Projects/superwire",
   "author": {
     "email": "blesh@netflix.com",
     "name": "Ben Lesh"

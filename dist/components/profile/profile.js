@@ -265,8 +265,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             class: 'col s12'
                         },
                         styleUrls: ['components/profile/profile.css'],
-                        templateUrl: 'components/profile/profile.html',
-                        directives: [router_1.ROUTER_DIRECTIVES, ng2_img_cropper_1.ImageCropperComponent]
+                        templateUrl: 'components/profile/profile.html'
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.ActivatedRoute, router_1.Router])
                 ], ProfileComponent);

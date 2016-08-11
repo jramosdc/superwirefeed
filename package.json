@@ -14,18 +14,24 @@
   "author": "Muhammad Kamran <smkamranqadri@yahoo.com>",
   "license": "ISC",
   "dependencies": {
-    "@angular/common": "2.0.0-rc.4",
-    "@angular/compiler": "2.0.0-rc.4",
-    "@angular/core": "2.0.0-rc.4",
-    "@angular/forms": "0.2.0",
-    "@angular/http": "2.0.0-rc.4",
-    "@angular/platform-browser": "2.0.0-rc.4",
-    "@angular/platform-browser-dynamic": "2.0.0-rc.4",
-    "@angular/router": "3.0.0-beta.1",
+    "@angular/common": "2.0.0-rc.5",
+    "@angular/compiler": "2.0.0-rc.5",
+    "@angular/core": "2.0.0-rc.5",
+    "@angular/forms": "0.3.0",
+    "@angular/http": "2.0.0-rc.5",
+    "@angular/platform-browser": "2.0.0-rc.5",
+    "@angular/platform-browser-dynamic": "2.0.0-rc.5",
+    "@angular/router": "3.0.0-rc.1",
     "@angular/router-deprecated": "2.0.0-rc.2",
-    "angular2-in-memory-web-api": "0.0.14",
-    "angularfire2": "^2.0.0-beta.3-0930330",
+    "@angular/upgrade": "2.0.0-rc.5",
+    
+    "systemjs": "0.19.27",
     "core-js": "^2.4.0",
+    "reflect-metadata": "^0.1.3",
+    "rxjs": "5.0.0-beta.6",
+    "zone.js": "^0.6.12",
+
+    "angularfire2": "^2.0.0-beta.3-0930330",
     "firebase": "^3.0.3",
     "jquery": "^2.2.4",
     "linkifyjs": "^2.0.3",
@@ -33,11 +39,10 @@
     "materialize-tags": "~1.0.0",
     "mdi": "^1.5.54",
     "ng2-img-cropper": "^0.5.1",
-    "reflect-metadata": "^0.1.3",
-    "rxjs": "5.0.0-beta.6",
-    "systemjs": "0.19.27",
     "tinymce": "^4.3.11",
-    "zone.js": "^0.6.12"
+
+    "angular2-in-memory-web-api": "0.0.15",
+    "bootstrap": "^3.3.6"
   },
   "devDependencies": {
     "del": "^2.2.0",
@@ -46,6 +51,7 @@
     "gulp-typescript": "^2.10.0",
     "gulp-watch": "^4.3.5",
     "gulp-webserver": "^0.9.1",
-    "typescript": "^1.8.10"
+    "typescript": "^1.8.10",
+    "typings":"^1.0.4"
   }
 }

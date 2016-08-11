@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', "@angular/common", '@angular/router', '../services/authService', '../directives/clip', "../pipes/orderby", '../pipes/searchPostTitle', '../pipes/searchCategory'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/common", '@angular/router', '../services/authService', "../pipes/orderby", '../pipes/searchPostTitle', '../pipes/searchCategory'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/common", '@angular/router', '../serv
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, router_1, authService_1, clip_1, orderby_1, searchPostTitle_1, searchCategory_1;
+    var core_1, common_1, router_1, authService_1, orderby_1, searchPostTitle_1, searchCategory_1;
     var PostsComponent;
     return {
         setters:[
@@ -26,9 +26,6 @@ System.register(['@angular/core', "@angular/common", '@angular/router', '../serv
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
-            },
-            function (clip_1_1) {
-                clip_1 = clip_1_1;
             },
             function (orderby_1_1) {
                 orderby_1 = orderby_1_1;
@@ -147,7 +144,6 @@ System.register(['@angular/core', "@angular/common", '@angular/router', '../serv
                         },
                         styleUrls: ['components/posts/posts.css'],
                         templateUrl: 'components/posts/posts.html',
-                        directives: [router_1.ROUTER_DIRECTIVES, clip_1.ClipboardDirective],
                         pipes: [searchPostTitle_1.SearchPostTitlePipe, common_1.DatePipe, orderby_1.OrderBy, searchCategory_1.SearchCategory]
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.ActivatedRoute, router_1.Router])

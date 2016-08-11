@@ -69,6 +69,7 @@
             'platform-browser-dynamic',
             'router',
             'router-deprecated',
+            'upgrade',
         ];
 
          // Individual files (~300 requests):
@@ -94,7 +95,7 @@
 
         System.config(config);
 
-        System.import('components').catch(function(err){ console.error(err); });
+        System.import('components').catch(function(err){ console.log(err); });
 
     </script>
 </head>

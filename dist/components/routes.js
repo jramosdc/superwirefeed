@@ -1,14 +1,11 @@
 // <reference path="../../typings/index.d.ts">
-System.register(['@angular/router', './feeds/feeds', './posts/posts', './newpost/newpost', './editpost/editpost', './viewpost/viewpost', './profile/profile'], function(exports_1, context_1) {
+System.register(['./feeds/feeds', './posts/posts', './newpost/newpost', './editpost/editpost', './viewpost/viewpost', './profile/profile'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var router_1, feeds_1, posts_1, newpost_1, editpost_1, viewpost_1, profile_1;
-    var routes, APP_ROUTER_PROVIDERS;
+    var feeds_1, posts_1, newpost_1, editpost_1, viewpost_1, profile_1;
+    var AppRoutes, ApplicationComponents;
     return {
         setters:[
-            function (router_1_1) {
-                router_1 = router_1_1;
-            },
             function (feeds_1_1) {
                 feeds_1 = feeds_1_1;
             },
@@ -28,7 +25,7 @@ System.register(['@angular/router', './feeds/feeds', './posts/posts', './newpost
                 profile_1 = profile_1_1;
             }],
         execute: function() {
-            routes = [
+            exports_1("AppRoutes", AppRoutes = [
                 { path: "feeds", component: feeds_1.FeedsComponent },
                 { path: "newpost", component: newpost_1.NewPostComponent },
                 { path: "posts/:feedid", component: posts_1.PostsComponent },
@@ -36,10 +33,8 @@ System.register(['@angular/router', './feeds/feeds', './posts/posts', './newpost
                 { path: "post/:postid", component: viewpost_1.ViewPostComponent },
                 { path: "profile/:userid", component: profile_1.ProfileComponent },
                 { path: "", redirectTo: "feeds", terminal: true }
-            ];
-            exports_1("APP_ROUTER_PROVIDERS", APP_ROUTER_PROVIDERS = [
-                router_1.provideRouter(routes)
             ]);
+            exports_1("ApplicationComponents", ApplicationComponents = [feeds_1.FeedsComponent, posts_1.PostsComponent, newpost_1.NewPostComponent, editpost_1.EditPostComponent, viewpost_1.ViewPostComponent, profile_1.ProfileComponent]);
         }
     }
 });

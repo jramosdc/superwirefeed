@@ -1,7 +1,7 @@
 // <reference path="../../../typings/index.d.ts">
 
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { User, authService } from '../services/authService';
 
 @Component({
@@ -10,8 +10,7 @@ import { User, authService } from '../services/authService';
     class: 'col s12'
   },
   styleUrls: ['components/editpost/editpost.css'],
-  templateUrl: 'components/editpost/editpost.html',
-  directives: [ROUTER_DIRECTIVES]
+  templateUrl: 'components/editpost/editpost.html'
 })
 export class EditPostComponent implements OnInit {
 

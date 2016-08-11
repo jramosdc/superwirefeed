@@ -2,7 +2,7 @@
 
 import { SafeResourceUrl, DomSanitizationService } from '@angular/platform-browser';
 import { Component } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { FirebaseObjectObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 
@@ -12,8 +12,7 @@ import { User, authService } from '../services/authService';
         class: 'col s12'
     },
     styleUrls: ['components/viewpost/viewpost.css'],
-    templateUrl: 'components/viewpost/viewpost.html',
-    directives: [ROUTER_DIRECTIVES]
+    templateUrl: 'components/viewpost/viewpost.html'
 })
 export class ViewPostComponent {
 
