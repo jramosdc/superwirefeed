@@ -34,13 +34,15 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                     };
                     this.Categories = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
                     this.postCategories = [];
+                    this.storageRef = firebase.storage().ref('/');
                     this.User = this.emptyUser();
                     this.af.auth.subscribe(function (res) {
                         if (res) {
                             _this.User.uid = res.uid;
-                            _this.User.password.profileImageURL = res.auth['photoURL'];
+                            // this.User.password.profileImageURL = res.auth['photoURL']
                             _this.User.password.email = res.auth['email'];
                             _this.getUserFeedDetail(_this.User.uid).subscribe(function (feed) {
+                                _this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
                                 _this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
                                 _this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
                                 _this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
@@ -163,6 +165,27 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                 };
                 authService.prototype.updateUserProfile = function (userid, profile) {
                     return this.af.database.object('/users/' + userid).update(profile);
+                };
+                authService.prototype.uploadUserImg = function (userid, base64) {
+                    var _this = this;
+                    return new Promise(function (resolve, reject) {
+                        var userProfileTask = _this.storageRef.child('img').child('profile').child(userid).put(_this.base64ToBlob(base64));
+                        userProfileTask.on('state_changed', null, function (err) {
+                            reject(err);
+                        }, function () {
+                            resolve(userProfileTask.snapshot.downloadURL);
+                        });
+                    });
+                };
+                authService.prototype.base64ToBlob = function (base64) {
+                    var blobBin = atob(base64.split(',')[1]);
+                    var array = [];
+                    for (var i = 0; i < blobBin.length; i++) {
+                        array.push(blobBin.charCodeAt(i));
+                    }
+                    return new Blob([new Uint8Array(array)], {
+                        type: 'image/png'
+                    });
                 };
                 authService.prototype.updateFeed = function (userid, feed) {
                     return this.af.database.object('/feeds/' + userid).update(feed);

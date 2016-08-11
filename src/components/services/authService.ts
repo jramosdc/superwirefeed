@@ -20,15 +20,17 @@ export class authService {
     Posts: FirebaseListObservable<any[]>;
 	Categories: Array<string> = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
 	postCategories: Array<string> = [];
+	storageRef = firebase.storage().ref('/');
 
     constructor(private af: AngularFire) {
 		this.User = this.emptyUser();
         this.af.auth.subscribe((res: FirebaseAuthState) => {
             if (res) {
                 this.User.uid = res.uid;
-                this.User.password.profileImageURL = res.auth['photoURL']
+                // this.User.password.profileImageURL = res.auth['photoURL']
                 this.User.password.email = res.auth['email'];
                 this.getUserFeedDetail(this.User.uid).subscribe(feed => {
+					this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
                     this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
                     this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
                     this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
@@ -172,6 +174,29 @@ export class authService {
 
 	updateUserProfile(userid: string, profile: Object) {
         return this.af.database.object('/users/' + userid).update(profile);
+	}
+
+	uploadUserImg(userid: string, base64: string) {
+		return new Promise((resolve, reject) => {
+			var userProfileTask = this.storageRef.child('img').child('profile').child(userid).put(this.base64ToBlob(base64));
+			userProfileTask.on('state_changed', null, function (err) {
+				reject(err);
+			}, function () {
+				resolve(userProfileTask.snapshot.downloadURL);
+			});
+		});
+	}
+
+	base64ToBlob(base64: string): Blob {
+		var blobBin = atob(base64.split(',')[1]);
+		var array = [];
+		for (var i = 0; i < blobBin.length; i++) {
+			array.push(blobBin.charCodeAt(i));
+		}
+		return new Blob([new Uint8Array(array)], {
+			type: 'image/png'
+		});
+				
 	}
 
     updateFeed(userid: string, feed: Object) {

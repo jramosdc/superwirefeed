@@ -2,8 +2,12 @@
     <div class="col s12 card padding10px">
         <div class="jumbo"></div>
         <div class="container icons">
-            <div class="big-icon" *ngIf="profile.profileImageURL"><img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12"></div>
-            <div class="big-icon" *ngIf="profile.email && !profile.profileImageURL"><i class="black-text mdi mdi-account circle col s12" style="font-size: 10em;"></i></div>
+            <div class="big-icon" *ngIf="profile.profileImageURL">
+                <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12" (click)="pictureModelOpen();">
+            </div>
+            <div class="big-icon" *ngIf="profile.email && !profile.profileImageURL">
+                <i class="black-text mdi mdi-account circle col s12" (click)="pictureModelOpen();" style="font-size: 10em;"></i>
+            </div>
             <div class="rate" *ngIf="!editMode && profile">
                 <a class="star-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-star"></i></a>
                 <a class="like-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-thumb-up"></i></a>
@@ -190,4 +194,52 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="pictureModal" class="modal">
+    <form class="modal-content">
+        <div class="nav-wrapper center-align">
+            <h2 class="purple-text">Profile Image</h2>
+        </div>
+        <div class="row center-align" class="flexCenter">
+            <input id="custom-input" type="file" class="displayNone" #fileInput (change)="fileChangeListener($event)">
+            
+            <div *ngIf="!profile?.profileImageURL">
+                <div [hidden]="!imageSelected">
+                    <i class="black-text mdi mdi-account circle col s12" (click)="fileInput.click(); imageSelected=false;" style="font-size: 10em;"></i>
+                </div>
+            </div>
+
+            <div *ngIf="profile?.profileImageURL">
+                <div [hidden]="!imageSelected">
+                    <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12 rounded" (click)="fileInput.click(); imageSelected=false;">
+                </div>
+            </div>
+
+            <div [hidden]="imageSelected">
+                <img-cropper id="imgCropper" #cropper [image]="data" [settings]="cropperSettings" (onCrop)="cropped($event)"></img-cropper>
+            </div>
+         
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorLogin"></span>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="imageUploading">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadProfileImage();" [disabled]="!data.image">Upload</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="pictureModelClose();">CANCEL</button>
+        </div>
+    </form>
 </div>

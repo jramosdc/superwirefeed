@@ -1,7 +1,12 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', "@angular/router", '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router", '../services/authService', 'ng2-img-cropper'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    var __extends = (this && this.__extends) || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11,7 +16,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1;
+    var core_1, router_1, authService_1, ng2_img_cropper_1;
     var ProfileComponent;
     return {
         setters:[
@@ -23,11 +28,16 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
+            },
+            function (ng2_img_cropper_1_1) {
+                ng2_img_cropper_1 = ng2_img_cropper_1_1;
             }],
         execute: function() {
-            ProfileComponent = (function () {
+            ProfileComponent = (function (_super) {
+                __extends(ProfileComponent, _super);
                 function ProfileComponent(as, route, router) {
                     var _this = this;
+                    _super.call(this);
                     this.as = as;
                     this.route = route;
                     this.router = router;
@@ -37,6 +47,10 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                     this.authNew = [];
                     this.postCategoryList = [];
                     this.postCategoryNew = [];
+                    // Cropper variables 
+                    this.data = {};
+                    this.imageSelected = true;
+                    this.imageUploading = false;
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.as.setActivePageTitle('Profile');
@@ -49,6 +63,22 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                             });
                         }
                     });
+                    // for angular2 Corpper 
+                    this.cropperSettings = new ng2_img_cropper_1.CropperSettings();
+                    this.cropperSettings.width = 200;
+                    this.cropperSettings.height = 200;
+                    this.cropperSettings.keepAspect = false;
+                    this.cropperSettings.croppedWidth = 200;
+                    this.cropperSettings.croppedHeight = 200;
+                    this.cropperSettings.canvasWidth = 400;
+                    this.cropperSettings.canvasHeight = 200;
+                    this.cropperSettings.minWidth = 100;
+                    this.cropperSettings.minHeight = 100;
+                    this.cropperSettings.rounded = true;
+                    this.cropperSettings.minWithRelativeToResolution = false;
+                    this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+                    this.cropperSettings.cropperDrawSettings.strokeWidth = 1;
+                    this.cropperSettings.noFileInput = true;
                 }
                 ProfileComponent.prototype.ngOnInit = function () {
                     $(window).scroll(function () {
@@ -187,6 +217,47 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         });
                     }
                 };
+                ProfileComponent.prototype.pictureModelOpen = function () {
+                    $('#pictureModal').openModal();
+                };
+                ProfileComponent.prototype.pictureModelClose = function () {
+                    $('#pictureModal').closeModal();
+                    this.imageSelected = true;
+                    this.data = {};
+                };
+                ProfileComponent.prototype.uploadProfileImage = function () {
+                    var _this = this;
+                    this.imageUploading = true;
+                    this.as.uploadUserImg(this.User.feed.userid, this.data.image).then(function (url) {
+                        _this.as.updateUserProfile(_this.User.feed.userid, { profileImageURL: url }).then(function (data) {
+                            _this.imageUploading = false;
+                            _this.pictureModelClose();
+                        });
+                    });
+                };
+                ProfileComponent.prototype.cropped = function (bounds) {
+                    // console.log(bounds);
+                };
+                /**
+                 * Used to send image to second cropper @param $event
+                */
+                ProfileComponent.prototype.fileChangeListener = function ($event) {
+                    var _this = this;
+                    var image = new Image();
+                    var file = $event.target.files[0];
+                    var myReader = new FileReader();
+                    myReader.onloadend = function (loadEvent) {
+                        image.src = loadEvent.target.result;
+                        _this.cropper.setImage(image);
+                        //data2 image on select image
+                        _this.data.image = loadEvent.target.result;
+                    };
+                    myReader.readAsDataURL(file);
+                };
+                __decorate([
+                    core_1.ViewChild('cropper', undefined), 
+                    __metadata('design:type', ng2_img_cropper_1.ImageCropperComponent)
+                ], ProfileComponent.prototype, "cropper", void 0);
                 ProfileComponent = __decorate([
                     core_1.Component({
                         selector: 'profile',
@@ -195,12 +266,12 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         },
                         styleUrls: ['components/profile/profile.css'],
                         templateUrl: 'components/profile/profile.html',
-                        directives: [router_1.ROUTER_DIRECTIVES]
+                        directives: [router_1.ROUTER_DIRECTIVES, ng2_img_cropper_1.ImageCropperComponent]
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.ActivatedRoute, router_1.Router])
                 ], ProfileComponent);
                 return ProfileComponent;
-            }());
+            }(core_1.Type));
             exports_1("ProfileComponent", ProfileComponent);
         }
     }

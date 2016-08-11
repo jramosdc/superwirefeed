@@ -1,8 +1,9 @@
 // <reference path="../../../typings/index.d.ts">
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
+import {ImageCropperComponent, Bounds, CropperSettings} from 'ng2-img-cropper';
 
 @Component({
     selector: 'profile',
@@ -11,23 +12,33 @@ import { User, authService } from '../services/authService';
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html',
-    directives: [ROUTER_DIRECTIVES]
+    directives: [ROUTER_DIRECTIVES, ImageCropperComponent]
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent extends Type implements OnInit {
 
     User: User;
-    domain: string
-    userid: string
-    editMode: boolean = false
-    profileLoading: boolean = false
-    profile: Object
-    deleteLoading: boolean
-    authList: Array<string> = []
-    authNew: Array<string> = []
-    postCategoryList: Array<string> = []
-    postCategoryNew: Array<string> = []
+    domain: string;
+    userid: string;
+    editMode: boolean = false;
+    profileLoading: boolean = false;
+    profile: Object;
+    deleteLoading: boolean;
+    authList: Array<string> = [];
+    authNew: Array<string> = [];
+    postCategoryList: Array<string> = [];
+    postCategoryNew: Array<string> = [];
+
+    // Cropper variables 
+    data: any = {};
+    cropperSettings: CropperSettings;
+    imageSelected: boolean = true;
+    imageUploading: boolean = false;
+    @ViewChild('cropper', undefined) cropper: ImageCropperComponent;
 
     constructor(private as: authService, private route: ActivatedRoute, private router: Router) {
+
+        super();
+
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.as.setActivePageTitle('Profile');
@@ -40,6 +51,24 @@ export class ProfileComponent implements OnInit {
                 });
             }
         });
+
+        // for angular2 Corpper 
+        this.cropperSettings = new CropperSettings();
+        this.cropperSettings.width = 200;
+        this.cropperSettings.height = 200;
+        this.cropperSettings.keepAspect = false;
+        this.cropperSettings.croppedWidth = 200;
+        this.cropperSettings.croppedHeight = 200;
+        this.cropperSettings.canvasWidth = 400;
+        this.cropperSettings.canvasHeight = 200;
+        this.cropperSettings.minWidth = 100;
+        this.cropperSettings.minHeight = 100;
+        this.cropperSettings.rounded = true;
+        this.cropperSettings.minWithRelativeToResolution = false;
+        this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+        this.cropperSettings.cropperDrawSettings.strokeWidth = 1;
+        this.cropperSettings.noFileInput = true;
+
     }
 
     ngOnInit() {
@@ -176,6 +205,47 @@ export class ProfileComponent implements OnInit {
                 return val != category;
             })
         }
+    }
+
+    pictureModelOpen() {
+        $('#pictureModal').openModal();
+    }
+
+    pictureModelClose() {
+        $('#pictureModal').closeModal();
+        this.imageSelected = true;
+        this.data = {};
+    }
+
+    uploadProfileImage() {
+        this.imageUploading = true;
+        this.as.uploadUserImg(this.User.feed.userid, this.data.image).then((url) => {
+            this.as.updateUserProfile(this.User.feed.userid, { profileImageURL: url }).then((data) => {
+                this.imageUploading = false;
+                this.pictureModelClose();
+            });
+        });
+    }
+
+    cropped(bounds: Bounds) {
+        // console.log(bounds);
+    }
+
+    /**
+     * Used to send image to second cropper @param $event
+    */
+    fileChangeListener($event) {
+        var image: any = new Image();
+        var file: File = $event.target.files[0];
+        var myReader: FileReader = new FileReader();
+
+        myReader.onloadend = (loadEvent: any) => {
+            image.src = loadEvent.target.result;
+            this.cropper.setImage(image);
+            //data2 image on select image
+            this.data.image = loadEvent.target.result
+        };
+        myReader.readAsDataURL(file);
     }
 
 }

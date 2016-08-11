@@ -16,6 +16,15 @@
     align-items: center;
 }
 
+.flexCenter {
+  display:flex; 
+  justify-content: center;
+}
+
+.displayNone {
+  display: none;
+}
+
 .jumbo {
   width: 100%;
   height: 200px;
@@ -134,10 +143,13 @@ main .bio {
   font-size: 20px;
 }
 
+.rounded {
+  border-radius: 50%;
+  width: 170px !important;
+  height: auto;
+}
+
 @media screen and (max-width: 600px) {
- 
-
-
   .icons {
     -webkit-box-pack: center !important;
     -webkit-justify-content: center !important;
@@ -158,3 +170,6 @@ main .bio {
     display: none;
   }
 }
+
+
+
