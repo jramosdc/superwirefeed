@@ -1,42 +1,48 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 import { Inject, Injectable } from '@angular/core';
-import { FirebaseConfig } from '../tokens';
-import { FirebaseListFactory } from '../utils/firebase_list_factory';
-import { FirebaseObjectFactory } from '../utils/firebase_object_factory';
-import * as utils from '../utils/utils';
-export let FirebaseDatabase = class FirebaseDatabase {
-    constructor(fbConfig) {
+import { FirebaseApp, FirebaseConfig } from '../tokens';
+import { FirebaseListFactory } from './index';
+import * as utils from '../utils';
+import { FirebaseObjectFactory } from './index';
+export var AngularFireDatabase = (function () {
+    function AngularFireDatabase(fbConfig, fbApp) {
         this.fbConfig = fbConfig;
+        this.fbApp = fbApp;
     }
-    list(urlOrRef, opts) {
+    AngularFireDatabase.prototype.list = function (urlOrRef, opts) {
+        var _this = this;
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: () => FirebaseListFactory(getAbsUrl(this.fbConfig, urlOrRef), opts),
-            isRef: () => FirebaseListFactory(urlOrRef)
+            isUrl: function () { return FirebaseListFactory(_this.fbApp.database().refFromURL(getAbsUrl(_this.fbConfig, urlOrRef)), opts); },
+            isRef: function () { return FirebaseListFactory(urlOrRef); }
         });
-    }
-    object(urlOrRef, opts) {
+    };
+    AngularFireDatabase.prototype.object = function (urlOrRef, opts) {
+        var _this = this;
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: () => FirebaseObjectFactory(getAbsUrl(this.fbConfig, urlOrRef), opts),
-            isRef: () => FirebaseObjectFactory(urlOrRef)
+            isUrl: function () { return FirebaseObjectFactory(_this.fbApp.database().refFromURL(getAbsUrl(_this.fbConfig, urlOrRef)), opts); },
+            isRef: function () { return FirebaseObjectFactory(urlOrRef); }
         });
+    };
+    AngularFireDatabase.decorators = [
+        { type: Injectable },
+    ];
+    AngularFireDatabase.ctorParameters = [
+        { type: undefined, decorators: [{ type: Inject, args: [FirebaseConfig,] },] },
+        { type: undefined, decorators: [{ type: Inject, args: [FirebaseApp,] },] },
+    ];
+    return AngularFireDatabase;
+}());
+export var FirebaseDatabase = (function (_super) {
+    __extends(FirebaseDatabase, _super);
+    function FirebaseDatabase() {
+        _super.apply(this, arguments);
     }
-};
-FirebaseDatabase = __decorate([
-    Injectable(),
-    __param(0, Inject(FirebaseConfig)), 
-    __metadata('design:paramtypes', [Object])
-], FirebaseDatabase);
+    return FirebaseDatabase;
+}(AngularFireDatabase));
 function getAbsUrl(root, url) {
     if (!(/^[a-z]+:\/\/.*/.test(url))) {
         url = root.databaseURL + '/' + utils.stripLeadingSlash(url);

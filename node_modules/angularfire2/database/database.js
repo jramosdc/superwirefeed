@@ -1,46 +1,50 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var core_1 = require('@angular/core');
 var tokens_1 = require('../tokens');
-var firebase_list_factory_1 = require('../utils/firebase_list_factory');
-var firebase_object_factory_1 = require('../utils/firebase_object_factory');
-var utils = require('../utils/utils');
-var FirebaseDatabase = (function () {
-    function FirebaseDatabase(fbConfig) {
+var index_1 = require('./index');
+var utils = require('../utils');
+var index_2 = require('./index');
+var AngularFireDatabase = (function () {
+    function AngularFireDatabase(fbConfig, fbApp) {
         this.fbConfig = fbConfig;
+        this.fbApp = fbApp;
     }
-    FirebaseDatabase.prototype.list = function (urlOrRef, opts) {
+    AngularFireDatabase.prototype.list = function (urlOrRef, opts) {
         var _this = this;
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: function () { return firebase_list_factory_1.FirebaseListFactory(getAbsUrl(_this.fbConfig, urlOrRef), opts); },
-            isRef: function () { return firebase_list_factory_1.FirebaseListFactory(urlOrRef); }
+            isUrl: function () { return index_1.FirebaseListFactory(_this.fbApp.database().refFromURL(getAbsUrl(_this.fbConfig, urlOrRef)), opts); },
+            isRef: function () { return index_1.FirebaseListFactory(urlOrRef); }
         });
     };
-    FirebaseDatabase.prototype.object = function (urlOrRef, opts) {
+    AngularFireDatabase.prototype.object = function (urlOrRef, opts) {
         var _this = this;
         return utils.checkForUrlOrFirebaseRef(urlOrRef, {
-            isUrl: function () { return firebase_object_factory_1.FirebaseObjectFactory(getAbsUrl(_this.fbConfig, urlOrRef), opts); },
-            isRef: function () { return firebase_object_factory_1.FirebaseObjectFactory(urlOrRef); }
+            isUrl: function () { return index_2.FirebaseObjectFactory(_this.fbApp.database().refFromURL(getAbsUrl(_this.fbConfig, urlOrRef)), opts); },
+            isRef: function () { return index_2.FirebaseObjectFactory(urlOrRef); }
         });
     };
-    FirebaseDatabase = __decorate([
-        core_1.Injectable(),
-        __param(0, core_1.Inject(tokens_1.FirebaseConfig)), 
-        __metadata('design:paramtypes', [Object])
-    ], FirebaseDatabase);
-    return FirebaseDatabase;
+    AngularFireDatabase.decorators = [
+        { type: core_1.Injectable },
+    ];
+    AngularFireDatabase.ctorParameters = [
+        { type: undefined, decorators: [{ type: core_1.Inject, args: [tokens_1.FirebaseConfig,] },] },
+        { type: undefined, decorators: [{ type: core_1.Inject, args: [tokens_1.FirebaseApp,] },] },
+    ];
+    return AngularFireDatabase;
 }());
+exports.AngularFireDatabase = AngularFireDatabase;
+var FirebaseDatabase = (function (_super) {
+    __extends(FirebaseDatabase, _super);
+    function FirebaseDatabase() {
+        _super.apply(this, arguments);
+    }
+    return FirebaseDatabase;
+}(AngularFireDatabase));
 exports.FirebaseDatabase = FirebaseDatabase;
 function getAbsUrl(root, url) {
     if (!(/^[a-z]+:\/\/.*/.test(url))) {

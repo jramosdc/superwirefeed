@@ -100,7 +100,12 @@
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s11">
+            <div class="input-field col s12">
+                <tag-input  placeholder="Add Post Category" [tagArray]="postCategoryList" (updatedList)="tagInputEventCatch($event);"> </tag-input>
+            </div>
+        </div>
+        <!--<div class="row">
+            <div class="input-field col s12">
                 <input id="postcategory" #postCategory type="text" class="validate">
                 <label for="postcategory">Add Post Category</label>
             </div>
@@ -117,11 +122,16 @@
                 {{category}}
                 <i class="mdi mdi-close" (click)="removePostCategory('new', category)"></i>
             </div>
-        </div>
+        </div>-->
         <div class="row center-align">
             <span class="red-text" id="errorPostCategory"></span>
         </div>
         <div class="row">
+            <div class="input-field col s12">
+                <tag-input  placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);"> </tag-input>
+            </div>
+        </div>
+        <!--<div class="row">
             <div class="input-field col s11">
                 <input id="authemail" #authEmail type="text" class="validate">
                 <label for="authemail">Add Authorized Email</label>
@@ -139,7 +149,7 @@
                     {{email}}
                 </li>
             </ui>
-        </div>
+        </div>-->
         <div class="row center-align">
             <span class="red-text" id="errorProfile"></span>
         </div>

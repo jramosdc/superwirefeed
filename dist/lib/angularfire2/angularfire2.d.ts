@@ -1,28 +1,25 @@
-import { Provider } from '@angular/core';
-import { AngularFireAuth, firebaseAuthConfig, FirebaseAuth } from './providers/auth';
-import { FirebaseListObservable } from './utils/firebase_list_observable';
-import { FirebaseObjectObservable } from './utils/firebase_object_observable';
-import { FirebaseListFactory, FirebaseListFactoryOpts } from './utils/firebase_list_factory';
-import { FirebaseObjectFactoryOpts, FirebaseObjectFactory } from './utils/firebase_object_factory';
-import { WindowLocation } from './tokens';
 import { FirebaseAppConfig } from './interfaces';
-import { AuthMethods, AuthProviders, FirebaseAuthState } from './providers/auth_backend';
-import { FirebaseDatabase } from './database/database';
+import { AuthConfiguration } from './auth';
+import { WindowLocation } from './tokens';
+import { ModuleWithProviders } from '@angular/core';
+import { FirebaseSdkAuthBackend, AngularFireAuth, firebaseAuthConfig, FirebaseAuth, AuthMethods, AuthProviders, FirebaseAuthState } from './auth/index';
+import { FirebaseListObservable, FirebaseObjectObservable, FirebaseListFactory, FirebaseObjectFactory, AngularFireDatabase, FirebaseDatabase } from './database/index';
 export declare class AngularFire {
     private fbUrl;
     auth: AngularFireAuth;
-    database: FirebaseDatabase;
-    list: (url: string, opts?: FirebaseListFactoryOpts) => FirebaseListObservable<any[]>;
-    object: (url: string, opts?: FirebaseObjectFactoryOpts) => FirebaseObjectObservable<any>;
-    constructor(fbUrl: string, auth: AngularFireAuth, database: FirebaseDatabase);
+    database: AngularFireDatabase;
+    constructor(fbUrl: string, auth: AngularFireAuth, database: AngularFireDatabase);
 }
+export declare function _getFirebase(config: FirebaseAppConfig): firebase.app.App;
+export declare function _getWindowLocation(): Location;
+export declare function _getAuthBackend(app: firebase.app.App): FirebaseSdkAuthBackend;
+export declare function _getDefaultFirebase(config: any): any;
 export declare const COMMON_PROVIDERS: any[];
 export declare const FIREBASE_PROVIDERS: any[];
-export declare const defaultFirebase: (config: FirebaseAppConfig) => Provider;
-export { AngularFireAuth, FirebaseAuth, FirebaseDatabase, FirebaseListObservable, FirebaseObjectObservable, FirebaseListFactory, FirebaseObjectFactory, firebaseAuthConfig, FirebaseAuthState, AuthMethods, AuthProviders, WindowLocation };
-export { FirebaseConfig, FirebaseApp, FirebaseAuthConfig, FirebaseRef, FirebaseUrl } from './tokens';
+export declare const defaultFirebase: (config: FirebaseAppConfig) => any;
+export declare class AngularFireModule {
+    static initializeApp(config: FirebaseAppConfig, authConfig?: AuthConfiguration): ModuleWithProviders;
+}
+export { AngularFireAuth, AngularFireDatabase, FirebaseAuth, FirebaseDatabase, FirebaseListObservable, FirebaseObjectObservable, FirebaseListFactory, FirebaseObjectFactory, firebaseAuthConfig, FirebaseAuthState, AuthMethods, AuthProviders, WindowLocation };
+export { FirebaseConfig, FirebaseApp, FirebaseAuthConfig, FirebaseRef, FirebaseUrl, FirebaseUserConfig } from './tokens';
 export { FirebaseAppConfig } from './interfaces';
-declare var _default: {
-    providers: any[];
-};
-export default _default;

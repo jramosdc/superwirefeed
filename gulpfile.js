@@ -28,8 +28,11 @@ var path = {
       { dist: 'lib', src: 'node_modules/materialize-tags/dist/js/materialize-tags.js' },
       { dist: 'lib', src: 'node_modules/linkifyjs/dist/linkify.js' },
       { dist: 'lib', src: 'node_modules/linkifyjs/dist/linkify-jquery.js' },
-      { dist: 'lib', src: 'node_modules/firebase/firebase.js' },
-      { dist: 'lib/ng2-img-cropper', src: 'node_modules/ng2-img-cropper/**' }
+      { dist: 'lib', src: 'node_modules/firebase/firebase.js' }
+      ,{ dist: 'lib/ng2-img-cropper', src: 'node_modules/ng2-img-cropper/**' }
+      ,{ dist: 'lib', src: 'node_modules/angular2-tag-input/dist/tag-input.component.js' }
+      ,{ dist: 'lib', src: 'node_modules/angular2-tag-input/dist/tag-input-item.component.js' }
+
   ],
   libcss: [
     'node_modules/materialize-css/dist/css/materialize.css',

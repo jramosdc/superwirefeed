@@ -1,8 +1,9 @@
 import { OpaqueToken } from '@angular/core';
-export const FirebaseConfig = new OpaqueToken('FirebaseUrl');
-export const FirebaseApp = new OpaqueToken('FirebaseApp');
-export const FirebaseAuthConfig = new OpaqueToken('FirebaseAuthConfig');
-export const WindowLocation = new OpaqueToken('WindowLocation');
-export const FirebaseRef = FirebaseApp;
-export const FirebaseUrl = FirebaseConfig;
+export var FirebaseConfig = new OpaqueToken('FirebaseUrl');
+export var FirebaseApp = new OpaqueToken('FirebaseApp');
+export var FirebaseAuthConfig = new OpaqueToken('FirebaseAuthConfig');
+export var FirebaseUserConfig = new OpaqueToken('FirebaseUserConfig');
+export var WindowLocation = new OpaqueToken('WindowLocation');
+export var FirebaseRef = FirebaseApp;
+export var FirebaseUrl = FirebaseConfig;
 //# sourceMappingURL=tokens.js.map

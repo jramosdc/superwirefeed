@@ -3,7 +3,9 @@
 import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
-import {ImageCropperComponent, Bounds, CropperSettings} from 'ng2-img-cropper';
+import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
+// In one of your application components
+import {TagInputComponent} from '../tag-input/tag-input.component';
 
 @Component({
     selector: 'profile',
@@ -12,6 +14,7 @@ import {ImageCropperComponent, Bounds, CropperSettings} from 'ng2-img-cropper';
     },
     styleUrls: ['components/profile/profile.css'],
     templateUrl: 'components/profile/profile.html'
+    ,directives: [TagInputComponent] // Add to directives
 })
 export class ProfileComponent extends Type implements OnInit {
 
@@ -33,6 +36,8 @@ export class ProfileComponent extends Type implements OnInit {
     imageSelected: boolean = true;
     imageUploading: boolean = false;
     @ViewChild('cropper', undefined) cropper: ImageCropperComponent;
+
+    public validEmailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     constructor(private as: authService, private route: ActivatedRoute, private router: Router) {
 
@@ -109,9 +114,9 @@ export class ProfileComponent extends Type implements OnInit {
     update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement) {
         if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '') return
         this.profileLoading = true;
-        $.merge(this.authList, this.authNew)
+        // $.merge(this.authList, this.authNew)
         this.authNew.splice(0);
-        $.merge(this.postCategoryList, this.postCategoryNew)
+        // $.merge(this.postCategoryList, this.postCategoryNew)
         this.postCategoryNew.splice(0);
         let profile = {
             'bio': bio.value,
@@ -245,6 +250,14 @@ export class ProfileComponent extends Type implements OnInit {
             this.data.image = loadEvent.target.result
         };
         myReader.readAsDataURL(file);
+    }
+
+    tagInputEventCatch($event) {
+        this.postCategoryList = $event;
+    }
+
+    emailInputEventCatch($event) {
+        this.authList = $event;
     }
 
 }

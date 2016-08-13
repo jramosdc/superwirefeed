@@ -1,11 +1,12 @@
 import { FirebaseAppConfig } from '../angularfire2';
-import { FirebaseListObservable } from '../utils/firebase_list_observable';
-import { FirebaseObjectObservable } from '../utils/firebase_object_observable';
-import { FirebaseListFactoryOpts } from '../utils/firebase_list_factory';
-import { FirebaseObjectFactoryOpts } from '../utils/firebase_object_factory';
-export declare class FirebaseDatabase {
+import { FirebaseListFactoryOpts, FirebaseObjectFactoryOpts } from '../interfaces';
+import { FirebaseListObservable, FirebaseObjectObservable } from './index';
+export declare class AngularFireDatabase {
     private fbConfig;
-    constructor(fbConfig: FirebaseAppConfig);
+    private fbApp;
+    constructor(fbConfig: FirebaseAppConfig, fbApp: any);
     list(urlOrRef: string | firebase.database.Reference, opts?: FirebaseListFactoryOpts): FirebaseListObservable<any[]>;
     object(urlOrRef: string | firebase.database.Reference, opts?: FirebaseObjectFactoryOpts): FirebaseObjectObservable<any>;
+}
+export declare class FirebaseDatabase extends AngularFireDatabase {
 }

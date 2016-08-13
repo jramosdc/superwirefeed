@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', "@angular/router", '../services/authService', 'ng2-img-cropper'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router", '../services/authService', 'ng2-img-cropper', '../tag-input/tag-input.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -16,7 +16,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1, ng2_img_cropper_1;
+    var core_1, router_1, authService_1, ng2_img_cropper_1, tag_input_component_1;
     var ProfileComponent;
     return {
         setters:[
@@ -31,6 +31,9 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
             },
             function (ng2_img_cropper_1_1) {
                 ng2_img_cropper_1 = ng2_img_cropper_1_1;
+            },
+            function (tag_input_component_1_1) {
+                tag_input_component_1 = tag_input_component_1_1;
             }],
         execute: function() {
             ProfileComponent = (function (_super) {
@@ -51,6 +54,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     this.data = {};
                     this.imageSelected = true;
                     this.imageUploading = false;
+                    this.validEmailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.as.setActivePageTitle('Profile');
@@ -121,9 +125,9 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '')
                         return;
                     this.profileLoading = true;
-                    $.merge(this.authList, this.authNew);
+                    // $.merge(this.authList, this.authNew)
                     this.authNew.splice(0);
-                    $.merge(this.postCategoryList, this.postCategoryNew);
+                    // $.merge(this.postCategoryList, this.postCategoryNew)
                     this.postCategoryNew.splice(0);
                     var profile = {
                         'bio': bio.value,
@@ -254,6 +258,12 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     };
                     myReader.readAsDataURL(file);
                 };
+                ProfileComponent.prototype.tagInputEventCatch = function ($event) {
+                    this.postCategoryList = $event;
+                };
+                ProfileComponent.prototype.emailInputEventCatch = function ($event) {
+                    this.authList = $event;
+                };
                 __decorate([
                     core_1.ViewChild('cropper', undefined), 
                     __metadata('design:type', ng2_img_cropper_1.ImageCropperComponent)
@@ -265,7 +275,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             class: 'col s12'
                         },
                         styleUrls: ['components/profile/profile.css'],
-                        templateUrl: 'components/profile/profile.html'
+                        templateUrl: 'components/profile/profile.html',
+                        directives: [tag_input_component_1.TagInputComponent] // Add to directives
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService, router_1.ActivatedRoute, router_1.Router])
                 ], ProfileComponent);
