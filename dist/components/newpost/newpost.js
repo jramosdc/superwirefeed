@@ -70,6 +70,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         category: newpost.category,
                         pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
                         gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
+                        mainUrl: newpost.mainUrl ? newpost.mainUrl : '',
                         owner: {
                             uid: this.User.uid,
                             userid: this.User.feed.userid,
@@ -77,15 +78,30 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         },
                         timestamp: firebase.database.ServerValue.TIMESTAMP
                     };
-                    this.as.submitPost(post).then(function (res) {
-                        console.log('Post is Submitted!');
-                        $('#errorPost').html('');
-                        _this.postLoading = false;
-                        _this.router.navigate(['posts', _this.User.feed.id]);
-                    }).catch(function (err) {
-                        console.log('Post Submit Failed!', err);
-                        $('#errorPost').html(err);
-                        _this.postLoading = false;
+                    this.embedlyjQuery(newpost.mainUrl).then(function (data) {
+                        post['embedly'] = data ? data : '';
+                        _this.as.submitPost(post).then(function (res) {
+                            console.log('Post is Submitted!');
+                            $('#errorPost').html('');
+                            _this.postLoading = false;
+                            _this.router.navigate(['posts', _this.User.feed.id]);
+                        }).catch(function (err) {
+                            console.log('Post Submit Failed!', err);
+                            $('#errorPost').html(err);
+                            _this.postLoading = false;
+                        });
+                    });
+                };
+                NewPostComponent.prototype.embedlyjQuery = function (url) {
+                    return new Promise(function (resolve, reject) {
+                        if (url.length > 0) {
+                            $.embedly.extract(url, { key: 'f81e196dc01b4cb49d68d48e9b1ea5f2' }).progress(function (data) {
+                                resolve(data);
+                            });
+                        }
+                        else {
+                            resolve(null);
+                        }
                     });
                 };
                 NewPostComponent = __decorate([

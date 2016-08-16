@@ -30,6 +30,7 @@
     "core-js": "^2.4.0",
     "firebase": "^3.0.3",
     "jquery": "^2.2.4",
+    "jquery-embedly": "git+https://github.com/embedly/embedly-jquery.git",
     "linkifyjs": "^2.0.3",
     "materialize-css": "^0.97.5",
     "materialize-tags": "~1.0.0",

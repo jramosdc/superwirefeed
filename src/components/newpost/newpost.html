@@ -76,6 +76,12 @@
                 <input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl"  placeholder="Google Spread Sheet Link">
             </div>
         </div>
+        <div class="row">
+            <label for="mainUrl">Main Url</label>
+            <div class="input-field">
+                <input type="url" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="mu" placeholder="Main Url">
+            </div>
+        </div>
         <div class="row center-align">
             <span class="red-text" id="errorPost"></span>
         </div>

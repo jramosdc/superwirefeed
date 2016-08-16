@@ -47,34 +47,55 @@ export class NewPostComponent implements OnInit {
     }
 
     submitPost(valid, newpost) {
-      event.preventDefault();
-      if (!valid) { return; }
-      this.postLoading = true;
-      let post = {
-        title: newpost.title,
-        detail: newpost.detail,
-        priority: newpost.priority,
-        types: newpost.type,
-        category: newpost.category,
-        pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
-        gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
-        owner: {
-          uid: this.User.uid,
-          userid: this.User.feed.userid,
-          feedid: this.User.feed.id
-        },
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      }
-      this.as.submitPost(post).then(res => {
-        console.log('Post is Submitted!');
-        $('#errorPost').html('');
-        this.postLoading = false;
-        this.router.navigate(['posts', this.User.feed.id]);
-      }).catch(err => {
-        console.log('Post Submit Failed!', err);
-        $('#errorPost').html(err);
-        this.postLoading = false;
-      });
+        event.preventDefault();
+        if (!valid) { return; }
+        this.postLoading = true;
+        let post = {
+            title: newpost.title,
+            detail: newpost.detail,
+            priority: newpost.priority,
+            types: newpost.type,
+            category: newpost.category,
+            pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
+            gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
+            mainUrl: newpost.mainUrl ? newpost.mainUrl : '',
+            owner: {
+                uid: this.User.uid,
+                userid: this.User.feed.userid,
+                feedid: this.User.feed.id
+            },
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        this.embedlyjQuery(newpost.mainUrl).then(data => {
+
+            post['embedly'] = data ? data : '';
+
+            this.as.submitPost(post).then(res => {
+                console.log('Post is Submitted!');
+                $('#errorPost').html('');
+                this.postLoading = false;
+                this.router.navigate(['posts', this.User.feed.id]);
+            }).catch(err => {
+                console.log('Post Submit Failed!', err);
+                $('#errorPost').html(err);
+                this.postLoading = false;
+            });
+
+        });
+        
+    }
+
+    embedlyjQuery(url: string) {
+        return new Promise((resolve, reject) => {
+            if (url.length > 0) {
+                $.embedly.extract(url, { key: 'f81e196dc01b4cb49d68d48e9b1ea5f2' }).progress(function (data) {
+                    resolve(data);
+                });
+            } else {
+                resolve(null);
+            }
+        });
     }
 
 }
