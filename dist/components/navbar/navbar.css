@@ -1,6 +1,12 @@
 .avatar {
     max-height: 55px;
-    padding: 0 10px
+    padding: 0 10px;
+}
+
+.profile {
+    max-height: 40px;
+    padding: 0 10px;
+    margin-top: 10px;
 }
 
 .padding10px {

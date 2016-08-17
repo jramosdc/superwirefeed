@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', '@angular/router', '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/router', '../services/authService', '../services/embedlyService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1;
+    var core_1, router_1, authService_1, embedlyService_1;
     var EditPostComponent;
     return {
         setters:[
@@ -23,29 +23,44 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
+            },
+            function (embedlyService_1_1) {
+                embedlyService_1 = embedlyService_1_1;
             }],
         execute: function() {
             EditPostComponent = (function () {
-                function EditPostComponent(as, router, route) {
-                    var _this = this;
+                function EditPostComponent(as, router, route, embedly) {
                     this.as = as;
                     this.router = router;
                     this.route = route;
+                    this.embedly = embedly;
                     this.post = {};
                     this.categories = [];
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.categories = this.as.getPostCategories();
                     this.as.setActivePageTitle('Edit Post');
-                    this.route.params.subscribe(function (params) {
-                        _this.postid = params['postid'];
-                        _this.as.loadPost(_this.postid).subscribe(function (post) {
-                            _this.post = post;
-                            _this.UserID = post.owner.userid;
-                        });
-                    });
                 }
                 EditPostComponent.prototype.ngOnInit = function () {
+                    var _this = this;
+                    this.loadData().then(function () {
+                        _this.viewInitialize();
+                    });
+                };
+                EditPostComponent.prototype.loadData = function () {
+                    var _this = this;
+                    return new Promise(function (resolve, reject) {
+                        _this.route.params.subscribe(function (params) {
+                            _this.postid = params['postid'];
+                            _this.as.loadPost(_this.postid).subscribe(function (post) {
+                                _this.post = post;
+                                _this.UserID = post.owner.userid;
+                                resolve();
+                            });
+                        });
+                    });
+                };
+                EditPostComponent.prototype.viewInitialize = function () {
                     var _this = this;
                     $('select').material_select();
                     tinymce.remove();
@@ -63,7 +78,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                                 _this.post['detail'] = editor.getContent();
                             });
                             editor.on('init', function (e) {
-                                // console.log('tiny init');
+                                // console.log('tiny init', this.post['detail']);
                                 tinymce.activeEditor.setContent(_this.post['detail']);
                             });
                         }
@@ -85,17 +100,21 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                         category: editpost.category,
                         pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
                         gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
+                        mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
                         timestamp: firebase.database.ServerValue.TIMESTAMP
                     };
-                    this.as.updatePost(this.postid, post).then(function (res) {
-                        console.log('Post is Updated!');
-                        $('#errorPost').html('');
-                        _this.postLoading = false;
-                        _this.router.navigate(['/posts', _this.User.feed.id]);
-                    }).catch(function (err) {
-                        console.log('Post Update Failed!', err);
-                        $('#errorPost').html(err);
-                        _this.postLoading = false;
+                    this.embedly.extractAPI(editpost.mainUrl).then(function (data) {
+                        post['embedly'] = data;
+                        _this.as.updatePost(_this.postid, post).then(function (res) {
+                            console.log('Post is Updated!');
+                            $('#errorPost').html('');
+                            _this.postLoading = false;
+                            _this.router.navigate(['/posts', _this.User.feed.id]);
+                        }).catch(function (err) {
+                            console.log('Post Update Failed!', err);
+                            $('#errorPost').html(err);
+                            _this.postLoading = false;
+                        });
                     });
                 };
                 EditPostComponent = __decorate([
@@ -107,7 +126,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                         styleUrls: ['components/editpost/editpost.css'],
                         templateUrl: 'components/editpost/editpost.html'
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute, embedlyService_1.embedlyService])
                 ], EditPostComponent);
                 return EditPostComponent;
             }());

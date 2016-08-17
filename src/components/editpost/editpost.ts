@@ -3,6 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User, authService } from '../services/authService';
+import { embedlyService, IEmbedly } from '../services/embedlyService';
 
 @Component({
   selector: 'editpost',
@@ -21,21 +22,33 @@ export class EditPostComponent implements OnInit {
   postLoading: boolean;
   categories: Array<string> = [];
 
-  constructor(private as: authService, private router: Router, private route: ActivatedRoute) {
+  constructor(private as: authService, private router: Router, private route: ActivatedRoute, private embedly: embedlyService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.categories = this.as.getPostCategories();
     this.as.setActivePageTitle('Edit Post');
-    this.route.params.subscribe(params => {
-      this.postid = params['postid'];
-      this.as.loadPost(this.postid).subscribe(post => {
-        this.post = post;
-        this.UserID = post.owner.userid;
+  }
+
+  ngOnInit() {
+    this.loadData().then(() => {
+      this.viewInitialize();
+    });
+  }
+
+  private loadData() {
+    return new Promise((resolve, reject) => {
+      this.route.params.subscribe(params => {
+        this.postid = params['postid'];
+        this.as.loadPost(this.postid).subscribe(post => {
+          this.post = post;
+          this.UserID = post.owner.userid;
+          resolve();
+        });
       });
     });
   }
 
-  ngOnInit() {
+  private viewInitialize() {
     $('select').material_select();
     tinymce.remove();
     tinymce.init({
@@ -52,7 +65,7 @@ export class EditPostComponent implements OnInit {
           this.post['detail'] = editor.getContent();
         });
         editor.on('init', (e) => {
-          // console.log('tiny init');
+          // console.log('tiny init', this.post['detail']);
           tinymce.activeEditor.setContent(this.post['detail']);
         });
       }
@@ -72,18 +85,28 @@ export class EditPostComponent implements OnInit {
       category: editpost.category,
       pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
       gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
+      mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
       timestamp: firebase.database.ServerValue.TIMESTAMP
     }
-    this.as.updatePost(this.postid, post).then(res => {
-      console.log('Post is Updated!');
-      $('#errorPost').html('');
-      this.postLoading = false;
-      this.router.navigate(['/posts', this.User.feed.id]);
-    }).catch(err => {
-      console.log('Post Update Failed!', err);
-      $('#errorPost').html(err);
-      this.postLoading = false;
+
+
+    this.embedly.extractAPI(editpost.mainUrl).then((data: IEmbedly) => {
+
+      post['embedly'] = data;
+
+      this.as.updatePost(this.postid, post).then(res => {
+        console.log('Post is Updated!');
+        $('#errorPost').html('');
+        this.postLoading = false;
+        this.router.navigate(['/posts', this.User.feed.id]);
+      }).catch(err => {
+        console.log('Post Update Failed!', err);
+        $('#errorPost').html(err);
+        this.postLoading = false;
+      });
+
     });
+
   }
 
 }

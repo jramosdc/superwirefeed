@@ -3,6 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { User, authService } from '../services/authService';
+import { embedlyService, IEmbedly } from '../services/embedlyService';
 
 @Component({
     selector: 'newpost',
@@ -19,7 +20,7 @@ export class NewPostComponent implements OnInit {
     postLoading: boolean;
     categories: Array<string> = [];
 
-    constructor(private as: authService, private router: Router) {
+    constructor(private as: authService, private router: Router, private embedly: embedlyService) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.categories = this.as.getPostCategories();
@@ -67,9 +68,9 @@ export class NewPostComponent implements OnInit {
             timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
-        this.embedlyjQuery(newpost.mainUrl).then(data => {
-
-            post['embedly'] = data ? data : '';
+        this.embedly.extractAPI(newpost.mainUrl).then((data: IEmbedly) => {
+            
+            post['embedly'] = data;
 
             this.as.submitPost(post).then(res => {
                 console.log('Post is Submitted!');
@@ -83,19 +84,7 @@ export class NewPostComponent implements OnInit {
             });
 
         });
-        
-    }
 
-    embedlyjQuery(url: string) {
-        return new Promise((resolve, reject) => {
-            if (url.length > 0) {
-                $.embedly.extract(url, { key: 'f81e196dc01b4cb49d68d48e9b1ea5f2' }).progress(function (data) {
-                    resolve(data);
-                });
-            } else {
-                resolve(null);
-            }
-        });
     }
 
 }

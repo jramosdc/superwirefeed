@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', "@angular/router", '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router", '../services/authService', '../services/embedlyService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1;
+    var core_1, router_1, authService_1, embedlyService_1;
     var NewPostComponent;
     return {
         setters:[
@@ -23,12 +23,16 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
+            },
+            function (embedlyService_1_1) {
+                embedlyService_1 = embedlyService_1_1;
             }],
         execute: function() {
             NewPostComponent = (function () {
-                function NewPostComponent(as, router) {
+                function NewPostComponent(as, router, embedly) {
                     this.as = as;
                     this.router = router;
+                    this.embedly = embedly;
                     this.categories = [];
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
@@ -78,8 +82,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         },
                         timestamp: firebase.database.ServerValue.TIMESTAMP
                     };
-                    this.embedlyjQuery(newpost.mainUrl).then(function (data) {
-                        post['embedly'] = data ? data : '';
+                    this.embedly.extractAPI(newpost.mainUrl).then(function (data) {
+                        post['embedly'] = data;
                         _this.as.submitPost(post).then(function (res) {
                             console.log('Post is Submitted!');
                             $('#errorPost').html('');
@@ -92,18 +96,6 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         });
                     });
                 };
-                NewPostComponent.prototype.embedlyjQuery = function (url) {
-                    return new Promise(function (resolve, reject) {
-                        if (url.length > 0) {
-                            $.embedly.extract(url, { key: 'f81e196dc01b4cb49d68d48e9b1ea5f2' }).progress(function (data) {
-                                resolve(data);
-                            });
-                        }
-                        else {
-                            resolve(null);
-                        }
-                    });
-                };
                 NewPostComponent = __decorate([
                     core_1.Component({
                         selector: 'newpost',
@@ -113,7 +105,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService'],
                         styleUrls: ['components/newpost/newpost.css'],
                         templateUrl: 'components/newpost/newpost.html'
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, embedlyService_1.embedlyService])
                 ], NewPostComponent);
                 return NewPostComponent;
             }());

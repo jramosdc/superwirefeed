@@ -1,8 +1,8 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['./httpService', './authService'], function(exports_1, context_1) {
+System.register(['./httpService', './authService', './embedlyService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var httpService_1, authService_1;
+    var httpService_1, authService_1, embedlyService_1;
     var ApplicationServices;
     return {
         setters:[
@@ -11,11 +11,15 @@ System.register(['./httpService', './authService'], function(exports_1, context_
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
+            },
+            function (embedlyService_1_1) {
+                embedlyService_1 = embedlyService_1_1;
             }],
         execute: function() {
             exports_1("ApplicationServices", ApplicationServices = [
                 httpService_1.httpService,
-                authService_1.authService
+                authService_1.authService,
+                embedlyService_1.embedlyService
             ]);
         }
     }
