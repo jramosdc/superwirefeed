@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
 
-export interface User { password: { email: string, profileImageURL: string }, uid: string, feed: { id: string, name: string, userid: string } }
+export interface User { uid: string, emailVerified: boolean, password: { email: string, profileImageURL: string }, feed: { id: string, name: string, userid: string } }
+
 
 @Injectable()
 export class authService {
@@ -27,6 +28,7 @@ export class authService {
         this.af.auth.subscribe((res: FirebaseAuthState) => {
             if (res) {
                 this.User.uid = res.uid;
+				this.User.emailVerified = res.auth.emailVerified;
                 // this.User.password.profileImageURL = res.auth['photoURL']
                 this.User.password.email = res.auth['email'];
                 this.getUserFeedDetail(this.User.uid).subscribe(feed => {
@@ -43,6 +45,7 @@ export class authService {
                 });
             } else {
                 this.User.uid = '';
+				this.User.emailVerified = false;
 				this.User.password.profileImageURL = '';
                 this.User.password.email = '';
                 this.User.feed.id = '';
@@ -55,11 +58,12 @@ export class authService {
 
 	emptyUser() {
 		return {
+			uid: '',
+			emailVerified: false,
 			password: {
 				email: '',
 				profileImageURL: ''
 			},
-			uid: '',
 			feed: {
 				id: '',
 				name: '',
@@ -160,6 +164,18 @@ export class authService {
 		});
     }
 
+	private sendEmailOnce: boolean = true;
+	sendEmailVerfication() {
+		if (this.sendEmailOnce) {
+			this.af.auth.subscribe(data => {
+				if (data) {
+					data.auth.sendEmailVerification();
+					this.sendEmailOnce = false;
+				}
+			});
+		}
+	}
+
     createUserProfile(uid: string, userid: string, email: string) {
         return this.af.database.object('/users/' + userid).set({
             uid: uid,
@@ -196,7 +212,7 @@ export class authService {
 		return new Blob([new Uint8Array(array)], {
 			type: 'image/png'
 		});
-				
+
 	}
 
     updateFeed(userid: string, feed: Object) {

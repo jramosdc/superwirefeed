@@ -35,10 +35,12 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                     this.Categories = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
                     this.postCategories = [];
                     this.storageRef = firebase.storage().ref('/');
+                    this.sendEmailOnce = true;
                     this.User = this.emptyUser();
                     this.af.auth.subscribe(function (res) {
                         if (res) {
                             _this.User.uid = res.uid;
+                            _this.User.emailVerified = res.auth.emailVerified;
                             // this.User.password.profileImageURL = res.auth['photoURL']
                             _this.User.password.email = res.auth['email'];
                             _this.getUserFeedDetail(_this.User.uid).subscribe(function (feed) {
@@ -56,6 +58,7 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                         }
                         else {
                             _this.User.uid = '';
+                            _this.User.emailVerified = false;
                             _this.User.password.profileImageURL = '';
                             _this.User.password.email = '';
                             _this.User.feed.id = '';
@@ -67,11 +70,12 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                 }
                 authService.prototype.emptyUser = function () {
                     return {
+                        uid: '',
+                        emailVerified: false,
                         password: {
                             email: '',
                             profileImageURL: ''
                         },
-                        uid: '',
                         feed: {
                             id: '',
                             name: '',
@@ -152,6 +156,17 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                         email: email,
                         password: password
                     });
+                };
+                authService.prototype.sendEmailVerfication = function () {
+                    var _this = this;
+                    if (this.sendEmailOnce) {
+                        this.af.auth.subscribe(function (data) {
+                            if (data) {
+                                data.auth.sendEmailVerification();
+                                _this.sendEmailOnce = false;
+                            }
+                        });
+                    }
                 };
                 authService.prototype.createUserProfile = function (uid, userid, email) {
                     return this.af.database.object('/users/' + userid).set({

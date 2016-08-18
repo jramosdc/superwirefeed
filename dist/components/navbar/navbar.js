@@ -90,6 +90,8 @@ System.register(['@angular/core', '@angular/router', '../services/authService'],
                             }).catch(function (err) {
                                 console.log('Profile Creation Failed!', err);
                             });
+                            // after login send email verification
+                            _this.as.sendEmailVerfication();
                         }).catch(function (err) {
                             console.log("Login Failed after Registration!", err);
                             $('#errorRegister').html(err['message']);

@@ -81,6 +81,10 @@ export class NavbarComponent implements OnInit {
         }).catch((err) => {
           console.log('Profile Creation Failed!', err)
         });
+        
+        // after login send email verification
+        this.as.sendEmailVerfication();
+
       }).catch((err) => {
         console.log("Login Failed after Registration!", err);
         $('#errorRegister').html(err['message']);
