@@ -42,8 +42,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                 NewPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
                     // $('select').material_select();
-                    tinymce.remove();
-                    tinymce.init({
+                    tinymce['remove']();
+                    tinymce['init']({
                         selector: '#editor',
                         height: 200,
                         plugins: [
@@ -61,6 +61,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                 };
                 NewPostComponent.prototype.submitPost = function (valid, newpost) {
                     var _this = this;
+                    console.log('sdddddsdsdsdsdsdsdsdsd');
                     event.preventDefault();
                     if (!valid) {
                         return;
@@ -80,7 +81,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             userid: this.User.feed.userid,
                             feedid: this.User.feed.id
                         },
-                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                        timestamp: firebase.database['ServerValue'].TIMESTAMP
                     };
                     this.embedly.extractAPI(newpost.mainUrl).then(function (data) {
                         post['embedly'] = data;

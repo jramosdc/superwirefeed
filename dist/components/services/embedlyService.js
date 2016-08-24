@@ -26,7 +26,7 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 embedlyService.prototype.extractAPI = function (url) {
                     var _this = this;
                     return new Promise(function (resolve, reject) {
-                        if (url.length > 0) {
+                        if (url && url.length > 0) {
                             $.embedly.extract(url).progress(function (data) {
                                 resolve(_this.extractProperties(data));
                             });

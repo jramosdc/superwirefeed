@@ -11,7 +11,7 @@ export class embedlyService {
 
     extractAPI(url: string) {
         return new Promise((resolve, reject) => {
-            if (url.length > 0) {
+            if (url && url.length > 0) {
                 $.embedly.extract(url).progress((data) => {
                     resolve(this.extractProperties(data));
                 });

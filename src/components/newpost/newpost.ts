@@ -29,8 +29,8 @@ export class NewPostComponent implements OnInit {
 
     ngOnInit() {
         // $('select').material_select();
-        tinymce.remove();
-        tinymce.init({
+        tinymce['remove']();
+        tinymce['init']({
             selector: '#editor',
             height: 200,
             plugins: [
@@ -48,6 +48,7 @@ export class NewPostComponent implements OnInit {
     }
 
     submitPost(valid, newpost) {
+        console.log('sdddddsdsdsdsdsdsdsdsd');
         event.preventDefault();
         if (!valid) { return; }
         this.postLoading = true;
@@ -65,7 +66,7 @@ export class NewPostComponent implements OnInit {
                 userid: this.User.feed.userid,
                 feedid: this.User.feed.id
             },
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+            timestamp: firebase.database['ServerValue'].TIMESTAMP
         };
 
         this.embedly.extractAPI(newpost.mainUrl).then((data: IEmbedly) => {
