@@ -32,6 +32,7 @@ var path = {
       ,{ dist: 'lib/ng2-img-cropper', src: 'node_modules/ng2-img-cropper/**' }
       ,{ dist: 'lib', src: 'node_modules/angular2-tag-input/dist/tag-input.component.js' }
       ,{ dist: 'lib', src: 'node_modules/angular2-tag-input/dist/tag-input-item.component.js' }
+      ,{ dist: 'lib', src: 'node_modules/jquery-embedly/jquery.embedly.min.js' }
 
   ],
   libcss: [
