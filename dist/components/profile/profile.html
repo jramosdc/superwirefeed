@@ -15,6 +15,7 @@
             <div class="add" *ngIf="profile && User.uid === profile.uid && !editMode">
                 <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="edit()"><i class="large mdi mdi-pencil"></i></a>
             </div>
+        <a class="btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="I am tooltip" *ngIf="profile && User.uid === profile.uid && !editMode">Hover me!</a>
         </div>
         <div class="details">
             <h3>{{profile.displayName || profile.email}}</h3>

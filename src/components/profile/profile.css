@@ -28,7 +28,7 @@
 .jumbo {
   width: 100%;
   height: 200px;
-  background: url(https://code.band-x.media/SASS-Material-Design-for-Bootstrap/assets/images/material-cover.jpg) center center no-repeat;
+  background: url("https://code.band-x.media/SASS-Material-Design-for-Bootstrap/assets/images/material-cover.jpg") center center no-repeat;
   background-size: cover;
 }
 
