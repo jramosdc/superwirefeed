@@ -6,23 +6,26 @@
                 <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12" (click)="pictureModelOpen();">
             </div>
             <div class="big-icon" *ngIf="profile.email && !profile.profileImageURL">
-                <i class="black-text mdi mdi-account circle col s12" (click)="pictureModelOpen();" style="font-size: 10em;"></i>
+                <i class="pink-text mdi mdi-account circle col s12" (click)="pictureModelOpen();" style="font-size: 10em;"></i>
             </div>
-            <div class="rate" *ngIf="!editMode && profile">
-                <a class="star-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-star"></i></a>
-                <a class="like-btn add-btn btn-floating btn-large waves-effect waves-light blue darken-1"><i class="mdi mdi-thumb-up"></i></a>
-            </div>
-            <div class="add" *ngIf="profile && User.uid === profile.uid && !editMode">
-                <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="edit()"><i class="large mdi mdi-pencil"></i></a>
-            </div>
+        <div class="edit"><a class="btn-floating waves-effect waves-light pink" (click)="pictureModelOpen();"><i class="mdi mdi-camera"></i></a></div>
         </div>
-        <div class="details">
+        <div class="container padding10px">
+          <div class="col s12 m4 l4"><h6>FOLLOWERS</h6><p>346</p></div>
+          <div class="col s12 m4 l4"><h6>FOLLOWING</h6><p>333</p></div>
+          <div class="col s12 m4 l4"><h6>ITEMS PUBLISHED</h6><p>666</p> </div> 
+<hr /> 
+        </div>
+        <div class="container details">
             <h3>{{profile.displayName || profile.email}}</h3>
             <div *ngIf="profile && profile.feedName">
                 <h5>{{profile.feedName}}</h5>
             </div>
             <div *ngIf="profile && profile.feedId">
-                <a [routerLink]="['/posts', profile.feedId]">{{domain + '/posts/' + profile.feedId}}</a>
+                <a [routerLink]="['/posts', profile.feedId]">HOME FEED</a>
+            </div>
+            <div *ngIf="profile && profile.feedId">
+                <a [routerLink]="['/posts', profile.feedId]">FOLLOWERS FEED</a>
             </div>
         </div>
         <div class="container bio" *ngIf="profile && profile.bio">
@@ -52,7 +55,7 @@
         <div class="row valign-wrapper">
             <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
             <h5 class="col s10 valign">{{profile.displayName || profile.email}}</h5>
-            <h5>Followers(5)</h5>
+            
         </div>
         <div class="divider"></div>
         <div class="row">
