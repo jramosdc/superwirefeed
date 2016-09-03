@@ -3,12 +3,14 @@
         <div class="jumbo"></div>
         <div class="container icons">
             <div class="big-icon" *ngIf="profile.profileImageURL">
-                <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12" (click)="pictureModelOpen();">
+                <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12">
             </div>
             <div class="big-icon" *ngIf="profile.email && !profile.profileImageURL">
-                <i class="pink-text mdi mdi-account circle col s12" (click)="pictureModelOpen();" style="font-size: 10em;"></i>
+                <i class="pink-text mdi mdi-account circle col s12" style="font-size: 10em;"></i>
             </div>
-        <div class="edit"><a class="btn-floating waves-effect waves-light pink" (click)="pictureModelOpen();"><i class="mdi mdi-camera"></i></a></div>
+        <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode">
+            <a class="btn-floating waves-effect waves-light pink" (click)="pictureModelOpen();"><i class="mdi mdi-camera"></i></a>
+        </div>
         </div>
         <div class="container padding10px">
           <div class="col s12 m4 l4"><h6>FOLLOWERS</h6><p>346</p></div>

@@ -9,8 +9,13 @@
         </div></div>
         <div class="row">
             <ul class="collapsible" data-collapsible="accordion">
-            <li class="posttitle"> <h2><span>{{post.title}}</span></h2><img [src]="post.embedly.images[0].url" class="img_header" *ngIf="post.mainUrl"><img src="http://www.davidluke.com/wp-content/themes/david-luke/media/ims/placeholder720.gif" class="img_header" *ngIf="!post.mainUrl">
-<div class="more" *ngIf="post.mainUrl"><a class="btn-floating waves-effect waves-light indigo" href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a></div>
+            <li class="posttitle"> 
+                <h2><span>{{post.title}}</span></h2>
+                <img [src]="post.embedly.images[0].url" class="img_header" *ngIf="post.embedly && post.embedly.images">
+                <img src="http://www.davidluke.com/wp-content/themes/david-luke/media/ims/placeholder720.gif" class="img_header" *ngIf="!post.mainUrl">
+                <div class="more" *ngIf="post.embedly && post.embedly.url">
+                    <a class="btn-floating waves-effect waves-light indigo" href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
+                </div>
             </li>
             <li>
                 <div class="collapsible-header"><i *ngFor="let type of post.types" class="mdi {{'mdi-' + type}}"></i>Content</div>

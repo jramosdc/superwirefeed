@@ -19,12 +19,22 @@ export class NewPostComponent implements OnInit {
     detail: string;
     postLoading: boolean;
     categories: Array<string> = [];
+    _priority: any;                 // priority model for default value in our form
+    ty: string[];                  // selected types
 
     constructor(private as: authService, private router: Router, private embedly: embedlyService) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.categories = this.as.getPostCategories();
         this.as.setActivePageTitle('New Post');
+        
+        this.defaultModelInitialization();
+        
+    }
+
+    defaultModelInitialization() {
+        this._priority = 'Low';
+        this.ty = null;
     }
 
     ngOnInit() {
@@ -45,12 +55,29 @@ export class NewPostComponent implements OnInit {
                 });
             }
         });
+
+        let that = this;
+        // multiple select options
+        $('select[multiple] option').mousedown(function(e) {
+            that.ty = (that.ty == null) ? [] : that.ty;
+            e.preventDefault();
+            let value = $(this).val().split(': ')[1].replace(/'/g, '');
+            if(!$(this).prop('selected')) {
+                that.ty.push(value)
+            } else {
+                that.ty.splice(that.ty.indexOf(value), 1);
+                that.ty = (that.ty.length === 0) ? null : that.ty;
+            }
+            $(this).prop('selected', $(this).prop('selected') ? false : true);
+            // $(this).prop('selected', !$(this).prop('selected'));
+            return false;
+        });
     }
 
     submitPost(valid, newpost) {
-        console.log('sdddddsdsdsdsdsdsdsdsd');
         event.preventDefault();
         if (!valid) { return; }
+
         this.postLoading = true;
         let post = {
             title: newpost.title,

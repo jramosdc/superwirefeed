@@ -38,7 +38,12 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     this.User = this.as.getUser();
                     this.categories = this.as.getPostCategories();
                     this.as.setActivePageTitle('New Post');
+                    this.defaultModelInitialization();
                 }
+                NewPostComponent.prototype.defaultModelInitialization = function () {
+                    this._priority = 'Low';
+                    this.ty = null;
+                };
                 NewPostComponent.prototype.ngOnInit = function () {
                     var _this = this;
                     // $('select').material_select();
@@ -58,10 +63,26 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             });
                         }
                     });
+                    var that = this;
+                    // multiple select options
+                    $('select[multiple] option').mousedown(function (e) {
+                        that.ty = (that.ty == null) ? [] : that.ty;
+                        e.preventDefault();
+                        var value = $(this).val().split(': ')[1].replace(/'/g, '');
+                        if (!$(this).prop('selected')) {
+                            that.ty.push(value);
+                        }
+                        else {
+                            that.ty.splice(that.ty.indexOf(value), 1);
+                            that.ty = (that.ty.length === 0) ? null : that.ty;
+                        }
+                        $(this).prop('selected', $(this).prop('selected') ? false : true);
+                        // $(this).prop('selected', !$(this).prop('selected'));
+                        return false;
+                    });
                 };
                 NewPostComponent.prototype.submitPost = function (valid, newpost) {
                     var _this = this;
-                    console.log('sdddddsdsdsdsdsdsdsdsd');
                     event.preventDefault();
                     if (!valid) {
                         return;

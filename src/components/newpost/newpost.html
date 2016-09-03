@@ -29,7 +29,7 @@
         <div class="row">
             <label for="priority">Priority</label>
             <div class="input-field">
-                <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="p" required>
+                <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="_priority" required>
                     <option value="" disabled selected>Select Priority</option>
                     <option value="High">Urgent</option>
                     <option value="Medium">Medium</option>

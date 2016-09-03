@@ -261,8 +261,13 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                         }).subscribe(function (res) {
                             _this.af.database.object('/feeds/' + feedid).remove().then(function (res) {
                                 _this.af.database.object('/users/' + userid).remove().then(function (res) {
-                                    _this.af.auth.logout();
-                                    resolve();
+                                    _this.af.auth.subscribe(function (authState) {
+                                        authState.auth.delete().then(function () {
+                                            console.log('deleted!');
+                                            // this.af.auth.logout();
+                                            resolve();
+                                        }).catch(function (e) { return console.error(e); });
+                                    });
                                     // return this.af.auth.remove(this.af.auth);
                                 }).catch(reject);
                             }).catch(reject);
