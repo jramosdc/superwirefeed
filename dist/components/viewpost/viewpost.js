@@ -48,6 +48,9 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
                                     $('.linkify').linkify();
                                     $('.collapsible').collapsible({ accordion: false });
                                     $("img").addClass("responsive-img");
+                                    if (_this.post['detail']) {
+                                        $('#postDetails').html(_this.post['detail']);
+                                    }
                                 });
                             });
                         }

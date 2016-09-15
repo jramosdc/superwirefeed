@@ -31,10 +31,11 @@ export class ViewPostComponent {
                     this.post = post;
                     this.post['purl'] = sanitizer.bypassSecurityTrustResourceUrl(post.pdfLink);
                     this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
-                    setTimeout(function () {
+                    setTimeout(() => {
                         $('.linkify').linkify();
                         $('.collapsible').collapsible({accordion : false});
                         $("img").addClass("responsive-img");
+                        if(this.post['detail']) { $('#postDetails').html(this.post['detail']); }
                     });
                 });
             }

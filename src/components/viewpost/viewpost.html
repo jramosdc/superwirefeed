@@ -4,9 +4,10 @@
             <a class="btn-floating btn-large waves-effect waves-light deep-purple" [routerLink]="['/editpost', postid]"><i class="large mdi mdi-pencil"></i></a>
         </div>
         <div class="row">
-          <div class="card panel indigo">
-            <h5 class="white-text" [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</h5>
-        </div></div>
+            <div class="card panel indigo">
+                <h5 class="white-text" [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</h5>
+            </div>
+        </div>
         <div class="row">
             <ul class="collapsible" data-collapsible="accordion">
             <li class="posttitle"> 
@@ -19,7 +20,9 @@
             </li>
             <li>
                 <div class="collapsible-header"><i *ngFor="let type of post.types" class="mdi {{'mdi-' + type}}"></i>Content</div>
-                <div class="collapsible-body" [innerHTML]="post.detail"></div>
+                <div class="collapsible-body">
+                    <div id="postDetails" class="demo-container">dddd</div>
+                </div>
             </li>
             <li *ngIf="post.pdfLink">
                 <div class="collapsible-header"><i class="mdi mdi-file-pdf"></i>PDF</div>
