@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/platform-browser', '@angular/core', "@angular/router", '../services/authService'], function(exports_1, context_1) {
+System.register(['@angular/platform-browser', '@angular/core', "@angular/router", '../services/authService', '../services/httpService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var platform_browser_1, core_1, router_1, authService_1;
+    var platform_browser_1, core_1, router_1, authService_1, httpService_1;
     var ViewPostComponent;
     return {
         setters:[
@@ -26,14 +26,18 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
             },
             function (authService_1_1) {
                 authService_1 = authService_1_1;
+            },
+            function (httpService_1_1) {
+                httpService_1 = httpService_1_1;
             }],
         execute: function() {
             ViewPostComponent = (function () {
-                function ViewPostComponent(as, router, route, sanitizer) {
+                function ViewPostComponent(as, router, route, sanitizer, http) {
                     var _this = this;
                     this.as = as;
                     this.router = router;
                     this.route = route;
+                    this.http = http;
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.as.setActivePageTitle('View Post');
@@ -51,6 +55,9 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
                                     if (_this.post['detail']) {
                                         $('#postDetails').html(_this.post['detail']);
                                     }
+                                    if (_this.post['csvToJson']) {
+                                        _this.displayTable(post['csvToJson']);
+                                    }
                                 });
                             });
                         }
@@ -64,6 +71,37 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
                         return '';
                     }
                 };
+                ViewPostComponent.prototype.displayTable = function (dataJSON) {
+                    var data = dataJSON;
+                    var tableDiv = document.getElementById("fullTable");
+                    var tbl = document.createElement("table");
+                    var tblHead = document.createElement("thead");
+                    var tblBody = document.createElement("tbody");
+                    // var Headerrow = document.createElement("tr");
+                    // for (var heading in data[0]) {
+                    //     console.log('heading', heading)
+                    //     var cell = document.createElement("td");
+                    //     var cellText = document.createTextNode(heading);
+                    //     cell.appendChild(cellText);
+                    //     Headerrow.appendChild(cell);
+                    // }
+                    // tblBody.appendChild(Headerrow);
+                    for (var j = 0; j < data.length; j++) {
+                        var row = document.createElement("tr");
+                        for (var obj in data[j]) {
+                            var cell = document.createElement("td");
+                            var cellText = document.createTextNode(data[j][obj]);
+                            cell.appendChild(cellText);
+                            row.appendChild(cell);
+                        }
+                        tblBody.appendChild(row);
+                    }
+                    tbl.appendChild(tblBody);
+                    tableDiv.appendChild(tbl);
+                    setTimeout(function () {
+                        tbl.setAttribute("class", "striped highlight centered responsive-table");
+                    }, 1000);
+                };
                 ViewPostComponent = __decorate([
                     core_1.Component({
                         selector: 'viewpost',
@@ -73,7 +111,7 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
                         styleUrls: ['components/viewpost/viewpost.css'],
                         templateUrl: 'components/viewpost/viewpost.html'
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute, platform_browser_1.DomSanitizationService])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute, platform_browser_1.DomSanitizationService, httpService_1.httpService])
                 ], ViewPostComponent);
                 return ViewPostComponent;
             }());
@@ -81,3 +119,12 @@ System.register(['@angular/platform-browser', '@angular/core', "@angular/router"
         }
     }
 });
+// Papa.parse('https://docs.google.com/spreadsheets/d/1se-tAna5Nlei8K7weGc-A9jDafoV8DLQP-sqd7Iq0Ns/pubhtml?gid=74699649&single=true', {
+//     download: true, 
+//     delimiter: ",", 
+//     skipemptylines: true, 
+//     header: false,
+//     complete: function(results, file){
+//         console.log('data finsingh: ', results, file);
+//     }
+// }) 

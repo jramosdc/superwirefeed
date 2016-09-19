@@ -30,7 +30,10 @@
             </li>
             <li *ngIf="post.gsheetLink">
                 <div class="collapsible-header"><i class="mdi mdi-google-drive"></i>Data</div>
-                <div class="collapsible-body"><iframe [src]="post.gurl" style="width:90%;"></iframe></div>
+                <div class="collapsible-body">
+                    <!--<iframe [src]="post.gurl" style="width:90%;"></iframe>-->
+                    <div id="fullTable" style="width: inherit; overflow-y: hidden;"></div>
+                </div>
             </li>            
             </ul>
         </div>

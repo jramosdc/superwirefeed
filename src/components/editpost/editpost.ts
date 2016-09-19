@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User, authService } from '../services/authService';
 import { embedlyService, IEmbedly } from '../services/embedlyService';
+import { FirebaseStorageService } from '../services/firebaseStorageService';
+
+declare var Papa: any, tinymce: any;
 
 @Component({
   selector: 'editpost',
@@ -21,8 +24,10 @@ export class EditPostComponent implements OnInit {
   UserID: string;
   postLoading: boolean;
   categories: Array<string> = [];
+  csvFile: any = null;
+  postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
 
-  constructor(private as: authService, private router: Router, private route: ActivatedRoute, private embedly: embedlyService) {
+  constructor(private as: authService, private router: Router, private route: ActivatedRoute, private embedly: embedlyService, private storge: FirebaseStorageService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.categories = this.as.getPostCategories();
@@ -34,6 +39,24 @@ export class EditPostComponent implements OnInit {
       this.viewInitialize();
     });
   }
+
+  handleFiles(evt) {
+    event.preventDefault();
+    let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
+    if (pattern.test(evt.target.files[0].name)) {
+      let size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
+      if (size <= 1) {
+        this.csvFile = evt.target.files[0];
+      } else {
+        document.getElementById('browseCSVFile')['value'] = null;
+        alert('Please CSV file size should be max 1mb');
+      }
+    } else {
+      document.getElementById('browseCSVFile')['value'] = null;
+      alert('please select *.csv file');
+    }
+  }
+
 
   private loadData() {
     return new Promise((resolve, reject) => {
@@ -86,14 +109,48 @@ export class EditPostComponent implements OnInit {
       pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
       gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
       mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
-      timestamp: firebase.database.ServerValue.TIMESTAMP
+      csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
+      timestamp: firebase.database['ServerValue'].TIMESTAMP
     }
 
+    // convert CVS file to JSON
+    if (this.csvFile) {
+      Papa.parse(this.csvFile, {
+        complete: (result) => {
+          post["csvToJson"] = result.data;
+        }
+      });
 
-    this.embedly.extractAPI(editpost.mainUrl).then((data: IEmbedly) => {
+      // after file upload get download link storgae
+      this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
+        post['gsheetLink'] = url;
+        this.postObjReady.uploadFile = true;
+        this.updateToFirebase(post);             // save to firebase
+      }).catch(err => {
+        console.log('file not upload err', err);
+      });
+    } else {
+      this.postObjReady.uploadFile = true;
+      this.updateToFirebase(post);             // save to firebase
+    }
 
-      post['embedly'] = data;
+    // checking if mailurl has changed then send request else nothing
+    if (editpost.mainUrl !== this.post['mainUrl']) {
+      // after extract data from embedly API save into post embedly property
+      this.embedly.extractAPI(editpost.mainUrl).then((data: IEmbedly) => {
+        post['embedly'] = data;
+        this.postObjReady.embedlyApi = true;
+        this.updateToFirebase(post);             // save to firebase
+      });
+    } else {
+      this.postObjReady.embedlyApi = true;
+      this.updateToFirebase(post);             // save to firebase
+    }
 
+  }
+
+  private updateToFirebase(post) {
+    if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
       this.as.updatePost(this.postid, post).then(res => {
         console.log('Post is Updated!');
         $('#errorPost').html('');
@@ -101,12 +158,10 @@ export class EditPostComponent implements OnInit {
         this.router.navigate(['/posts', this.User.feed.id]);
       }).catch(err => {
         console.log('Post Update Failed!', err);
-        $('#errorPost').html(err);
+        $('#errorPost').html(err.toString());
         this.postLoading = false;
       });
-
-    });
-
+    }
   }
 
 }

@@ -74,9 +74,10 @@
             </div>
         </div>
         <div class="row">
-            <label for="gsheetLink">Google Spread Sheet Link</label>
+            <label for="gsheetLink">CSV File</label>
             <div class="input-field">
-                <input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl" placeholder="Google Spread Sheet Link">
+                <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl" placeholder="Google Spread Sheet Link">-->
+                <input type="file" id="browseCSVFile" (change)="handleFiles($event, gsheetLink)" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
             </div>
         </div>
         <div class="row">
@@ -105,4 +106,7 @@
             <button type="submit" class="waves-effect waves-light btn purple white-text right">Post</button>
         </div>
     </form>
+</div>
+
+<div id="fullTable">
 </div>

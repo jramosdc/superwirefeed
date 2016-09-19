@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 import { embedlyService, IEmbedly } from '../services/embedlyService';
+import { FirebaseStorageService } from '../services/firebaseStorageService';
+
+declare var Papa: any, tinymce: any;
 
 @Component({
     selector: 'newpost',
@@ -21,15 +24,17 @@ export class NewPostComponent implements OnInit {
     categories: Array<string> = [];
     _priority: any;                 // priority model for default value in our form
     ty: string[];                  // selected types
+    csvFile: any = null;
+    postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
 
-    constructor(private as: authService, private router: Router, private embedly: embedlyService) {
+    constructor(private as: authService, private router: Router, private embedly: embedlyService, private storge: FirebaseStorageService) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.categories = this.as.getPostCategories();
         this.as.setActivePageTitle('New Post');
-        
+
         this.defaultModelInitialization();
-        
+
     }
 
     defaultModelInitialization() {
@@ -58,11 +63,11 @@ export class NewPostComponent implements OnInit {
 
         let that = this;
         // multiple select options
-        $('select[multiple] option').mousedown(function(e) {
+        $('select[multiple] option').mousedown(function (e) {
             that.ty = (that.ty == null) ? [] : that.ty;
             e.preventDefault();
             let value = $(this).val().split(': ')[1].replace(/'/g, '');
-            if(!$(this).prop('selected')) {
+            if (!$(this).prop('selected')) {
                 that.ty.push(value)
             } else {
                 that.ty.splice(that.ty.indexOf(value), 1);
@@ -72,6 +77,23 @@ export class NewPostComponent implements OnInit {
             // $(this).prop('selected', !$(this).prop('selected'));
             return false;
         });
+    }
+
+    handleFiles(evt) {
+        event.preventDefault();
+        let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
+        if (pattern.test(evt.target.files[0].name)) {
+            let size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
+            if (size <= 1) {
+                this.csvFile = evt.target.files[0];
+            } else {
+                document.getElementById('browseCSVFile')['value'] = null;
+                alert('Please CSV file size should be max 1mb');
+            }
+        } else {
+            document.getElementById('browseCSVFile')['value'] = null;
+            alert('please select *.csv file');
+        }
     }
 
     submitPost(valid, newpost) {
@@ -88,6 +110,8 @@ export class NewPostComponent implements OnInit {
             pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
             gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
             mainUrl: newpost.mainUrl ? newpost.mainUrl : '',
+            csvFilename: (this.csvFile) ? this.csvFile.name : '',
+            csvToJson: '',
             owner: {
                 uid: this.User.uid,
                 userid: this.User.feed.userid,
@@ -96,10 +120,40 @@ export class NewPostComponent implements OnInit {
             timestamp: firebase.database['ServerValue'].TIMESTAMP
         };
 
-        this.embedly.extractAPI(newpost.mainUrl).then((data: IEmbedly) => {
-            
-            post['embedly'] = data;
+        // convert CVS file to JSON
+        if (this.csvFile) {
+            Papa.parse(this.csvFile, {
+                complete: (result) => {
+                    post["csvToJson"] = result.data;
+                }
+            });
 
+            // after file upload get download link storgae
+            this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
+                post['gsheetLink'] = url;
+                this.postObjReady.uploadFile = true;
+                this.postToFirebase(post);             // save to firebase
+            }).catch(err => {
+                console.log('file not upload err', err);
+            });
+        } else {
+            this.postObjReady.uploadFile = true;
+            this.postToFirebase(post);             // save to firebase
+        }
+
+        // after extract data from embedly API save into post embedly property
+        this.embedly.extractAPI(newpost.mainUrl).then((data: IEmbedly) => {
+            post['embedly'] = data;
+            this.postObjReady.embedlyApi = true;
+            this.postToFirebase(post);             // save to firebase
+        });
+
+
+
+    } // submitPost
+
+    private postToFirebase(post) {
+        if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
             this.as.submitPost(post).then(res => {
                 console.log('Post is Submitted!');
                 $('#errorPost').html('');
@@ -107,12 +161,10 @@ export class NewPostComponent implements OnInit {
                 this.router.navigate(['posts', this.User.feed.id]);
             }).catch(err => {
                 console.log('Post Submit Failed!', err);
-                $('#errorPost').html(err);
+                $('#errorPost').html(err.toString());
                 this.postLoading = false;
             });
-
-        });
-
-    }
+        }
+    } // postToFirebase
 
 }

@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', "@angular/router", '../services/authService', '../services/embedlyService'], function(exports_1, context_1) {
+System.register(['@angular/core', "@angular/router", '../services/authService', '../services/embedlyService', '../services/firebaseStorageService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1, embedlyService_1;
+    var core_1, router_1, authService_1, embedlyService_1, firebaseStorageService_1;
     var NewPostComponent;
     return {
         setters:[
@@ -26,14 +26,20 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
             },
             function (embedlyService_1_1) {
                 embedlyService_1 = embedlyService_1_1;
+            },
+            function (firebaseStorageService_1_1) {
+                firebaseStorageService_1 = firebaseStorageService_1_1;
             }],
         execute: function() {
             NewPostComponent = (function () {
-                function NewPostComponent(as, router, embedly) {
+                function NewPostComponent(as, router, embedly, storge) {
                     this.as = as;
                     this.router = router;
                     this.embedly = embedly;
+                    this.storge = storge;
                     this.categories = [];
+                    this.csvFile = null;
+                    this.postObjReady = { embedlyApi: false, uploadFile: false };
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.categories = this.as.getPostCategories();
@@ -81,6 +87,24 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         return false;
                     });
                 };
+                NewPostComponent.prototype.handleFiles = function (evt) {
+                    event.preventDefault();
+                    var pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
+                    if (pattern.test(evt.target.files[0].name)) {
+                        var size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
+                        if (size <= 1) {
+                            this.csvFile = evt.target.files[0];
+                        }
+                        else {
+                            document.getElementById('browseCSVFile')['value'] = null;
+                            alert('Please CSV file size should be max 1mb');
+                        }
+                    }
+                    else {
+                        document.getElementById('browseCSVFile')['value'] = null;
+                        alert('please select *.csv file');
+                    }
+                };
                 NewPostComponent.prototype.submitPost = function (valid, newpost) {
                     var _this = this;
                     event.preventDefault();
@@ -97,6 +121,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
                         gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
                         mainUrl: newpost.mainUrl ? newpost.mainUrl : '',
+                        csvFilename: (this.csvFile) ? this.csvFile.name : '',
+                        csvToJson: '',
                         owner: {
                             uid: this.User.uid,
                             userid: this.User.feed.userid,
@@ -104,20 +130,48 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         },
                         timestamp: firebase.database['ServerValue'].TIMESTAMP
                     };
+                    // convert CVS file to JSON
+                    if (this.csvFile) {
+                        Papa.parse(this.csvFile, {
+                            complete: function (result) {
+                                post["csvToJson"] = result.data;
+                            }
+                        });
+                        // after file upload get download link storgae
+                        this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(function (url) {
+                            post['gsheetLink'] = url;
+                            _this.postObjReady.uploadFile = true;
+                            _this.postToFirebase(post); // save to firebase
+                        }).catch(function (err) {
+                            console.log('file not upload err', err);
+                        });
+                    }
+                    else {
+                        this.postObjReady.uploadFile = true;
+                        this.postToFirebase(post); // save to firebase
+                    }
+                    // after extract data from embedly API save into post embedly property
                     this.embedly.extractAPI(newpost.mainUrl).then(function (data) {
                         post['embedly'] = data;
-                        _this.as.submitPost(post).then(function (res) {
+                        _this.postObjReady.embedlyApi = true;
+                        _this.postToFirebase(post); // save to firebase
+                    });
+                }; // submitPost
+                NewPostComponent.prototype.postToFirebase = function (post) {
+                    var _this = this;
+                    if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
+                        this.as.submitPost(post).then(function (res) {
                             console.log('Post is Submitted!');
                             $('#errorPost').html('');
                             _this.postLoading = false;
                             _this.router.navigate(['posts', _this.User.feed.id]);
                         }).catch(function (err) {
                             console.log('Post Submit Failed!', err);
-                            $('#errorPost').html(err);
+                            $('#errorPost').html(err.toString());
                             _this.postLoading = false;
                         });
-                    });
-                };
+                    }
+                }; // postToFirebase
                 NewPostComponent = __decorate([
                     core_1.Component({
                         selector: 'newpost',
@@ -127,7 +181,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         styleUrls: ['components/newpost/newpost.css'],
                         templateUrl: 'components/newpost/newpost.html'
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, embedlyService_1.embedlyService])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, embedlyService_1.embedlyService, firebaseStorageService_1.FirebaseStorageService])
                 ], NewPostComponent);
                 return NewPostComponent;
             }());

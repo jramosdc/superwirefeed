@@ -33,6 +33,8 @@ var path = {
       ,{ dist: 'lib', src: 'node_modules/angular2-tag-input/dist/tag-input.component.js' }
       ,{ dist: 'lib', src: 'node_modules/angular2-tag-input/dist/tag-input-item.component.js' }
       ,{ dist: 'lib', src: 'node_modules/jquery-embedly/jquery.embedly.min.js' }
+      ,{ dist: 'lib', src: 'src/lib/papaparse.min.js' }
+      ,{ dist: 'lib', src: 'src/lib/papaparse.js' }
 
   ],
   libcss: [

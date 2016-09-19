@@ -1,5 +1,5 @@
 // <reference path="../../../typings/index.d.ts">
-System.register(['@angular/core', '@angular/router', '../services/authService', '../services/embedlyService'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/router', '../services/authService', '../services/embedlyService', '../services/firebaseStorageService'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService', 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, authService_1, embedlyService_1;
+    var core_1, router_1, authService_1, embedlyService_1, firebaseStorageService_1;
     var EditPostComponent;
     return {
         setters:[
@@ -26,16 +26,22 @@ System.register(['@angular/core', '@angular/router', '../services/authService', 
             },
             function (embedlyService_1_1) {
                 embedlyService_1 = embedlyService_1_1;
+            },
+            function (firebaseStorageService_1_1) {
+                firebaseStorageService_1 = firebaseStorageService_1_1;
             }],
         execute: function() {
             EditPostComponent = (function () {
-                function EditPostComponent(as, router, route, embedly) {
+                function EditPostComponent(as, router, route, embedly, storge) {
                     this.as = as;
                     this.router = router;
                     this.route = route;
                     this.embedly = embedly;
+                    this.storge = storge;
                     this.post = {};
                     this.categories = [];
+                    this.csvFile = null;
+                    this.postObjReady = { embedlyApi: false, uploadFile: false };
                     this.User = this.as.emptyUser();
                     this.User = this.as.getUser();
                     this.categories = this.as.getPostCategories();
@@ -46,6 +52,24 @@ System.register(['@angular/core', '@angular/router', '../services/authService', 
                     this.loadData().then(function () {
                         _this.viewInitialize();
                     });
+                };
+                EditPostComponent.prototype.handleFiles = function (evt) {
+                    event.preventDefault();
+                    var pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
+                    if (pattern.test(evt.target.files[0].name)) {
+                        var size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
+                        if (size <= 1) {
+                            this.csvFile = evt.target.files[0];
+                        }
+                        else {
+                            document.getElementById('browseCSVFile')['value'] = null;
+                            alert('Please CSV file size should be max 1mb');
+                        }
+                    }
+                    else {
+                        document.getElementById('browseCSVFile')['value'] = null;
+                        alert('please select *.csv file');
+                    }
                 };
                 EditPostComponent.prototype.loadData = function () {
                     var _this = this;
@@ -101,21 +125,57 @@ System.register(['@angular/core', '@angular/router', '../services/authService', 
                         pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
                         gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
                         mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
-                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                        csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
+                        timestamp: firebase.database['ServerValue'].TIMESTAMP
                     };
-                    this.embedly.extractAPI(editpost.mainUrl).then(function (data) {
-                        post['embedly'] = data;
-                        _this.as.updatePost(_this.postid, post).then(function (res) {
+                    // convert CVS file to JSON
+                    if (this.csvFile) {
+                        Papa.parse(this.csvFile, {
+                            complete: function (result) {
+                                post["csvToJson"] = result.data;
+                            }
+                        });
+                        // after file upload get download link storgae
+                        this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(function (url) {
+                            post['gsheetLink'] = url;
+                            _this.postObjReady.uploadFile = true;
+                            _this.updateToFirebase(post); // save to firebase
+                        }).catch(function (err) {
+                            console.log('file not upload err', err);
+                        });
+                    }
+                    else {
+                        this.postObjReady.uploadFile = true;
+                        this.updateToFirebase(post); // save to firebase
+                    }
+                    // checking if mailurl has changed then send request else nothing
+                    if (editpost.mainUrl !== this.post['mainUrl']) {
+                        // after extract data from embedly API save into post embedly property
+                        this.embedly.extractAPI(editpost.mainUrl).then(function (data) {
+                            post['embedly'] = data;
+                            _this.postObjReady.embedlyApi = true;
+                            _this.updateToFirebase(post); // save to firebase
+                        });
+                    }
+                    else {
+                        this.postObjReady.embedlyApi = true;
+                        this.updateToFirebase(post); // save to firebase
+                    }
+                };
+                EditPostComponent.prototype.updateToFirebase = function (post) {
+                    var _this = this;
+                    if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
+                        this.as.updatePost(this.postid, post).then(function (res) {
                             console.log('Post is Updated!');
                             $('#errorPost').html('');
                             _this.postLoading = false;
                             _this.router.navigate(['/posts', _this.User.feed.id]);
                         }).catch(function (err) {
                             console.log('Post Update Failed!', err);
-                            $('#errorPost').html(err);
+                            $('#errorPost').html(err.toString());
                             _this.postLoading = false;
                         });
-                    });
+                    }
                 };
                 EditPostComponent = __decorate([
                     core_1.Component({
@@ -126,7 +186,7 @@ System.register(['@angular/core', '@angular/router', '../services/authService', 
                         styleUrls: ['components/editpost/editpost.css'],
                         templateUrl: 'components/editpost/editpost.html'
                     }), 
-                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute, embedlyService_1.embedlyService])
+                    __metadata('design:paramtypes', [authService_1.authService, router_1.Router, router_1.ActivatedRoute, embedlyService_1.embedlyService, firebaseStorageService_1.FirebaseStorageService])
                 ], EditPostComponent);
                 return EditPostComponent;
             }());
