@@ -4,12 +4,38 @@
 <div class="row">
     <div class="col s12">
         <ul class="tabs">
-            <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories" ><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
+            <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories"><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
         </ul>
     </div>
 </div>
 <div class="row">
-    <div class="col l3 s10" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
+    <div class="card col l3 s10" style="padding:0px;margin:5px;" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
+        <div class="card-stacked grey lighten-2">
+            <div class="card-content" style="padding:10px;">
+                <img class="activator" width="50px" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+                <img class="activator" style="border-radius:50%;" width="50px" *ngIf="feed.owner.profileImageURL" [src]="feed.owner.profileImageURL">
+                <span class="grey-text text-darken-1">@{{feed.owner.userid}}</span>
+            </div>
+            <div class="card-action" style="padding:0px;">
+            </div>
+        </div>
+        <div class="card-image">
+            <img class="responsive-img" src="http://trunkweed.com/uploads/posts/images/970939-sports_car-category-cars.jpg" alt="car" style="opacity: 0.5;">
+            <div class="card-title grey-text text-darken-4" style="top:10px;width:100%">
+                <em class="right grey-text text-darken-4" style="font-size:15px;">{{returnMoment(feed.timestamp)}}</em>
+                <strong style="font-size:20px;">{{feed.feedName}}</strong>
+                <span class="card-title grey-text text-darken-4" style="top:55px;font-size:20px;">{{feed.description}}</span>
+            </div>
+        </div>
+        <div class="card-stacked">
+            <div class="card-action grey lighten-2 layout-row layout-align-space-between-center">
+                <span class="grey-text text-darken-1" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
+                <span class="grey-text text-darken-1" *ngIf="!feed.likes">Upvotes(0)</span>
+                <i class="grey-text text-darken-4 mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
+            </div>
+        </div>
+    </div>
+    <!--<div class="col l3 s10" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
         <div class="card deep-purple lighten-1">
             <div [routerLink]="['/posts', feed.$key]">
                 <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
@@ -26,5 +52,5 @@
                 <i class="white-text mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
