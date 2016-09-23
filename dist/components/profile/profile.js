@@ -96,6 +96,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     var _this = this;
                     this.editMode = true;
                     setTimeout(function () {
+                        $('#useBG').prop('checked', _this.profile['useBackgroundImage']);
                         $('#bio').val(_this.profile['bio']);
                         $('#feedId').val(_this.profile['feedId']);
                         $('#feedName').val(_this.profile['feedName']);
@@ -120,7 +121,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         }
                     });
                 };
-                ProfileComponent.prototype.update = function (bio, feedId, feedName, description, pyes, pno, category) {
+                ProfileComponent.prototype.update = function (bio, feedId, feedName, description, pyes, pno, category, useBG) {
                     var _this = this;
                     if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '')
                         return;
@@ -137,7 +138,9 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         'private': $(pyes).prop('checked') ? 'true' : 'false',
                         'category': category.value,
                         'authEmail': this.authList,
-                        'postCategories': this.postCategoryList
+                        'postCategories': this.postCategoryList,
+                        'profileImageURL': this.User.password.profileImageURL,
+                        'useBackgroundImage': useBG.checked
                     };
                     this.as.updateUserProfile(this.userid, profile).then(function (res) {
                         var feed = {
@@ -147,10 +150,12 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             'category': category.value,
                             'authEmail': _this.authList,
                             'postCategories': _this.postCategoryList,
-                            'timestamp': firebase.database.ServerValue.TIMESTAMP,
+                            'timestamp': firebase.database['ServerValue'].TIMESTAMP,
+                            'useBackgroundImage': useBG.checked,
                             'owner': {
                                 'uid': _this.User.uid,
-                                'userid': _this.userid
+                                'userid': _this.userid,
+                                'profileImageURL': _this.User.password.profileImageURL
                             }
                         };
                         _this.as.updateFeed(feedId.value.toLowerCase(), feed).then(function (res) {
@@ -162,11 +167,11 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             console.log('Profile and Feed Updated.');
                         }).catch(function (err) {
                             console.log('Feed Update Failed!', err);
-                            $('#errorProfile').html(err);
+                            $('#errorProfile').html(err.toString());
                         });
                     }).catch(function (err) {
                         console.log('Profile Update Failed!', err);
-                        $('#errorProfile').html(err);
+                        $('#errorProfile').html(err.toString());
                     });
                 };
                 ProfileComponent.prototype.confirmDelete = function () {

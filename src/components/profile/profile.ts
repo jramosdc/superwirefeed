@@ -87,6 +87,7 @@ export class ProfileComponent extends Type implements OnInit {
     edit() {
         this.editMode = true;
         setTimeout(() => {
+            $('#useBG').prop('checked', this.profile['useBackgroundImage']);
             $('#bio').val(this.profile['bio']);
             $('#feedId').val(this.profile['feedId']);
             $('#feedName').val(this.profile['feedName']);
@@ -111,7 +112,7 @@ export class ProfileComponent extends Type implements OnInit {
         });
     }
 
-    update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement) {
+    update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement, useBG: HTMLInputElement) {
         if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '') return
         this.profileLoading = true;
         // $.merge(this.authList, this.authNew)
@@ -126,7 +127,9 @@ export class ProfileComponent extends Type implements OnInit {
             'private': $(pyes).prop('checked') ? 'true' : 'false',
             'category': category.value,
             'authEmail': this.authList,
-            'postCategories': this.postCategoryList
+            'postCategories': this.postCategoryList,
+            'profileImageURL': this.User.password.profileImageURL,
+            'useBackgroundImage': useBG.checked
         };
         this.as.updateUserProfile(this.userid, profile).then((res) => {
             let feed = {
@@ -136,10 +139,12 @@ export class ProfileComponent extends Type implements OnInit {
                 'category': category.value,
                 'authEmail': this.authList,
                 'postCategories': this.postCategoryList,
-                'timestamp': firebase.database.ServerValue.TIMESTAMP,
+                'timestamp': firebase.database['ServerValue'].TIMESTAMP,
+                'useBackgroundImage': useBG.checked,
                 'owner': {
                     'uid': this.User.uid,
-                    'userid': this.userid
+                    'userid': this.userid,
+                    'profileImageURL': this.User.password.profileImageURL
                 }
             }
             this.as.updateFeed(feedId.value.toLowerCase(), feed).then((res) => {
@@ -151,11 +156,11 @@ export class ProfileComponent extends Type implements OnInit {
                 console.log('Profile and Feed Updated.');
             }).catch((err) => {
                 console.log('Feed Update Failed!', err);
-                $('#errorProfile').html(err);
+                $('#errorProfile').html(err.toString());
             })
         }).catch((err) => {
             console.log('Profile Update Failed!', err);
-            $('#errorProfile').html(err);
+            $('#errorProfile').html(err.toString());
         });
     }
 
