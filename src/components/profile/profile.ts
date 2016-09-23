@@ -225,8 +225,10 @@ export class ProfileComponent extends Type implements OnInit {
         this.imageUploading = true;
         this.as.uploadUserImg(this.User.feed.userid, this.data.image).then((url) => {
             this.as.updateUserProfile(this.User.feed.userid, { profileImageURL: url }).then((data) => {
-                this.imageUploading = false;
-                this.pictureModelClose();
+                this.as.updateFeed(this.User.feed.id + '/owner', { profileImageURL: url }).then((d) => {
+                    this.imageUploading = false;
+                    this.pictureModelClose();
+                });
             });
         });
     }

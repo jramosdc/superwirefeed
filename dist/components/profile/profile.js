@@ -234,8 +234,10 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     this.imageUploading = true;
                     this.as.uploadUserImg(this.User.feed.userid, this.data.image).then(function (url) {
                         _this.as.updateUserProfile(_this.User.feed.userid, { profileImageURL: url }).then(function (data) {
-                            _this.imageUploading = false;
-                            _this.pictureModelClose();
+                            _this.as.updateFeed(_this.User.feed.id + '/owner', { profileImageURL: url }).then(function (d) {
+                                _this.imageUploading = false;
+                                _this.pictureModelClose();
+                            });
                         });
                     });
                 };
