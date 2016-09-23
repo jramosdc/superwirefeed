@@ -12,7 +12,7 @@
     <div class="card col l3 s10" style="padding:0px;margin:5px;" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
         <div *ngIf="feed.feedName">
             <div class="card-stacked grey lighten-2">
-                <div class="card-content" style="padding:10px;">
+                <div class="card-content" style="padding:10px;" [routerLink]="['/profile/', feed.owner.userid]">
                     <img class="activator" width="50px" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
                     <img class="activator" style="border-radius:50%;" width="50px" *ngIf="feed.owner.profileImageURL" [src]="feed.owner.profileImageURL">
                     <span class="grey-text text-darken-1">@{{feed.owner.userid}}</span>
