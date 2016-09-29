@@ -31,11 +31,14 @@ export class ProfileComponent extends Type implements OnInit {
     postCategoryNew: Array<string> = [];
 
     // Cropper variables 
-    data: any = {};
-    cropperSettings: CropperSettings;
+    profileImgData: any = {};
+    backgroundImgData: any = {};
+    cropperSettings_round: CropperSettings;
+    cropperSettings_rectangle: CropperSettings;
     imageSelected: boolean = true;
     imageUploading: boolean = false;
-    @ViewChild('cropper', undefined) cropper: ImageCropperComponent;
+    @ViewChild('profileCropper', undefined) profileCropper: ImageCropperComponent;
+    @ViewChild('bgCropper', undefined) bgCropper: ImageCropperComponent;
 
     public validEmailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -52,27 +55,48 @@ export class ProfileComponent extends Type implements OnInit {
             if (this.userid) {
                 this.as.getUserProfile(this.userid).subscribe((profile) => {
                     this.profile = profile;
+                    if(profile['backgroundImageURL']) {
+                        setTimeout(()=>{
+                            $('#bgImage').attr( "style", 'width: 100%; height: 200px; background: url("'+profile['backgroundImageURL']+'") center center no-repeat; background-size: cover;' );
+                        }, 100);
+                    }
                 });
             }
         });
 
-        // for angular2 Corpper 
-        this.cropperSettings = new CropperSettings();
-        this.cropperSettings.width = 200;
-        this.cropperSettings.height = 200;
-        this.cropperSettings.keepAspect = false;
-        this.cropperSettings.croppedWidth = 200;
-        this.cropperSettings.croppedHeight = 200;
-        this.cropperSettings.canvasWidth = 400;
-        this.cropperSettings.canvasHeight = 200;
-        this.cropperSettings.minWidth = 100;
-        this.cropperSettings.minHeight = 100;
-        this.cropperSettings.rounded = true;
-        this.cropperSettings.minWithRelativeToResolution = false;
-        this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
-        this.cropperSettings.cropperDrawSettings.strokeWidth = 1;
-        this.cropperSettings.noFileInput = true;
+        // for angular2 Corpper (round)
+        this.cropperSettings_round = new CropperSettings();
+        this.cropperSettings_round.width = 200;
+        this.cropperSettings_round.height = 200;
+        this.cropperSettings_round.keepAspect = false;
+        this.cropperSettings_round.croppedWidth = 200;
+        this.cropperSettings_round.croppedHeight = 200;
+        this.cropperSettings_round.canvasWidth = 400;
+        this.cropperSettings_round.canvasHeight = 200;
+        this.cropperSettings_round.minWidth = 100;
+        this.cropperSettings_round.minHeight = 100;
+        this.cropperSettings_round.rounded = true;
+        this.cropperSettings_round.minWithRelativeToResolution = false;
+        this.cropperSettings_round.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+        this.cropperSettings_round.cropperDrawSettings.strokeWidth = 1;
+        this.cropperSettings_round.noFileInput = true;
 
+        // for angular2 Corpper (rectangle)
+        this.cropperSettings_rectangle = new CropperSettings();
+        this.cropperSettings_rectangle.width = 400;
+        this.cropperSettings_rectangle.height = 200;
+        this.cropperSettings_rectangle.keepAspect = false;
+        this.cropperSettings_rectangle.croppedWidth = 400;
+        this.cropperSettings_rectangle.croppedHeight = 200;
+        this.cropperSettings_rectangle.canvasWidth = 400;
+        this.cropperSettings_rectangle.canvasHeight = 200;
+        this.cropperSettings_rectangle.minWidth = 200;
+        this.cropperSettings_rectangle.minHeight = 100;
+        this.cropperSettings_rectangle.rounded = false;
+        this.cropperSettings_rectangle.minWithRelativeToResolution = false;
+        this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+        this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
+        this.cropperSettings_rectangle.noFileInput = true;
     }
 
     ngOnInit() {
@@ -82,6 +106,8 @@ export class ProfileComponent extends Type implements OnInit {
                 $('.fab').css('margin-bottom', '150px');
             }
         });
+
+
     }
 
     edit() {
@@ -129,6 +155,7 @@ export class ProfileComponent extends Type implements OnInit {
             'authEmail': this.authList,
             'postCategories': this.postCategoryList,
             'profileImageURL': this.User.password.profileImageURL,
+            'backgroundImageURL': this.User.backgroundImageURL,
             'useBackgroundImage': useBG.checked
         };
         this.as.updateUserProfile(this.userid, profile).then((res) => {
@@ -144,7 +171,8 @@ export class ProfileComponent extends Type implements OnInit {
                 'owner': {
                     'uid': this.User.uid,
                     'userid': this.userid,
-                    'profileImageURL': this.User.password.profileImageURL
+                    'profileImageURL': this.User.password.profileImageURL,
+                    'backgroundImageURL': this.User.backgroundImageURL
                 }
             }
             this.as.updateFeed(feedId.value.toLowerCase(), feed).then((res) => {
@@ -216,45 +244,60 @@ export class ProfileComponent extends Type implements OnInit {
         }
     }
 
-    pictureModelOpen() {
-        $('#pictureModal').openModal();
+    profileModelOpen() {
+        $('#profileModal').openModal();
     }
 
-    pictureModelClose() {
-        $('#pictureModal').closeModal();
+    profileModelClose() {
+        $('#profileModal').closeModal();
         this.imageSelected = true;
-        this.data = {};
+        this.profileImgData = {};
     }
 
     uploadProfileImage() {
         this.imageUploading = true;
-        this.as.uploadUserImg(this.User.feed.userid, this.data.image).then((url) => {
+        this.as.uploadUserImg(this.User.feed.userid, this.profileImgData.image).then((url) => {
             this.as.updateUserProfile(this.User.feed.userid, { profileImageURL: url }).then((data) => {
                 this.as.updateFeed(this.User.feed.id + '/owner', { profileImageURL: url }).then((d) => {
                     this.imageUploading = false;
-                    this.pictureModelClose();
+                    this.profileModelClose();
                 });
             });
         });
     }
 
     cropped(bounds: Bounds) {
-        // console.log(bounds);
+        console.log(bounds);
     }
 
     /**
      * Used to send image to second cropper @param $event
     */
-    fileChangeListener($event) {
-        var image: any = new Image();
-        var file: File = $event.target.files[0];
-        var myReader: FileReader = new FileReader();
+    profileChangeListener($event) {
+        let image: any = new Image();
+        let file: File = $event.target.files[0];
+        let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (loadEvent: any) => {
             image.src = loadEvent.target.result;
-            this.cropper.setImage(image);
+            this.profileCropper.setImage(image);
             //data2 image on select image
-            this.data.image = loadEvent.target.result
+            this.profileImgData.image = loadEvent.target.result
+        };
+        myReader.readAsDataURL(file);
+    }
+
+    backgroundChangeListener($event) {
+        console.log($event)
+        let image: any = new Image();
+        let file: File = $event.target.files[0];
+        let myReader: FileReader = new FileReader();
+
+        myReader.onloadend = (loadEvent: any) => {
+            image.src = loadEvent.target.result;
+            this.bgCropper.setImage(image);
+            //data2 image on select image
+            this.backgroundImgData.image = loadEvent.target.result
         };
         myReader.readAsDataURL(file);
     }
@@ -265,6 +308,29 @@ export class ProfileComponent extends Type implements OnInit {
 
     emailInputEventCatch($event) {
         this.authList = $event;
+    }
+
+    backgroundImagePopup() {
+        $('#backgroundModal').openModal();
+        //  $('#bgInputFile').click();
+    }
+    
+    backgroundModelClose() {
+        $('#backgroundModal').closeModal();
+        this.imageSelected = true;
+        this.backgroundImgData = {};
+    }
+
+    uploadBackgroundImage() {
+        this.imageUploading = true;
+        this.as.uploadUserImg('bg-'+this.User.feed.userid, this.backgroundImgData.image).then((url) => {
+            this.as.updateUserProfile(this.User.feed.userid, { backgroundImageURL: url }).then((data) => {
+                this.as.updateFeed(this.User.feed.id + '/owner', { backgroundImageURL: url }).then((d) => {
+                    this.imageUploading = false;
+                    this.backgroundModelClose();
+                });
+            });
+        });
     }
 
 }

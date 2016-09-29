@@ -1,15 +1,33 @@
+<style>
+    .jumbo:hover { opacity: 0.5; }
+    .backgroundContainer:hover
+    .camOnHover { display:block; }
+    .camOnHover {
+        position : absolute;
+        display:none;
+        top:20%; 
+        width:40px;
+        margin:0 auto; left:0px;
+        right:0px;
+        /*z-index:100;*/
+    } 
+</style>
 <div class="row" *ngIf="!editMode && profile">
     <div class="col s12 card padding10px">
-        <div class="jumbo"></div>
+        <div class="backgroundContainer">
+            <div id="bgImage" class="jumbo"></div>
+            <a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
+            <input type="file" id="bgInputFile" value="" style="display:none;" />
+        </div>
         <div class="container icons">
-            <div class="big-icon" *ngIf="profile.profileImageURL">
+            <div class="big-icon zindex9000" *ngIf="profile.profileImageURL">
                 <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12">
             </div>
-            <div class="big-icon" *ngIf="profile.email && !profile.profileImageURL">
+            <div class="big-icon zindex9000" *ngIf="profile.email && !profile.profileImageURL">
                 <i class="pink-text mdi mdi-account circle col s12" style="font-size: 10em;"></i>
             </div>
         <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode">
-            <a class="btn-floating waves-effect waves-light pink" (click)="pictureModelOpen();"><i class="mdi mdi-camera"></i></a>
+            <a class="btn-floating waves-effect waves-light pink zindex9001" (click)="profileModelOpen();"><i class="mdi mdi-camera"></i></a>
         </div>
         </div>
         <div class="container padding10px">
@@ -214,13 +232,13 @@
     </div>
 </div>
 
-<div id="pictureModal" class="modal">
+<div id="profileModal" class="modal zindex9999">
     <form class="modal-content">
         <div class="nav-wrapper center-align">
             <h2 class="purple-text">Profile Image</h2>
         </div>
         <div class="row center-align" class="flexCenter">
-            <input id="custom-input" type="file" class="displayNone" #fileInput (change)="fileChangeListener($event)">
+            <input id="custom-input" type="file" class="displayNone" #fileInput (change)="profileChangeListener($event)">
             
             <div *ngIf="!profile?.profileImageURL">
                 <div [hidden]="!imageSelected">
@@ -235,7 +253,7 @@
             </div>
 
             <div [hidden]="imageSelected">
-                <img-cropper id="imgCropper" #cropper [image]="data" [settings]="cropperSettings" (onCrop)="cropped($event)"></img-cropper>
+                <img-cropper id="imgCropper" #profileCropper [image]="profileImgData" [settings]="cropperSettings_round" (onCrop)="cropped($event)"></img-cropper>
             </div>
          
         </div>
@@ -256,8 +274,57 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadProfileImage();" [disabled]="!data.image">Upload</button>
-            <button type="button" class="waves-effect waves-blue btn white-text" (click)="pictureModelClose();">CANCEL</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadProfileImage();" [disabled]="!profileImgData.image">Upload</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="profileModelClose();">CANCEL</button>
+        </div>
+    </form>
+</div>
+
+
+<div id="backgroundModal" class="modal zindex9999">
+    <form class="modal-content">
+        <div class="nav-wrapper center-align">
+            <h2 class="purple-text">Background Image {{imageSelected}}</h2>
+        </div>
+        <div class="row center-align" class="flexCenter">
+            <input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
+            
+            <div *ngIf="!profile?.backgroundImageURL">
+                <div [hidden]="!imageSelected">
+                    <img src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg" alt="default background image" (click)="fileInput2.click(); imageSelected=false;" style="width: 300px; height: auto;"/>
+                </div>
+            </div>
+
+            <div *ngIf="profile?.backgroundImageURL">
+                <div [hidden]="!imageSelected">
+                    <img [src]="profile.backgroundImageURL" alt="User Profile Image" class="col s12" (click)="fileInput2.click(); imageSelected=false;">
+                </div>
+            </div>
+
+            <div [hidden]="imageSelected">
+                <img-cropper id="imgCropper2" #bgCropper [image]="backgroundImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"></img-cropper>
+            </div>
+         
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorLogin"></span>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="imageUploading">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!backgroundImgData.image">Upload</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
         </div>
     </form>
 </div>

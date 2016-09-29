@@ -51,7 +51,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     this.postCategoryList = [];
                     this.postCategoryNew = [];
                     // Cropper variables 
-                    this.data = {};
+                    this.profileImgData = {};
+                    this.backgroundImgData = {};
                     this.imageSelected = true;
                     this.imageUploading = false;
                     this.validEmailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -64,25 +65,46 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         if (_this.userid) {
                             _this.as.getUserProfile(_this.userid).subscribe(function (profile) {
                                 _this.profile = profile;
+                                if (profile['backgroundImageURL']) {
+                                    setTimeout(function () {
+                                        $('#bgImage').attr("style", 'width: 100%; height: 200px; background: url("' + profile['backgroundImageURL'] + '") center center no-repeat; background-size: cover;');
+                                    }, 100);
+                                }
                             });
                         }
                     });
-                    // for angular2 Corpper 
-                    this.cropperSettings = new ng2_img_cropper_1.CropperSettings();
-                    this.cropperSettings.width = 200;
-                    this.cropperSettings.height = 200;
-                    this.cropperSettings.keepAspect = false;
-                    this.cropperSettings.croppedWidth = 200;
-                    this.cropperSettings.croppedHeight = 200;
-                    this.cropperSettings.canvasWidth = 400;
-                    this.cropperSettings.canvasHeight = 200;
-                    this.cropperSettings.minWidth = 100;
-                    this.cropperSettings.minHeight = 100;
-                    this.cropperSettings.rounded = true;
-                    this.cropperSettings.minWithRelativeToResolution = false;
-                    this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
-                    this.cropperSettings.cropperDrawSettings.strokeWidth = 1;
-                    this.cropperSettings.noFileInput = true;
+                    // for angular2 Corpper (round)
+                    this.cropperSettings_round = new ng2_img_cropper_1.CropperSettings();
+                    this.cropperSettings_round.width = 200;
+                    this.cropperSettings_round.height = 200;
+                    this.cropperSettings_round.keepAspect = false;
+                    this.cropperSettings_round.croppedWidth = 200;
+                    this.cropperSettings_round.croppedHeight = 200;
+                    this.cropperSettings_round.canvasWidth = 400;
+                    this.cropperSettings_round.canvasHeight = 200;
+                    this.cropperSettings_round.minWidth = 100;
+                    this.cropperSettings_round.minHeight = 100;
+                    this.cropperSettings_round.rounded = true;
+                    this.cropperSettings_round.minWithRelativeToResolution = false;
+                    this.cropperSettings_round.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+                    this.cropperSettings_round.cropperDrawSettings.strokeWidth = 1;
+                    this.cropperSettings_round.noFileInput = true;
+                    // for angular2 Corpper (rectangle)
+                    this.cropperSettings_rectangle = new ng2_img_cropper_1.CropperSettings();
+                    this.cropperSettings_rectangle.width = 400;
+                    this.cropperSettings_rectangle.height = 200;
+                    this.cropperSettings_rectangle.keepAspect = false;
+                    this.cropperSettings_rectangle.croppedWidth = 400;
+                    this.cropperSettings_rectangle.croppedHeight = 200;
+                    this.cropperSettings_rectangle.canvasWidth = 400;
+                    this.cropperSettings_rectangle.canvasHeight = 200;
+                    this.cropperSettings_rectangle.minWidth = 200;
+                    this.cropperSettings_rectangle.minHeight = 100;
+                    this.cropperSettings_rectangle.rounded = false;
+                    this.cropperSettings_rectangle.minWithRelativeToResolution = false;
+                    this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+                    this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
+                    this.cropperSettings_rectangle.noFileInput = true;
                 }
                 ProfileComponent.prototype.ngOnInit = function () {
                     $(window).scroll(function () {
@@ -140,6 +162,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         'authEmail': this.authList,
                         'postCategories': this.postCategoryList,
                         'profileImageURL': this.User.password.profileImageURL,
+                        'backgroundImageURL': this.User.backgroundImageURL,
                         'useBackgroundImage': useBG.checked
                     };
                     this.as.updateUserProfile(this.userid, profile).then(function (res) {
@@ -155,7 +178,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             'owner': {
                                 'uid': _this.User.uid,
                                 'userid': _this.userid,
-                                'profileImageURL': _this.User.password.profileImageURL
+                                'profileImageURL': _this.User.password.profileImageURL,
+                                'backgroundImageURL': _this.User.backgroundImageURL
                             }
                         };
                         _this.as.updateFeed(feedId.value.toLowerCase(), feed).then(function (res) {
@@ -226,42 +250,56 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         });
                     }
                 };
-                ProfileComponent.prototype.pictureModelOpen = function () {
-                    $('#pictureModal').openModal();
+                ProfileComponent.prototype.profileModelOpen = function () {
+                    $('#profileModal').openModal();
                 };
-                ProfileComponent.prototype.pictureModelClose = function () {
-                    $('#pictureModal').closeModal();
+                ProfileComponent.prototype.profileModelClose = function () {
+                    $('#profileModal').closeModal();
                     this.imageSelected = true;
-                    this.data = {};
+                    this.profileImgData = {};
                 };
                 ProfileComponent.prototype.uploadProfileImage = function () {
                     var _this = this;
                     this.imageUploading = true;
-                    this.as.uploadUserImg(this.User.feed.userid, this.data.image).then(function (url) {
+                    this.as.uploadUserImg(this.User.feed.userid, this.profileImgData.image).then(function (url) {
                         _this.as.updateUserProfile(_this.User.feed.userid, { profileImageURL: url }).then(function (data) {
                             _this.as.updateFeed(_this.User.feed.id + '/owner', { profileImageURL: url }).then(function (d) {
                                 _this.imageUploading = false;
-                                _this.pictureModelClose();
+                                _this.profileModelClose();
                             });
                         });
                     });
                 };
                 ProfileComponent.prototype.cropped = function (bounds) {
-                    // console.log(bounds);
+                    console.log(bounds);
                 };
                 /**
                  * Used to send image to second cropper @param $event
                 */
-                ProfileComponent.prototype.fileChangeListener = function ($event) {
+                ProfileComponent.prototype.profileChangeListener = function ($event) {
                     var _this = this;
                     var image = new Image();
                     var file = $event.target.files[0];
                     var myReader = new FileReader();
                     myReader.onloadend = function (loadEvent) {
                         image.src = loadEvent.target.result;
-                        _this.cropper.setImage(image);
+                        _this.profileCropper.setImage(image);
                         //data2 image on select image
-                        _this.data.image = loadEvent.target.result;
+                        _this.profileImgData.image = loadEvent.target.result;
+                    };
+                    myReader.readAsDataURL(file);
+                };
+                ProfileComponent.prototype.backgroundChangeListener = function ($event) {
+                    var _this = this;
+                    console.log($event);
+                    var image = new Image();
+                    var file = $event.target.files[0];
+                    var myReader = new FileReader();
+                    myReader.onloadend = function (loadEvent) {
+                        image.src = loadEvent.target.result;
+                        _this.bgCropper.setImage(image);
+                        //data2 image on select image
+                        _this.backgroundImgData.image = loadEvent.target.result;
                     };
                     myReader.readAsDataURL(file);
                 };
@@ -271,10 +309,35 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                 ProfileComponent.prototype.emailInputEventCatch = function ($event) {
                     this.authList = $event;
                 };
+                ProfileComponent.prototype.backgroundImagePopup = function () {
+                    $('#backgroundModal').openModal();
+                    //  $('#bgInputFile').click();
+                };
+                ProfileComponent.prototype.backgroundModelClose = function () {
+                    $('#backgroundModal').closeModal();
+                    this.imageSelected = true;
+                    this.backgroundImgData = {};
+                };
+                ProfileComponent.prototype.uploadBackgroundImage = function () {
+                    var _this = this;
+                    this.imageUploading = true;
+                    this.as.uploadUserImg('bg-' + this.User.feed.userid, this.backgroundImgData.image).then(function (url) {
+                        _this.as.updateUserProfile(_this.User.feed.userid, { backgroundImageURL: url }).then(function (data) {
+                            _this.as.updateFeed(_this.User.feed.id + '/owner', { backgroundImageURL: url }).then(function (d) {
+                                _this.imageUploading = false;
+                                _this.backgroundModelClose();
+                            });
+                        });
+                    });
+                };
                 __decorate([
-                    core_1.ViewChild('cropper', undefined), 
+                    core_1.ViewChild('profileCropper', undefined), 
                     __metadata('design:type', ng2_img_cropper_1.ImageCropperComponent)
-                ], ProfileComponent.prototype, "cropper", void 0);
+                ], ProfileComponent.prototype, "profileCropper", void 0);
+                __decorate([
+                    core_1.ViewChild('bgCropper', undefined), 
+                    __metadata('design:type', ng2_img_cropper_1.ImageCropperComponent)
+                ], ProfileComponent.prototype, "bgCropper", void 0);
                 ProfileComponent = __decorate([
                     core_1.Component({
                         selector: 'profile',

@@ -48,6 +48,7 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                                 _this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
                                 _this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
                                 _this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+                                _this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
                                 if (feed[0] && feed[0]['postCategories']) {
                                     _this.postCategories.splice(0);
                                     feed[0]['postCategories'].forEach(function (val) {
@@ -64,6 +65,7 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                             _this.User.feed.id = '';
                             _this.User.feed.name = '';
                             _this.User.feed.userid = '';
+                            _this.User.backgroundImageURL = '';
                         }
                     });
                     this.loadFeeds();
@@ -80,7 +82,8 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                             id: '',
                             name: '',
                             userid: ''
-                        }
+                        },
+                        backgroundImageURL: ''
                     };
                 };
                 authService.prototype.getUserFeedDetail = function (uid) {

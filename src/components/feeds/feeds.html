@@ -15,14 +15,15 @@
                 <div class="card-content" style="padding:10px;" [routerLink]="['/profile/', feed.owner.userid]">
                     <img class="activator" width="50px" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
                     <img class="activator" style="border-radius:50%;" width="50px" *ngIf="feed.owner.profileImageURL" [src]="feed.owner.profileImageURL">
-                    <span class="grey-text text-darken-1">@{{feed.owner.userid}}</span>
+                    <span class="grey-text text-darken-1">@{{feed.owner.userid}} {{feed.useBackgroundImage}}</span>
                 </div>
                 <div class="card-action" style="padding:0px;">
                 </div>
             </div>
             <div class="card-image">
-                <img class="responsive-img" *ngIf="feed.useBackgroundImage" src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg" alt="Background Image" style="opacity: 0.5;">
-                <img class="responsive-img" *ngIf="!feed.useBackgroundImage" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image" style="opacity: 0.5;">
+                <img class="responsive-img" *ngIf="feed.useBackgroundImage && feed.owner.backgroundImageURL" [src]="feed.owner.backgroundImageURL" alt="Background Image" style="opacity: 0.5;">
+                <img class="responsive-img" *ngIf="!feed.useBackgroundImage" src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg" alt="Background Image" style="opacity: 0.5; height:205px;">
+                <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image" style="opacity: 0.5;height:205px;">
                 <div class="card-title grey-text text-darken-4" style="top:10px;width:100%">
                     <em class="right grey-text text-darken-4" style="font-size:15px;">{{returnMoment(feed.timestamp)}}</em>
                     <strong style="font-size:20px;">{{feed.feedName}}</strong>

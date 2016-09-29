@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
 
-export interface User { uid: string, emailVerified: boolean, password: { email: string, profileImageURL: string }, feed: { id: string, name: string, userid: string } }
+export interface User { uid: string, emailVerified: boolean, password: { email: string, profileImageURL: string }, feed: { id: string, name: string, userid: string }, backgroundImageURL: string }
 
 
 @Injectable()
@@ -36,6 +36,7 @@ export class authService {
                     this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
                     this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
                     this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+					this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
 					if (feed[0] && feed[0]['postCategories']) {
 						this.postCategories.splice(0);
 						feed[0]['postCategories'].forEach(val => {
@@ -51,6 +52,7 @@ export class authService {
                 this.User.feed.id = '';
                 this.User.feed.name = '';
                 this.User.feed.userid = '';
+				this.User.backgroundImageURL = '';
             }
         })
 		this.loadFeeds();
@@ -68,7 +70,8 @@ export class authService {
 				id: '',
 				name: '',
 				userid: ''
-			}
+			},
+			backgroundImageURL: ''
 		}
 	}
 
