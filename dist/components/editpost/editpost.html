@@ -24,10 +24,10 @@
             <label for="priority">Priority</label>
             <div class="input-field">
                 <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="post.priority" required>
-                    <option value="" disabled selected>Select Priority</option>
-                    <option value="High">Urgent</option>
+                    <option value="" disabled selected>Is it breaking now?</option>
+                    <option value="High">Breaking</option>
                     <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
+                    <option value="Low">Normal</option>
                 </select>
                 <small class="invalid-test" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
                     Priority is required.
@@ -62,20 +62,20 @@
             </div>
         </div>
         <div class="row">
-            <label for="pdfLink">Pdf Link</label>
+            <label for="pdfLink">Add link to PDF</label>
             <div class="input-field">
                 <input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="post.pdfLink" placeholder="Pdf Link">
             </div>
         </div>
         <div class="row">
-            <label for="gsheetLink">CSV File</label>
+            <label for="gsheetLink">Add dataset in csv format or a Google link</label>
             <div class="input-field">
                 <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="post.gsheetLink" placeholder="Google Spread Sheet Link">-->
                 <input type="file" id="browseCSVFile" (change)="handleFiles($event)" class="validate" #gsheetLink="ngModel" name="gsheetLink" value="asad" [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
             </div>
         </div>
         <div class="row">
-            <label for="mainUrl">Main Url</label>
+            <label for="mainUrl">Main url (just saving a link? we can make magic with it)</label>
             <div class="input-field">
                 <input type="text" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="post.mainUrl" placeholder="Main Url">
             </div>
