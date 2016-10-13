@@ -1,42 +1,57 @@
 <style>
-    .jumbo:hover { opacity: 0.5; }
-    .backgroundContainer:hover
-    .camOnHover { display:block; }
+    .jumbo:hover {
+        opacity: 0.5;
+    }
+    
+    .backgroundContainer:hover .camOnHover {
+        display: block;
+    }
+    
     .camOnHover {
-        position : absolute;
-        display:none;
-        top:15px; 
-        width:40px;
-        margin:0 auto; left:15px;
-        
+        position: absolute;
+        display: none;
+        top: 15px;
+        width: 40px;
+        margin: 0 auto;
+        left: 15px;
         /*z-index:100;*/
-    } 
+    }
 </style>
 <div class="row" *ngIf="!editMode && profile">
     <div class="col s12 card padding10px">
-        <div class="backgroundContainer">
+        <div class="backgroundContainer" *ngIf="User.uid === profile.uid && !editMode">
             <div id="bgImage" class="jumbo"></div>
-            <a *ngIf="User.uid === profile.uid" class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
+            <a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
             <input type="file" id="bgInputFile" value="" style="display:none;" />
         </div>
-        <div class="container icons">
-            <div class="big-icon zindex9000" *ngIf="profile.profileImageURL" (click)="profileModelOpen();">
-                <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12">
-                <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode">
-             <i class="grey-text mdi mdi-camera circle col s12" style="font-size: 10em;"></i>
+        <div *ngIf="User.uid !== profile.uid && !editMode">
+            <div id="bgImage" class=""></div>
         </div>
+        <div class="container icons">
+            <div class="big-icon zindex9000" *ngIf="profile.profileImageURL" >
+                <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12">
+                <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="profileModelOpen();">
+                    <i class="grey-text mdi mdi-camera circle col s12" style="font-size: 10em;"></i>
+                </div>
             </div>
             <div class="big-icon zindex9000" *ngIf="profile.email && !profile.profileImageURL">
                 <i class="pink-text mdi mdi-account circle col s12" style="font-size: 10em;"></i>
-                
             </div>
-
         </div>
         <div class="container padding10px">
-          <div class="col s12 m4 l4"><h6>FOLLOWERS</h6><p>346</p></div>
-          <div class="col s12 m4 l4"><h6>FOLLOWING</h6><p>333</p></div>
-          <div class="col s12 m4 l4"><h6>ITEMS PUBLISHED</h6><p>666</p> </div> 
-<hr /> 
+            <div class="col s12 m4 l4">
+                <h6>FOLLOWERS</h6>
+                <p>346</p>
+            </div>
+            <div class="col s12 m4 l4">
+                <h6>FOLLOWING</h6>
+                <p>333</p>
+            </div>
+            <div class="col s12 m4 l4">
+                <h6>ITEMS PUBLISHED</h6>
+                <p>666</p>
+            </div>
+            <hr />
         </div>
         <div class="container details">
             <h3>{{profile.displayName || profile.email}} </h3>
@@ -129,7 +144,7 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <tag-input  placeholder="Add Post Category" [tagArray]="postCategoryList" (updatedList)="tagInputEventCatch($event);"> </tag-input>
+                <tag-input placeholder="Add Post Category" [tagArray]="postCategoryList" (updatedList)="tagInputEventCatch($event);"> </tag-input>
             </div>
         </div>
         <!--<div class="row">
@@ -156,7 +171,8 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <tag-input  placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);"> </tag-input>
+                <tag-input placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);">
+                </tag-input>
             </div>
         </div>
         <!--<div class="row">
@@ -241,7 +257,7 @@
         </div>
         <div class="row center-align" class="flexCenter">
             <input id="custom-input" type="file" class="displayNone" #fileInput (change)="profileChangeListener($event)">
-            
+
             <div *ngIf="!profile?.profileImageURL">
                 <div [hidden]="!imageSelected">
                     <i class="black-text mdi mdi-account circle col s12" (click)="fileInput.click(); imageSelected=false;" style="font-size: 10em;"></i>
@@ -257,7 +273,7 @@
             <div [hidden]="imageSelected">
                 <img-cropper id="imgCropper" #profileCropper [image]="profileImgData" [settings]="cropperSettings_round" (onCrop)="cropped($event)"></img-cropper>
             </div>
-         
+
         </div>
         <div class="row center-align">
             <span class="red-text" id="errorLogin"></span>
@@ -290,10 +306,12 @@
         </div>
         <div class="row center-align" class="flexCenter">
             <input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
-            
+
             <div *ngIf="!profile?.backgroundImageURL">
                 <div [hidden]="!imageSelected">
-                    <img src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg" alt="default background image" (click)="fileInput2.click(); imageSelected=false;" style="width: 300px; height: auto;"/>
+                    <img src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg"
+                        alt="default background image" (click)="fileInput2.click(); imageSelected=false;" style="width: 300px; height: auto;"
+                    />
                 </div>
             </div>
 
@@ -306,7 +324,7 @@
             <div [hidden]="imageSelected">
                 <img-cropper id="imgCropper2" #bgCropper [image]="backgroundImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"></img-cropper>
             </div>
-         
+
         </div>
         <div class="row center-align">
             <span class="red-text" id="errorLogin"></span>
