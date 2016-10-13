@@ -10,10 +10,10 @@
     .camOnHover {
         position: absolute;
         display: none;
-        top: 15px;
-        width: 40px;
+        top: 0.2em;
+        /*width: 40px;
         margin: 0 auto;
-        left: 15px;
+        left: 15px;*/
         /*z-index:100;*/
     }
 </style>
@@ -21,7 +21,8 @@
     <div class="col s12 card padding10px">
         <div class="backgroundContainer" *ngIf="User.uid === profile.uid && !editMode">
             <div id="bgImage" class="jumbo"></div>
-            <a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
+             <i class="grey-text mdi mdi-camera circle col s12 camOnHover" style="font-size: 10em; margin: 0 44%;" (click)="backgroundImagePopup();"></i>
+            <!--<a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>-->
             <input type="file" id="bgInputFile" value="" style="display:none;" />
         </div>
         <div *ngIf="User.uid !== profile.uid && !editMode">
