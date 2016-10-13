@@ -34,7 +34,10 @@
                 <div class="card-action grey lighten-2 layout-row layout-align-space-between-center">
                     <span class="grey-text text-darken-1" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
                     <span class="grey-text text-darken-1" *ngIf="!feed.likes">Upvotes(0)</span>
-                    <i class="grey-text text-darken-4 mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
+                    <span>
+                        <i class="grey-text text-darken-4">Posts({{(feed.posts | async)?.length}})</i>
+                        <i class="grey-text text-darken-4 mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
+                    </span>
                 </div>
             </div>
         </div>

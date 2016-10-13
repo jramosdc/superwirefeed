@@ -125,7 +125,20 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                     return this.activeFeed;
                 };
                 authService.prototype.loadFeeds = function () {
-                    this.Feeds = this.af.database.list('/feeds');
+                    var _this = this;
+                    this.Feeds = this.af.database.list('/feeds')
+                        .map(function (feeds) {
+                        // this.feeds2.next(feeds);
+                        return feeds.map(function (feed) {
+                            feed['posts'] = _this.af.database.list('/posts', {
+                                query: {
+                                    orderByChild: 'owner/feedid',
+                                    equalTo: feed['$key']
+                                }
+                            });
+                            return feed;
+                        });
+                    });
                 };
                 authService.prototype.checkEmail = function (feedid, email) {
                     return this.af.database.object('/feeds/' + feedid + '/authEmail').map(function (emails) {

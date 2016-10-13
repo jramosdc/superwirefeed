@@ -17,25 +17,25 @@ export class authService {
 	activeFeed: Object = {
 		id: null
 	};
-    Feeds: FirebaseListObservable<any[]>;
-    Posts: FirebaseListObservable<any[]>;
+	Feeds: FirebaseListObservable<any[]>;
+	Posts: FirebaseListObservable<any[]>;
 	Categories: Array<string> = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
 	postCategories: Array<string> = [];
 	storageRef = firebase.storage().ref('/');
 
-    constructor(private af: AngularFire) {
+	constructor(private af: AngularFire) {
 		this.User = this.emptyUser();
-        this.af.auth.subscribe((res: FirebaseAuthState) => {
-            if (res) {
-                this.User.uid = res.uid;
+		this.af.auth.subscribe((res: FirebaseAuthState) => {
+			if (res) {
+				this.User.uid = res.uid;
 				this.User.emailVerified = res.auth.emailVerified;
-                // this.User.password.profileImageURL = res.auth['photoURL']
-                this.User.password.email = res.auth['email'];
-                this.getUserFeedDetail(this.User.uid).subscribe(feed => {
+				// this.User.password.profileImageURL = res.auth['photoURL']
+				this.User.password.email = res.auth['email'];
+				this.getUserFeedDetail(this.User.uid).subscribe(feed => {
 					this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
-                    this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
-                    this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
-                    this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+					this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
+					this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
+					this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
 					this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
 					if (feed[0] && feed[0]['postCategories']) {
 						this.postCategories.splice(0);
@@ -43,18 +43,18 @@ export class authService {
 							this.postCategories.push(val);
 						});
 					}
-                });
-            } else {
-                this.User.uid = '';
+				});
+			} else {
+				this.User.uid = '';
 				this.User.emailVerified = false;
 				this.User.password.profileImageURL = '';
-                this.User.password.email = '';
-                this.User.feed.id = '';
-                this.User.feed.name = '';
-                this.User.feed.userid = '';
+				this.User.password.email = '';
+				this.User.feed.id = '';
+				this.User.feed.name = '';
+				this.User.feed.userid = '';
 				this.User.backgroundImageURL = '';
-            }
-        })
+			}
+		})
 		this.loadFeeds();
 	}
 
@@ -75,17 +75,17 @@ export class authService {
 		}
 	}
 
-    getUserFeedDetail(uid: string) {
-        return this.af.database.list('/users', {
-            query: {
-                orderByChild: 'uid',
-                equalTo: uid
-            }
-        })
+	getUserFeedDetail(uid: string) {
+		return this.af.database.list('/users', {
+			query: {
+				orderByChild: 'uid',
+				equalTo: uid
+			}
+		})
 	}
 
 	getFeedNameByFeedID(feedid: string) {
-        return this.af.database.object('/feeds/' + feedid)
+		return this.af.database.object('/feeds/' + feedid)
 	}
 
 	getDomain() {
@@ -125,10 +125,22 @@ export class authService {
 	}
 
 	loadFeeds() {
-        this.Feeds = this.af.database.list('/feeds');
+		this.Feeds = <FirebaseListObservable<any[]>>this.af.database.list('/feeds')
+			.map(feeds => {
+				// this.feeds2.next(feeds);
+				return feeds.map(feed => {
+					feed['posts'] = this.af.database.list('/posts', {
+						query: {
+							orderByChild: 'owner/feedid',
+							equalTo: feed['$key']
+						}
+					});
+					return feed;
+				});
+			});
 	}
 
-    checkEmail(feedid: string, email: string) {
+	checkEmail(feedid: string, email: string) {
 		return this.af.database.object('/feeds/' + feedid + '/authEmail').map(emails => {
 			return emails.filter(eMail => {
 				return eMail === email;
@@ -136,36 +148,36 @@ export class authService {
 		})
 	}
 
-    loadPosts(feedid: string) {
-        return this.af.database.list('/posts', {
-            query: {
-                orderByChild: 'owner/feedid',
-                equalTo: feedid
-            }
-        })
-    }
-
-    loadPost(postid: string) {
-        return this.af.database.object('/posts/' + postid);
+	loadPosts(feedid: string) {
+		return this.af.database.list('/posts', {
+			query: {
+				orderByChild: 'owner/feedid',
+				equalTo: feedid
+			}
+		})
 	}
 
-    login(email: string, password: string) {
-        return this.af.auth.login({
-            email: email,
-            password: password
-        });
+	loadPost(postid: string) {
+		return this.af.database.object('/posts/' + postid);
 	}
 
-	logout() {
-        this.af.auth.logout();
-	}
-
-    register(email: string, password: string) {
-        return this.af.auth.createUser({
+	login(email: string, password: string) {
+		return this.af.auth.login({
 			email: email,
 			password: password
 		});
-    }
+	}
+
+	logout() {
+		this.af.auth.logout();
+	}
+
+	register(email: string, password: string) {
+		return this.af.auth.createUser({
+			email: email,
+			password: password
+		});
+	}
 
 	private sendEmailOnce: boolean = true;
 	sendEmailVerfication() {
@@ -179,20 +191,20 @@ export class authService {
 		}
 	}
 
-    createUserProfile(uid: string, userid: string, email: string) {
-        return this.af.database.object('/users/' + userid).set({
-            uid: uid,
-            email: email,
+	createUserProfile(uid: string, userid: string, email: string) {
+		return this.af.database.object('/users/' + userid).set({
+			uid: uid,
+			email: email,
 			profileImageURL: this.User.password.profileImageURL
-        })
-    }
+		})
+	}
 
-    getUserProfile(userid: string) {
-        return this.af.database.object('/users/' + userid)
-    }
+	getUserProfile(userid: string) {
+		return this.af.database.object('/users/' + userid)
+	}
 
 	updateUserProfile(userid: string, profile: Object) {
-        return this.af.database.object('/users/' + userid).update(profile);
+		return this.af.database.object('/users/' + userid).update(profile);
 	}
 
 	uploadUserImg(userid: string, base64: string) {
@@ -218,8 +230,8 @@ export class authService {
 
 	}
 
-    updateFeed(userid: string, feed: Object) {
-        return this.af.database.object('/feeds/' + userid).update(feed);
+	updateFeed(userid: string, feed: Object) {
+		return this.af.database.object('/feeds/' + userid).update(feed);
 	}
 
 	submitPost(post: Object) {
