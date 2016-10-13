@@ -16,7 +16,7 @@
     <div class="col s12 card padding10px">
         <div class="backgroundContainer">
             <div id="bgImage" class="jumbo"></div>
-            <a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
+            <a *ngIf="User.uid === profile.uid" class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
             <input type="file" id="bgInputFile" value="" style="display:none;" />
         </div>
         <div class="container icons">
@@ -284,7 +284,7 @@
 <div id="backgroundModal" class="modal zindex9999">
     <form class="modal-content">
         <div class="nav-wrapper center-align">
-            <h2 class="purple-text">Background Image {{imageSelected}}</h2>
+            <h2 class="purple-text">Background Image</h2>
         </div>
         <div class="row center-align" class="flexCenter">
             <input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
