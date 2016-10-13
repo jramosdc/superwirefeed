@@ -40,18 +40,22 @@
   justify-content: left;
 }
 .icons .big-icon {
+  position:relative;
   width: 180px;
   height: 180px;
   margin-top: -90px;
   cursor:pointer;
 }
-
+.big-icon:hover .edit {display:block;}
 .edit {
+  display:none;
   position:absolute;
-  left:210px;
-  top: 190px;
+  width: 180px;
+  height: 180px;
+  left:0;
+  top: 0;
 }
-
+.icons .big-icon:hover {opacity:.7;}
 
 .details {
   display: -webkit-box;

@@ -5,10 +5,10 @@
     .camOnHover {
         position : absolute;
         display:none;
-        top:20%; 
+        top:15px; 
         width:40px;
-        margin:0 auto; left:0px;
-        right:0px;
+        margin:0 auto; left:15px;
+        
         /*z-index:100;*/
     } 
 </style>
@@ -20,15 +20,17 @@
             <input type="file" id="bgInputFile" value="" style="display:none;" />
         </div>
         <div class="container icons">
-            <div class="big-icon zindex9000" *ngIf="profile.profileImageURL">
+            <div class="big-icon zindex9000" *ngIf="profile.profileImageURL" (click)="profileModelOpen();">
                 <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12">
+                <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode">
+             <i class="grey-text mdi mdi-camera circle col s12" style="font-size: 10em;"></i>
+        </div>
             </div>
             <div class="big-icon zindex9000" *ngIf="profile.email && !profile.profileImageURL">
                 <i class="pink-text mdi mdi-account circle col s12" style="font-size: 10em;"></i>
+                
             </div>
-        <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode">
-            <a class="btn-floating waves-effect waves-light pink zindex9001" (click)="profileModelOpen();"><i class="mdi mdi-camera"></i></a>
-        </div>
+
         </div>
         <div class="container padding10px">
           <div class="col s12 m4 l4"><h6>FOLLOWERS</h6><p>346</p></div>
