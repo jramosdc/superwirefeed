@@ -347,6 +347,18 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     // userFollower[this.userid][this.User.feed.userid] = this.User.feed.userid
                     this.as.toggleFollowSystem(me, userFollowingObj, followerId, userFollowerObj);
                 };
+                ProfileComponent.prototype.followerModelPopup = function () {
+                    $('#followersModal').openModal();
+                };
+                ProfileComponent.prototype.followerModelClose = function () {
+                    $('#followersModal').closeModal();
+                };
+                ProfileComponent.prototype.followingModelPopup = function () {
+                    $('#followingModal').openModal();
+                };
+                ProfileComponent.prototype.followingModelClose = function () {
+                    $('#followingModal').closeModal();
+                };
                 __decorate([
                     core_1.ViewChild('profileCropper', undefined), 
                     __metadata('design:type', ng2_img_cropper_1.ImageCropperComponent)

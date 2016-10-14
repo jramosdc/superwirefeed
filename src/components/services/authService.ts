@@ -342,17 +342,20 @@ export class authService {
 
 	getFollowers(id) {
 		return this.af.database.list('/user-followers/' + id).map((followers) => {
-			console.log(followers)
-			return followers
-
-		})
+			return followers.map((follower) => {
+				follower = this.af.database.object('/users/' + follower['$key']);
+				return follower;
+			});
+		});
 	}
 
 	getFollowing(id) {
 		return this.af.database.list('/user-following/' + id).map((following)=>{
-			console.log('following: ', following)
-			return following
-		})
+			return following.map((follow) => {
+				follow = this.af.database.object('/users/' + follow['$key']);
+				return follow;
+			});
+		});
 
 	}
 

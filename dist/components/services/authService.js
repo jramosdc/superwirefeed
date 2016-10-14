@@ -323,15 +323,21 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                     });
                 }; // toggleFollowSystem
                 authService.prototype.getFollowers = function (id) {
+                    var _this = this;
                     return this.af.database.list('/user-followers/' + id).map(function (followers) {
-                        console.log(followers);
-                        return followers;
+                        return followers.map(function (follower) {
+                            follower = _this.af.database.object('/users/' + follower['$key']);
+                            return follower;
+                        });
                     });
                 };
                 authService.prototype.getFollowing = function (id) {
+                    var _this = this;
                     return this.af.database.list('/user-following/' + id).map(function (following) {
-                        console.log('following: ', following);
-                        return following;
+                        return following.map(function (follow) {
+                            follow = _this.af.database.object('/users/' + follow['$key']);
+                            return follow;
+                        });
                     });
                 };
                 authService = __decorate([

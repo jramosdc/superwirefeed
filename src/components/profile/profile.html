@@ -40,11 +40,11 @@
             </div>
         </div>
         <div class="container padding10px">
-            <div class="col s12 m4 l4">
+            <div class="col s12 m4 l4" (click)="followerModelPopup();">
                 <h6>FOLLOWERS</h6>
                 <p>{{followers.length}}</p>
             </div>
-            <div class="col s12 m4 l4">
+            <div class="col s12 m4 l4" (click)="followingModelPopup();">
                 <h6>FOLLOWING</h6>
                 <p>{{following.length}}</p>
             </div>
@@ -346,6 +346,49 @@
             </div>
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!backgroundImgData.image">Upload</button>
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
+        </div>
+    </form>
+</div>
+
+<div id="followersModal" class="modal zindex9999">
+    <form class="modal-content">
+        <div class="nav-wrapper center-align">
+            <h2 class="purple-text">Followers List</h2>
+        </div>
+        <hr />
+        <div class="row left-align">
+            <div *ngFor="let f of followers">
+                <h6 class="grey-text">{{(f | async | json) }}</h6>
+            </div>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorLogin"></span>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="followerModelClose();">CLOSE</button>
+        </div>
+    </form>
+</div>
+
+<div id="followingModal" class="modal zindex9999">
+    <form class="modal-content">
+        <div class="nav-wrapper center-align">
+            <h2 class="purple-text">following List</h2>
+        </div>
+        <hr />
+        <div class="row left-align">
+            <div>
+                <h6 class="purple-text">User 1</h6>
+            </div>
+            <div>
+                <h6 class="purple-text">User 2</h6>
+            </div>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorLogin"></span>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="followingModelClose();">CLOSE</button>
         </div>
     </form>
 </div>

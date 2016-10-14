@@ -353,4 +353,21 @@ export class ProfileComponent extends Type implements OnInit {
         this.as.toggleFollowSystem(me, userFollowingObj, followerId, userFollowerObj);
     }
 
+    followerModelPopup() {
+        $('#followersModal').openModal();
+    }
+    
+    followerModelClose() {
+        $('#followersModal').closeModal();
+    }
+
+    followingModelPopup() {
+        $('#followingModal').openModal();
+    }
+    
+    followingModelClose() {
+        $('#followingModal').closeModal();
+    }
+    
+
 }
