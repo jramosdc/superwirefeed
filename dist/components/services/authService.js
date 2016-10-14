@@ -293,14 +293,6 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                 };
                 authService.prototype.toggleFollowSystem = function (myid, followingObj, followerId, followersObj) {
                     var _this = this;
-                    this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', function (following) {
-                        if (following.val()) {
-                            removeFollowingSys();
-                        }
-                        else {
-                            setFollowingSys();
-                        }
-                    });
                     var setFollowingSys = function () {
                         var multipath = {};
                         multipath['/user-following/' + myid + '/' + followerId] = followerId;
@@ -310,7 +302,7 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                         }).catch(function (err) {
                             err ? console.log('err', err) : '';
                         });
-                    };
+                    }; // setFollowingSys
                     var removeFollowingSys = function () {
                         var multipath = {};
                         multipath['/user-following/' + myid + '/' + followerId] = null;
@@ -320,7 +312,27 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                         }).catch(function (err) {
                             err ? console.log('err', err) : '';
                         });
-                    };
+                    }; // removeFollowingSys
+                    this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', function (following) {
+                        if (following.val()) {
+                            removeFollowingSys();
+                        }
+                        else {
+                            setFollowingSys();
+                        }
+                    });
+                }; // toggleFollowSystem
+                authService.prototype.getFollowers = function (id) {
+                    return this.af.database.list('/user-followers/' + id).map(function (followers) {
+                        console.log(followers);
+                        return followers;
+                    });
+                };
+                authService.prototype.getFollowing = function (id) {
+                    return this.af.database.list('/user-following/' + id).map(function (following) {
+                        console.log('following: ', following);
+                        return following;
+                    });
                 };
                 authService = __decorate([
                     core_1.Injectable(), 

@@ -29,6 +29,8 @@ export class ProfileComponent extends Type implements OnInit {
     authNew: Array<string> = [];
     postCategoryList: Array<string> = [];
     postCategoryNew: Array<string> = [];
+    following: any[] = [];
+    followers: any[] = [];
 
     // Cropper variables 
     profileImgData: any = {};
@@ -53,6 +55,8 @@ export class ProfileComponent extends Type implements OnInit {
         this.route.params.subscribe(params => {
             this.userid = params['userid'];
             if (this.userid) {
+                this.as.getFollowers(this.userid).subscribe((followers) => this.followers = followers); 
+                this.as.getFollowing(this.userid).subscribe((following) => this.following = following); 
                 this.as.getUserProfile(this.userid).subscribe((profile) => {
                     this.profile = profile;
                     if(profile['backgroundImageURL']) {
@@ -333,7 +337,7 @@ export class ProfileComponent extends Type implements OnInit {
         });
     }
 
-    following() {
+    followingSys() {
         let me = this.User.feed.userid;
         let userFollowingObj = { }
         userFollowingObj[this.userid] = this.userid;

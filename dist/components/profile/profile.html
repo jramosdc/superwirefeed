@@ -42,11 +42,11 @@
         <div class="container padding10px">
             <div class="col s12 m4 l4">
                 <h6>FOLLOWERS</h6>
-                <p>346</p>
+                <p>{{followers.length}}</p>
             </div>
             <div class="col s12 m4 l4">
                 <h6>FOLLOWING</h6>
-                <p>333</p>
+                <p>{{following.length}}</p>
             </div>
             <div class="col s12 m4 l4">
                 <h6>ITEMS PUBLISHED</h6>
@@ -82,7 +82,7 @@
         </a>
         <ul>
             <li><a class="btn-floating orange"><i class="mdi mdi-thumb-up"></i></a></li>
-            <li><a class="btn-floating green" *ngIf="profile && User.uid !== profile.uid" (click)="following();"><i class="mdi mdi-star"></i></a></li>
+            <li><a class="btn-floating green" *ngIf="profile && User.uid !== profile.uid" (click)="followingSys();"><i class="mdi mdi-star"></i></a></li>
             <li><a class="btn-floating blue"><i class="mdi mdi-open-in-new"></i></a></li>
             <li><a class="btn-floating purple" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()"><i class="mdi mdi-pencil"></i></a></li>
         </ul>

@@ -50,6 +50,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     this.authNew = [];
                     this.postCategoryList = [];
                     this.postCategoryNew = [];
+                    this.following = [];
+                    this.followers = [];
                     // Cropper variables 
                     this.profileImgData = {};
                     this.backgroundImgData = {};
@@ -63,6 +65,8 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                     this.route.params.subscribe(function (params) {
                         _this.userid = params['userid'];
                         if (_this.userid) {
+                            _this.as.getFollowers(_this.userid).subscribe(function (followers) { return _this.followers = followers; });
+                            _this.as.getFollowing(_this.userid).subscribe(function (following) { return _this.following = following; });
                             _this.as.getUserProfile(_this.userid).subscribe(function (profile) {
                                 _this.profile = profile;
                                 if (profile['backgroundImageURL']) {
@@ -330,7 +334,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         });
                     });
                 };
-                ProfileComponent.prototype.following = function () {
+                ProfileComponent.prototype.followingSys = function () {
                     var me = this.User.feed.userid;
                     var userFollowingObj = {};
                     userFollowingObj[this.userid] = this.userid;

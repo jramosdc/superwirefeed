@@ -308,15 +308,7 @@ export class authService {
 	}
 
 	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
-
-		this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', (following) => {
-			if (following.val()) {
-				removeFollowingSys();
-			} else {
-				setFollowingSys();
-			}
-		});
-
+		
 		let setFollowingSys = () => {
 			let multipath = {}
 			multipath['/user-following/' + myid + '/' + followerId] = followerId;
@@ -326,7 +318,8 @@ export class authService {
 			}).catch(err => {
 				err ? console.log('err', err) : '';
 			});
-		}
+		}; // setFollowingSys
+		
 		let removeFollowingSys = () => {
 			let multipath = {}
 			multipath['/user-following/' + myid + '/' + followerId] = null;
@@ -336,7 +329,31 @@ export class authService {
 			}).catch(err => {
 				err ? console.log('err', err) : '';
 			});
-		}
+		}; // removeFollowingSys
+
+		this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', (following) => {
+			if (following.val()) {
+				removeFollowingSys();
+			} else {
+				setFollowingSys();
+			}
+		});
+	} // toggleFollowSystem
+
+	getFollowers(id) {
+		return this.af.database.list('/user-followers/' + id).map((followers) => {
+			console.log(followers)
+			return followers
+
+		})
+	}
+
+	getFollowing(id) {
+		return this.af.database.list('/user-following/' + id).map((following)=>{
+			console.log('following: ', following)
+			return following
+		})
+
 	}
 
 }
