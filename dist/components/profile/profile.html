@@ -359,7 +359,9 @@
         <div class="row left-align">
             <div *ngFor="let f of followers" style="display:flex; align-items:center; margin-bottom: 10px;"> 
                 <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
-                <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
+                <a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
+                    <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
+                </a>
             </div>
         </div>
         <div class="modal-footer">
@@ -377,7 +379,9 @@
       <div class="row left-align">
             <div *ngFor="let f of following" style="display:flex; align-items:center; margin-bottom: 10px;"> 
                 <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
-                <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
+                <a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
+                    <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
+                </a>
             </div>
         </div>
         <div class="modal-footer">
