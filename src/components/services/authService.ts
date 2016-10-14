@@ -22,6 +22,7 @@ export class authService {
 	Categories: Array<string> = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
 	postCategories: Array<string> = [];
 	storageRef = firebase.storage().ref('/');
+	private mainRef = firebase.database().ref('/');
 
 	constructor(private af: AngularFire) {
 		this.User = this.emptyUser();
@@ -304,6 +305,38 @@ export class authService {
 				}).catch(reject);
 			})
 		})
+	}
+
+	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
+
+		this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', (following) => {
+			if (following.val()) {
+				removeFollowingSys();
+			} else {
+				setFollowingSys();
+			}
+		});
+
+		let setFollowingSys = () => {
+			let multipath = {}
+			multipath['/user-following/' + myid + '/' + followerId] = followerId;
+			multipath['/user-followers/' + followerId + '/' + myid] = myid;
+			this.mainRef.update(multipath).then(() => {
+				console.log('update multipath');
+			}).catch(err => {
+				err ? console.log('err', err) : '';
+			});
+		}
+		let removeFollowingSys = () => {
+			let multipath = {}
+			multipath['/user-following/' + myid + '/' + followerId] = null;
+			multipath['/user-followers/' + followerId + '/' + myid] = null;
+			this.mainRef.update(multipath).then(() => {
+				console.log('remove multipath');
+			}).catch(err => {
+				err ? console.log('err', err) : '';
+			});
+		}
 	}
 
 }

@@ -82,7 +82,7 @@
         </a>
         <ul>
             <li><a class="btn-floating orange"><i class="mdi mdi-thumb-up"></i></a></li>
-            <li><a class="btn-floating green"><i class="mdi mdi-star"></i></a></li>
+            <li><a class="btn-floating green" *ngIf="profile && User.uid !== profile.uid" (click)="following();"><i class="mdi mdi-star"></i></a></li>
             <li><a class="btn-floating blue"><i class="mdi mdi-open-in-new"></i></a></li>
             <li><a class="btn-floating purple" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()"><i class="mdi mdi-pencil"></i></a></li>
         </ul>

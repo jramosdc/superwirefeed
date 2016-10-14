@@ -333,4 +333,20 @@ export class ProfileComponent extends Type implements OnInit {
         });
     }
 
+    following() {
+        let me = this.User.feed.userid;
+        let userFollowingObj = { }
+        userFollowingObj[this.userid] = this.userid;
+        // userFollowing[this.User.feed.userid] = { }
+        // userFollowing[this.User.feed.userid][this.userid] = this.userid;
+
+        let followerId = this.userid;
+        let userFollowerObj = { }
+        userFollowerObj[this.User.feed.userid] = this.User.feed.userid;
+        // userFollower[this.userid] = { }
+        // userFollower[this.userid][this.User.feed.userid] = this.User.feed.userid
+
+        this.as.toggleFollowSystem(me, userFollowingObj, followerId, userFollowerObj);
+    }
+
 }

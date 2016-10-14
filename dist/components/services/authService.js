@@ -35,6 +35,7 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                     this.Categories = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
                     this.postCategories = [];
                     this.storageRef = firebase.storage().ref('/');
+                    this.mainRef = firebase.database().ref('/');
                     this.sendEmailOnce = true;
                     this.User = this.emptyUser();
                     this.af.auth.subscribe(function (res) {
@@ -289,6 +290,37 @@ System.register(['@angular/core', 'angularfire2'], function(exports_1, context_1
                             }).catch(reject);
                         });
                     });
+                };
+                authService.prototype.toggleFollowSystem = function (myid, followingObj, followerId, followersObj) {
+                    var _this = this;
+                    this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', function (following) {
+                        if (following.val()) {
+                            removeFollowingSys();
+                        }
+                        else {
+                            setFollowingSys();
+                        }
+                    });
+                    var setFollowingSys = function () {
+                        var multipath = {};
+                        multipath['/user-following/' + myid + '/' + followerId] = followerId;
+                        multipath['/user-followers/' + followerId + '/' + myid] = myid;
+                        _this.mainRef.update(multipath).then(function () {
+                            console.log('update multipath');
+                        }).catch(function (err) {
+                            err ? console.log('err', err) : '';
+                        });
+                    };
+                    var removeFollowingSys = function () {
+                        var multipath = {};
+                        multipath['/user-following/' + myid + '/' + followerId] = null;
+                        multipath['/user-followers/' + followerId + '/' + myid] = null;
+                        _this.mainRef.update(multipath).then(function () {
+                            console.log('remove multipath');
+                        }).catch(function (err) {
+                            err ? console.log('err', err) : '';
+                        });
+                    };
                 };
                 authService = __decorate([
                     core_1.Injectable(), 

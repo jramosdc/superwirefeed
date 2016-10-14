@@ -330,6 +330,19 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         });
                     });
                 };
+                ProfileComponent.prototype.following = function () {
+                    var me = this.User.feed.userid;
+                    var userFollowingObj = {};
+                    userFollowingObj[this.userid] = this.userid;
+                    // userFollowing[this.User.feed.userid] = { }
+                    // userFollowing[this.User.feed.userid][this.userid] = this.userid;
+                    var followerId = this.userid;
+                    var userFollowerObj = {};
+                    userFollowerObj[this.User.feed.userid] = this.User.feed.userid;
+                    // userFollower[this.userid] = { }
+                    // userFollower[this.userid][this.User.feed.userid] = this.User.feed.userid
+                    this.as.toggleFollowSystem(me, userFollowingObj, followerId, userFollowerObj);
+                };
                 __decorate([
                     core_1.ViewChild('profileCropper', undefined), 
                     __metadata('design:type', ng2_img_cropper_1.ImageCropperComponent)
