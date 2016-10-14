@@ -353,16 +353,14 @@
 <div id="followersModal" class="modal zindex9999">
     <form class="modal-content">
         <div class="nav-wrapper center-align">
-            <h2 class="purple-text">Followers List</h2>
+            <h4 class="purple-text">Followers</h4>
         </div>
         <hr />
         <div class="row left-align">
-            <div *ngFor="let f of followers">
-                <h6 class="grey-text">{{(f | async | json) }}</h6>
+            <div *ngFor="let f of followers" style="display:flex; align-items:center; margin-bottom: 10px;"> 
+                <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
+                <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
             </div>
-        </div>
-        <div class="row center-align">
-            <span class="red-text" id="errorLogin"></span>
         </div>
         <div class="modal-footer">
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="followerModelClose();">CLOSE</button>
@@ -373,19 +371,14 @@
 <div id="followingModal" class="modal zindex9999">
     <form class="modal-content">
         <div class="nav-wrapper center-align">
-            <h2 class="purple-text">following List</h2>
+            <h4 class="purple-text">Following</h4>
         </div>
         <hr />
-        <div class="row left-align">
-            <div>
-                <h6 class="purple-text">User 1</h6>
+      <div class="row left-align">
+            <div *ngFor="let f of following" style="display:flex; align-items:center; margin-bottom: 10px;"> 
+                <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
+                <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
             </div>
-            <div>
-                <h6 class="purple-text">User 2</h6>
-            </div>
-        </div>
-        <div class="row center-align">
-            <span class="red-text" id="errorLogin"></span>
         </div>
         <div class="modal-footer">
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="followingModelClose();">CLOSE</button>
