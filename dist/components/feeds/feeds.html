@@ -9,8 +9,8 @@
     </div>
 </div>
 <div class="row">
-    <div class="card col l3 s10" style="padding:0px;margin:5px;" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
-        <div *ngIf="feed.feedName">
+    <div class="col l3 m4 s6" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
+        <div class="card" *ngIf="feed.feedName">
             <div class="card-stacked grey lighten-2">
                 <div class="card-content" style="padding:10px;cursor:pointer;" [routerLink]="['/profile/', feed.owner.userid]">
                     <img class="activator" width="50px" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
