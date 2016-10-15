@@ -7,7 +7,7 @@
     <title>SuperWire</title>
     <!-- Library for Supporting ES2015 Features -->
     <!-- If Browser not support ES2015 -->
-     <script src="lib/shim.min.js"></script> 
+     <script src="lib/shim.min.js"></script>
     <!-- Library for Zones  -->
     <script src="lib/zone.js"></script>
     <!-- Library for Reflect Metadata  -->
@@ -41,7 +41,7 @@
     <script src="lib/papaparse.js"></script>
     <!-- Configuration of SystemJS -->
     <script>
-        
+
         // map tells the System loader where to look for things
         var map = {
             'components': 'components',
@@ -89,7 +89,7 @@
         // Most environments should use UMD; some (Karma) need the individual index files
         // var setPackageConfig = packIndex;
         var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
-        
+
         // Add package entries for angular packages
         ngPackageNames.forEach(setPackageConfig);
         // console.log(packages)

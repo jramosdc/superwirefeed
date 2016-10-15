@@ -8,8 +8,8 @@
         </ul>
     </div>
 </div>
-<div class="row">
-    <div class="col l3 m4 s6" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
+<div class="grid">
+    <div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
         <div class="card" *ngIf="feed.feedName">
             <div class="card-stacked grey lighten-2">
                 <div class="card-content" style="padding:10px;cursor:pointer;" [routerLink]="['/profile/', feed.owner.userid]">

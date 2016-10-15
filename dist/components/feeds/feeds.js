@@ -58,7 +58,10 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                         host: {
                             class: 'col s12'
                         },
-                        styleUrls: ['components/feeds/feeds.css'],
+                        styleUrls: [
+                            'components/materialize-overrides.css',
+                            'components/feeds/feeds.css'
+                        ],
                         templateUrl: 'components/feeds/feeds.html',
                         pipes: [searchCategory_1.SearchCategory, orderby_1.OrderBy]
                     }), 

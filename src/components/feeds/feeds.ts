@@ -12,12 +12,15 @@ import { OrderBy } from "../pipes/orderby";
 	host: {
 		class: 'col s12'
 	},
-	styleUrls: ['components/feeds/feeds.css'],
+	styleUrls: [
+		'components/materialize-overrides.css',
+		'components/feeds/feeds.css'
+	],
 	templateUrl: 'components/feeds/feeds.html',
 	pipes: [SearchCategory, OrderBy]
 })
-export class FeedsComponent implements OnInit {
 
+export class FeedsComponent implements OnInit {
 	User: User;
 	feeds: FirebaseListObservable<any[]>;
 	activeCategory: string;
