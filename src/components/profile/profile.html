@@ -2,11 +2,11 @@
     .jumbo:hover {
         opacity: 0.5;
     }
-    
+
     .backgroundContainer:hover .camOnHover {
         display: block;
     }
-    
+
     .camOnHover {
         position: absolute;
         display: none;
@@ -18,8 +18,8 @@
     }
 </style>
 <div class="row" *ngIf="!editMode && profile">
-    <div class="col s12 card padding10px">
-        <div class="backgroundContainer" *ngIf="User.uid === profile.uid && !editMode">
+    <div class="col s12 padding10px">
+        <div class="card backgroundContainer" *ngIf="User.uid === profile.uid && !editMode">
             <div id="bgImage" class="jumbo"></div>
              <i class="grey-text mdi mdi-camera circle col s12 camOnHover" style="font-size: 10em; margin: 0 44%;" (click)="backgroundImagePopup();"></i>
             <!--<a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>-->
@@ -89,8 +89,8 @@
     </div>
 </div>
 <div class="row" *ngIf="editMode">
-    <form class="col s12 card padding10px">
-        <div class="row valign-wrapper">
+    <form class="col s12 padding10px">
+        <div class="row card valign-wrapper">
             <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
             <h5 class="col s5 valign">{{profile.displayName || profile.email}}</h5>
             <span class="col s4 valign">
@@ -357,7 +357,7 @@
         </div>
         <hr />
         <div class="row left-align">
-            <div *ngFor="let f of followers" style="display:flex; align-items:center; margin-bottom: 10px;"> 
+            <div *ngFor="let f of followers" style="display:flex; align-items:center; margin-bottom: 10px;">
                 <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
                 <a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
                     <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
@@ -377,7 +377,7 @@
         </div>
         <hr />
       <div class="row left-align">
-            <div *ngFor="let f of following" style="display:flex; align-items:center; margin-bottom: 10px;"> 
+            <div *ngFor="let f of following" style="display:flex; align-items:center; margin-bottom: 10px;">
                 <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
                 <a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
                     <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>

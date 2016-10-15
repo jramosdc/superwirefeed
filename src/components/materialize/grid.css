@@ -1,11 +1,4 @@
 /**
- * Tabs replacement
- */
-ul.tabs {
-  background-color: transparent;
-}
-
-/**
  * Grid replacement using columns in CSS.
  * Warning: it has partial support:
  * http://caniuse.com/#feat=multicolumn
@@ -13,25 +6,24 @@ ul.tabs {
 .grid {
   column-break-inside: avoid;
   column-count: 4;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 
 @media only screen and (max-width: 1440px) {
   .grid {
-    column-break-inside: avoid;
     column-count: 3;
   }
 }
 
 @media only screen and (max-width: 993px) {
   .grid {
-    column-break-inside: avoid;
     column-count: 2;
   }
 }
 
 @media only screen and (max-width: 601px) {
   .grid {
-    column-break-inside: avoid;
     column-count: 1;
   }
 }
@@ -44,4 +36,5 @@ ul.tabs {
 
 .grid > div > .card {
   margin-top: 0;
+  cursor: pointer;
 }

@@ -13,7 +13,7 @@ import { OrderBy } from "../pipes/orderby";
 		class: 'col s12'
 	},
 	styleUrls: [
-		'components/materialize-overrides.css',
+		'components/materialize/index.css',
 		'components/feeds/feeds.css'
 	],
 	templateUrl: 'components/feeds/feeds.html',

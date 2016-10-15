@@ -8,7 +8,10 @@ import { User, authService } from '../services/authService';
 @Component({
 	selector: 'ng2-app',
 	host: {},
-	styleUrls: ['components/app/app.css'],
+	styleUrls: [
+    'components/materialize/index.css',
+    'components/app/app.css'
+  ],
 	templateUrl: 'components/app/app.html'
 })
 export class AppComponent {

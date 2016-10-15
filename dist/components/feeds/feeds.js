@@ -59,7 +59,7 @@ System.register(['@angular/core', "@angular/router", '../services/authService', 
                             class: 'col s12'
                         },
                         styleUrls: [
-                            'components/materialize-overrides.css',
+                            'components/materialize/index.css',
                             'components/feeds/feeds.css'
                         ],
                         templateUrl: 'components/feeds/feeds.html',

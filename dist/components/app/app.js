@@ -32,7 +32,10 @@ System.register(['@angular/core', '../services/authService'], function(exports_1
                     core_1.Component({
                         selector: 'ng2-app',
                         host: {},
-                        styleUrls: ['components/app/app.css'],
+                        styleUrls: [
+                            'components/materialize/index.css',
+                            'components/app/app.css'
+                        ],
                         templateUrl: 'components/app/app.html'
                     }), 
                     __metadata('design:paramtypes', [authService_1.authService])
