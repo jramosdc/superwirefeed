@@ -4,5 +4,11 @@
 ul.tabs {
   background-color: transparent;
   margin-bottom: 0;
+  height: 56px;
+}
+
+ul.tabs .tab {
+  height: 56px;
+  line-height: 56px;
 }
 
