@@ -92,6 +92,10 @@
   margin-right: .5rem;
 }
 
+.card .thumb span {
+  font-size: 11px;
+}
+
 .card .avatar h6 {
   opacity: .5;
 }
