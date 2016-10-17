@@ -4,27 +4,42 @@
  * http://caniuse.com/#feat=multicolumn
  */
 .grid {
+  -webkit-column-break-inside: avoid;
   column-break-inside: avoid;
+  -webkit-column-count: 4;
+  -moz-column-count: 4;
+  -o-column-count: 4;
   column-count: 4;
+  -webkit-column-gap: 1.5rem;
+  -moz-column-gap: 1.5rem;
   column-gap: 1.5rem;
-  padding: 0 10px;
+  padding: 0 .75rem;
   box-sizing: border-box;
 }
 
 @media only screen and (max-width: 1440px) {
   .grid {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    -o-column-count: 3;
     column-count: 3;
   }
 }
 
 @media only screen and (max-width: 993px) {
   .grid {
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    -o-column-count: 2;
     column-count: 2;
   }
 }
 
 @media only screen and (max-width: 601px) {
   .grid {
+    -webkit-column-count: 1;
+    -moz-column-count: 1;
+    -o-column-count: 1;
     column-count: 1;
   }
 }
@@ -39,4 +54,48 @@
   margin-top: 0;
   margin-bottom: 1.5rem;
   cursor: pointer;
+}
+
+@supports not (
+  (column-count: 4) or
+  (-o-column-count: 4) or
+  (-moz-column-count: 4) or
+  (-webkit-column-count: 4)
+) {
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .grid > div {
+    width: 100%;
+    max-width: 25%;
+    min-width: 25%;
+    padding: 0.5rem;
+  }
+
+  .grid > div > .card {
+    margin-bottom: 0;
+  }
+
+  @media only screen and (max-width: 1440px) {
+    .grid > div {
+      max-width: 33.33%;
+      min-width: 33.33%;
+    }
+  }
+
+  @media only screen and (max-width: 993px) {
+    .grid > div {
+      max-width: 50%;
+      min-width: 50%;
+    }
+  }
+
+  @media only screen and (max-width: 601px) {
+    .grid > div {
+      max-width: 100%;
+      min-width: 100%;
+    }
+  }
 }

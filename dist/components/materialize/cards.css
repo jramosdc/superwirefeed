@@ -128,7 +128,7 @@
 }
 
 .card:hover figure img {
-  transform: scale(1.1);
+  transform: scale(1.075, 1.075);
 }
 
 .card:hover figcaption div {
