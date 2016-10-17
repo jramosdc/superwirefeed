@@ -27,9 +27,7 @@
             <span>
               <i class="mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
               {{(feed.posts | async)?.length}} Posts
-            </span>
-            <span> • </span>
-            <span>{{feed.description}}</span>
+              • {{feed.description}}</span>
           </div>
         </figcaption>
       </figure>
