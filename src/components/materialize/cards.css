@@ -88,8 +88,8 @@
 }
 
 .card .thumb .mdi {
-  font-size: 2rem;
-  margin-right: .25rem;
+  font-size: 1.5rem;
+  margin-right: .5rem;
 }
 
 .card .avatar h6 {
@@ -100,7 +100,7 @@
   position: absolute;
   top: 1rem;
   left: 1.25rem;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.75);
   color: rgba(255, 255, 255, 0.75);
   font-size: 11px;
   padding: .5em;
