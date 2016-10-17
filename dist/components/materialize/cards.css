@@ -57,10 +57,12 @@
   line-height: 1;
 }
 
-.card figcaption div {
-  height: 0em;
-  overflow: hidden;
-  transition: 0.3s ease height;
+@media (hover) {
+  .card figcaption div {
+    height: 0em;
+    overflow: hidden;
+    transition: 0.3s ease height;
+  }
 }
 
 .card figcaption span {
@@ -110,6 +112,7 @@
   padding: .5em;
   line-height: 1;
   transition: 0.3s ease all;
+  z-index: 1;
 }
 
 .card:hover {

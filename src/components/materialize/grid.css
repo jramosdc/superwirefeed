@@ -1,7 +1,5 @@
 /**
  * Grid replacement using columns in CSS.
- * Warning: it has partial support:
- * http://caniuse.com/#feat=multicolumn
  */
 .grid {
   -webkit-column-break-inside: avoid;
