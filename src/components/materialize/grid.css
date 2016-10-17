@@ -6,6 +6,7 @@
 .grid {
   column-break-inside: avoid;
   column-count: 4;
+  column-gap: 1.5rem;
   padding: 0 10px;
   box-sizing: border-box;
 }
@@ -36,5 +37,6 @@
 
 .grid > div > .card {
   margin-top: 0;
+  margin-bottom: 1.5rem;
   cursor: pointer;
 }

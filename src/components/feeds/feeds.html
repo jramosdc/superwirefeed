@@ -1,63 +1,68 @@
 <div class="progress" *ngIf="feeds.length == 0">
-    <div class="indeterminate"></div>
+  <div class="indeterminate"></div>
 </div>
+
 <div class="row">
-    <div class="col s12">
-        <ul class="tabs">
-            <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories"><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
-        </ul>
-    </div>
+  <div class="col s12">
+    <ul class="tabs">
+      <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories"><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
+    </ul>
+  </div>
 </div>
+
 <div class="grid">
-    <div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
-        <div class="card" *ngIf="feed.feedName">
-            <div class="card-stacked grey lighten-2">
-                <div class="card-content" style="padding:10px;cursor:pointer;" [routerLink]="['/profile/', feed.owner.userid]">
-                    <img class="activator" width="50px" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
-                    <img class="activator" style="border-radius:50%;" width="50px" *ngIf="feed.owner.profileImageURL" [src]="feed.owner.profileImageURL">
-                    <span class="grey-text text-darken-1">@{{feed.owner.userid}} {{feed.useBackgroundImage}}</span>
-                </div>
-                <div class="card-action" style="padding:0px;">
-                </div>
-            </div>
-            <div class="card-image" [routerLink]="['/posts', feed.$key]">
-                <img class="responsive-img" *ngIf="feed.useBackgroundImage && feed.owner.backgroundImageURL" [src]="feed.owner.backgroundImageURL" alt="Background Image" style="opacity: 0.5;">
-                <img class="responsive-img" *ngIf="!feed.useBackgroundImage" src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg" alt="Background Image" style="opacity: 0.5; height:205px;">
-                <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image" style="opacity: 0.5;height:205px;">
-                <div class="card-title grey-text text-darken-4" style="top:10px;width:100%">
-                    <em class="right grey-text text-darken-4" style="font-size:15px;">{{returnMoment(feed.timestamp)}}</em>
-                    <strong style="font-size:20px;cursor:pointer;">{{feed.feedName}}</strong>
-                    <span class="card-title grey-text text-darken-4" style="top:55px;font-size:20px;">{{feed.description}}</span>
-                </div>
-            </div>
-            <div class="card-stacked">
-                <div class="card-action grey lighten-2 layout-row layout-align-space-between-center">
-                    <span class="grey-text text-darken-1" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
-                    <span class="grey-text text-darken-1" *ngIf="!feed.likes">Upvotes(0)</span>
-                    <span>
-                        <i class="grey-text text-darken-4">Posts({{(feed.posts | async)?.length}})</i>
-                        <i class="grey-text text-darken-4 mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
-                    </span>
-                </div>
-            </div>
+  <div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
+
+    <div class="card" *ngIf="feed.feedName">
+      <div class="card-stacked">
+        <div class="card-content" [routerLink]="['/profile/', feed.owner.userid]">
+          <img class="activator" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+          <img class="activator" *ngIf="feed.owner.profileImageURL" [src]="feed.owner.profileImageURL">
+          <span class="grey-text text-darken-1">@{{feed.owner.userid}} {{feed.useBackgroundImage}}</span>
         </div>
+      </div>
+
+      <div class="card-image" [routerLink]="['/posts', feed.$key]">
+        <img class="responsive-img" *ngIf="feed.useBackgroundImage && feed.owner.backgroundImageURL" [src]="feed.owner.backgroundImageURL" alt="Background Image">
+        <img class="responsive-img" *ngIf="!feed.useBackgroundImage" src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg" alt="Background Image">
+        <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
+        <div class="card-title grey-text text-darken-4">
+          <em class="right grey-text text-darken-4">{{returnMoment(feed.timestamp)}}</em>
+          <strong>{{feed.feedName}}</strong>
+          <span class="card-title grey-text text-darken-4">{{feed.description}}</span>
+        </div>
+      </div>
+
+      <div class="card-stacked">
+        <div class="card-action grey lighten-2 layout-row layout-align-space-between-center">
+          <span class="grey-text text-darken-1" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
+          <span class="grey-text text-darken-1" *ngIf="!feed.likes">Upvotes(0)</span>
+          <span>
+            <i class="grey-text text-darken-4">Posts({{(feed.posts | async)?.length}})</i>
+            <i class="grey-text text-darken-4 mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
+          </span>
+        </div>
+      </div>
     </div>
-    <!--<div class="col l3 s10" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
-        <div class="card deep-purple lighten-1">
-            <div [routerLink]="['/posts', feed.$key]">
-                <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
-                    {{returnMoment(feed.timestamp)}}
-                </div>
-                <div class="card-content white-text">
-                    <span style="cursor:pointer" class="card-title">{{feed.feedName}}</span>
-                    <p>{{feed.description}}</p>
-                </div>
-            </div>
-            <div class="card-action pink lighten-2 layout-row layout-align-space-between-center">
-                <span style="cursor:pointer" class="white-text" [routerLink]="['/profile/', feed.owner.userid]">@{{feed.owner.userid}}</span>
-                <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
-                <i class="white-text mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
-            </div>
+
+  </div>
+
+  <!--<div class="col l3 s10" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
+    <div class="card deep-purple lighten-1">
+      <div [routerLink]="['/posts', feed.$key]">
+        <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
+          {{returnMoment(feed.timestamp)}}
         </div>
-    </div>-->
+        <div class="card-content white-text">
+          <span style="cursor:pointer" class="card-title">{{feed.feedName}}</span>
+          <p>{{feed.description}}</p>
+        </div>
+      </div>
+      <div class="card-action pink lighten-2 layout-row layout-align-space-between-center">
+        <span style="cursor:pointer" class="white-text" [routerLink]="['/profile/', feed.owner.userid]">@{{feed.owner.userid}}</span>
+        <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
+        <i class="white-text mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
+      </div>
+    </div>
+  </div>-->
 </div>
