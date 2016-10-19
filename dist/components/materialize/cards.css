@@ -65,7 +65,7 @@
   overflow: hidden;
 }
 
-@media (hover) {
+@media (pointer: fine), (hover) {
   .card figcaption div {
     height: 0em;
     transition: 0.3s ease height;
