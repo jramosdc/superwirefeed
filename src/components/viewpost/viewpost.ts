@@ -1,6 +1,5 @@
-// <reference path="../../../typings/index.d.ts">
 
-import { SafeResourceUrl, DomSanitizationService } from '@angular/platform-browser';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { FirebaseObjectObservable } from 'angularfire2';
@@ -12,8 +11,8 @@ import { httpService } from '../services/httpService';
     host: {
         class: 'col s12'
     },
-    styleUrls: ['components/viewpost/viewpost.css'],
-    templateUrl: 'components/viewpost/viewpost.html'
+    styles: [require('./viewpost.css')],
+    template: require('./viewpost.html')
 })
 export class ViewPostComponent {
 
@@ -21,7 +20,7 @@ export class ViewPostComponent {
     postid: string
     post: FirebaseObjectObservable<{}>
 
-    constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizationService, private http: httpService) {
+    constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.as.setActivePageTitle('View Post');
@@ -33,13 +32,13 @@ export class ViewPostComponent {
                     this.post['purl'] = sanitizer.bypassSecurityTrustResourceUrl(post.pdfLink);
                     this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
                     setTimeout(() => {
-                        $('.linkify').linkify();
-                        $('.collapsible').collapsible({accordion : false});
+                        $('.linkify')['linkify']();
+                        $('.collapsible')['collapsible']({ accordion: false });
                         $("img").addClass("responsive-img");
-                        if(this.post['detail']) { $('#postDetails').html(this.post['detail']); }
-                        if(this.post['csvToJson']) {
+                        if (this.post['detail']) { $('#postDetails').html(this.post['detail']); }
+                        if (this.post['csvToJson']) {
                             this.displayTable(post['csvToJson']);
-                        }   
+                        }
                     });
                 });
             }
@@ -81,9 +80,9 @@ export class ViewPostComponent {
         }
         tbl.appendChild(tblBody);
         tableDiv.appendChild(tbl);
-        setTimeout(()=>{
+        setTimeout(() => {
             tbl.setAttribute("class", "striped highlight centered responsive-table");
-        },1000)
+        }, 1000)
     }
 
 }

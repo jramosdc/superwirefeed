@@ -2,111 +2,22 @@
 <html lang="en">
 
 <head>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>SuperWire</title>
-    <!-- Library for Supporting ES2015 Features -->
-    <!-- If Browser not support ES2015 -->
-     <script src="lib/shim.min.js"></script> 
-    <!-- Library for Zones  -->
-    <script src="lib/zone.js"></script>
-    <!-- Library for Reflect Metadata  -->
-    <script src="lib/Reflect.js"></script>
-    <!-- Library for Importing System Modules  -->
-    <script src="lib/system.src.js"></script>
-    <!--Firebase-->
-    <script src="lib/firebase.js"></script>
-    <!-- JQuery -->
-    <script src="lib/jquery.js"></script>
-    <!-- Materialize -->
-    <link href="lib/materialize.css" rel="stylesheet" />
-    <link href="lib/materialize-tags.css" rel="stylesheet" />
-    <script src="lib/materialize.js"></script>
-    <script src="lib/materialize-tags.js"></script>
-    <!-- Tinymce -->
-    <script src="lib/tinymce/tinymce.js"></script>
-    <!-- Embedly -->
-    <!--<script src="//cdn.embedly.com/widgets/platform.js"></script>-->
-    <script src="https://cdn.embed.ly/jquery.embedly-3.1.2.min.js" type="text/javascript"></script>
-    <!-- Linkify -->
-    <script src="lib/linkify.js"></script>
-    <script src="lib/linkify-jquery.js"></script>
-    <!-- Material Design Icon -->
-    <link href="lib/materialdesignicons.css" rel="stylesheet" />
-    <!-- Moment -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.js"></script>
-    <!-- Clipboard -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.5/clipboard.min.js"></script>
-    <!-- Papa Parse CSV to JSON (vise versa)-->
-    <script src="lib/papaparse.js"></script>
-    <!-- Configuration of SystemJS -->
-    <script>
-        
-        // map tells the System loader where to look for things
-        var map = {
-            'components': 'components',
-            '@angular': 'lib/@angular',
-            'angular2-in-memory-web-api': 'lib/angular2-in-memory-web-api',
-            'rxjs': 'lib/rxjs',
-            'angularfire2': 'lib/angularfire2',
-            'firebase': 'lib/firebase.js'
-            ,'ng2-img-cropper': 'lib/ng2-img-cropper'
-            // ,'angular2-tag-item': 'lib/tag-input-item.component.js'
-            // ,'angular2-tag-input': 'lib/tag-input.component.js'
-        };
+	<base href="/" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+	<title>SuperWire</title>
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- get the required files from 3rd party sources -->
+	  <!--<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>-->
 
-        // packages tells the System loader how to load when no filename and/or no extension
-        var packages = {
-            'components': { main: 'boot.js', defaultExtension: 'js' },
-            'angular2-in-memory-web-api': { defaultExtension: 'js' },
-            'rxjs': { defaultExtension: 'js' },
-            'angularfire2': { main: 'angularfire2.js', defaultExtension: 'js' },
-            'ng2-img-cropper' : { main: 'index.js', defaultExtension: 'js' }
-        };
-
-        var ngPackageNames = [
-            'common',
-            'compiler',
-            'core',
-            'forms',
-            'http',
-            'platform-browser',
-            'platform-browser-dynamic',
-            'router',
-            'router-deprecated',
-            'upgrade',
-        ];
-
-         // Individual files (~300 requests):
-        function packIndex(pkgName) {
-            packages['@angular/' + pkgName] = { main: 'index.js', defaultExtension: 'js' };
-        }
-        // Bundled (~40 requests):
-        function packUmd(pkgName) {
-            packages['@angular/' + pkgName] = { main: 'bundles/' + pkgName + '.umd.js', defaultExtension: 'js' };
-        }
-
-        // Most environments should use UMD; some (Karma) need the individual index files
-        // var setPackageConfig = packIndex;
-        var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
-        
-        // Add package entries for angular packages
-        ngPackageNames.forEach(setPackageConfig);
-        // console.log(packages)
-        var config = {
-            map: map,
-            packages: packages
-        }
-
-        System.config(config);
-
-        System.import('components').catch(function(err){ console.log(err); });
-
-    </script>
+	<!-- Moment -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.js"></script>
+	<!-- Clipboard -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.5/clipboard.min.js"></script>
 </head>
 
 <body>
-    <ng2-app>Please Wait, Loading...</ng2-app>
+	<ng2-app>Please Wait, Loading...</ng2-app>
 </body>
 
 </html>

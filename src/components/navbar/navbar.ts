@@ -1,5 +1,3 @@
-// <reference path="../../../typings/index.d.ts">
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
@@ -7,8 +5,8 @@ import { User, authService } from '../services/authService';
 @Component({
   selector: 'navbar',
   host: {},
-  styleUrls: ['components/navbar/navbar.css'],
-  templateUrl: 'components/navbar/navbar.html'
+  styles: [require('./navbar.css')],
+  template: require('./navbar.html')
 })
 export class NavbarComponent implements OnInit {
 
@@ -26,7 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    $(".button-collapse").sideNav({
+    $(".button-collapse")['sideNav']({
       menuWidth: 200,
       edge: 'right',
       closeOnClick: true
@@ -43,8 +41,8 @@ export class NavbarComponent implements OnInit {
   }
 
   loginModal() {
-    $(".button-collapse").sideNav('hide');
-    $('#loginModal').openModal();
+    $(".button-collapse")['sideNav']('hide');
+    $('#loginModal')['openModal']();
   }
 
   login(user) {
@@ -53,7 +51,7 @@ export class NavbarComponent implements OnInit {
       this.User = this.as.getUser();
       console.log('User is Logged In!');
       $('#errorLogin').html('');
-      $('#loginModal').closeModal();
+      $('#loginModal')['closeModal']();
       this.loginLoading = false;
     }).catch((err) => {
       console.log("Login Failed!", err);
@@ -63,8 +61,8 @@ export class NavbarComponent implements OnInit {
   }
 
   registerModal() {
-    $(".button-collapse").sideNav('hide');
-    $('#registerModal').openModal();
+    $(".button-collapse")['sideNav']('hide');
+    $('#registerModal')['openModal']();
   }
 
   register(user) {
@@ -76,12 +74,12 @@ export class NavbarComponent implements OnInit {
           console.log('User is Registered & Logged In!');
           this.router.navigate(['/profile', user.name.toLowerCase()]);
           $('#errorRegister').html('');
-          $('#registerModal').closeModal();
+          $('#registerModal')['closeModal']();
           this.registerLoading = false;
         }).catch((err) => {
           console.log('Profile Creation Failed!', err)
         });
-        
+
         // after login send email verification
         this.as.sendEmailVerfication();
 
@@ -100,7 +98,7 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.as.logout();
     console.log('User is Logged Out!');
-    $(".button-collapse").sideNav('hide');
+    $(".button-collapse")['sideNav']('hide');
     this.router.navigate(['feeds']);
   }
 

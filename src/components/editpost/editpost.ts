@@ -1,5 +1,3 @@
-// <reference path="../../../typings/index.d.ts">
-
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User, authService } from '../services/authService';
@@ -13,8 +11,8 @@ declare var Papa: any, tinymce: any;
   host: {
     class: 'col s12'
   },
-  styleUrls: ['components/editpost/editpost.css'],
-  templateUrl: 'components/editpost/editpost.html'
+  styles: [require('./editpost.css')],
+  template: require('./editpost.html')
 })
 export class EditPostComponent implements OnInit {
 
@@ -72,7 +70,7 @@ export class EditPostComponent implements OnInit {
   }
 
   private viewInitialize() {
-    $('select').material_select();
+    $('select')['material_select']();
     tinymce.remove();
     tinymce.init({
       selector: '#editor',
@@ -82,19 +80,19 @@ export class EditPostComponent implements OnInit {
         'searchreplace visualblocks code fullscreen',
         'insertdatetime media table contextmenu paste code'
       ],
- textpattern_patterns: [
-     {start: '*', end: '*', format: 'italic'},
-     {start: '**', end: '**', format: 'bold'},
-     {start: '#', format: 'h1'},
-     {start: '##', format: 'h2'},
-     {start: '###', format: 'h3'},
-     {start: '####', format: 'h4'},
-     {start: '#####', format: 'h5'},
-     {start: '######', format: 'h6'},
-     {start: '1. ', cmd: 'InsertOrderedList'},
-     {start: '* ', cmd: 'InsertUnorderedList'},
-     {start: '- ', cmd: 'InsertUnorderedList'}
-  ],
+      textpattern_patterns: [
+        { start: '*', end: '*', format: 'italic' },
+        { start: '**', end: '**', format: 'bold' },
+        { start: '#', format: 'h1' },
+        { start: '##', format: 'h2' },
+        { start: '###', format: 'h3' },
+        { start: '####', format: 'h4' },
+        { start: '#####', format: 'h5' },
+        { start: '######', format: 'h6' },
+        { start: '1. ', cmd: 'InsertOrderedList' },
+        { start: '* ', cmd: 'InsertUnorderedList' },
+        { start: '- ', cmd: 'InsertUnorderedList' }
+      ],
       toolbar: 'insertfile undo redo | bold | bullist | link image',
       setup: (editor) => {
         editor.on('change', (e) => {
