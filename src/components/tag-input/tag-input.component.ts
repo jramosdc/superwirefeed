@@ -1,6 +1,6 @@
 import {Component, HostBinding, Input, Output, EventEmitter} from '@angular/core';
-import {NgControl} from '@angular/common';
-import {isBlank} from '@angular/common/src/facade/lang';
+// import {NgControl} from '@angular/common';
+// import { isBlank } from '@angular/common/src/facade/lang';
 import {TagInputItemComponent} from './tag-input-item.component';
 
 @Component({
@@ -39,8 +39,7 @@ import {TagInputItemComponent} from './tag-input-item.component';
       box-shadow: none;
       border: 0;
     }
-  `],
-  directives: [TagInputItemComponent],
+  `]
 })
 export class TagInputComponent {
   @Input() placeholder: string = 'Add a tag';
@@ -53,6 +52,7 @@ export class TagInputComponent {
   @Input() allowedTagsPattern: RegExp = /.+/;
   @HostBinding('class.ng2-tag-input-focus') isFocussed;
   @Output() updatedList: EventEmitter<string[]> = new EventEmitter<string[]>();
+  delimiter: any;
 
   public tagsList: string[] = [];
   public inputValue: string = '';
@@ -134,12 +134,12 @@ export class TagInputComponent {
 
   private _handleBackspace() {
     if (!this.inputValue.length && this.tagsList.length) {
-      if (!isBlank(this.selectedTag)) {
-        this._removeTag(this.selectedTag);
-      }
-      else {
+      // if (!isBlank(this.selectedTag)) {
+      //   this._removeTag(this.selectedTag);
+      // }
+      // else {
         this.selectedTag = this.tagsList.length - 1;
-      }
+      // }
     }
   }
 

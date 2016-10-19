@@ -1,20 +1,16 @@
-// <reference path="../../../typings/index.d.ts">
-
 import { Component, OnInit, ViewChild, Type } from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
-// In one of your application components
-import {TagInputComponent} from '../tag-input/tag-input.component';
+
 
 @Component({
     selector: 'profile',
     host: {
         class: 'col s12'
     },
-    styleUrls: ['components/profile/profile.css'],
-    templateUrl: 'components/profile/profile.html'
-    ,directives: [TagInputComponent] // Add to directives
+    styles: [require('./profile.css')],
+    template: require('./profile.html')
 })
 export class ProfileComponent extends Type implements OnInit {
 
@@ -55,13 +51,13 @@ export class ProfileComponent extends Type implements OnInit {
         this.route.params.subscribe(params => {
             this.userid = params['userid'];
             if (this.userid) {
-                this.as.getFollowers(this.userid).subscribe((followers) => this.followers = followers); 
-                this.as.getFollowing(this.userid).subscribe((following) => this.following = following); 
+                this.as.getFollowers(this.userid).subscribe((followers) => this.followers = followers);
+                this.as.getFollowing(this.userid).subscribe((following) => this.following = following);
                 this.as.getUserProfile(this.userid).subscribe((profile) => {
                     this.profile = profile;
-                    if(profile['backgroundImageURL']) {
-                        setTimeout(()=>{
-                            $('#bgImage').attr( "style", 'width: 100%; height: 200px; background: url("'+profile['backgroundImageURL']+'") center center no-repeat; background-size: cover;' );
+                    if (profile['backgroundImageURL']) {
+                        setTimeout(() => {
+                            $('#bgImage').attr("style", 'width: 100%; height: 200px; background: url("' + profile['backgroundImageURL'] + '") center center no-repeat; background-size: cover;');
                         }, 100);
                     }
                 });
@@ -105,7 +101,7 @@ export class ProfileComponent extends Type implements OnInit {
 
     ngOnInit() {
         $(window).scroll(function () {
-            let space = $(window).innerHeight() - $('.fab').offsetTop + $('.fab').offsetHeight;
+            let space = $(window).innerHeight() - $('.fab')['offsetTop'] + $('.fab')['offsetHeight'];
             if (space < 200) {
                 $('.fab').css('margin-bottom', '150px');
             }
@@ -128,7 +124,7 @@ export class ProfileComponent extends Type implements OnInit {
                 $('#pno').prop('checked', true);
             }
             $('#category').val(this.profile['category']);
-            $('select').material_select();
+            $('select')['material_select']();
             if (this.profile['authEmail']) {
                 this.profile['authEmail'].forEach(val => {
                     this.authList.push(val);
@@ -197,7 +193,7 @@ export class ProfileComponent extends Type implements OnInit {
     }
 
     confirmDelete() {
-        $('#confirmDeleteModel').openModal();
+        $('#confirmDeleteModel')['openModal']();
     }
 
     delete(answer: string) {
@@ -206,7 +202,7 @@ export class ProfileComponent extends Type implements OnInit {
             this.as.deleteAll(this.profile['feedId'], this.userid, this.User.uid).then(res => {
                 console.log('User, Profile and Feed Deleted!')
                 $('#errorDelete').html('');
-                $('#confirmDeleteModel').closeModal();
+                $('#confirmDeleteModel')['closeModal']();
                 this.deleteLoading = false;
                 this.router.navigate(['/feeds']);
             }).catch(err => {
@@ -216,7 +212,7 @@ export class ProfileComponent extends Type implements OnInit {
             })
         } else {
             $('#errorDelete').html('');
-            $('#confirmDeleteModel').closeModal();
+            $('#confirmDeleteModel')['closeModal']();
             this.deleteLoading = false;
         }
     }
@@ -249,11 +245,11 @@ export class ProfileComponent extends Type implements OnInit {
     }
 
     profileModelOpen() {
-        $('#profileModal').openModal();
+        $('#profileModal')['openModal']();
     }
 
     profileModelClose() {
-        $('#profileModal').closeModal();
+        $('#profileModal')['closeModal']();
         this.imageSelected = true;
         this.profileImgData = {};
     }
@@ -315,19 +311,19 @@ export class ProfileComponent extends Type implements OnInit {
     }
 
     backgroundImagePopup() {
-        $('#backgroundModal').openModal();
+        $('#backgroundModal')['openModal']();
         //  $('#bgInputFile').click();
     }
-    
+
     backgroundModelClose() {
-        $('#backgroundModal').closeModal();
+        $('#backgroundModal')['closeModal']();
         this.imageSelected = true;
         this.backgroundImgData = {};
     }
 
     uploadBackgroundImage() {
         this.imageUploading = true;
-        this.as.uploadUserImg('bg-'+this.User.feed.userid, this.backgroundImgData.image).then((url) => {
+        this.as.uploadUserImg('bg-' + this.User.feed.userid, this.backgroundImgData.image).then((url) => {
             this.as.updateUserProfile(this.User.feed.userid, { backgroundImageURL: url }).then((data) => {
                 this.as.updateFeed(this.User.feed.id + '/owner', { backgroundImageURL: url }).then((d) => {
                     this.imageUploading = false;
@@ -339,13 +335,13 @@ export class ProfileComponent extends Type implements OnInit {
 
     followingSys() {
         let me = this.User.feed.userid;
-        let userFollowingObj = { }
+        let userFollowingObj = {}
         userFollowingObj[this.userid] = this.userid;
         // userFollowing[this.User.feed.userid] = { }
         // userFollowing[this.User.feed.userid][this.userid] = this.userid;
 
         let followerId = this.userid;
-        let userFollowerObj = { }
+        let userFollowerObj = {}
         userFollowerObj[this.User.feed.userid] = this.User.feed.userid;
         // userFollower[this.userid] = { }
         // userFollower[this.userid][this.User.feed.userid] = this.User.feed.userid
@@ -354,20 +350,20 @@ export class ProfileComponent extends Type implements OnInit {
     }
 
     followerModelPopup() {
-        $('#followersModal').openModal();
+        $('#followersModal')['openModal']();
     }
-    
+
     followerModelClose() {
-        $('#followersModal').closeModal();
+        $('#followersModal')['closeModal']();
     }
 
     followingModelPopup() {
-        $('#followingModal').openModal();
+        $('#followingModal')['openModal']();
     }
-    
+
     followingModelClose() {
-        $('#followingModal').closeModal();
+        $('#followingModal')['closeModal']();
     }
-    
+
 
 }

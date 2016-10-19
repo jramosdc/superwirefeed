@@ -1,35 +1,29 @@
-// <reference path="../../../typings/index.d.ts">
-
 import { Component, OnInit, Injector } from '@angular/core';
-import { DatePipe } from "@angular/common";
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
-import { OrderBy } from "../pipes/orderby";
-import { SearchPostTitlePipe } from '../pipes/searchPostTitle';
-import { SearchCategory } from '../pipes/searchCategory';
+
 
 @Component({
 	selector: 'posts',
 	host: {
 		class: 'col s12'
 	},
-    styleUrls: ['components/posts/posts.css'],
-	templateUrl: 'components/posts/posts.html',
-	pipes: [SearchPostTitlePipe, DatePipe, OrderBy, SearchCategory]
+	styles: [require('./posts.css')],
+	template: require('./posts.html')
 })
 export class PostsComponent implements OnInit {
 
 	User: User;
 	Domain: string
-    FeedID: string
-    search: string
-    activeCategory: string;
-    categories: Array<string> = [];
-    deletePostID: string
+	FeedID: string
+	search: string
+	activeCategory: string;
+	categories: Array<string> = [];
+	deletePostID: string
 	posts: FirebaseListObservable<any[]>
 	emailLoading: Boolean = false
-    
+
 	constructor(public as: authService, public route: ActivatedRoute, private router: Router) {
 		this.Domain = this.as.getDomain();
 		this.User = this.as.emptyUser();
@@ -41,25 +35,25 @@ export class PostsComponent implements OnInit {
 
 	ngOnInit() {
 		this.as.getFeedNameByFeedID(this.FeedID).subscribe(feed => {
-            this.as.setActivePageTitle(feed.feedName);
+			this.as.setActivePageTitle(feed.feedName);
 			this.categories.splice(0);
 			this.categories.push('All');
-            if (feed['postCategories']) {
-                feed['postCategories'].forEach( (val: string) => {
-                    this.categories.push(val);
-                });
-            }
-            if (feed.private === 'true' && feed.owner.uid !== this.User.uid) {
-                if (sessionStorage['email']) {
-                    this.checkEmail(sessionStorage['email']);
-                } else {
-                    $('#emailModel').openModal({ dismissible: false });
-                }
+			if (feed['postCategories']) {
+				feed['postCategories'].forEach((val: string) => {
+					this.categories.push(val);
+				});
+			}
+			if (feed.private === 'true' && feed.owner.uid !== this.User.uid) {
+				if (sessionStorage['email']) {
+					this.checkEmail(sessionStorage['email']);
+				} else {
+					$('#emailModel')['openModal']({ dismissible: false });
+				}
 			} else {
 				this.posts = this.as.loadPosts(this.FeedID);
 			}
 		});
-	    $('ul.tabs').tabs();
+		$('ul.tabs')['tabs']();
 	}
 
 	navigate(type: string, id: string) {
@@ -79,9 +73,9 @@ export class PostsComponent implements OnInit {
 		this.emailLoading = true;
 		this.as.checkEmail(this.FeedID, email).subscribe(res => {
 			if (res.length > 0) {
-                this.posts = this.as.loadPosts(this.FeedID);
-                sessionStorage['email'] = email;
-				$('#emailModel').closeModal();
+				this.posts = this.as.loadPosts(this.FeedID);
+				sessionStorage['email'] = email;
+				$('#emailModel')['closeModal']();
 				$('#errorEmail').html('');
 				this.emailLoading = false;
 			} else {
@@ -89,18 +83,18 @@ export class PostsComponent implements OnInit {
 				this.emailLoading = false;
 			}
 		})
-		
+
 	}
 
 	closeEmail() {
 		$('#errorEmail').html('');
-		$('#emailModel').closeModal();
+		$('#emailModel')['closeModal']();
 		this.router.navigate(['/feeds']);
 	}
-	
+
 	deleteModel(postid) {
 		this.deletePostID = postid;
-		$('#deleteModel').openModal();
+		$('#deleteModel')['openModal']();
 	}
 
 	deletePost() {
@@ -123,6 +117,6 @@ export class PostsComponent implements OnInit {
 		} else {
 			return ''
 		}
-    }
+	}
 
 }

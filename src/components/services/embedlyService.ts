@@ -1,18 +1,16 @@
-// <reference path="../../../typings/index.d.ts">
-
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class embedlyService {
 
     constructor() {
-        $.embedly.defaults.key = 'f81e196dc01b4cb49d68d48e9b1ea5f2';
+        $['embedly'].defaults.key = 'f81e196dc01b4cb49d68d48e9b1ea5f2';
     }
 
     extractAPI(url: string) {
         return new Promise((resolve, reject) => {
             if (url && url.length > 0) {
-                $.embedly.extract(url).progress((data) => {
+                $['embedly'].extract(url).progress((data) => {
                     resolve(this.extractProperties(data));
                 });
             } else {

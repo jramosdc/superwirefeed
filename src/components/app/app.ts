@@ -1,6 +1,4 @@
-// <reference path="../../../typings/index.d.ts">
-
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 import { NavbarComponent } from '../navbar/navbar';
 import { User, authService } from '../services/authService';
@@ -8,11 +6,11 @@ import { User, authService } from '../services/authService';
 @Component({
 	selector: 'ng2-app',
 	host: {},
-	styleUrls: [
-    'components/materialize/index.css',
-    'components/app/app.css'
-  ],
-	templateUrl: 'components/app/app.html'
+	styles: [
+		require('./app.scss')
+	],
+	template: require('./app.html'),
+	encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
 

@@ -1,5 +1,3 @@
-// <reference path="../../typings/index.d.ts">
-
 import { Routes } from '@angular/router';
 
 import { FeedsComponent } from './feeds/feeds';
@@ -16,7 +14,7 @@ export const AppRoutes: Routes = [
   { path: "editpost/:postid", component: EditPostComponent },
   { path: "post/:postid", component: ViewPostComponent },
   { path: "profile/:userid", component: ProfileComponent },
-  { path: "", redirectTo: "feeds", terminal: true }
+  { path: "", redirectTo: "feeds", pathMatch: 'full' }
 ];
 
 export const ApplicationComponents = [FeedsComponent, PostsComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent];

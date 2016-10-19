@@ -1,4 +1,17 @@
-// <reference path="../../typings/index.d.ts">
+import 'reflect-metadata';
+import 'core-js';
+import 'zone.js/dist/zone';
+import 'jquery/dist/jquery';
+import 'jquery-embedly/jquery.embedly';
+import 'bootstrap';
+import 'firebase';
+import 'materialize-css/dist/js/materialize';
+import 'materialize-tags';
+import 'tinymce/tinymce';
+import 'linkifyjs/dist/linkify';
+import 'linkifyjs/dist/linkify-jquery';
+import '../lib/papaparse';
+
 
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

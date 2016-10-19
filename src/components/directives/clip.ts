@@ -1,5 +1,3 @@
-// <reference path="../../../typings/index.d.ts">
-
 import {Directive, ElementRef, Input, Output, EventEmitter} from '@angular/core';
 // import Clipboard from 'clipboard';
 

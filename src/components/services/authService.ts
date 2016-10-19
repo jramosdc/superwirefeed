@@ -1,8 +1,9 @@
-// <reference path="../../../typings/index.d.ts">
-
 import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularfire2';
+import * as firebase from 'firebase';
 import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/take';
 
 export interface User { uid: string, emailVerified: boolean, password: { email: string, profileImageURL: string }, feed: { id: string, name: string, userid: string }, backgroundImageURL: string }
 
@@ -26,37 +27,73 @@ export class authService {
 
 	constructor(private af: AngularFire) {
 		this.User = this.emptyUser();
-		this.af.auth.subscribe((res: FirebaseAuthState) => {
-			if (res) {
-				this.User.uid = res.uid;
-				this.User.emailVerified = res.auth.emailVerified;
-				// this.User.password.profileImageURL = res.auth['photoURL']
-				this.User.password.email = res.auth['email'];
-				this.getUserFeedDetail(this.User.uid).subscribe(feed => {
-					this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
-					this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
-					this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
-					this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
-					this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
-					if (feed[0] && feed[0]['postCategories']) {
-						this.postCategories.splice(0);
-						feed[0]['postCategories'].forEach(val => {
-							this.postCategories.push(val);
-						});
-					}
-				});
-			} else {
-				this.User.uid = '';
-				this.User.emailVerified = false;
-				this.User.password.profileImageURL = '';
-				this.User.password.email = '';
-				this.User.feed.id = '';
-				this.User.feed.name = '';
-				this.User.feed.userid = '';
-				this.User.backgroundImageURL = '';
-			}
-		})
+		this.authSubscribe()
 		this.loadFeeds();
+	}
+
+	authSubscribe() {
+
+		let res = this.af.auth.getAuth(); 
+		if (res) {
+			this.User.uid = res.uid;
+			this.User.emailVerified = res.auth.emailVerified;
+			// this.User.password.profileImageURL = res.auth['photoURL']
+			this.User.password.email = res.auth['email'];
+			this.getUserFeedDetail(this.User.uid).subscribe(feed => {
+				this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
+				this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
+				this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
+				this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+				this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
+				if (feed[0] && feed[0]['postCategories']) {
+					this.postCategories.splice(0);
+					feed[0]['postCategories'].forEach(val => {
+						this.postCategories.push(val);
+					});
+				}
+			});
+		} else { // if getAuth is not null
+			this.User.uid = '';
+			this.User.emailVerified = false;
+			this.User.password.profileImageURL = '';
+			this.User.password.email = '';
+			this.User.feed.id = '';
+			this.User.feed.name = '';
+			this.User.feed.userid = '';
+			this.User.backgroundImageURL = '';
+		}
+
+		// this.af.auth.subscribe((res/*: FirebaseAuthState*/) => {
+		// 	console.log('auth.subscribe');
+		// 	if (res) {
+		// 		this.User.uid = res.uid;
+		// 		this.User.emailVerified = res.auth.emailVerified;
+		// 		// this.User.password.profileImageURL = res.auth['photoURL']
+		// 		this.User.password.email = res.auth['email'];
+		// 		this.getUserFeedDetail(this.User.uid).subscribe(feed => {
+		// 			this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
+		// 			this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
+		// 			this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
+		// 			this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+		// 			this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
+		// 			if (feed[0] && feed[0]['postCategories']) {
+		// 				this.postCategories.splice(0);
+		// 				feed[0]['postCategories'].forEach(val => {
+		// 					this.postCategories.push(val);
+		// 				});
+		// 			}
+		// 		});
+		// 	} else {
+		// 		this.User.uid = '';
+		// 		this.User.emailVerified = false;
+		// 		this.User.password.profileImageURL = '';
+		// 		this.User.password.email = '';
+		// 		this.User.feed.id = '';
+		// 		this.User.feed.name = '';
+		// 		this.User.feed.userid = '';
+		// 		this.User.backgroundImageURL = '';
+		// 	}
+		// })
 	}
 
 	emptyUser() {
@@ -94,6 +131,7 @@ export class authService {
 	}
 
 	getUser() {
+		this.authSubscribe();
 		return this.User;
 	}
 
@@ -171,6 +209,9 @@ export class authService {
 
 	logout() {
 		this.af.auth.logout();
+		setTimeout(()=>{
+			this.authSubscribe();
+		}, 200)
 	}
 
 	register(email: string, password: string) {
@@ -308,7 +349,7 @@ export class authService {
 	}
 
 	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
-		
+
 		let setFollowingSys = () => {
 			let multipath = {}
 			multipath['/user-following/' + myid + '/' + followerId] = followerId;
@@ -319,7 +360,7 @@ export class authService {
 				err ? console.log('err', err) : '';
 			});
 		}; // setFollowingSys
-		
+
 		let removeFollowingSys = () => {
 			let multipath = {}
 			multipath['/user-following/' + myid + '/' + followerId] = null;
@@ -350,7 +391,7 @@ export class authService {
 	}
 
 	getFollowing(id) {
-		return this.af.database.list('/user-following/' + id).map((following)=>{
+		return this.af.database.list('/user-following/' + id).map((following) => {
 			return following.map((follow) => {
 				follow = this.af.database.object('/users/' + follow['$key']);
 				return follow;

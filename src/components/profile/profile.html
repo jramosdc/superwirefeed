@@ -1,58 +1,42 @@
 <style>
-    .jumbo:hover {
-        opacity: 0.5;
-    }
-
-    .backgroundContainer:hover .camOnHover {
-        display: block;
-    }
-
+    .jumbo:hover { opacity: 0.5; }
+    .backgroundContainer:hover
+    .camOnHover { display:block; }
     .camOnHover {
-        position: absolute;
-        display: none;
-        top: 0.2em;
-        /*width: 40px;
-        margin: 0 auto;
-        left: 15px;*/
+        position : absolute;
+        display:none;
+        top:15px; 
+        width:40px;
+        margin:0 auto; left:15px;
+        
         /*z-index:100;*/
-    }
+    } 
 </style>
 <div class="row" *ngIf="!editMode && profile">
-    <div class="col s12 padding10px">
-        <div class="card backgroundContainer" *ngIf="User.uid === profile.uid && !editMode">
+    <div class="col s12 card padding10px">
+        <div class="backgroundContainer">
             <div id="bgImage" class="jumbo"></div>
-             <i class="grey-text mdi mdi-camera circle col s12 camOnHover" style="font-size: 10em; margin: 0 44%;" (click)="backgroundImagePopup();"></i>
-            <!--<a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>-->
+            <a class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
             <input type="file" id="bgInputFile" value="" style="display:none;" />
         </div>
-        <div *ngIf="User.uid !== profile.uid && !editMode">
-            <div id="bgImage" class="jumbo"></div>
-        </div>
         <div class="container icons">
-            <div class="big-icon zindex9000" *ngIf="profile.profileImageURL" >
+            <div class="big-icon zindex9000" *ngIf="profile.profileImageURL" (click)="profileModelOpen();">
                 <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12">
-                <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="profileModelOpen();">
-                    <i class="grey-text mdi mdi-camera circle col s12" style="font-size: 10em;"></i>
-                </div>
+                <div class="edit" *ngIf="profile && User.uid === profile.uid && !editMode">
+             <i class="grey-text mdi mdi-camera circle col s12" style="font-size: 10em;"></i>
+        </div>
             </div>
             <div class="big-icon zindex9000" *ngIf="profile.email && !profile.profileImageURL">
                 <i class="pink-text mdi mdi-account circle col s12" style="font-size: 10em;"></i>
+                
             </div>
+
         </div>
         <div class="container padding10px">
-            <div class="col s12 m4 l4" (click)="followerModelPopup();">
-                <h6>FOLLOWERS</h6>
-                <p>{{followers.length}}</p>
-            </div>
-            <div class="col s12 m4 l4" (click)="followingModelPopup();">
-                <h6>FOLLOWING</h6>
-                <p>{{following.length}}</p>
-            </div>
-            <div class="col s12 m4 l4">
-                <h6>ITEMS PUBLISHED</h6>
-                <p>666</p>
-            </div>
-            <hr />
+          <div class="col s12 m4 l4"><h6>FOLLOWERS</h6><p>346</p></div>
+          <div class="col s12 m4 l4"><h6>FOLLOWING</h6><p>333</p></div>
+          <div class="col s12 m4 l4"><h6>ITEMS PUBLISHED</h6><p>666</p> </div> 
+<hr /> 
         </div>
         <div class="container details">
             <h3>{{profile.displayName || profile.email}} </h3>
@@ -82,15 +66,15 @@
         </a>
         <ul>
             <li><a class="btn-floating orange"><i class="mdi mdi-thumb-up"></i></a></li>
-            <li><a class="btn-floating green" *ngIf="profile && User.uid !== profile.uid" (click)="followingSys();"><i class="mdi mdi-star"></i></a></li>
+            <li><a class="btn-floating green"><i class="mdi mdi-star"></i></a></li>
             <li><a class="btn-floating blue"><i class="mdi mdi-open-in-new"></i></a></li>
             <li><a class="btn-floating purple" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()"><i class="mdi mdi-pencil"></i></a></li>
         </ul>
     </div>
 </div>
 <div class="row" *ngIf="editMode">
-    <form class="col s12 padding10px">
-        <div class="row card valign-wrapper">
+    <form class="col s12 card padding10px">
+        <div class="row valign-wrapper">
             <img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
             <h5 class="col s5 valign">{{profile.displayName || profile.email}}</h5>
             <span class="col s4 valign">
@@ -145,7 +129,7 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <tag-input placeholder="Add Post Category" [tagArray]="postCategoryList" (updatedList)="tagInputEventCatch($event);"> </tag-input>
+                <tag-input  placeholder="Add Post Category" [tagArray]="postCategoryList" (updatedList)="tagInputEventCatch($event);"> </tag-input>
             </div>
         </div>
         <!--<div class="row">
@@ -172,8 +156,7 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <tag-input placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);">
-                </tag-input>
+                <tag-input  placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);"> </tag-input>
             </div>
         </div>
         <!--<div class="row">
@@ -258,7 +241,7 @@
         </div>
         <div class="row center-align" class="flexCenter">
             <input id="custom-input" type="file" class="displayNone" #fileInput (change)="profileChangeListener($event)">
-
+            
             <div *ngIf="!profile?.profileImageURL">
                 <div [hidden]="!imageSelected">
                     <i class="black-text mdi mdi-account circle col s12" (click)="fileInput.click(); imageSelected=false;" style="font-size: 10em;"></i>
@@ -274,7 +257,7 @@
             <div [hidden]="imageSelected">
                 <img-cropper id="imgCropper" #profileCropper [image]="profileImgData" [settings]="cropperSettings_round" (onCrop)="cropped($event)"></img-cropper>
             </div>
-
+         
         </div>
         <div class="row center-align">
             <span class="red-text" id="errorLogin"></span>
@@ -303,16 +286,14 @@
 <div id="backgroundModal" class="modal zindex9999">
     <form class="modal-content">
         <div class="nav-wrapper center-align">
-            <h2 class="purple-text">Background Image</h2>
+            <h2 class="purple-text">Background Image {{imageSelected}}</h2>
         </div>
         <div class="row center-align" class="flexCenter">
             <input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
-
+            
             <div *ngIf="!profile?.backgroundImageURL">
                 <div [hidden]="!imageSelected">
-                    <img src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg"
-                        alt="default background image" (click)="fileInput2.click(); imageSelected=false;" style="width: 300px; height: auto;"
-                    />
+                    <img src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg" alt="default background image" (click)="fileInput2.click(); imageSelected=false;" style="width: 300px; height: auto;"/>
                 </div>
             </div>
 
@@ -325,7 +306,7 @@
             <div [hidden]="imageSelected">
                 <img-cropper id="imgCropper2" #bgCropper [image]="backgroundImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"></img-cropper>
             </div>
-
+         
         </div>
         <div class="row center-align">
             <span class="red-text" id="errorLogin"></span>
@@ -346,46 +327,6 @@
             </div>
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!backgroundImgData.image">Upload</button>
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
-        </div>
-    </form>
-</div>
-
-<div id="followersModal" class="modal zindex9999">
-    <form class="modal-content">
-        <div class="nav-wrapper center-align">
-            <h4 class="purple-text">Followers</h4>
-        </div>
-        <hr />
-        <div class="row left-align">
-            <div *ngFor="let f of followers" style="display:flex; align-items:center; margin-bottom: 10px;">
-                <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
-                <a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
-                    <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
-                </a>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="waves-effect waves-blue btn white-text" (click)="followerModelClose();">CLOSE</button>
-        </div>
-    </form>
-</div>
-
-<div id="followingModal" class="modal zindex9999">
-    <form class="modal-content">
-        <div class="nav-wrapper center-align">
-            <h4 class="purple-text">Following</h4>
-        </div>
-        <hr />
-      <div class="row left-align">
-            <div *ngFor="let f of following" style="display:flex; align-items:center; margin-bottom: 10px;">
-                <img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f" />
-                <a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
-                    <span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
-                </a>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="waves-effect waves-blue btn white-text" (click)="followingModelClose();">CLOSE</button>
         </div>
     </form>
 </div>

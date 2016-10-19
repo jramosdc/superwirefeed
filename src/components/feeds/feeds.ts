@@ -1,23 +1,15 @@
-// <reference path="../../../typings/index.d.ts">
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
-import { SearchCategory } from '../pipes/searchCategory';
-import { OrderBy } from "../pipes/orderby";
 
 @Component({
 	selector: 'feeds',
 	host: {
 		class: 'col s12'
 	},
-	styleUrls: [
-		'components/materialize/index.css',
-		'components/feeds/feeds.css'
-	],
-	templateUrl: 'components/feeds/feeds.html',
-	pipes: [SearchCategory, OrderBy]
+	styles: [require('./feeds.css')],
+	template: require('./feeds.html')
 })
 
 export class FeedsComponent implements OnInit {
@@ -35,7 +27,7 @@ export class FeedsComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		$('ul.tabs').tabs();
+		// $('ul.tabs')['tabs']();
 	}
 
 	returnMoment(timestamp) {
