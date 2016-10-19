@@ -30,10 +30,15 @@
 </nav>
 
 <div id="loginModal" class="modal account login">
+  <header>
+    <h5 class="title">Login</h5>
+    <div class="logo">
+      <img src="" alt="">
+      SuperWire
+    </div>
+  </header>
+
   <form class="modal-content" novalidate #l="ngForm" (submit)="login(l.value)">
-    <header>
-        <h5 class="title">Login</h5>
-    </header>
     <div class="row">
       <div class="input-field">
         <input type="email" class="validate" #email="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
@@ -43,6 +48,7 @@
         </small>
       </div>
     </div>
+
     <div class="row">
       <div class="input-field">
         <input type="password" class="validate" #password="ngModel" name="password" [ngModel]="p" required minlength="6">
@@ -52,81 +58,100 @@
         </small>
       </div>
     </div>
+
     <div class="row center-align">
       <span class="red-text" id="errorLogin"></span>
     </div>
-    <div class="modal-footer">
-      <div class="preloader-wrapper small active" *ngIf="loginLoading">
-        <div class="spinner-layer spinner-blue-only">
-          <div class="circle-clipper left">
-            <div class="circle"></div>
-          </div>
-          <div class="gap-patch">
-            <div class="circle"></div>
-          </div>
-          <div class="circle-clipper right">
-            <div class="circle"></div>
-          </div>
+
+    <div class="preloader-wrapper small active" *ngIf="loginLoading">
+      <div class="spinner-layer spinner-blue-only">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
         </div>
       </div>
-      <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!l.valid">Login</button>
     </div>
+
+    <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!l.valid">Login</button>
   </form>
+
+  <footer class="modal-footer">
+    <h6>Problems with signing in?</h6>
+    <button>Sign up</button> Or
+    <a href="#">recover password</a>
+  </footer>
 </div>
 
-<div id="registerModal" class="modal" style="width: 30%">
+<div id="registerModal" class="modal account register">
+  <header>
+    <h5 class="title">Signup</h5>
+    <div class="logo">
+      <img src="" alt="">
+      SuperWire
+    </div>
+  </header>
+
   <form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value)">
-    <div class="nav-wrapper center-align">
-      <h2 class="purple-text">Register</h2>
-    </div>
-    <div class="card padding10px">
-      <div class="row">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" required>
         <label for="reqUserID">User ID</label>
-        <div class="input-field">
-          <input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" placeholder="User ID" required>
-          <small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !f._submitted)">
-            Name is required.
-          </small>
-        </div>
-      </div>
-      <div class="row">
-        <label for="regEmail">Email</label>
-        <div class="input-field">
-          <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" placeholder="Email" required pattern=".+\@.+\..+">
-          <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
-            Email is required and format should be <i>john@doe.com</i>.
-          </small>
-        </div>
-      </div>
-      <div class="row">
-        <label for="regPassword">Password</label>
-        <div class="input-field">
-          <input type="password" class="validate" #regPassword="ngModel" name="password" [ngModel]="p" placeholder="password" required
-            minlength="6">
-          <small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !f._submitted)">
-            Password is required (minimum 6 characters).
-          </small>
-        </div>
-      </div>
-      <div class="row center-align">
-        <span class="red-text" id="errorRegister"></span>
-      </div>
-      <div class="modal-footer">
-        <div class="preloader-wrapper small active" *ngIf="registerLoading">
-          <div class="spinner-layer spinner-blue-only">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div>
-            <div class="gap-patch">
-              <div class="circle"></div>
-            </div>
-            <div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!f.valid">Create</button>
+        <small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !f._submitted)">
+          Name is required.
+        </small>
       </div>
     </div>
+
+    <div class="row">
+      <div class="input-field">
+        <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
+        <label for="regEmail">Email</label>
+        <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
+          Email is required and format should be <i>john@doe.com</i>.
+        </small>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field">
+        <input type="password" class="validate" #regPassword="ngModel" name="password" [ngModel]="p" required
+          minlength="6">
+        <label for="regPassword">Password</label>
+        <small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !f._submitted)">
+          Password is required (minimum 6 characters).
+        </small>
+      </div>
+    </div>
+
+    <div class="row center-align">
+      <span class="red-text" id="errorRegister"></span>
+    </div>
+
+    <div class="preloader-wrapper small active" *ngIf="registerLoading">
+      <div class="spinner-layer spinner-blue-only">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!f.valid">Create account</button>
   </form>
+
+  <footer class="modal-footer">
+    <h6>Do you already have an account?</h6>
+    <button>Login</button> Or
+    <a href="#">recover password</a>
+  </footer>
 </div>
