@@ -7,7 +7,10 @@ import { User, authService } from '../services/authService';
 @Component({
   selector: 'navbar',
   host: {},
-  styleUrls: ['components/navbar/navbar.css'],
+  styleUrls: [
+    'components/materialize/index.css',
+    'components/navbar/navbar.css'
+   ],
   templateUrl: 'components/navbar/navbar.html'
 })
 export class NavbarComponent implements OnInit {
@@ -81,7 +84,7 @@ export class NavbarComponent implements OnInit {
         }).catch((err) => {
           console.log('Profile Creation Failed!', err)
         });
-        
+
         // after login send email verification
         this.as.sendEmailVerfication();
 

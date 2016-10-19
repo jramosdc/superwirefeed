@@ -17,6 +17,7 @@
         /*z-index:100;*/
     }
 </style>
+
 <div class="row" *ngIf="!editMode && profile">
     <div class="col s12 padding10px">
         <div class="card backgroundContainer" *ngIf="User.uid === profile.uid && !editMode">
@@ -298,7 +299,6 @@
         </div>
     </form>
 </div>
-
 
 <div id="backgroundModal" class="modal zindex9999">
     <form class="modal-content">
