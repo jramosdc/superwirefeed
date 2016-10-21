@@ -44,7 +44,9 @@ module.exports = {
         // ensure loader extensions match
         extensions: prepend(['', '.js', '.ts', '.html', '.css'], '.async'), // ensure .async.ts etc also works
         alias: {
-            jQuery: "jquery/dist/jquery"
+            jQuery: "jquery",
+            JQuery: "jquery",
+            $: "jquery"
         }
     },
 
@@ -87,7 +89,7 @@ module.exports = {
         // static assets
         new CopyWebpackPlugin([
             { from: 'src/assets', to: 'assets' },
-            { from: 'node_modules/materialize-css/fonts', to: 'fonts' },
+            { from: 'node_modules/materialize-css/font', to: 'font' },
             { from: 'node_modules/mdi/fonts', to: 'fonts' }
         ]),
         // generating html
