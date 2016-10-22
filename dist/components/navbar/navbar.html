@@ -88,7 +88,7 @@
 
   <footer>
     <h6>Problems with signing in?</h6>
-    <button class="btn">Sign up</button> or
+    <button class="btn" (click)="registerModal()">Sign up</button> or
     <a>recover password</a>
   </footer>
 
@@ -99,8 +99,8 @@
   <header>
     <h5 class="title">Signup</h5>
     <div class="logo">
-      <img src="" alt="">
-      SuperWire
+      <img src="assets/logo.svg" alt="">
+      <span>SuperWire</span>
     </div>
   </header>
 
@@ -163,9 +163,9 @@
 
   <hr class="line">
 
-  <footer class="modal-footer">
+  <footer>
     <h6>Do you already have an account?</h6>
-    <button class="btn">Login</button> Or
+    <button class="btn" (click)="loginModal()">Login</button> Or
     <a href="#">recover password</a>
   </footer>
 
