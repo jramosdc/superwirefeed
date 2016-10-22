@@ -62,25 +62,25 @@
   width: 100%;
   margin-bottom: 1rem;
   color: white;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 16px;
 }
 
 .modal .error {
-  margin-bottom: 1rem;
-  font-size: 12px;
+  margin-bottom: 1.25rem;
+  font-size: 13px;
 }
 
 /* footer */
 .modal footer {
-  padding: .75rem 2rem;
+  padding: 1.5rem 2rem;
   height: auto;
   color: #A2A2A2;
   font-weight: 300;
 }
 
 .modal footer h6 {
-  margin: 1rem 0;
+  margin: .75rem 0 .5rem;
 }
 
 .modal footer button {
@@ -93,6 +93,10 @@
 .modal footer a {
   color: #A9A9A9;
   font-weight: 400;
+}
+
+.modal .preloader-wrapper {
+  /*height: 0;*/
 }
 
 /* account specific modals */
