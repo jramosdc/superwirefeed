@@ -33,10 +33,12 @@
   <header>
     <h5 class="title">Login</h5>
     <div class="logo">
-      <img src="" alt="">
-      SuperWire
+      <img src="assets/logo.svg" alt="">
+      <span>SuperWire</span>
     </div>
   </header>
+
+  <hr class="line">
 
   <form class="modal-content" novalidate #l="ngForm" (submit)="login(l.value)">
     <div class="row">
@@ -59,32 +61,36 @@
       </div>
     </div>
 
-    <div class="row center-align">
-      <span class="red-text" id="errorLogin"></span>
-    </div>
+    <button type="submit" class="waves-effect waves-blue btn-large submit" [disabled]="!l.valid">Login</button>
 
-    <div class="preloader-wrapper small active" *ngIf="loginLoading">
-      <div class="spinner-layer spinner-blue-only">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div>
-        <div class="gap-patch">
-          <div class="circle"></div>
-        </div>
-        <div class="circle-clipper right">
-          <div class="circle"></div>
+    <div class="error">
+      <span class="red-text" id="errorLogin"></span>
+
+      <div class="preloader-wrapper small active" *ngIf="loginLoading">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
         </div>
       </div>
     </div>
-
-    <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!l.valid">Login</button>
   </form>
 
-  <footer class="modal-footer">
+  <hr class="line">
+
+  <footer>
     <h6>Problems with signing in?</h6>
-    <button>Sign up</button> Or
+    <button class="btn">Sign up</button> or
     <a href="#">recover password</a>
   </footer>
+
+  <hr class="triple line">
 </div>
 
 <div id="registerModal" class="modal account register">

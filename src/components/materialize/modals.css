@@ -1,16 +1,101 @@
 .modal {
-
 }
 
+/* header */
 .modal header {
-
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  color: black;
+  font-weight: 300;
 }
 
 .modal header .title {
   font-weight: 600;
-  margin: 0;
+  margin: 1em 0;
+  flex: 1;
+  font-size: 24px;
+  opacity: .7;
+  line-height: 1;
 }
 
+.modal header .logo {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.modal header img {
+  margin-right: .5rem;
+  opacity: .7;
+  height: 22px;
+}
+
+.modal header span {
+  opacity: .35;
+  font-size: 13px;
+}
+
+/* content */
+.modal .modal-content {
+  background-color: #F5F5F5;
+  padding: .75rem 2rem;
+}
+
+.modal .modal-content .row {
+  margin-bottom: 1rem;
+}
+
+/* form */
+.modal .input-field input {
+  margin-bottom: .75rem;
+  border-bottom-color: rgba(150, 150, 150, 0.5);
+}
+
+.modal .input-field label {
+  color: rgba(150, 150, 150, 1);
+}
+
+.modal button.submit {
+  background-color: #FF3B3F;
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.modal .error {
+  margin-bottom: 1rem;
+  font-size: 12px;
+}
+
+/* footer */
+.modal footer {
+  padding: .75rem 2rem;
+  height: auto;
+  color: #A2A2A2;
+  font-weight: 300;
+}
+
+.modal footer h6 {
+  margin: 1rem 0;
+}
+
+.modal footer button {
+  background-color: #A9A9A9;
+  color: white;
+  margin: .5rem;
+  margin-left: 0;
+}
+
+.modal footer a {
+  color: #A9A9A9;
+  font-weight: 400;
+}
+
+/* account specific modals */
 .modal.account {
-  width: 32rem;
+  width: 36rem;
 }
