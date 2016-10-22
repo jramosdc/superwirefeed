@@ -65,8 +65,10 @@
 
     <div class="error">
       <span class="red-text" id="errorLogin"></span>
+    </div>
 
-      <div class="preloader-wrapper small active" *ngIf="loginLoading">
+    <div class="modal-loading" *ngIf="loginLoading">
+      <div class="preloader-wrapper small active">
         <div class="spinner-layer spinner-blue-only">
           <div class="circle-clipper left">
             <div class="circle"></div>
@@ -102,6 +104,8 @@
     </div>
   </header>
 
+  <hr class="line">
+
   <form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value)">
     <div class="row">
       <div class="input-field">
@@ -134,30 +138,36 @@
       </div>
     </div>
 
-    <div class="row center-align">
-      <span class="red-text" id="errorRegister"></span>
+    <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!f.valid">Create account</button>
+
+    <div class="error">
+      <span class="red-text" id="errorLogin"></span>
     </div>
 
-    <div class="preloader-wrapper small active" *ngIf="registerLoading">
-      <div class="spinner-layer spinner-blue-only">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div>
-        <div class="gap-patch">
-          <div class="circle"></div>
-        </div>
-        <div class="circle-clipper right">
-          <div class="circle"></div>
+    <div class="modal-loading" *ngIf="loginLoading">
+      <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
         </div>
       </div>
     </div>
-
-    <button type="submit" class="waves-effect waves-blue btn white-text" [disabled]="!f.valid">Create account</button>
   </form>
+
+  <hr class="line">
 
   <footer class="modal-footer">
     <h6>Do you already have an account?</h6>
-    <button>Login</button> Or
+    <button class="btn">Login</button> Or
     <a href="#">recover password</a>
   </footer>
+
+  <hr class="triple line">
 </div>
