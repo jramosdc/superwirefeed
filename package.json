@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "build:prod": "webpack --progress --optimize-minimize",
+    "build:prod": "webpack --config webpack.prod.config.js --progress --profile --colors --display-error-details --display-cached",
+    "build:prod2": "webpack --progress --optimize-minimize",
     "serve": "webpack-dev-server --progress --profile --colors --display-error-details --inline --history-api-fallback true",
     "start": "npm run clean && npm run serve",
     "postinstall": "typings install"
@@ -50,9 +51,10 @@
   "devDependencies": {
     "@types/es6-shim": "0.31.32",
     "@types/firebase": "2.4.30",
-    "copy-webpack-plugin": "3.0.1",
+    "compression-webpack-plugin": "^0.3.2",
+    "copy-webpack-plugin": "^3.0.1",
     "file-loader": "0.9.0",
-    "html-webpack-plugin": "2.22.0",
+    "html-webpack-plugin": "^2.22.0",
     "materialize-loader": "1.1.1",
     "node-sass": "3.8.0",
     "raw-loader": "0.5.1",
@@ -62,6 +64,7 @@
     "typings": "1.0.4",
     "url-loader": "0.5.7",
     "webpack": "1.13.1",
-    "webpack-dev-server": "1.14.1"
+    "webpack-dev-server": "1.14.1",
+    "webpack-md5-hash": "0.0.5"
   }
 }

@@ -10,6 +10,9 @@ module.exports = {
     path: './dist',
     filename: 'app.bundle.js'
   },
+  // externals: {
+  //   jquery: 'jQuery',
+  // },
   module: {
     loaders: [
       { test: /\.ts$/, loader: 'ts' },
@@ -37,8 +40,10 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.ts', '.html', '.css'],
     alias: {
-            jQuery: "jquery/dist/jquery"
-        }
+      jQuery: "jquery",
+      JQuery: "jquery",
+      $: "jquery"
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -46,7 +51,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: 'src/assets', to: 'assets' },
-      { from: 'node_modules/materialize-css/fonts', to: 'fonts' },
+      { from: 'node_modules/materialize-css/font', to: 'font' },
       { from: 'node_modules/mdi/fonts', to: 'fonts' }
     ]),
     new webpack.DefinePlugin({
