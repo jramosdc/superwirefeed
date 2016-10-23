@@ -5,7 +5,10 @@ import { User, authService } from '../services/authService';
 @Component({
   selector: 'navbar',
   host: {},
-  styles: [require('./navbar.css')],
+  styles: [
+    require('../materialize/index.scss'),
+    require('./navbar.css')
+   ],
   template: require('./navbar.html')
 })
 export class NavbarComponent implements OnInit {

@@ -1,0 +1,19 @@
+hr.line {
+  height: 2px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: linear-gradient(
+    to right,
+    rgba(169, 169, 169, 0.5) 0%,
+    #CAEBF2 100%
+  );
+}
+
+hr.line.double {
+  height: 4px;
+}
+
+hr.line.triple {
+  height: 6px;
+}
