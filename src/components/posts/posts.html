@@ -59,36 +59,46 @@
 	</div>
 </div>
 
-<div id="emailModel" class="modal" style="width: 40%">
+<div id="emailModel" class="modal account">
+	<header>
+    <h5 class="title">Authorize Email</h5>
+	</header>
+
+  <hr class="line">
+
 	<div class="modal-content">
-		<div class="nav-wrapper center-align">
-			<h2 class="purple-text">Authorized Email?</h2>
-		</div>
 		<div class="row">
-			<label for="email">Email</label>
 			<div class="input-field">
 				<input type="email" class="validate" #email required value="">
+				<label for="email">Email</label>
 			</div>
 		</div>
+
 		<div class="row center-align">
 			<span class="red-text" id="errorEmail"></span>
 		</div>
-		<div class="modal-footer">
-			<div class="preloader-wrapper small active" *ngIf="emailLoading">
-				<div class="spinner-layer spinner-blue-only">
-					<div class="circle-clipper left">
-						<div class="circle"></div>
-					</div>
-					<div class="gap-patch">
-						<div class="circle"></div>
-					</div>
-					<div class="circle-clipper right">
-						<div class="circle"></div>
-					</div>
-				</div>
-			</div>
-			<a class="waves-effect waves-blue btn white-text left" (click)="closeEmail()">close</a>
-			<a class="waves-effect waves-blue btn white-text right" (click)="checkEmail(email.value)">Load</a>
-		</div>
-	</div>
+
+    <div class="modal-loading" *ngIf="emailLoading">
+      <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="line">
+
+  <footer>
+		<a class="waves-effect waves-blue btn white-text" (click)="closeEmail()">close</a>
+		<a class="waves-effect waves-blue btn white-text" (click)="checkEmail(email.value)">Load</a>
+	</footer>
 </div>
