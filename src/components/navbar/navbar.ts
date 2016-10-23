@@ -6,13 +6,13 @@ import { User, authService } from '../services/authService';
   selector: 'navbar',
   host: {},
   styles: [
-    require('../materialize/index.scss'),
-    require('./navbar.css')
-   ],
+    // require('../materialize/index.scss'),
+    // require('./navbar.scss')
+  ],
   template: require('./navbar.html')
 })
-export class NavbarComponent implements OnInit {
 
+export class NavbarComponent implements OnInit {
   User: User;
   activePage: Object;
   activeFeed: Object;
