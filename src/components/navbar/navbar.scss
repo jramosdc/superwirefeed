@@ -1,22 +1,99 @@
-.avatar {
-  max-height: 55px;
-  padding: 0 10px;
-}
+// .avatar {
+//   max-height: 55px;
+//   padding: 0 10px;
+// }
 
-.profile {
-  max-height: 40px;
-  padding: 0 10px;
-  margin-top: 10px;
-}
+// .profile {
+//   max-height: 40px;
+//   padding: 0 10px;
+//   margin-top: 10px;
+// }
 
-.padding10px {
-  padding: 10px;
-}
+// .padding10px {
+//   padding: 10px;
+// }
 
-.invalid-test {
-  color: red;
-}
+// .invalid-test {
+//   color: red;
+// }
 
 nav {
   background-color: $quaternary-color;
+  height: $navbar-height-mobile;
+  line-height: $navbar-height-mobile;
+}
+
+.nav-wrapper {
+  display: flex;
+  max-width: 1440px;
+  margin: 0 auto;
+  align-items: center;
+  position: relative;
+  padding: 0 1.5rem;
+
+  .logo {
+    line-height: 1;
+    cursor: pointer;
+
+    img {
+      height: $search-height;
+    }
+  }
+
+  .back {
+    margin-left: -3em;
+    margin-right: 1em;
+  }
+
+  ul a {
+    padding: 0 1.5rem;
+  }
+}
+
+.space {
+  flex: 1;
+}
+
+.highlight {
+  background-color: rgba(white, .1);
+}
+
+.searchbar {
+  background: rgba(white, .15);
+  margin: 0 2rem;
+  width: 35%;
+
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+
+  input,
+  button {
+    margin: 0;
+    height: $search-height;
+  }
+
+  input {
+    padding: 0 1em;
+
+    &,
+    &:focus {
+      border: 0 !important;
+    }
+
+    &:focus {
+      background: rgba(white, .15);
+    }
+  }
+
+  button {
+    padding: 0 .5em;
+    background: rgba(white, .3);
+    border: 0;
+
+    i {
+      height: auto;
+      line-height: normal;
+    }
+  }
 }

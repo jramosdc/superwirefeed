@@ -12,8 +12,8 @@ import { User, authService } from '../services/authService';
 	template: require('./app.html'),
 	encapsulation: ViewEncapsulation.None
 })
-export class AppComponent {
 
+export class AppComponent {
 	User: User;
 
 	constructor(private as: authService) {
