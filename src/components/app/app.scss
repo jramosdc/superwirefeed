@@ -1,3 +1,6 @@
+@import '../materialize/colors';
+@import '../materialize/variables';
+
 @import '../../../node_modules/materialize-css/sass/materialize';
 @import '../../../node_modules/materialize-tags/dist/css/materialize-tags';
 @import '../../../node_modules/mdi/scss/materialdesignicons';
@@ -6,7 +9,9 @@
 
 @import '../navbar/navbar';
 
-.content {
+.center-container {
   max-width: 1440px;
   margin: 0 auto;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
 }

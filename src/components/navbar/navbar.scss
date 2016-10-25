@@ -19,17 +19,14 @@
 
 nav {
   background-color: $quaternary-color;
-  height: $navbar-height-mobile;
-  line-height: $navbar-height-mobile;
+  position: relative;
+  z-index: 2;
 }
 
 .nav-wrapper {
   display: flex;
-  max-width: 1440px;
-  margin: 0 auto;
   align-items: center;
   position: relative;
-  padding: 0 1.5rem;
 
   .logo {
     line-height: 1;
@@ -47,7 +44,7 @@ nav {
 
   ul a {
     padding: 0 1.5rem;
-    font-size: .8em;
+    font-size: .9em;
   }
 }
 
@@ -96,6 +93,7 @@ nav {
     i {
       height: auto;
       line-height: normal;
+      font-size: 1.5em;
     }
   }
 }

@@ -8,7 +8,7 @@ import { User, authService } from '../services/authService';
 	host: {
 		class: 'col s12'
 	},
-	styles: [require('./feeds.css')],
+	styles: [require('./feeds.scss')],
 	template: require('./feeds.html')
 })
 

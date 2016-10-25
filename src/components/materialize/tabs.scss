@@ -1,14 +1,42 @@
 /**
  * Tabs replacement
  */
-ul.tabs {
-  background-color: transparent;
-  margin-bottom: 0;
-  height: 56px;
+
+.tabs-wrapper {
+  background-color: $tabs-bg-color;
 }
 
-ul.tabs .tab {
+ul.tabs {
+  margin-bottom: 0;
   height: 56px;
-  line-height: 56px;
+
+  .tab {
+    height: 56px;
+    line-height: 56px;
+
+    a {
+      transition: 0.3s linear background, 0.3s linear color;
+
+      &:hover {
+        color: darken($tabs-text-color, 15%);
+      }
+
+      &.active {
+        color: darken($tabs-text-color, 10%);
+        background: $tab-active-bg-color;
+      }
+    }
+  }
+
+  .indicator {
+    margin: 0 1.5rem;
+    z-index: 1;
+  }
+
+  & + hr {
+    position: relative;
+    margin-top: -2px;
+    margin-bottom: 2rem;
+  }
 }
 

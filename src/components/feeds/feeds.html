@@ -2,15 +2,17 @@
 	<div class="indeterminate"></div>
 </div>
 
-<div class="row">
-  <div class="col s12">
-    <ul class="tabs">
-      <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories"><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
-    </ul>
-  </div>
+<div class="tabs-wrapper">
+  <ul class="tabs center-container">
+    <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories">
+      <a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a>
+    </li>
+  </ul>
+
+  <hr class="line">
 </div>
 
-<div class="grid">
+<div class="grid center-container">
   <div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
     <article class="card" *ngIf="feed.feedName">
 
