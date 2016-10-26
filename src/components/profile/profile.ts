@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
-
+import * as firebase from 'firebase';
 
 @Component({
     selector: 'profile',
@@ -158,38 +158,40 @@ export class ProfileComponent extends Type implements OnInit {
             'backgroundImageURL': this.User.backgroundImageURL,
             'useBackgroundImage': useBG.checked
         };
-        this.as.updateUserProfile(this.userid, profile).then((res) => {
-            let feed = {
-                'feedName': feedName.value,
-                'description': description.value,
-                'private': $(pyes).prop('checked') ? 'true' : 'false',
-                'category': category.value,
-                'authEmail': this.authList,
-                'postCategories': this.postCategoryList,
-                'timestamp': firebase.database['ServerValue'].TIMESTAMP,
-                'useBackgroundImage': useBG.checked,
-                'owner': {
-                    'uid': this.User.uid,
-                    'userid': this.userid,
-                    'profileImageURL': this.User.password.profileImageURL,
-                    'backgroundImageURL': this.User.backgroundImageURL
+        this.as.updateUserProfile(this.userid, profile)
+            .then((res) => {
+                let feed = {
+                    'feedName': feedName.value,
+                    'description': description.value,
+                    'private': $(pyes).prop('checked') ? 'true' : 'false',
+                    'category': category.value,
+                    'authEmail': this.authList,
+                    'postCategories': this.postCategoryList,
+                    'timestamp': firebase.database['ServerValue'].TIMESTAMP,
+                    'useBackgroundImage': useBG.checked,
+                    'owner': {
+                        'uid': this.User.uid,
+                        'userid': this.userid,
+                        'profileImageURL': this.User.password.profileImageURL,
+                        'backgroundImageURL': this.User.backgroundImageURL
+                    }
                 }
-            }
-            this.as.updateFeed(feedId.value.toLowerCase(), feed).then((res) => {
-                this.editMode = false;
-                this.profileLoading = false;
-                $('#errorProfile').html('');
-                this.authList.splice(0);
-                this.postCategoryList.splice(0);
-                console.log('Profile and Feed Updated.');
+                this.as.updateFeed(feedId.value.toLowerCase(), feed)
+                    .then((res) => {
+                        this.editMode = false;
+                        this.profileLoading = false;
+                        $('#errorProfile').html('');
+                        this.authList.splice(0);
+                        this.postCategoryList.splice(0);
+                        console.log('Profile and Feed Updated.');
+                    }).catch((err) => {
+                        console.log('Feed Update Failed!', err);
+                        $('#errorProfile').html(err.toString());
+                    })
             }).catch((err) => {
-                console.log('Feed Update Failed!', err);
+                console.log('Profile Update Failed!', err);
                 $('#errorProfile').html(err.toString());
-            })
-        }).catch((err) => {
-            console.log('Profile Update Failed!', err);
-            $('#errorProfile').html(err.toString());
-        });
+            });
     }
 
     confirmDelete() {
