@@ -7,11 +7,11 @@ import 'bootstrap';
 import 'firebase';
 import 'materialize-css/dist/js/materialize';
 import 'materialize-tags';
-import 'tinymce/tinymce';
 import 'linkifyjs/dist/linkify';
 import 'linkifyjs/dist/linkify-jquery';
 import '../lib/papaparse';
-
+// import 'tinymce/tinymce';
+// import 'tinymce/themes/modern/theme';
 
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

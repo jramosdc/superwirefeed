@@ -91,6 +91,7 @@ module.exports = {
             { from: 'src/assets', to: 'assets' },
             { from: 'node_modules/materialize-css/font', to: 'font' },
             { from: 'node_modules/mdi/fonts', to: 'fonts' }
+            // { from: 'node_modules/tinymce/plugins', to: 'plugins' },       // for tinymce
         ]),
         // generating html
         new HtmlWebpackPlugin({ template: 'src/index.html' }),

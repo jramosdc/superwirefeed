@@ -18,7 +18,7 @@ module.exports = {
       { test: /\.ts$/, loader: 'ts' },
       { test: /\.html$/, loader: 'raw' },
       { test: /\.css$/, loader: 'raw' },
-      { test: /\.scss$/, loaders: ['raw', 'sass'] },
+      { test: /\.scss$/, loaders: ['raw', 'sass'] }
       // // Font Definitions
       // { test: /\.svg$/, loader: 'url?limit=65000&mimetype=image/svg+xml&name=node_modules/materialize-css/fonts/roboto/[name].[ext]' },
       // { test: /\.woff$/, loader: 'url?limit=65000&mimetype=application/font-woff&name=dist/assets/fonts/roboto/[name].[ext]' },
@@ -53,6 +53,7 @@ module.exports = {
       { from: 'src/assets', to: 'assets' },
       { from: 'node_modules/materialize-css/font', to: 'font' },
       { from: 'node_modules/mdi/fonts', to: 'fonts' }
+      // { from: 'node_modules/tinymce/plugins', to: 'plugins' },       // for tinymce
     ]),
     new webpack.DefinePlugin({
       app: {
