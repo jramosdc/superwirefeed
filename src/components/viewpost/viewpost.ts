@@ -1,4 +1,3 @@
-
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";

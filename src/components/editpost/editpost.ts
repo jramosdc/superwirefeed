@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { User, authService } from '../services/authService';
 import { embedlyService, IEmbedly } from '../services/embedlyService';
 import { FirebaseStorageService } from '../services/firebaseStorageService';
+import * as firebase from 'firebase';
 
 declare var Papa: any, tinymce: any;
 
