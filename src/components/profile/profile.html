@@ -32,7 +32,7 @@
 					<i class="grey-text mdi mdi-camera circle col s12" style="font-size: 10em;"></i>
 				</div>
 			</div>
-			<div class="big-icon zindex9000" *ngIf="profile.email && !profile.profileImageURL">
+			<div class="big-icon zindex9000" *ngIf="profile.email && !profile.profileImageURL" (click)="profileModelOpen();">
 				<i class="pink-text mdi mdi-account circle col s12" style="font-size: 10em;"></i>
 			</div>
 		</div>
