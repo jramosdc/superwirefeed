@@ -6,8 +6,12 @@
 
     <div class="space hide-on-med-and-up"></div>
 
-    <a (click)="navigate()" class="logo">
+    <a (click)="navigate()" class="logo hide-on-small-and-down">
       <img src="assets/logo-white.svg" alt="">
+    </a>
+
+    <a (click)="navigate()" class="brand-logo hide-on-med-and-up">
+      {{activePage.title}}
     </a>
 
     <form class="searchbar hide-on-small-and-down">
@@ -18,9 +22,6 @@
     </form>
 
     <!-- <div>
-      <a (click)="navigate()" class="brand-logo center">
-        {{activePage.title}}
-      </a>
       <a (click)="navigate()" *ngIf="activePage.title!=='LATEST FEEDS'" class="hide-on-large-only">
         <i class="mdi mdi-arrow-left"></i>
       </a>
