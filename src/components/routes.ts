@@ -6,6 +6,7 @@ import { NewPostComponent } from './newpost/newpost';
 import { EditPostComponent } from './editpost/editpost';
 import { ViewPostComponent } from './viewpost/viewpost';
 import { ProfileComponent } from './profile/profile';
+import { SubscriptionComponent } from './subscription/subscription';
 
 export const AppRoutes: Routes = [
   { path: "feeds", component: FeedsComponent },
@@ -14,7 +15,8 @@ export const AppRoutes: Routes = [
   { path: "editpost/:postid", component: EditPostComponent },
   { path: "post/:postid", component: ViewPostComponent },
   { path: "profile/:userid", component: ProfileComponent },
+  { path: "subscription", component: SubscriptionComponent },
   { path: "", redirectTo: "feeds", pathMatch: 'full' }
 ];
 
-export const ApplicationComponents = [FeedsComponent, PostsComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent];
+export const ApplicationComponents = [FeedsComponent, PostsComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent, SubscriptionComponent];

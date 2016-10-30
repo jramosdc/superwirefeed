@@ -1,21 +1,21 @@
 <nav>
-  <div class="nav-wrapper center-container">
-    <!-- <a class="back" (click)="navigate()" *ngIf="activePage.title!=='LATEST FEEDS'">
+	<div class="nav-wrapper center-container">
+		<!-- <a class="back" (click)="navigate()" *ngIf="activePage.title!=='LATEST FEEDS'">
       <i class="mdi mdi-arrow-left"></i>
     </a> -->
 
-    <a (click)="navigate()" class="logo">
-      <img src="assets/logo-white.svg" alt="">
-    </a>
+		<a (click)="navigate()" class="logo">
+			<img src="assets/logo-white.svg" alt="">
+		</a>
 
-    <form class="searchbar">
-      <input type="search" placeholder="Search">
-      <button>
+		<form class="searchbar">
+			<input type="search" placeholder="Search">
+			<button>
         <i class="mdi mdi-magnify"></i>
       </button>
-    </form>
+		</form>
 
-    <!-- <div>
+		<!-- <div>
       <a data-activates="mobile-demo" class="button-collapse right">
         <i class="mdi mdi-dots-vertical"></i>
       </a>
@@ -27,206 +27,210 @@
       </a>
     </div> -->
 
-    <div class="space"></div>
+		<div class="space"></div>
 
-    <ul class="hide-on-med-and-down">
-      <li>
-      </li>
-      <li>
-        <a (click)="loginModal()" *ngIf="!User.password.email">
+		<ul class="hide-on-med-and-down">
+			<li>
+			</li>
+			<li *ngIf="User.password.email">
+				<a href="#" [routerLink]="['/subscription']">
+          subscription
+        </a>
+			</li>
+			<li>
+				<a (click)="loginModal()" *ngIf="!User.password.email">
           Login
         </a>
-      </li>
-      <li>
-        <a class="highlight" (click)="registerModal()" *ngIf="!User.password.email">
+			</li>
+			<li>
+				<a class="highlight" (click)="registerModal()" *ngIf="!User.password.email">
           Create feed
         </a>
-      </li>
+			</li>
 
-      <li *ngIf="User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]">
-        <img [src]="User.password.profileImageURL" class="valign profile circle" alt="User Profile Image">
-      </li>
+			<li *ngIf="User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]">
+				<img [src]="User.password.profileImageURL" class="valign profile circle" alt="User Profile Image">
+			</li>
 
-      <li *ngIf="User.password.email && !User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]">
-        <i class="mdi mdi-account valign avatar circle"></i>
-      </li>
+			<li *ngIf="User.password.email && !User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]">
+				<i class="mdi mdi-account valign avatar circle"></i>
+			</li>
 
-      <li [routerLink]="['/profile', User.feed.userid]">
-        {{User.password.email}}
-      </li>
-      <li>
-        <a (click)="logout()" *ngIf="User.password.email">
+			<li [routerLink]="['/profile', User.feed.userid]">
+				{{User.password.email}}
+			</li>
+			<li>
+				<a (click)="logout()" *ngIf="User.password.email">
           Logout
         </a>
-      </li>
-    </ul>
+			</li>
+		</ul>
 
-    <ul class="side-nav" id="mobile-demo">
-      <li>
-        <a (click)="loginModal()" *ngIf="!User.password.email">
+		<ul class="side-nav" id="mobile-demo">
+			<li>
+				<a (click)="loginModal()" *ngIf="!User.password.email">
           Login
         </a>
-      </li>
-      <li>
-        <a (click)="registerModal()" *ngIf="!User.password.email">
+			</li>
+			<li>
+				<a (click)="registerModal()" *ngIf="!User.password.email">
           Create feed
         </a>
-      </li>
-      <li>
-        <a class="valign-wrapper" [routerLink]="['/profile', User.feed.userid]">
-          <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="circle avatar left" alt="User Profile Image">
-          <i *ngIf="User.password.email && !User.password.profileImageURL" class="blue-text mdi mdi-account valign avatar circle left"></i>
-          <span class="blue-text center-align right">{{User.password.email}}</span>
-        </a>
-      </li>
-      <li>
-        <a (click)="logout()" *ngIf="User.password.email">
+			</li>
+			<li>
+				<a class="valign-wrapper" [routerLink]="['/profile', User.feed.userid]">
+					<img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="circle avatar left" alt="User Profile Image">
+					<i *ngIf="User.password.email && !User.password.profileImageURL" class="blue-text mdi mdi-account valign avatar circle left"></i>
+					<span class="blue-text center-align right">{{User.password.email}}</span>
+				</a>
+			</li>
+			<li>
+				<a (click)="logout()" *ngIf="User.password.email">
           Logout
         </a>
-      </li>
-    </ul>
-  </div>
+			</li>
+		</ul>
+	</div>
 </nav>
 
 <div id="loginModal" class="modal account login">
-  <header>
-    <h5 class="title">Login</h5>
-    <div class="logo">
-      <img src="assets/logo.svg" alt="">
-      <span>SuperWire</span>
-    </div>
-  </header>
+	<header>
+		<h5 class="title">Login</h5>
+		<div class="logo">
+			<img src="assets/logo.svg" alt="">
+			<span>SuperWire</span>
+		</div>
+	</header>
 
-  <hr class="line">
+	<hr class="line">
 
-  <form class="modal-content" novalidate #l="ngForm" (submit)="login(l.value)">
-    <div class="row">
-      <div class="input-field">
-        <input type="email" class="validate" #email="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
-        <label for="email">Email</label>
-        <small class="invalid-test" [hidden]="email.valid || (email.pristine && !l._submitted)">
+	<form class="modal-content" novalidate #l="ngForm" (submit)="login(l.value)">
+		<div class="row">
+			<div class="input-field">
+				<input type="email" class="validate" #email="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
+				<label for="email">Email</label>
+				<small class="invalid-test" [hidden]="email.valid || (email.pristine && !l._submitted)">
           Email is required and format should be <i>john@doe.com</i>.
         </small>
-      </div>
-    </div>
+			</div>
+		</div>
 
-    <div class="row">
-      <div class="input-field">
-        <input type="password" class="validate" #password="ngModel" name="password" [ngModel]="p" required minlength="6">
-        <label for="password">Password</label>
-        <small class="invalid-test" [hidden]="password.valid || (password.pristine && !l._submitted)">
+		<div class="row">
+			<div class="input-field">
+				<input type="password" class="validate" #password="ngModel" name="password" [ngModel]="p" required minlength="6">
+				<label for="password">Password</label>
+				<small class="invalid-test" [hidden]="password.valid || (password.pristine && !l._submitted)">
           Password is required (minimum 6 characters).
         </small>
-      </div>
-    </div>
+			</div>
+		</div>
 
-    <button type="submit" class="waves-effect waves-blue btn-large submit" [disabled]="!l.valid">Login</button>
+		<button type="submit" class="waves-effect waves-blue btn-large submit" [disabled]="!l.valid">Login</button>
 
-    <div class="error">
-      <span class="red-text" id="errorLogin"></span>
-    </div>
+		<div class="error">
+			<span class="red-text" id="errorLogin"></span>
+		</div>
 
-    <div class="modal-loading" *ngIf="loginLoading">
-      <div class="preloader-wrapper small active">
-        <div class="spinner-layer spinner-blue-only">
-          <div class="circle-clipper left">
-            <div class="circle"></div>
-          </div>
-          <div class="gap-patch">
-            <div class="circle"></div>
-          </div>
-          <div class="circle-clipper right">
-            <div class="circle"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+		<div class="modal-loading" *ngIf="loginLoading">
+			<div class="preloader-wrapper small active">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+						<div class="circle"></div>
+					</div>
+					<div class="gap-patch">
+						<div class="circle"></div>
+					</div>
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
 
-  <hr class="line">
+	<hr class="line">
 
-  <footer>
-    <h6>Problems with signing in?</h6>
-    <button class="btn" (click)="registerModal()">Sign up</button> or
-    <a>recover password</a>
-  </footer>
+	<footer>
+		<h6>Problems with signing in?</h6>
+		<button class="btn" (click)="registerModal()">Sign up</button> or
+		<a>recover password</a>
+	</footer>
 
-  <hr class="triple line">
+	<hr class="triple line">
 </div>
 
 <div id="registerModal" class="modal account register">
-  <header>
-    <h5 class="title">Signup</h5>
-    <div class="logo">
-      <img src="assets/logo.svg" alt="">
-      <span>SuperWire</span>
-    </div>
-  </header>
+	<header>
+		<h5 class="title">Signup</h5>
+		<div class="logo">
+			<img src="assets/logo.svg" alt="">
+			<span>SuperWire</span>
+		</div>
+	</header>
 
-  <hr class="line">
+	<hr class="line">
 
-  <form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value)">
-    <div class="row">
-      <div class="input-field">
-        <input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" required>
-        <label for="reqUserID">User ID</label>
-        <small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !f._submitted)">
+	<form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value)">
+		<div class="row">
+			<div class="input-field">
+				<input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" required>
+				<label for="reqUserID">User ID</label>
+				<small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !f._submitted)">
           Name is required.
         </small>
-      </div>
-    </div>
+			</div>
+		</div>
 
-    <div class="row">
-      <div class="input-field">
-        <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
-        <label for="regEmail">Email</label>
-        <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
+		<div class="row">
+			<div class="input-field">
+				<input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
+				<label for="regEmail">Email</label>
+				<small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
           Email is required and format should be <i>john@doe.com</i>.
         </small>
-      </div>
-    </div>
+			</div>
+		</div>
 
-    <div class="row">
-      <div class="input-field">
-        <input type="password" class="validate" #regPassword="ngModel" name="password" [ngModel]="p" required
-          minlength="6">
-        <label for="regPassword">Password</label>
-        <small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !f._submitted)">
+		<div class="row">
+			<div class="input-field">
+				<input type="password" class="validate" #regPassword="ngModel" name="password" [ngModel]="p" required minlength="6">
+				<label for="regPassword">Password</label>
+				<small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !f._submitted)">
           Password is required (minimum 6 characters).
         </small>
-      </div>
-    </div>
+			</div>
+		</div>
 
-    <button type="submit" class="waves-effect waves-blue white-text btn-large submit" [disabled]="!f.valid">Create account</button>
+		<button type="submit" class="waves-effect waves-blue white-text btn-large submit" [disabled]="!f.valid">Create account</button>
 
-    <div class="error">
-      <span class="red-text" id="errorLogin"></span>
-    </div>
+		<div class="error">
+			<span class="red-text" id="errorLogin"></span>
+		</div>
 
-    <div class="modal-loading" *ngIf="loginLoading">
-      <div class="preloader-wrapper small active">
-        <div class="spinner-layer spinner-blue-only">
-          <div class="circle-clipper left">
-            <div class="circle"></div>
-          </div>
-          <div class="gap-patch">
-            <div class="circle"></div>
-          </div>
-          <div class="circle-clipper right">
-            <div class="circle"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+		<div class="modal-loading" *ngIf="loginLoading">
+			<div class="preloader-wrapper small active">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+						<div class="circle"></div>
+					</div>
+					<div class="gap-patch">
+						<div class="circle"></div>
+					</div>
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
 
-  <hr class="line">
+	<hr class="line">
 
-  <footer>
-    <h6>Do you already have an account?</h6>
-    <button class="btn" (click)="loginModal()">Login</button> Or
-    <a href="#">recover password</a>
-  </footer>
+	<footer>
+		<h6>Do you already have an account?</h6>
+		<button class="btn" (click)="loginModal()">Login</button> Or
+		<a href="#">recover password</a>
+	</footer>
 
-  <hr class="triple line">
+	<hr class="triple line">
 </div>

@@ -3,6 +3,8 @@ import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularf
 import * as firebase from 'firebase';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
 
 export interface User { uid: string, emailVerified: boolean, password: { email: string, profileImageURL: string }, feed: { id: string, name: string, userid: string }, backgroundImageURL: string }
@@ -33,7 +35,7 @@ export class authService {
 
 	authSubscribe() {
 
-		let res = this.af.auth.getAuth(); 
+		let res = this.af.auth.getAuth();
 		if (res) {
 			this.User.uid = res.uid;
 			this.User.emailVerified = res.auth.emailVerified;
@@ -209,7 +211,7 @@ export class authService {
 
 	logout() {
 		this.af.auth.logout();
-		setTimeout(()=>{
+		setTimeout(() => {
 			this.authSubscribe();
 		}, 200)
 	}
@@ -382,22 +384,37 @@ export class authService {
 	} // toggleFollowSystem
 
 	getFollowers(id) {
-		return this.af.database.list('/user-followers/' + id).map((followers) => {
-			return followers.map((follower) => {
-				follower = this.af.database.object('/users/' + follower['$key']);
-				return follower;
+		return this.af.database.list('/user-followers/' + id)
+			.map((followers) => {
+				return followers.map((follower) => {
+					follower = this.af.database.object('/users/' + follower['$key']);
+					return follower;
+				});
 			});
-		});
 	}
 
 	getFollowing(id) {
-		return this.af.database.list('/user-following/' + id).map((following) => {
-			return following.map((follow) => {
-				follow = this.af.database.object('/users/' + follow['$key']);
-				return follow;
+		return this.af.database.list('/user-following/' + id)
+			.map((following) => {
+				return following.map((follow) => {
+					follow = this.af.database.object('/users/' + follow['$key']);
+					return follow;
+				});
 			});
-		});
+	}
 
+	getFollowingFeedsPosts(userId) {
+		return this.af.database.list('/user-following/' + userId)
+			.map((following) => {
+				return following.map((follow) => {
+					return this.af.database.list('/posts', {
+						query: {
+							orderByChild: 'owner/userid',
+							equalTo: follow['$key']
+						}
+					})
+				})
+			});
 	}
 
 }

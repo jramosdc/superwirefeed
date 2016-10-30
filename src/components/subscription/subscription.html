@@ -1,0 +1,16 @@
+<div class="subscription">
+	<h1>Subscription...</h1>
+	<div class="row" *ngIf="subsObservable">
+		<ul class="collection" *ngFor="let posts of (subsObservable | async)">
+			<li class="collection-item" *ngFor="let post of posts | async | orderBy: ['-timestamp']" [ngStyle]="{'background-color': (post.priority == 'High' ? '#ff4d4d' : (post.priority == 'Medium' ? '#ffa64d' : '#4da6ff')) }">
+				<div (click)="navigate('view', post.$key)">
+					<i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
+					<span class="title">{{post.title}}</span>
+				</div>
+				<div>
+					<small>{{returnMoment(post.timestamp)}}</small>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
