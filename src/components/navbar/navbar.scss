@@ -38,7 +38,7 @@ nav {
   }
 
   .back {
-    margin-left: -3em;
+    // margin-left: -3em;
     margin-right: 1em;
   }
 
@@ -64,6 +64,10 @@ nav {
   display: flex;
   align-items: center;
   border-radius: 3px;
+
+  a {
+    cursor: pointer;
+  }
 
   input,
   button {
@@ -95,5 +99,9 @@ nav {
       line-height: normal;
       font-size: 1.5em;
     }
+  }
+
+  .button-collapse i {
+    font-size: 2.2rem;
   }
 }
