@@ -1,15 +1,27 @@
+<div class="tabs-wrapper">
+  <ul class="tabs center-container">
+    <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories">
+      <a class="" [ngClass]="{active: activeCategory === category}">
+        {{category}}
+      </a>
+    </li>
+  </ul>
+
+  <hr class="line">
+</div>
+
 <div class="progress blue" *ngIf="!posts">
 	<div class="indeterminate"></div>
 </div>
 
-<div class="row">
-	<div class="col s12">
+<div class="grid center-container" *ngIf="posts">
+<!-- 	<div class="col s12">
 		<ul class="tabs">
 			<li class="tab col s2" *ngFor="let category of categories" (click)="activeCategory = category"><a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a></li>
 		</ul>
-	</div>
+	</div> -->
 	<div class="col s12">
-		<div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="User.password.email && FeedID == User.feed.id">
+<!-- 		<div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="User.password.email && FeedID == User.feed.id">
 			<a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="navigate('new')"><i class="large mdi mdi-plus"></i></a>
 		</div>
 		<div class="card-panel hoverable padding10px layout-row layout-align-space-between-center">
@@ -25,26 +37,24 @@
 			<div class="col s11 input-field nomargin">
 				<input type="text" [(ngModel)]="search" class="validate nomargin" placeholder="Search">
 			</div>
-		</div>
-		<div class="row">
-			<ul class="collection" *ngIf="posts">
-				<li class="collection-item" *ngFor="let post of posts | async | orderBy: ['-timestamp'] | searchPostTitle: search | searchCategory: activeCategory"
-					[ngStyle]="{'background-color': (post.priority == 'High' ? '#ff4d4d' : (post.priority == 'Medium' ? '#ffa64d' : '#4da6ff')) }">
-					<a class="btn secondary-content nobackground nopadding" (click)="navigate('edit', post.$key)" *ngIf="User.password.email && FeedID == User.feed.id">
-						<i class="black-text large mdi mdi-pencil"></i>
-					</a>
-					<a class="btn secondary-content nobackground nopadding" (click)="deleteModel(post.$key)" *ngIf="User.password.email && FeedID == User.feed.id"
-						style="margin-right: 20px;">
-						<i class="black-text large mdi mdi-delete"></i>
-					</a>
-					<div (click)="navigate('view', post.$key)">
-						<i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
-						<span class="title">{{post.title}}</span>
-					</div>
-					<div><small>{{returnMoment(post.timestamp)}}</small></div>
-				</li>
-			</ul>
-		</div>
+		</div> -->
+		<ul class="collection">
+			<li class="collection-item" *ngFor="let post of posts | async | orderBy: ['-timestamp'] | searchPostTitle: search | searchCategory: activeCategory"
+				[ngStyle]="{'background-color': (post.priority == 'High' ? '#ff4d4d' : (post.priority == 'Medium' ? '#ffa64d' : '#4da6ff')) }">
+				<a class="btn secondary-content nobackground nopadding" (click)="navigate('edit', post.$key)" *ngIf="User.password.email && FeedID == User.feed.id">
+					<i class="black-text large mdi mdi-pencil"></i>
+				</a>
+				<a class="btn secondary-content nobackground nopadding" (click)="deleteModel(post.$key)" *ngIf="User.password.email && FeedID == User.feed.id"
+					style="margin-right: 20px;">
+					<i class="black-text large mdi mdi-delete"></i>
+				</a>
+				<div (click)="navigate('view', post.$key)">
+					<i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
+					<span class="title">{{post.title}}</span>
+				</div>
+				<div><small>{{returnMoment(post.timestamp)}}</small></div>
+			</li>
+		</ul>
 	</div>
 </div>
 

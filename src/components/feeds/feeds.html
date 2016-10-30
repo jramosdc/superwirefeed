@@ -1,15 +1,17 @@
-<div class="progress" *ngIf="feeds.length == 0">
-	<div class="indeterminate"></div>
-</div>
-
 <div class="tabs-wrapper">
   <ul class="tabs center-container">
     <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories">
-      <a class="" [ngClass]="{active: activeCategory === category}"> {{category}} </a>
+      <a class="" [ngClass]="{active: activeCategory === category}">
+        {{category}}
+      </a>
     </li>
   </ul>
 
   <hr class="line">
+</div>
+
+<div class="progress" *ngIf="feeds.length == 0">
+	<div class="indeterminate"></div>
 </div>
 
 <div class="grid center-container">
