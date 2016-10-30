@@ -51,17 +51,14 @@
         </a>
       </li>
 
-      <li *ngIf="User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]">
-        <img [src]="User.password.profileImageURL" class="valign profile circle" alt="User Profile Image">
+      <li>
+        <a [routerLink]="['/profile', User.feed.userid]">
+          <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="valign profile circle" alt="User Profile Image">
+          <i *ngIf="User.password.email && !User.password.profileImageURL" class="mdi mdi-account valign avatar circle"></i>
+          {{User.password.email}}
+        </a>
       </li>
 
-      <li *ngIf="User.password.email && !User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]">
-        <i class="mdi mdi-account valign avatar circle"></i>
-      </li>
-
-      <li [routerLink]="['/profile', User.feed.userid]">
-        {{User.password.email}}
-      </li>
       <li>
         <a (click)="logout()" *ngIf="User.password.email">
           Logout
