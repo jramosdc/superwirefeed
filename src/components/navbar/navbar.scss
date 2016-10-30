@@ -41,6 +41,13 @@ nav {
     }
   }
 
+  .profile.circle {
+    display: inline-block;
+    vertical-align: middle;
+    height: 2rem;
+    margin-right: 0 .5rem;
+  }
+
   .brand-logo {
     font-size: 1.4rem;
   }
@@ -82,6 +89,10 @@ nav {
   button {
     margin: 0;
     height: $search-height;
+
+    @media only screen and (max-width: 992px) {
+      height: $search-height-small;
+    }
   }
 
   input {
