@@ -20,7 +20,7 @@
 nav {
   background-color: $quaternary-color;
   position: relative;
-  z-index: 2;
+  z-index: 998;
 }
 
 .nav-wrapper {
@@ -45,6 +45,11 @@ nav {
   ul a {
     padding: 0 1.5rem;
     font-size: .95em;
+    cursor: pointer;
+  }
+
+  .button-collapse i {
+    font-size: 2.2rem;
   }
 }
 
@@ -64,10 +69,6 @@ nav {
   display: flex;
   align-items: center;
   border-radius: 3px;
-
-  a {
-    cursor: pointer;
-  }
 
   input,
   button {
@@ -100,8 +101,11 @@ nav {
       font-size: 1.5em;
     }
   }
+}
 
-  .button-collapse i {
-    font-size: 2.2rem;
+.side-nav {
+  .searchbar {
+    width: 100%;
+    background: rgba(black, .15);
   }
 }
