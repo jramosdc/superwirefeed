@@ -155,7 +155,7 @@ export class ProfileComponent extends Type implements OnInit {
             'authEmail': this.authList,
             'postCategories': this.postCategoryList,
             'profileImageURL': this.User.password.profileImageURL,
-            'backgroundImageURL': this.User.backgroundImageURL,
+            'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg',
             'useBackgroundImage': useBG.checked
         };
         this.as.updateUserProfile(this.userid, profile)
@@ -173,7 +173,7 @@ export class ProfileComponent extends Type implements OnInit {
                         'uid': this.User.uid,
                         'userid': this.userid,
                         'profileImageURL': this.User.password.profileImageURL,
-                        'backgroundImageURL': this.User.backgroundImageURL
+                        'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg'
                     }
                 }
                 this.as.updateFeed(feedId.value.toLowerCase(), feed)
