@@ -15,7 +15,7 @@ export const AppRoutes: Routes = [
   { path: "editpost/:postid", component: EditPostComponent },
   { path: "post/:postid", component: ViewPostComponent },
   { path: "profile/:userid", component: ProfileComponent },
-  { path: "subscription", component: SubscriptionComponent },
+  { path: "subscription/:userid", component: SubscriptionComponent },
   { path: "", redirectTo: "feeds", pathMatch: 'full' }
 ];
 

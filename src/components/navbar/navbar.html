@@ -33,19 +33,13 @@
 			<li>
 			</li>
 			<li *ngIf="User.password.email">
-				<a href="#" [routerLink]="['/subscription']">
-          subscription
-        </a>
+				<a href="#" [routerLink]="['/subscription', User.feed.id]">subscription</a>
 			</li>
 			<li>
-				<a (click)="loginModal()" *ngIf="!User.password.email">
-          Login
-        </a>
+				<a (click)="loginModal()" *ngIf="!User.password.email">Login</a>
 			</li>
 			<li>
-				<a class="highlight" (click)="registerModal()" *ngIf="!User.password.email">
-          Create feed
-        </a>
+				<a class="highlight" (click)="registerModal()" *ngIf="!User.password.email">Create feed</a>
 			</li>
 
 			<li *ngIf="User.password.profileImageURL" [routerLink]="['/profile', User.feed.userid]">
