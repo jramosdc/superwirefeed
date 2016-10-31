@@ -330,19 +330,22 @@ export class authService {
 			}).map(posts => {
 				return posts.map(post => {
 					this.deletePost(post.$key).catch(reject);
-				})
+				});
 			}).subscribe(res => {
 				this.af.database.object('/feeds/' + feedid).remove().then(res => {
 					this.af.database.object('/users/' + userid).remove().then(res => {
-
-						this.af.auth.subscribe(authState => {
-							authState.auth.delete().then(() => {
-								console.log('deleted!')
-								// this.af.auth.logout();
-								resolve();
-							}).catch(e => console.error(e));
+						// this.af.auth.subscribe(authState => {
+						firebase.auth().currentUser.delete().then(function () {
+							resolve();
+						}).catch(error => {
+							console.log("error in deleting user", error)
+							reject(error);
 						});
-
+						// authState.auth.delete().then(() => {
+						// console.log('deleted!')
+						// this.af.auth.logout();
+						// }).catch(e => console.error(e));
+						// });
 						// return this.af.auth.remove(this.af.auth);
 					}).catch(reject);
 				}).catch(reject);
