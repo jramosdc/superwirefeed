@@ -1,3 +1,4 @@
+import { FirebaseListObservable } from 'angularfire2/es6/database';
 import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
@@ -27,6 +28,7 @@ export class ProfileComponent extends Type implements OnInit {
     postCategoryNew: Array<string> = [];
     following: any[] = [];
     followers: any[] = [];
+    posts: FirebaseListObservable<any[]>;
 
     // Cropper variables 
     profileImgData: any = {};
@@ -55,6 +57,8 @@ export class ProfileComponent extends Type implements OnInit {
                 this.as.getFollowing(this.userid).subscribe((following) => this.following = following);
                 this.as.getUserProfile(this.userid).subscribe((profile) => {
                     this.profile = profile;
+                    this.posts = this.as.loadPosts(this.profile['feedId']);     // geting posts for item published
+                    console.log('this.profile: ', this.profile);
                     if (profile['backgroundImageURL']) {
                         setTimeout(() => {
                             $('#bgImage').attr("style", 'width: 100%; height: 200px; background: url("' + profile['backgroundImageURL'] + '") center center no-repeat; background-size: cover;');
