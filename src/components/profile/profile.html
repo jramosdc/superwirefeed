@@ -62,6 +62,9 @@
 			<div *ngIf="profile && profile.feedId">
 				<a [routerLink]="['/posts', profile.feedId]">FOLLOWERS FEED</a>
 			</div>
+			<div *ngIf="profile && profile.feedId">
+				<a [routerLink]="['/subscription', profile.feedId]">SUBSCRIPTION</a>
+			</div>
 		</div>
 		<div class="container bio" *ngIf="profile && profile.bio">
 			<div class="title">

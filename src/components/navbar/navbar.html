@@ -32,9 +32,9 @@
 		<ul class="hide-on-med-and-down">
 			<li>
 			</li>
-			<li *ngIf="User.password.email">
+			<!--<li *ngIf="User.password.email">
 				<a href="#" [routerLink]="['/subscription', User.feed.id]">subscription</a>
-			</li>
+			</li>-->
 			<li>
 				<a (click)="loginModal()" *ngIf="!User.password.email">Login</a>
 			</li>
