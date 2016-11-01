@@ -342,13 +342,13 @@ export class ProfileComponent extends Type implements OnInit {
     followingSys() {
         let me = this.User.feed.userid;
         let userFollowingObj = {}
-        userFollowingObj[this.userid] = this.userid;
+        userFollowingObj[this.userid] = this.profile['feedId'];
         // userFollowing[this.User.feed.userid] = { }
         // userFollowing[this.User.feed.userid][this.userid] = this.userid;
 
         let followerId = this.userid;
         let userFollowerObj = {}
-        userFollowerObj[this.User.feed.userid] = this.User.feed.userid;
+        userFollowerObj[this.User.feed.userid] = this.User.feed.id;
         // userFollower[this.userid] = { }
         // userFollower[this.userid][this.User.feed.userid] = this.User.feed.userid
 

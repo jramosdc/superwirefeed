@@ -357,8 +357,8 @@ export class authService {
 
 		let setFollowingSys = () => {
 			let multipath = {}
-			multipath['/user-following/' + myid + '/' + followerId] = followerId;
-			multipath['/user-followers/' + followerId + '/' + myid] = myid;
+			multipath['/user-following/' + myid + '/' + followerId] = followersObj[followerId];
+			multipath['/user-followers/' + followerId + '/' + myid] = followingObj[myid];
 			this.mainRef.update(multipath).then(() => {
 				console.log('update multipath');
 			}).catch(err => {
@@ -406,18 +406,33 @@ export class authService {
 			});
 	}
 
-	getFollowingFeedsPosts(userId) {
-		return this.af.database.list('/user-following/' + userId)
-			.map((following) => {
-				return following.map((follow) => {
-					return this.af.database.list('/posts', {
-						query: {
-							orderByChild: 'owner/userid',
-							equalTo: follow['$key']
-						}
-					})
-				})
-			});
+	getFollowingFeedsPosts(postId) {
+		return this.af.database.object('/feeds/' + postId)
+			.switchMap(feed => {
+				console.log('feed: ', feed)
+				return this.af.database.list('/user-following/' + feed['owner']['userid'])
+					.map((following) => {
+						return following.map((follow) => {
+							return this.af.database.list('/posts', {
+								query: {
+									orderByChild: 'owner/userid',
+									equalTo: follow['$key']
+								}
+							})
+						})
+					});
+			})
+		// return this.af.database.list('/user-following/' + userId)
+		// 	.map((following) => {
+		// 		return following.map((follow) => {
+		// 			return this.af.database.list('/posts', {
+		// 				query: {
+		// 					orderByChild: 'owner/userid',
+		// 					equalTo: follow['$key']
+		// 				}
+		// 			})
+		// 		})
+		// 	});
 	}
 
 }
