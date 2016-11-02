@@ -2,11 +2,11 @@
 	.jumbo:hover {
 		opacity: 0.5;
 	}
-	
+
 	.backgroundContainer:hover .camOnHover {
 		display: block;
 	}
-	
+
 	.camOnHover {
 		position: absolute;
 		display: none;
@@ -298,7 +298,7 @@
 			<input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
 			<div *ngIf="!profile?.backgroundImageURL">
 				<div [hidden]="!imageSelected">
-					<img src="http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg"
+					<img src="https://unsplash.it/300/200/?random"
 						alt="default background image" (click)="fileInput2.click(); imageSelected=false;" style="width: 300px; height: auto;"
 					/>
 				</div>
