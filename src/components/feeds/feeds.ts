@@ -5,10 +5,6 @@ import { User, authService } from '../services/authService';
 
 @Component({
 	selector: 'feeds',
-	// host: {
-	// 	class: 'col s12'
-	// },
-	styles: [require('./feeds.scss')],
 	template: require('./feeds.html')
 })
 

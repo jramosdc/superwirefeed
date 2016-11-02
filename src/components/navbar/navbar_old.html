@@ -21,11 +21,50 @@
       </button>
     </form>
 
+    <!-- <div>
+      <a (click)="navigate()" *ngIf="activePage.title!=='LATEST FEEDS'" class="hide-on-large-only">
+        <i class="mdi mdi-arrow-left"></i>
+      </a>
+    </div> -->
+
     <div class="space"></div>
 
     <a data-activates="slide-out" class="button-collapse right">
       <i class="mdi mdi-dots-vertical"></i>
     </a>
+
+    <!-- <ul class="hide-on-med-and-down">
+      <li *ngIf="User.password.email">
+        <a href="#" [routerLink]="['/subscription']">
+          subscription
+        </a>
+      </li>
+      <li>
+        <a (click)="loginModal()" *ngIf="!User.password.email">
+          Login
+        </a>
+      </li>
+
+      <li>
+        <a class="highlight" (click)="registerModal()" *ngIf="!User.password.email">
+          Create feed
+        </a>
+      </li>
+
+      <li>
+        <a class="userinfo" [routerLink]="['/profile', User.feed.userid]">
+          <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="valign profile circle" alt="User Profile Image">
+          <i *ngIf="User.password.email && !User.password.profileImageURL" class="mdi mdi-account valign avatar circle"></i>
+          {{User.feed.userid || User.password.email}}
+        </a>
+      </li>
+
+      <li>
+        <a (click)="logout()" *ngIf="User.password.email">
+          Logout
+        </a>
+      </li>
+    </ul> -->
 
   </div>
 </nav>

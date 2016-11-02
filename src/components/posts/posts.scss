@@ -1,0 +1,10 @@
+.newspaper.grid {
+  column-rule: 1px solid $mid-gray;
+  column-gap: 4rem;
+
+  & > div {
+    img {
+      max-width: 44%;
+    }
+  }
+}

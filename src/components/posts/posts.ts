@@ -9,7 +9,6 @@ import { User, authService } from '../services/authService';
 	host: {
 		class: 'col s12'
 	},
-	styles: [require('./posts.css')],
 	template: require('./posts.html')
 })
 export class PostsComponent implements OnInit {

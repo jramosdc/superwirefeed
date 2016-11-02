@@ -5,10 +5,6 @@ import { User, authService } from '../services/authService';
 @Component({
   selector: 'navbar',
   host: {},
-  styles: [
-    // require('../materialize/index.scss'),
-    // require('./navbar.scss')
-  ],
   template: require('./navbar.html')
 })
 

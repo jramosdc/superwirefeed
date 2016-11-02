@@ -14,27 +14,24 @@
 	<div class="indeterminate"></div>
 </div>
 
-<div class="newspaper grid center-container" *ngIf="posts">
-	<div *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
-      searchPostTitle: search | searchCategory: activeCategory"
-		  [ngClass]="{'high': post.priority === 'High'}">
-
-		<a class="btn secondary-content nobackground nopadding" (click)="navigate('edit', post.$key)" *ngIf="User.password.email && FeedID == User.feed.id">
-			<i class="black-text large mdi mdi-pencil"></i>
-		</a>
-
-		<a class="btn secondary-content nobackground nopadding" (click)="deleteModel(post.$key)" *ngIf="User.password.email && FeedID == User.feed.id"
-			style="margin-right: 20px;">
-			<i class="black-text large mdi mdi-delete"></i>
-		</a>
-
-		<div (click)="navigate('view', post.$key)">
-			<i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
-			<span class="title">{{post.title}}</span>
-		</div>
-
-		<div><small>{{returnMoment(post.timestamp)}}</small></div>
-	</div>
+<div class="grid center-container" *ngIf="posts">
+	<ul class="collection">
+		<li class="collection-item" *ngFor="let post of posts | async | orderBy: ['-timestamp'] | searchPostTitle: search | searchCategory: activeCategory"
+			[ngStyle]="{'background-color': (post.priority == 'High' ? '#ff4d4d' : (post.priority == 'Medium' ? '#ffa64d' : '#4da6ff')) }">
+			<a class="btn secondary-content nobackground nopadding" (click)="navigate('edit', post.$key)" *ngIf="User.password.email && FeedID == User.feed.id">
+				<i class="black-text large mdi mdi-pencil"></i>
+			</a>
+			<a class="btn secondary-content nobackground nopadding" (click)="deleteModel(post.$key)" *ngIf="User.password.email && FeedID == User.feed.id"
+				style="margin-right: 20px;">
+				<i class="black-text large mdi mdi-delete"></i>
+			</a>
+			<div (click)="navigate('view', post.$key)">
+				<i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
+				<span class="title">{{post.title}}</span>
+			</div>
+			<div><small>{{returnMoment(post.timestamp)}}</small></div>
+		</li>
+	</ul>
 </div>
 
 <div id="deleteModel" class="modal">

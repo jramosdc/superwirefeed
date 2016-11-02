@@ -6,9 +6,7 @@ import { User, authService } from '../services/authService';
 @Component({
 	selector: 'ng2-app',
 	host: {},
-	styles: [
-		require('./app.scss')
-	],
+	styles: [ require('./app.scss') ],
 	template: require('./app.html'),
 	encapsulation: ViewEncapsulation.None
 })
