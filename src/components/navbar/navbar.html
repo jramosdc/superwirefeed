@@ -33,7 +33,7 @@
       <i class="mdi mdi-dots-vertical"></i>
     </a>
 
-    <ul class="hide-on-med-and-down">
+    <!-- <ul class="hide-on-med-and-down">
       <li *ngIf="User.password.email">
         <a href="#" [routerLink]="['/subscription']">
           subscription
@@ -64,46 +64,43 @@
           Logout
         </a>
       </li>
-    </ul>
+    </ul> -->
 
-    <aside class="side-nav" id="mobile-demo">
-      <form class="searchbar hide-on-small-and-down">
-        <input type="search" placeholder="Search">
-        <button>
-          <i class="mdi mdi-magnify"></i>
-        </button>
-      </form>
-
-      <ul>
-        <li>
-        </li>
-
-        <li>
-          <a (click)="loginModal()" *ngIf="!User.password.email">
-            Login
-          </a>
-        </li>
-        <li>
-          <a (click)="registerModal()" *ngIf="!User.password.email">
-            Create feed
-          </a>
-        </li>
-        <li>
-          <a class="valign-wrapper" [routerLink]="['/profile', User.feed.userid]">
-            <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="circle avatar left" alt="User Profile Image">
-            <i *ngIf="User.password.email && !User.password.profileImageURL" class="blue-text mdi mdi-account valign avatar circle left"></i>
-            <span class="blue-text center-align right">{{User.password.email}}</span>
-          </a>
-        </li>
-        <li>
-          <a (click)="logout()" *ngIf="User.password.email">
-            Logout
-          </a>
-        </li>
-      </ul>
-    </aside>
   </div>
 </nav>
+
+<aside class="side-nav" id="mobile-demo">
+  <form class="searchbar hide-on-med-and-up">
+    <input type="search" placeholder="Search">
+    <button>
+      <i class="mdi mdi-magnify"></i>
+    </button>
+  </form>
+
+  <ul>
+    <!-- if not logged in -->
+    <li *ngIf="!User.password.email" (click)="loginModal()">
+      <a *ngIf="!User.password.email">Login</a>
+    </li>
+    <li *ngIf="!User.password.email" (click)="registerModal()">
+      <a *ngIf="!User.password.email">Create feed</a>
+    </li>
+
+    <!-- if logged in -->
+    <li *ngIf="User.password.email">
+      <a [routerLink]="['/profile', User.feed.userid]">
+        <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="circle avatar left" alt="User Profile Image">
+        <i *ngIf="User.password.email && !User.password.profileImageURL" class="blue-text mdi mdi-account valign avatar circle left"></i>
+        <span class="blue-text center-align right">{{User.password.email}}</span>
+      </a>
+    </li>
+    <li *ngIf="User.password.email">
+      <a (click)="logout()">
+        Logout
+      </a>
+    </li>
+  </ul>
+</aside>
 
 <div id="loginModal" class="modal account login">
   <header>

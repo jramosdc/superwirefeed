@@ -20,7 +20,8 @@
 
       <figure class="card-image" [routerLink]="['/posts', feed.$key]">
         <img class="responsive-img" *ngIf="feed.useBackgroundImage && feed.owner.backgroundImageURL" [src]="feed.owner.backgroundImageURL" alt="Background Image">
-        <img class="responsive-img" *ngIf="!feed.useBackgroundImage" [src]="'https://unsplash.it/300/200/?random='+feed.$key" alt="Background Image">
+        <!-- temporary placeholder image -->
+        <img class="responsive-img" *ngIf="!feed.useBackgroundImage" [src]="'http://unsplash.it/300/'+feed.$key.length*20+'/?random='+feed.$key" alt="Background Image">
         <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
 
         <time>{{returnMoment(feed.timestamp)}}</time>

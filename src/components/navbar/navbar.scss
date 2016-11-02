@@ -41,13 +41,6 @@ nav {
     }
   }
 
-  .profile.circle {
-    display: inline-block;
-    vertical-align: middle;
-    height: 2rem;
-    margin-right: .4rem;
-  }
-
   .brand-logo {
     font-size: 1.4rem;
   }
@@ -67,9 +60,21 @@ nav {
     cursor: pointer;
   }
 
-  .button-collapse i {
-    font-size: 2.2rem;
+  .button-collapse {
+    cursor: pointer;
+    display: inline-block !important; // show it on large screens
+
+    i {
+      font-size: 2.2rem;
+    }
   }
+}
+
+.avatar.circle {
+  display: inline-block;
+  vertical-align: middle;
+  height: 2rem;
+  margin-right: .4rem;
 }
 
 .space {
