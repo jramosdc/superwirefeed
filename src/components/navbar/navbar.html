@@ -29,7 +29,7 @@
 
     <div class="space"></div>
 
-    <a data-activates="mobile-demo" class="button-collapse right">
+    <a data-activates="slide-out" class="button-collapse right">
       <i class="mdi mdi-dots-vertical"></i>
     </a>
 
@@ -69,7 +69,7 @@
   </div>
 </nav>
 
-<aside class="side-nav" id="mobile-demo">
+<aside class="side-nav" id="slide-out">
   <form class="searchbar hide-on-med-and-up">
     <input type="search" placeholder="Search">
     <button>
@@ -77,27 +77,40 @@
     </button>
   </form>
 
-  <ul>
-    <!-- if not logged in -->
-    <li *ngIf="!User.password.email" (click)="loginModal()">
-      <a *ngIf="!User.password.email">Login</a>
+  <!-- if not logged in -->
+  <ul *ngIf="!User.password.email">
+    <li>
+      <a (click)="loginModal()">Login</a>
     </li>
-    <li *ngIf="!User.password.email" (click)="registerModal()">
-      <a *ngIf="!User.password.email">Create feed</a>
+    <li>
+      <a (click)="registerModal()">Create feed</a>
+    </li>
+  </ul>
+
+  <!-- if logged in -->
+  <ul *ngIf="User.password.email">
+    <li class="userView">
+      <div class="background">
+        <!-- temporary placeholder image -->
+        <img src="http://materializecss.com/images/office.jpg">
+      </div>
+      <a [routerLink]="['/profile', User.feed.userid]">
+        <img *ngIf="User.password.profileImageURL"
+            [src]="User.password.profileImageURL"
+            alt="User Profile Image" class="circle">
+        <i *ngIf="User.password.email && !User.password.profileImageURL"
+            class="mdi mdi-account avatar circle"></i>
+      </a>
+      <a [routerLink]="['/profile', User.feed.userid]">
+        <span class="white-text name">{{User.feed.userid}}</span>
+      </a>
+      <a href="#!email">
+        <span class="white-text email">{{User.password.email}}</span>
+      </a>
     </li>
 
-    <!-- if logged in -->
-    <li *ngIf="User.password.email">
-      <a [routerLink]="['/profile', User.feed.userid]">
-        <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" class="circle avatar left" alt="User Profile Image">
-        <i *ngIf="User.password.email && !User.password.profileImageURL" class="blue-text mdi mdi-account valign avatar circle left"></i>
-        <span class="blue-text center-align right">{{User.password.email}}</span>
-      </a>
-    </li>
-    <li *ngIf="User.password.email">
-      <a (click)="logout()">
-        Logout
-      </a>
+    <li>
+      <a (click)="logout()">Logout</a>
     </li>
   </ul>
 </aside>
