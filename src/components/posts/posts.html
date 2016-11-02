@@ -19,12 +19,13 @@
       searchPostTitle: search | searchCategory: activeCategory"
 		  [ngClass]="{'high': post.priority === 'High'}">
 
-		<a class="btn secondary-content nobackground nopadding" (click)="navigate('edit', post.$key)" *ngIf="User.password.email && FeedID == User.feed.id">
+		<a (click)="navigate('edit', post.$key)"
+        *ngIf="User.password.email && FeedID == User.feed.id">
 			<i class="black-text large mdi mdi-pencil"></i>
 		</a>
 
-		<a class="btn secondary-content nobackground nopadding" (click)="deleteModel(post.$key)" *ngIf="User.password.email && FeedID == User.feed.id"
-			style="margin-right: 20px;">
+		<a (click)="deleteModel(post.$key)"
+        *ngIf="User.password.email && FeedID == User.feed.id">
 			<i class="black-text large mdi mdi-delete"></i>
 		</a>
 
@@ -33,7 +34,7 @@
 			<span class="title">{{post.title}}</span>
 		</div>
 
-		<div><small>{{returnMoment(post.timestamp)}}</small></div>
+		<div><small>{{ returnMoment(post.timestamp) }}</small></div>
 	</div>
 </div>
 
