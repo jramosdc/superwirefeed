@@ -47,7 +47,7 @@
 			</div>
 			<div class="col s12 m4 l4">
 				<h6>ITEMS PUBLISHED</h6>
-				<p>555</p>
+				<p>{{ (posts | async)?.length }}</p>
 			</div>
 			<hr />
 		</div>
@@ -61,6 +61,9 @@
 			</div>
 			<div *ngIf="profile && profile.feedId">
 				<a [routerLink]="['/posts', profile.feedId]">FOLLOWERS FEED</a>
+			</div>
+			<div *ngIf="profile && profile.feedId">
+				<a [routerLink]="['/subscription', profile.feedId]">SUBSCRIPTION</a>
 			</div>
 		</div>
 		<div class="container bio" *ngIf="profile && profile.bio">
@@ -88,7 +91,9 @@
 <div class="row" *ngIf="editMode">
 	<form class="col s12 card padding10px">
 		<div class="row valign-wrapper">
-			<img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
+			<!--<img *ngIf="!profile.profileImageURL" src="" alt="User Profile Image" class="circle col s1">-->
+			<i *ngIf="!profile.profileImageURL" class="pink-text mdi mdi-account circle col s12" style="font-size: 10em; width: 10px;"></i>
+			<img *ngIf="profile.profileImageURL" [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
 			<h5 class="col s5 valign">{{profile.displayName || profile.email}}</h5>
 			<span class="col s4 valign">
         <input type="checkbox" id="useBG" #useBG/>
@@ -98,7 +103,7 @@
 		<div class="divider"></div>
 		<div class="row">
 			<div class="input-field col s12">
-				<textarea id="bio" #bio class="materialize-textarea"></textarea>
+				<textarea id="bio" #bio class="materialize-textarea validate"></textarea>
 				<label for="bio">Bio</label>
 			</div>
 		</div>
@@ -129,15 +134,15 @@
 		</div>
 		<div class="row">
 			<div class="input-field col s12">
-				<select id="category" #category>
-          <option disabled selected>Select Category</option>
-          <option value="Marketing">Marketing</option>
-          <option value="News">News</option>
-          <option value="Visuals">Visuals</option>
-          <option value="Data">Data</option>
-          <option value="Misc">Misc</option>
-        </select>
-				<label for="category">Category</label>
+				<select id="category" #category class="validate">
+					<option disabled selected>Select Category</option>
+					<option value="Marketing">Marketing</option>
+					<option value="News">News</option>
+					<option value="Visuals">Visuals</option>
+					<option value="Data">Data</option>
+					<option value="Misc">Misc</option>
+				</select>
+				<label for="category">Category dasdsad</label>
 			</div>
 		</div>
 		<div class="row">

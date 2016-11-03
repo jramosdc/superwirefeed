@@ -12,25 +12,22 @@ import { User, authService } from '../services/authService';
 })
 export class SubscriptionComponent {
     // userid
-    User: User;
+    // User: User;
+    FeedId: string;
     subsObservable;
 
-    constructor(/*private route: ActivatedRoute,*/ private router: Router, private as: authService, ) {
-        // this.route.params.subscribe(params => {
-        //     this.userid = params['userid'];
-        // });
-        this.User = this.as.emptyUser();
-        this.User = this.as.getUser();
-
-        if (this.User.feed.userid) {
-            this.subsObservable = this.as.getFollowingFeedsPosts(this.User.feed.userid);
-        }
+    constructor(private route: ActivatedRoute, private router: Router, private as: authService, ) {
+        // this.User = this.as.emptyUser();
+        // this.User = this.as.getUser();
+        this.route.params.subscribe(params => {
+            this.FeedId = params['postid'];
+            this.subsObservable = this.as.getFollowingFeedsPosts(this.FeedId);
+        });
     }
 
-    navigate(type: string, id: string) {
-        if (type === 'view') {
+    navigate(id: string) {
+        if (id) {
             this.router.navigate(['post', id]);
-            // this.as.setActiveFeedID(this.FeedID);
         }
     }
 

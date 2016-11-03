@@ -7,7 +7,7 @@
     </li>
   </ul>
 
-  <hr class="line">
+	<hr class="line">
 </div>
 
 <div class="progress" *ngIf="feeds.length == 0">
@@ -15,8 +15,8 @@
 </div>
 
 <div class="grid center-container">
-  <div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
-    <article class="card" *ngIf="feed.feedName">
+	<div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
+		<article class="card" *ngIf="feed.feedName">
 
       <figure class="card-image" [routerLink]="['/posts', feed.$key]">
         <img class="responsive-img" *ngIf="feed.useBackgroundImage && feed.owner.backgroundImageURL" [src]="feed.owner.backgroundImageURL" alt="Background Image">
@@ -24,51 +24,32 @@
         <img class="responsive-img" *ngIf="!feed.useBackgroundImage" [src]="'http://unsplash.it/300/'+feed.$key.length*20+'/?random='+feed.$key" alt="Background Image">
         <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
 
-        <time>{{returnMoment(feed.timestamp)}}</time>
+				<time>{{returnMoment(feed.timestamp)}}</time>
 
-        <figcaption>
-          <h5>{{feed.feedName}}</h5>
-          <div>
-            <span>
+				<figcaption>
+					<h5>{{feed.feedName}}</h5>
+					<div>
+						<span>
               <i class="mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
               {{(feed.posts | async)?.length}} Posts
               • {{feed.description}}</span>
-          </div>
-        </figcaption>
-      </figure>
+					</div>
+				</figcaption>
+			</figure>
 
-      <div class="card-stacked">
-        <div class="avatar card-content" [routerLink]="['/profile/', feed.owner.userid]">
-          <img class="activator" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
-          <img class="activator" *ngIf="feed.owner.profileImageURL" [src]="feed.owner.profileImageURL">
-          <h6>@{{feed.owner.userid}} {{feed.useBackgroundImage}}</h6>
-        </div>
+			<div class="card-stacked">
+				<div class="avatar card-content" [routerLink]="['/profile/', feed.owner.userid]">
+					<img class="activator" *ngIf="!feed.owner.profileImageURL" src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+					<img class="activator" *ngIf="feed.owner.profileImageURL" [src]="feed.owner.profileImageURL">
+					<h6>@{{feed.owner.userid}}</h6>
+				</div>
 
-        <div class="thumb card-content">
-          <i class="mdi mdi-thumb-up"></i>
-          <span>{{feed.likes || 0}}</span>
-        </div>
-      </div>
+				<div class="thumb card-content">
+					<i class="mdi mdi-thumb-up"></i>
+					<span>{{feed.likes || 0}}</span>
+				</div>
+			</div>
 
-    </article>
-  </div>
-
-  <!--<div class="col l3 s10" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
-    <div class="card deep-purple lighten-1">
-      <div [routerLink]="['/posts', feed.$key]">
-        <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
-          {{returnMoment(feed.timestamp)}}
-        </div>
-        <div class="card-content white-text">
-          <span style="cursor:pointer" class="card-title">{{feed.feedName}}</span>
-          <p>{{feed.description}}</p>
-        </div>
-      </div>
-      <div class="card-action pink lighten-2 layout-row layout-align-space-between-center">
-        <span style="cursor:pointer" class="white-text" [routerLink]="['/profile/', feed.owner.userid]">@{{feed.owner.userid}}</span>
-        <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
-        <i class="white-text mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
-      </div>
-    </div>
-  </div>-->
+		</article>
+	</div>
 </div>
