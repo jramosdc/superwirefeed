@@ -1,22 +1,3 @@
-// .avatar {
-//   max-height: 55px;
-//   padding: 0 10px;
-// }
-
-// .profile {
-//   max-height: 40px;
-//   padding: 0 10px;
-//   margin-top: 10px;
-// }
-
-// .padding10px {
-//   padding: 10px;
-// }
-
-// .invalid-test {
-//   color: red;
-// }
-
 nav {
   background-color: $quaternary-color;
   position: relative;
@@ -41,8 +22,21 @@ nav {
     }
   }
 
+  .vertical-separator {
+    width: 1px;
+    height: $search-height;
+    background: rgba(white, .15);
+    margin: 0 1.5rem;
+  }
+
   .brand-logo {
     font-size: 1.4rem;
+
+    @media #{$medium-and-up} {
+      position: relative;
+      transform: none;
+      left: auto;
+    }
   }
 
   .userinfo {
@@ -87,7 +81,7 @@ nav {
 
 .searchbar {
   background: rgba(white, .15);
-  margin: 0 2rem;
+  margin: 0 1rem;
   width: 35%;
 
   display: flex;

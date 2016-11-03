@@ -19,7 +19,7 @@ export class FeedsComponent implements OnInit {
 		this.User = this.as.getUser();
 		this.feeds = this.as.getFeeds();
 		this.categories = this.as.getCategories();
-		this.as.setActivePageTitle('LATEST FEEDS');
+		this.as.setActivePageTitle('Latest feeds');
 	}
 
 	ngOnInit() {

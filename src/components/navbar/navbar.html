@@ -1,6 +1,6 @@
 <nav>
   <div class="nav-wrapper center-container">
-    <a class="back" (click)="navigate()" *ngIf="activePage.title!=='LATEST FEEDS'">
+    <a class="back" (click)="navigate()" *ngIf="activePage.title!=='Latest feeds'">
       <i class="mdi mdi-arrow-left"></i>
     </a>
 
@@ -8,11 +8,15 @@
       <img src="assets/logo-white.svg" alt="">
     </a>
 
+    <div class="vertical-separator hide-on-small-and-down"></div>
+
     <div class="space hide-on-med-and-up"></div>
 
-    <a (click)="navigate()" class="brand-logo hide-on-med-and-up">
+    <a (click)="navigate()" class="brand-logo">
       {{activePage.title}}
     </a>
+
+    <div class="space"></div>
 
     <form class="searchbar hide-on-small-and-down">
       <input type="search" placeholder="Search">
@@ -20,8 +24,6 @@
         <i class="mdi mdi-magnify"></i>
       </button>
     </form>
-
-    <div class="space"></div>
 
     <a data-activates="slide-out" class="button-collapse right">
       <i class="mdi mdi-dots-vertical"></i>
