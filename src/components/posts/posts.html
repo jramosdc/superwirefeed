@@ -15,9 +15,11 @@
 </div>
 
 <div class="newspaper grid center-container" *ngIf="posts">
-	<div *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
+  <div *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
       searchPostTitle: search | searchCategory: activeCategory"
-		  [ngClass]="{'high': post.priority === 'High'}">
+      [ngClass]="{'high': post.priority === 'High'}">
+
+    <img class="responsive-img" [src]="'http://lorempixel.com/'+post.$key.length*15+'/200/?random='+post.timestamp%20" alt="Background Image">
 
 		<a (click)="navigate('edit', post.$key)"
         *ngIf="User.password.email && FeedID == User.feed.id">
@@ -29,12 +31,12 @@
 			<i class="black-text large mdi mdi-delete"></i>
 		</a>
 
-		<div (click)="navigate('view', post.$key)">
-			<i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
+		<h5 class="title" (click)="navigate('view', post.$key)">
+			<!-- <i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i> -->
 			<span class="title">{{post.title}}</span>
-		</div>
+		</h5>
 
-		<div><small>{{ returnMoment(post.timestamp) }}</small></div>
+		<time>{{ returnMoment(post.timestamp) }}</time>
 	</div>
 </div>
 

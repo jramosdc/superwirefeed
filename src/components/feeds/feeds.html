@@ -21,7 +21,7 @@
       <figure class="card-image" [routerLink]="['/posts', feed.$key]">
         <img class="responsive-img" *ngIf="feed.useBackgroundImage && feed.owner.backgroundImageURL" [src]="feed.owner.backgroundImageURL" alt="Background Image">
         <!-- temporary placeholder image -->
-        <img class="responsive-img" *ngIf="!feed.useBackgroundImage" [src]="'http://unsplash.it/300/'+feed.$key.length*20+'/?random='+feed.$key" alt="Background Image">
+        <img class="responsive-img" *ngIf="!feed.useBackgroundImage" [src]="'http://lorempixel.com/300/'+feed.$key.length*20+'/?random='+feed.$key" alt="Background Image">
         <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
 
         <time>{{returnMoment(feed.timestamp)}}</time>
@@ -52,23 +52,4 @@
 
     </article>
   </div>
-
-  <!--<div class="col l3 s10" *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
-    <div class="card deep-purple lighten-1">
-      <div [routerLink]="['/posts', feed.$key]">
-        <div class="right white-text" style="position: relative; top: 10px; right: 15px;">
-          {{returnMoment(feed.timestamp)}}
-        </div>
-        <div class="card-content white-text">
-          <span style="cursor:pointer" class="card-title">{{feed.feedName}}</span>
-          <p>{{feed.description}}</p>
-        </div>
-      </div>
-      <div class="card-action pink lighten-2 layout-row layout-align-space-between-center">
-        <span style="cursor:pointer" class="white-text" [routerLink]="['/profile/', feed.owner.userid]">@{{feed.owner.userid}}</span>
-        <span class="white-text" *ngIf="feed.likes">Upvotes({{feed.likes}})</span>
-        <i class="white-text mdi mdi-lock" *ngIf="feed.private === 'true'"></i>
-      </div>
-    </div>
-  </div>-->
 </div>
