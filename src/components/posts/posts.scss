@@ -25,6 +25,7 @@ header.feed-header {
     align-items: center;
     padding: 1rem 0;
     position: relative;
+    max-width: calc(#{$center-container-size} - 4rem);
 
     > div {
       padding: 0 2rem;
