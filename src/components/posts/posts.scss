@@ -107,9 +107,31 @@ header.feed-header {
       .sharing-options {
         display: flex;
         align-items: center;
+        line-height: 1;
 
         a {
-          margin-right: 1rem;
+          margin-right: 1.15rem;
+        }
+      }
+
+      .url {
+        margin-left: .25rem;
+        background-color: lighten($blue-gray, 35%);
+        border-radius: 3px;
+        overflow: hidden;
+        display: flex;
+
+        span {
+          padding: .4rem .5rem;
+          display: inline-block;
+          color: rgba($blue-gray, .85);
+        }
+
+        button {
+          appearance: none;
+          border: 0;
+          background: rgba($blue-gray, .15);
+          color: $blue-gray;
         }
       }
     }

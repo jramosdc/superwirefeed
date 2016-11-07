@@ -65,9 +65,9 @@
           </svg>
         </a>
 
-        <label class="hide">
-          <input type="text">
-          <button>
+        <label class="url">
+          <span #domain>{{Domain + '/posts/' + FeedID}}</span>
+          <button [clipboard]="domain">
             <i class="mdi mdi-content-copy"></i>
           </button>
         </label>
