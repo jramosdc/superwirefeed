@@ -20,15 +20,16 @@ header.feed-header {
 
   .info {
     background-color: white;
-    margin-top: -5.5rem;
     display: flex;
     align-items: center;
-    padding: 1rem 0;
+    // padding: 1rem 0;
     position: relative;
-    max-width: calc(#{$center-container-size} - 4rem);
 
     > div {
       padding: 0 2rem;
+
+      &:first-child { padding-left: 0 }
+      &:last-child { padding-right: 0 }
 
       .label {
         display: block;
