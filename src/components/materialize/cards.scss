@@ -2,6 +2,7 @@
   box-shadow: none;
   background: #F5F5F5;
   transition: 0.3s ease all;
+  border-radius: 0;
 
   .card-content {
     display: flex;
@@ -16,7 +17,7 @@
     margin-right: .5rem;
   }
 
-  figure {
+  figure.card-image {
     margin: 0;
     overflow: hidden;
 
@@ -37,6 +38,7 @@
     }
 
     img {
+      border-radius: 0;
       transition: 0.3s linear transform;
     }
   }

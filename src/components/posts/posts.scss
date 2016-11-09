@@ -148,7 +148,7 @@ header.feed-header {
   section.media {
     overflow-x: auto;
     overflow-y: hidden;
-    margin: 3rem 0;
+    margin: 2.5rem 0;
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
@@ -164,6 +164,7 @@ header.feed-header {
 
 main.feed {
   display: flex;
+  justify-content: flex-end;
 }
 
 h6.section-title {
@@ -176,25 +177,81 @@ h6.section-title {
   &:first-child { margin-top: 0 }
 }
 
+// posts content
 section.posts {
   flex: 1;
   padding-right: 2rem;
-}
-
-aside.activities {
-  min-width: 28rem;
-  max-width: 28rem;
-  background-color: $tabs-bg-color;
-  border-radius: 3px;
-  padding: 1.75rem;
-
-  .section-title {
-    text-align: right;
-  }
+  border-right: 0;
 }
 
 article.post {
+  padding: 1rem;
+  border-bottom: 1px solid $mid-gray;
+  cursor: pointer;
+
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
   img {
-    // display: block;
+    max-width: 15%;
+    float: right;
+    margin-left: 1rem;
+  }
+
+  &:last-child { border-bottom: 0; }
+
+  .title {
+    font-size: 1.25em;
+  }
+
+  p {
+    opacity: .65;
+  }
+
+  &.high {
+    .title {
+      font-size: 1.5em;
+    }
+  }
+
+  footer {
+    opacity: .45;
+    font-size: .8em;
+
+    span, time, i {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    span:not(.owner) {
+      opacity: .75;
+      margin: 0 .25rem;
+    }
+
+    time,
+    .owner {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &:hover {
+    background-color: $light-gray;
+  }
+}
+
+// activities
+aside.activities {
+  min-width: 28rem;
+  max-width: 28rem;
+  border-left: 1px solid darken($tabs-bg-color, 5%);
+  padding: 1rem 0 1rem 2rem;
+
+  .section-title {
+    text-align: right;
   }
 }

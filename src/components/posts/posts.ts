@@ -68,6 +68,18 @@ export class PostsComponent implements OnInit {
 		}
 	}
 
+	parseImgUrl(htmlDesc: string) {
+		let regex = /(https?:\/\/[^">]+)(jpg|png)/gi
+		let imgs = htmlDesc.match(regex)
+		return imgs && imgs[0]
+	}
+
+	parseShortDescription(htmlDesc: string) {
+		let regex = /[^-=\>/"<:;&]{55,}/gi
+		let descriptions = htmlDesc.match(regex)
+		return descriptions && descriptions[0]
+	}
+
 	checkEmail(email: string) {
 		this.emailLoading = true;
 		this.as.checkEmail(this.FeedID, email).subscribe(res => {

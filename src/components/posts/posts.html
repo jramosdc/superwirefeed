@@ -11,7 +11,7 @@
 </div>
 
 <div class="progress blue" *ngIf="!posts">
-	<div class="indeterminate"></div>
+  <div class="indeterminate"></div>
 </div>
 
 <header class="feed-header  center-container">
@@ -90,30 +90,45 @@
   </section>
 </header>
 
-
 <main class="feed center-container">
   <section class="posts" *ngIf="posts">
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
-        searchPostTitle: search | searchCategory: activeCategory">
+        searchPostTitle: search | searchCategory: activeCategory"
+        (click)="navigate('view', post.$key)"
+        [ngClass]="{'high': post.priority === 'High'}" class="post">
 
-  		<a (click)="navigate('edit', post.$key)"
+     <!-- <a (click)="navigate('edit', post.$key)"
           *ngIf="User.password.email && FeedID == User.feed.id">
-  			<i class="black-text large mdi mdi-pencil"></i>
-  		</a>
+        <i class="black-text large mdi mdi-pencil"></i>
+      </a>
 
-  		<a (click)="deleteModel(post.$key)"
+      <a (click)="deleteModel(post.$key)"
           *ngIf="User.password.email && FeedID == User.feed.id">
-  			<i class="black-text large mdi mdi-delete"></i>
-  		</a>
+        <i class="black-text large mdi mdi-delete"></i>
+      </a> -->
 
-  		<h5 class="title" (click)="navigate('view', post.$key)">
-  			<i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
-  			<span class="title">{{post.title}}</span>
-  		</h5>
+      <!-- {{ post.img = post.detail.match() }} -->
 
-  		<time>{{ returnMoment(post.timestamp) }}</time>
+      <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
-  	</article>
+      <h6 class="title">{{ post.title }}</h6>
+      <p>{{ parseShortDescription(post.detail) }}</p>
+
+      <!-- <pre>{{post | json}}</pre> -->
+
+      <footer>
+        <i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
+        <span> • </span>
+        <time>{{ returnMoment(post.timestamp) }}</time>
+        <span> • </span>
+        <span [routerLink]="['/profile/', post.owner.userid]"
+            class="owner">
+          {{ post.owner.userid }}
+        </span>
+      </footer>
+
+
+    </article>
   </section>
 
   <aside class="activities">
@@ -122,34 +137,34 @@
 </main>
 
 <div id="deleteModel" class="modal">
-	<div class="modal-content">
-		<h4>Delete Post</h4>
-		<p>Do you really want to delete the Post?</p>
-	</div>
-	<div class="modal-footer">
-		<a class="modal-action modal-close waves-effect waves-light btn-flat" (click)="deletePost()">Yes</a>
-		<a class="modal-action modal-close waves-effect waves-light btn-flat">No</a>
-	</div>
+  <div class="modal-content">
+    <h4>Delete Post</h4>
+    <p>Do you really want to delete the Post?</p>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-light btn-flat" (click)="deletePost()">Yes</a>
+    <a class="modal-action modal-close waves-effect waves-light btn-flat">No</a>
+  </div>
 </div>
 
 <div id="emailModel" class="modal account">
-	<header>
+  <header>
     <h5 class="title">Authorize Email</h5>
-	</header>
+  </header>
 
   <hr class="line">
 
-	<div class="modal-content">
-		<div class="row">
-			<div class="input-field">
-				<input type="email" class="validate" #email required value="">
-				<label for="email">Email</label>
-			</div>
-		</div>
+  <div class="modal-content">
+    <div class="row">
+      <div class="input-field">
+        <input type="email" class="validate" #email required value="">
+        <label for="email">Email</label>
+      </div>
+    </div>
 
-		<div class="error">
-			<span class="red-text" id="errorEmail"></span>
-		</div>
+    <div class="error">
+      <span class="red-text" id="errorEmail"></span>
+    </div>
 
     <div class="modal-loading" *ngIf="emailLoading">
       <div class="preloader-wrapper small active">
@@ -171,13 +186,12 @@
   <hr class="line">
 
   <footer>
-		<a class="waves-effect waves-blue btn white-text" (click)="checkEmail(email.value)">Load</a>
-		<a class="waves-effect waves-blue btn white-text grey darken-1 right" (click)="closeEmail()">Back</a>
-	</footer>
+    <a class="waves-effect waves-blue btn white-text" (click)="checkEmail(email.value)">Load</a>
+    <a class="waves-effect waves-blue btn white-text grey darken-1 right" (click)="closeEmail()">Back</a>
+  </footer>
 
   <hr class="triple line">
 </div>
-
 
 <!-- social icons svg sprite -->
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
