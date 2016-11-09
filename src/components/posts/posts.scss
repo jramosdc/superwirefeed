@@ -188,6 +188,8 @@ article.post {
   padding: 1rem;
   border-bottom: 1px solid $mid-gray;
   cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: padding .2s;
 
   &:after {
     content: '';
@@ -208,12 +210,20 @@ article.post {
   }
 
   p {
+    font-size: .9em;
     opacity: .65;
   }
 
   &.high {
+    font-size: 1.15em;
+    border-left-color: $secondary-color;
+
+    &:hover {
+      border-left-color: darken($secondary-color, 5%);
+    }
+
     .title {
-      font-size: 1.5em;
+      font-size: 1.25em;
     }
   }
 
@@ -239,8 +249,24 @@ article.post {
     }
   }
 
+  .title, p, footer {
+    transition: padding .2s;
+  }
+
   &:hover {
     background-color: $light-gray;
+
+    .title {
+      padding-left: .5rem;
+    }
+
+    p {
+      padding-left: .75rem;
+    }
+
+    footer {
+      padding-left: 1rem;
+    }
   }
 }
 
