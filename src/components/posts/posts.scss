@@ -1,30 +1,8 @@
 header.feed-header {
-  > .cover {
-    width: 100%;
-    max-height: 20rem;
-    min-height: 16rem;
-    height: 16vw;
-    overflow: hidden;
-    position: relative;
-    margin-top: -2rem;
-
-    img {
-      position: absolute;
-      left: 0;
-      right: 0;
-      width: 100%;
-      min-height: 100%;
-      min-width: 100%;
-      top: 50%;
-      transform: translate3d(0, -50%, 0);
-    }
-  }
-
   > .info {
     background-color: white;
     display: flex;
     align-items: center;
-    // padding: 1rem 0;
     position: relative;
 
     > div {
@@ -68,6 +46,7 @@ header.feed-header {
       h5 {
         font-weight: bold;
         margin: .25rem 0 0;
+        letter-spacing: 0.75px;
       }
     }
 
@@ -166,52 +145,51 @@ header.feed-header {
     }
   }
 
-  > .media {
+  section.media {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 3rem 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
 
-    &:after {
-      content: '';
-      display: block;
-      clear: both;
+    a {
+      margin-right: .25rem;
+      overflow: hidden;
+
+      &:last-child { margin-right: 0 }
     }
   }
 }
 
 main.feed {
-  max-width: calc(#{$center-container-size} - 1rem);
   display: flex;
+}
 
-  .title {
-    color: $blue-gray;
-    font-size: em(12px);
-    text-transform: uppercase;
-    padding: 2rem;
-  }
+h6.section-title {
+  color: $blue-gray;
+  font-size: em(12px);
+  text-transform: uppercase;
+  margin: 4rem 0 1.25rem;
+  line-height: 1;
+
+  &:first-child { margin-top: 0 }
 }
 
 section.posts {
   flex: 1;
+  padding-right: 2rem;
 }
 
 aside.activities {
   min-width: 28rem;
   max-width: 28rem;
+  background-color: $tabs-bg-color;
+  border-radius: 3px;
+  padding: 1.75rem;
 
-  > .photos {
-    overflow-x: auto;
-    overflow-y: hidden;
-    margin-top: 2rem;
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-
-    a {
-      margin-left: .5rem;
-      overflow: hidden;
-    }
-
-    img {
-      height: 7.5rem;
-    }
+  .section-title {
+    text-align: right;
   }
 }
 

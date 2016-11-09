@@ -14,10 +14,8 @@
 	<div class="indeterminate"></div>
 </div>
 
-<header class="feed-header">
-  <!-- <div class="cover"><img src="http://lorempixel.com/900/180/?random=superteam" alt=""></div> -->
-
-  <section class="info center-container">
+<header class="feed-header  center-container">
+  <section class="info">
     <div class="title">
       <time>2 months ago</time>
       <h5>WikiLeaks</h5>
@@ -82,15 +80,21 @@
       </div>
     </div>
   </section>
+
+  <section class="media">
+    <a><img class="responsive-img" src="http://lorempixel.com/300/200/?random=1"></a>
+    <a><img class="responsive-img" src="http://lorempixel.com/200/200/?random=4"></a>
+    <a><img class="responsive-img" src="http://lorempixel.com/450/200/?random=2"></a>
+    <a><img class="responsive-img" src="http://lorempixel.com/400/200/?random=3"></a>
+    <a><img class="responsive-img" src="http://lorempixel.com/300/200/?random=4"></a>
+  </section>
 </header>
 
-<main class="feed center-container" *ngIf="posts">
-  <section class="posts">
-    <div class="title">Highlights</div>
 
+<main class="feed center-container">
+  <section class="posts" *ngIf="posts">
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
-        searchPostTitle: search | searchCategory: activeCategory"
-        [ngClass]="{'high': post.priority === 'High'}" class="post">
+        searchPostTitle: search | searchCategory: activeCategory">
 
   		<a (click)="navigate('edit', post.$key)"
           *ngIf="User.password.email && FeedID == User.feed.id">
@@ -109,23 +113,11 @@
 
   		<time>{{ returnMoment(post.timestamp) }}</time>
 
-      <!-- <img class="responsive-img" [src]="'http://lorempixel.com/600/200/?random='+post.timestamp%20" alt="Background Image"> -->
   	</article>
-
-    <div class="title">Posts</div>
-
   </section>
 
   <aside class="activities">
-    <div class="title">Activities</div>
-
-    <section class="photos hide">
-      <a><img class="responsive-img" src="http://lorempixel.com/300/200/?random=1"></a>
-      <a><img class="responsive-img" src="http://lorempixel.com/200/200/?random=4"></a>
-      <a><img class="responsive-img" src="http://lorempixel.com/450/200/?random=2"></a>
-      <a><img class="responsive-img" src="http://lorempixel.com/400/200/?random=3"></a>
-      <a><img class="responsive-img" src="http://lorempixel.com/300/200/?random=4"></a>
-    </section>
+    <h6 class="section-title">Activities</h6>
   </aside>
 </main>
 
