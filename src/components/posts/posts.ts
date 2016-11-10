@@ -25,6 +25,8 @@ export class PostsComponent implements OnInit {
 
 	constructor(public as: authService, public route: ActivatedRoute, private router: Router) {
 		this.Domain = this.as.getDomain();
+		console.log('--------++++++++++++Domain')
+		console.log(this)
 		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
 		this.route.params.subscribe(params => {
@@ -75,7 +77,7 @@ export class PostsComponent implements OnInit {
 	}
 
 	parseShortDescription(htmlDesc: string) {
-		let regex = /[^-=\>/"<:;&]{55,}/gi
+		let regex = /[^-=\>/"%_<:;&]{55,}/gi
 		let descriptions = htmlDesc.match(regex)
 		return descriptions && descriptions[0]
 	}

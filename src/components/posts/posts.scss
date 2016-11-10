@@ -23,7 +23,7 @@ main.feed {
 
 h6.section-title {
   color: $blue-gray;
-  font-size: em(12px);
+  font-size: 1em;
   text-transform: uppercase;
   margin: 4rem 0 1.25rem;
   line-height: 1;
@@ -39,24 +39,31 @@ aside.info {
   border-right: 1px solid darken($tabs-bg-color, 5%);
 
   .title {
-    flex: 1;
-
-    time {
-      opacity: .4;
-      font-size: .85em;
-    }
+    margin-top: .75rem;
 
     h5 {
       font-weight: bold;
       margin: .25rem 0 0;
       letter-spacing: 0.75px;
     }
+
+    p {
+      opacity: .55;
+      margin-top: .25rem;
+    }
+  }
+
+  .section-title {
+    margin: 2rem 0 .25rem;
+    font-size: 0.85em;
+    text-transform: none;
   }
 
   .author {
     display: flex;
     align-items: center;
     line-height: 1;
+    margin-top: .75rem;
 
     img {
       width: 2.5rem;
