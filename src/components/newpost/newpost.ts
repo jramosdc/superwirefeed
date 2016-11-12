@@ -141,13 +141,14 @@ export class NewPostComponent implements OnInit {
             });
 
             // after file upload get download link storgae
-            this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
-                post['gsheetLink'] = url;
-                this.postObjReady.uploadFile = true;
-                this.postToFirebase(post);             // save to firebase
-            }).catch(err => {
-                console.log('file not upload err', err);
-            });
+            this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/')
+                .then(url => {
+                    post['gsheetLink'] = url;
+                    this.postObjReady.uploadFile = true;
+                    this.postToFirebase(post);             // save to firebase
+                }).catch(err => {
+                    console.log('file not upload err', err);
+                });
         } else {
             this.postObjReady.uploadFile = true;
             this.postToFirebase(post);             // save to firebase
@@ -166,6 +167,8 @@ export class NewPostComponent implements OnInit {
 
     private postToFirebase(post) {
         if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
+            // for show updated on top feeds!
+            this.as.updateFeed(this.User.feed.id, { 'timestamp': firebase.database['ServerValue'].TIMESTAMP });
             this.as.submitPost(post).then(res => {
                 console.log('Post is Submitted!');
                 $('#errorPost').html('');

@@ -58,7 +58,6 @@ export class ProfileComponent extends Type implements OnInit {
                 this.as.getUserProfile(this.userid).subscribe((profile) => {
                     this.profile = profile;
                     this.posts = this.as.loadPosts(this.profile['feedId']);     // geting posts for item published
-                    console.log('this.profile: ', this.profile);
                     if (profile['backgroundImageURL']) {
                         setTimeout(() => {
                             $('#bgImage').attr("style", 'width: 100%; height: 200px; background: url("' + profile['backgroundImageURL'] + '") center center no-repeat; background-size: cover;');
@@ -101,6 +100,7 @@ export class ProfileComponent extends Type implements OnInit {
         this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
         this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
         this.cropperSettings_rectangle.noFileInput = true;
+
     }
 
     ngOnInit() {
@@ -110,8 +110,6 @@ export class ProfileComponent extends Type implements OnInit {
                 $('.fab').css('margin-bottom', '150px');
             }
         });
-
-
     }
 
     edit() {

@@ -163,6 +163,8 @@ export class EditPostComponent implements OnInit {
 
   private updateToFirebase(post) {
     if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
+      // for show updated on top feeds!
+      this.as.updateFeed(this.User.feed.id, { 'timestamp': firebase.database['ServerValue'].TIMESTAMP });
       this.as.updatePost(this.postid, post).then(res => {
         console.log('Post is Updated!');
         $('#errorPost').html('');
