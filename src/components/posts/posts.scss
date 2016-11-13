@@ -77,8 +77,15 @@ section.info-card {
         margin-left: .5rem;
       }
 
+      .modify-button {
+        transition: opacity .2s;
+        opacity: .5;
+      }
+
       .share-btn {
         background-color: white;
+        transition: opacity .2s;
+        opacity: .5;
 
         i {
           color: $dark-blue;
@@ -88,7 +95,7 @@ section.info-card {
       .options-btn {
         opacity: 0;
         transition: opacity .2s;
-        background-color: rgba($dark-blue, .35);
+        background-color: rgba($dark-blue, .5);
       }
 
       .dropdown-content {
@@ -99,6 +106,8 @@ section.info-card {
     }
 
     &:hover {
+      .modify-btn,
+      .share-btn,
       .options-btn {
         opacity: 1;
       }
