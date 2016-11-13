@@ -406,7 +406,8 @@ aside.activities {
   position: absolute;
   width: auto !important;
   top: -.35rem !important;
-  left: calc(100% + 3rem) !important;
+  left: -1000px;
+  // left: calc(100% + 3rem) !important;
   text-align: right;
   padding: .75rem 1.5rem;
   border-radius: 100px;
