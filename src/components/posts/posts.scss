@@ -66,17 +66,33 @@ section.info-card {
       display: block;
     }
 
-    > .dropdown {
+    > .dropdowns {
       position: absolute;
       top: 1.5rem;
       left: 1.5rem;
       right: 1.5rem;
       color: white;
 
-      i {
-        // text-shadow: 1px 1px 1px $dark-blue;
-        // font-size: 1.8rem;
-        // color: white;
+      .left {
+        margin-right: .5rem;
+      }
+
+      .share-btn {
+        background-color: white;
+
+        i {
+          color: $dark-blue;
+        }
+      }
+
+      .options-btn {
+        background-color: rgba($dark-blue, .25);
+      }
+
+      .dropdown-content {
+        a {
+          font-size: .8em;
+        }
       }
     }
   }
@@ -238,58 +254,6 @@ section.posts {
   &:not(:last-child) {
     border-right: 1px solid darken($tabs-bg-color, 5%);
   }
-
-  > header {
-    padding: 1rem 0;
-    margin: 0 1rem;
-    background: $light-gray;
-
-    .share {
-      flex: 1;
-      text-align: right;
-
-      svg {
-        width: 1.25em;
-        height: 1.25em;
-      }
-
-      .label {
-        margin-bottom: .6rem;
-      }
-
-      .sharing-options {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        line-height: 1;
-
-        a {
-          margin-right: 1.15rem;
-        }
-      }
-
-      .url {
-        margin-left: .25rem;
-        background-color: lighten($blue-gray, 35%);
-        border-radius: 3px;
-        overflow: hidden;
-        display: flex;
-
-        span {
-          padding: .4rem .5rem;
-          display: inline-block;
-          color: rgba($blue-gray, .85);
-        }
-
-        button {
-          appearance: none;
-          border: 0;
-          background: rgba($blue-gray, .15);
-          color: $blue-gray;
-        }
-      }
-    }
-  }
 }
 
 article.post {
@@ -413,6 +377,47 @@ aside.activities {
       time {
         display: block;
       }
+    }
+  }
+}
+
+// sharing
+.share {
+  flex: 1;
+  text-align: right;
+
+  svg {
+    width: 2.25em;
+    height: 2.25em;
+  }
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+
+  a {
+    margin-right: 1.15rem;
+  }
+
+  .url {
+    margin-left: .25rem;
+    background-color: lighten($blue-gray, 35%);
+    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+
+    span {
+      padding: .4rem .5rem;
+      display: inline-block;
+      color: rgba($blue-gray, .85);
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      background: rgba($blue-gray, .15);
+      color: $blue-gray;
     }
   }
 }

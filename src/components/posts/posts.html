@@ -20,15 +20,35 @@
       <figure>
         <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
 
-        <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
-        <div class="dropdown">
-          <a class="dropdown-button left btn waves-effect waves-light btn-floating"
+        <div class="dropdowns">
+          <a class="dropdown-button options-btn right waves-effect waves-light btn-floating"
               data-activates="feed-options"
-              data-alignment="right">
-            <i class="mdi mdi-pencil"></i>
+              data-alignment="right"
+              data-constrainwidth="false">
+            <i class="mdi mdi-dots-vertical"></i>
+          </a>
+          <ul id="feed-options" class='dropdown-content'>
+            <li><a>@nikoloza's profile</a></li>
+            <li><a>Message @nikoloza</a></li>
+            <li class="divider"></li>
+            <li><a>Block @nikoloza</a></li>
+            <li><a>Block this feed</a></li>
+            <li class="divider"></li>
+            <li><a>Report this feed</a></li>
+          </ul>
+
+          <!--  -->
+          <a class="dropdown-button share-btn left waves-effect waves-light btn-floating">
+            <i class="mdi mdi-share"></i>
           </a>
 
-          <ul id="feed-options" class='dropdown-content'>
+          <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
+          <a class="dropdown-button left waves-effect waves-light btn-floating"
+              data-activates="edit-options"
+              data-alignment="left">
+            <i class="mdi mdi-pencil"></i>
+          </a>
+          <ul id="edit-options" class='dropdown-content'>
             <li>
               <a>Modify</a>
             </li>
@@ -94,46 +114,6 @@
   </aside>
 
   <section class="posts" *ngIf="posts">
-    <header class="hide">
-
-      <div class="share">
-        <span class="label">share</span>
-
-        <div class="sharing-options">
-          <a>
-            <svg class="social-icon facebook-color" viewBox="0 0 96 96">
-              <use xlink:href="#social-facebook"></use>
-            </svg>
-          </a>
-
-          <a>
-            <svg class="social-icon twitter-color" viewBox="0 0 612 612">
-              <use xlink:href="#social-twitter"></use>
-            </svg>
-          </a>
-
-          <a>
-            <svg class="social-icon google-plus-color" viewBox="0 0 96 96">
-              <use xlink:href="#social-google-plus"></use>
-            </svg>
-          </a>
-
-          <a>
-            <svg class="social-icon linkedin-color" viewBox="0 0 430 430">
-              <use xlink:href="#social-linkedin"></use>
-            </svg>
-          </a>
-
-          <label class="url">
-            <span #domain>{{Domain + '/posts/' + FeedID}}</span>
-            <button [clipboard]="domain">
-              <i class="mdi mdi-content-copy"></i>
-            </button>
-          </label>
-        </div>
-      </div>
-    </header>
-
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
         searchPostTitle: search | searchCategory: activeCategory"
         (click)="navigate('view', post.$key)"
@@ -231,6 +211,40 @@
   </footer>
 
   <hr class="triple line">
+</div>
+
+<!-- share -->
+<div class="share hide">
+  <a>
+    <svg class="social-icon facebook-color" viewBox="0 0 96 96">
+      <use xlink:href="#social-facebook"></use>
+    </svg>
+  </a>
+
+  <a>
+    <svg class="social-icon twitter-color" viewBox="0 0 612 612">
+      <use xlink:href="#social-twitter"></use>
+    </svg>
+  </a>
+
+  <a>
+    <svg class="social-icon google-plus-color" viewBox="0 0 96 96">
+      <use xlink:href="#social-google-plus"></use>
+    </svg>
+  </a>
+
+  <a>
+    <svg class="social-icon linkedin-color" viewBox="0 0 430 430">
+      <use xlink:href="#social-linkedin"></use>
+    </svg>
+  </a>
+
+  <label class="url">
+    <span #domain>{{Domain + '/posts/' + FeedID}}</span>
+    <button [clipboard]="domain">
+      <i class="mdi mdi-content-copy"></i>
+    </button>
+  </label>
 </div>
 
 <!-- social icons svg sprite -->
