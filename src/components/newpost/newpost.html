@@ -1,7 +1,7 @@
 <div class="row">
     <form class="col s12 card padding10px" novalidate #f="ngForm" (ngSubmit)="submitPost(f.valid, f.value)">
         <div class="row">
-            <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name}}</a><a href="#" class="active">New Post</a>
+            <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name || 'Feed'}}</a><a href="#" class="active">New Post</a>
             </div>
         </div>
         <!--<small>{{f | json}}</small>
