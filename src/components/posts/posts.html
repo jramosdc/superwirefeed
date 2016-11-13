@@ -61,8 +61,7 @@
             </label>
           </div>
 
-           <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
-          <div
+          <div *ngIf="User.password.email && FeedID == User.feed.id"
               class="right">
 
             <a class="dropdown-button modify-btn waves-effect waves-light btn-floating blue-grey darken-1"
