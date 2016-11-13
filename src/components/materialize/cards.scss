@@ -2,7 +2,8 @@
   box-shadow: none;
   background: #F5F5F5;
   transition: 0.3s ease all;
-  border-radius: 0;
+  border-radius: 3px;
+  overflow: hidden;
 
   .card-content {
     display: flex;
@@ -123,7 +124,8 @@
   }
 
   &:hover {
-    background: white;
+    background: $dark-blue;
+    color: white;
     box-shadow: rgba(180, 180, 180, 0.5) 2px 2px 15px;
     transform: translate(-2px, -2px);
 
