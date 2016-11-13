@@ -21,7 +21,26 @@
         <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
 
         <div class="dropdowns">
-          <a class="dropdown-button options-btn right waves-effect waves-light btn-floating"
+          <a class="dropdown-button share-btn right waves-effect waves-light btn-floating">
+            <i class="mdi mdi-share"></i>
+          </a>
+
+          <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
+          <a class="dropdown-button right waves-effect waves-light btn-floating"
+              data-activates="edit-options"
+              data-alignment="left">
+            <i class="mdi mdi-pencil"></i>
+          </a>
+          <ul id="edit-options" class='dropdown-content'>
+            <li>
+              <a>Modify</a>
+            </li>
+            <li>
+              <a>Remove</a>
+            </li>
+          </ul>
+
+          <a class="dropdown-button options-btn left waves-effect waves-light btn-floating"
               data-activates="feed-options"
               data-alignment="right"
               data-constrainwidth="false">
@@ -35,26 +54,6 @@
             <li><a>Block this feed</a></li>
             <li class="divider"></li>
             <li><a>Report this feed</a></li>
-          </ul>
-
-          <!--  -->
-          <a class="dropdown-button share-btn left waves-effect waves-light btn-floating">
-            <i class="mdi mdi-share"></i>
-          </a>
-
-          <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
-          <a class="dropdown-button left waves-effect waves-light btn-floating"
-              data-activates="edit-options"
-              data-alignment="left">
-            <i class="mdi mdi-pencil"></i>
-          </a>
-          <ul id="edit-options" class='dropdown-content'>
-            <li>
-              <a>Modify</a>
-            </li>
-            <li>
-              <a>Remove</a>
-            </li>
           </ul>
         </div>
       </figure>

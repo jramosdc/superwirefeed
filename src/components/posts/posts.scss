@@ -73,8 +73,8 @@ section.info-card {
       right: 1.5rem;
       color: white;
 
-      .left {
-        margin-right: .5rem;
+      .right {
+        margin-left: .5rem;
       }
 
       .share-btn {
@@ -86,13 +86,21 @@ section.info-card {
       }
 
       .options-btn {
-        background-color: rgba($dark-blue, .25);
+        opacity: 0;
+        transition: opacity .2s;
+        background-color: rgba($dark-blue, .35);
       }
 
       .dropdown-content {
         a {
           font-size: .8em;
         }
+      }
+    }
+
+    &:hover {
+      .options-btn {
+        opacity: 1;
       }
     }
   }
