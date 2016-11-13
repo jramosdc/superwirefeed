@@ -77,15 +77,14 @@ section.info-card {
         margin-left: .5rem;
       }
 
-      .modify-button {
+      .modify-btn,
+      .share-btn {
         transition: opacity .2s;
         opacity: .5;
       }
 
       .share-btn {
         background-color: white;
-        transition: opacity .2s;
-        opacity: .5;
 
         i {
           color: $dark-blue;
@@ -104,13 +103,13 @@ section.info-card {
         }
       }
     }
+  }
 
-    &:hover {
-      .modify-btn,
-      .share-btn,
-      .options-btn {
-        opacity: 1;
-      }
+  &:hover {
+    .modify-btn,
+    .share-btn,
+    .options-btn {
+      opacity: 1 !important;
     }
   }
 
