@@ -37,7 +37,7 @@ aside.info {
   min-width: 22rem;
   max-width: 22rem;
   // background-color: #56586a;
-  background-color: #31334a;
+  background-color: $dark-blue;
   box-shadow: rgba(180, 180, 180, .5) 2px 2px 15px;
   border-radius: 3px;
   color: white;
@@ -47,9 +47,27 @@ aside.info {
   > figure {
     margin: -1.5rem -1.5rem 1.5rem;
     width: calc(100% + 3rem);
+    position: relative;
+    min-height: 6rem;
+    background-color: rgba(white, .15);
 
-    img {
+    > img {
       width: 100%;
+      display: block;
+    }
+
+    > .dropdown {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      color: white;
+
+      i {
+        // text-shadow: 1px 1px 1px $dark-blue;
+        // font-size: 1.8rem;
+        // color: white;
+      }
     }
   }
 
@@ -75,6 +93,9 @@ aside.info {
   > .labels {
     display: flex;
     justify-content: center;
+    margin: 1.5rem -1.5rem;
+    background-color: rgba(white, .05);
+    padding: 1.5rem 0;
 
     > div {
       padding: 0 1.5rem;
@@ -150,10 +171,6 @@ aside.info {
     align-items: center;
     line-height: 1;
     margin-top: 1rem;
-    // background-color: #F5F5F5;
-    // color: black;
-    // padding: .75rem 0;
-    // margin: 1.5rem -1.5rem -1.5rem;
 
     img {
       width: 2.5rem;

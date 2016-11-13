@@ -18,6 +18,24 @@
   <aside class="info">
     <figure>
       <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
+
+      <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
+      <div class="dropdown">
+        <a class="dropdown-button left btn waves-effect waves-light btn-floating"
+            data-activates="feed-options"
+            data-alignment="right">
+          <i class="mdi mdi-pencil"></i>
+        </a>
+
+        <ul id="feed-options" class='dropdown-content'>
+          <li>
+            <a>Modify</a>
+          </li>
+          <li>
+            <a>Remove</a>
+          </li>
+        </ul>
+      </div>
     </figure>
 
     <div class="title">
@@ -25,7 +43,7 @@
       <p>Some description here</p>
     </div>
 
-    <hr>
+    <!-- <hr> -->
 
     <div class="labels">
       <div class="posts">
@@ -48,7 +66,7 @@
       </div>
     </div>
 
-    <hr>
+    <!-- <hr> -->
 
     <div class="author">
       <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
@@ -100,27 +118,10 @@
       </div>
     </header>
 
-    <!-- (click)="navigate('view', post.$key)" -->
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
         searchPostTitle: search | searchCategory: activeCategory"
-
+        (click)="navigate('view', post.$key)"
         [ngClass]="{'high': post.priority === 'High'}" class="post">
-
-      <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
-<!--       <div>
-        <a class="dropdown-button btn" data-activates="aaa">Drop Me!</a>
-
-        <ul id="aaa" class='dropdown-content'>
-          <li>
-            <a (click)="navigate('edit', post.$key)">Modify</a>
-          </li>
-          <li>
-            <a (click)="deleteModel(post.$key)">Remove</a>
-          </li>
-        </ul>
-      </div> -->
-
-      <!-- {{ post.img = post.detail.match() }} -->
 
       <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
@@ -136,6 +137,13 @@
             class="owner">
           {{ post.owner.userid }}
         </span>
+
+        <div *ngIf="User.password.email && FeedID == User.feed.id">
+          <span> • </span>
+          <span (click)="navigate('edit', post.$key)">Modify</span>
+          <span> • </span>
+          <span (click)="deleteModel(post.$key)">Remove</span>
+        </div>
       </footer>
 
 
