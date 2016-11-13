@@ -53,10 +53,6 @@ export class PostsComponent implements OnInit {
       }
     });
     // $('ul.tabs')['tabs']();
-    window.j = $
-    $('.dropdown-button').each(function() {
-      $(this).dropdown()
-    })
   }
 
   navigate(type: string, id: string) {
