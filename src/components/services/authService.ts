@@ -330,19 +330,22 @@ export class authService {
 			}).map(posts => {
 				return posts.map(post => {
 					this.deletePost(post.$key).catch(reject);
-				})
+				});
 			}).subscribe(res => {
 				this.af.database.object('/feeds/' + feedid).remove().then(res => {
 					this.af.database.object('/users/' + userid).remove().then(res => {
-
-						this.af.auth.subscribe(authState => {
-							authState.auth.delete().then(() => {
-								console.log('deleted!')
-								// this.af.auth.logout();
-								resolve();
-							}).catch(e => console.error(e));
+						// this.af.auth.subscribe(authState => {
+						firebase.auth().currentUser.delete().then(function () {
+							resolve();
+						}).catch(error => {
+							console.log("error in deleting user", error)
+							reject(error);
 						});
-
+						// authState.auth.delete().then(() => {
+						// console.log('deleted!')
+						// this.af.auth.logout();
+						// }).catch(e => console.error(e));
+						// });
 						// return this.af.auth.remove(this.af.auth);
 					}).catch(reject);
 				}).catch(reject);
@@ -354,8 +357,8 @@ export class authService {
 
 		let setFollowingSys = () => {
 			let multipath = {}
-			multipath['/user-following/' + myid + '/' + followerId] = followerId;
-			multipath['/user-followers/' + followerId + '/' + myid] = myid;
+			multipath['/user-following/' + myid + '/' + followerId] = followersObj[followerId];
+			multipath['/user-followers/' + followerId + '/' + myid] = followingObj[myid];
 			this.mainRef.update(multipath).then(() => {
 				console.log('update multipath');
 			}).catch(err => {
@@ -403,18 +406,33 @@ export class authService {
 			});
 	}
 
-	getFollowingFeedsPosts(userId) {
-		return this.af.database.list('/user-following/' + userId)
-			.map((following) => {
-				return following.map((follow) => {
-					return this.af.database.list('/posts', {
-						query: {
-							orderByChild: 'owner/userid',
-							equalTo: follow['$key']
-						}
-					})
-				})
-			});
+	getFollowingFeedsPosts(postId) {
+		return this.af.database.object('/feeds/' + postId)
+			.switchMap(feed => {
+				console.log('feed: ', feed)
+				return this.af.database.list('/user-following/' + feed['owner']['userid'])
+					.map((following) => {
+						return following.map((follow) => {
+							return this.af.database.list('/posts', {
+								query: {
+									orderByChild: 'owner/userid',
+									equalTo: follow['$key']
+								}
+							})
+						})
+					});
+			})
+		// return this.af.database.list('/user-following/' + userId)
+		// 	.map((following) => {
+		// 		return following.map((follow) => {
+		// 			return this.af.database.list('/posts', {
+		// 				query: {
+		// 					orderByChild: 'owner/userid',
+		// 					equalTo: follow['$key']
+		// 				}
+		// 			})
+		// 		})
+		// 	});
 	}
 
 }

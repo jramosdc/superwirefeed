@@ -11,11 +11,11 @@
 </div>
 
 <div class="progress" *ngIf="feeds.length == 0">
-	<div class="indeterminate"></div>
+  <div class="indeterminate"></div>
 </div>
 
 <div class="grid center-container">
-  <div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory" >
+  <div *ngFor="let feed of feeds | async | orderBy: ['-timestamp'] | searchCategory: activeCategory">
     <article class="card" *ngIf="feed.feedName">
 
       <figure class="card-image" [routerLink]="['/posts', feed.$key]">

@@ -1,3 +1,4 @@
+import { FirebaseListObservable } from 'angularfire2/es6/database';
 import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
@@ -27,6 +28,7 @@ export class ProfileComponent extends Type implements OnInit {
     postCategoryNew: Array<string> = [];
     following: any[] = [];
     followers: any[] = [];
+    posts: FirebaseListObservable<any[]>;
 
     // Cropper variables 
     profileImgData: any = {};
@@ -55,6 +57,8 @@ export class ProfileComponent extends Type implements OnInit {
                 this.as.getFollowing(this.userid).subscribe((following) => this.following = following);
                 this.as.getUserProfile(this.userid).subscribe((profile) => {
                     this.profile = profile;
+                    this.posts = this.as.loadPosts(this.profile['feedId']);     // geting posts for item published
+                    console.log('this.profile: ', this.profile);
                     if (profile['backgroundImageURL']) {
                         setTimeout(() => {
                             $('#bgImage').attr("style", 'width: 100%; height: 200px; background: url("' + profile['backgroundImageURL'] + '") center center no-repeat; background-size: cover;');
@@ -155,7 +159,7 @@ export class ProfileComponent extends Type implements OnInit {
             'authEmail': this.authList,
             'postCategories': this.postCategoryList,
             'profileImageURL': this.User.password.profileImageURL,
-            'backgroundImageURL': this.User.backgroundImageURL,
+            'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg',
             'useBackgroundImage': useBG.checked
         };
         this.as.updateUserProfile(this.userid, profile)
@@ -173,7 +177,7 @@ export class ProfileComponent extends Type implements OnInit {
                         'uid': this.User.uid,
                         'userid': this.userid,
                         'profileImageURL': this.User.password.profileImageURL,
-                        'backgroundImageURL': this.User.backgroundImageURL
+                        'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg'
                     }
                 }
                 this.as.updateFeed(feedId.value.toLowerCase(), feed)
@@ -338,13 +342,13 @@ export class ProfileComponent extends Type implements OnInit {
     followingSys() {
         let me = this.User.feed.userid;
         let userFollowingObj = {}
-        userFollowingObj[this.userid] = this.userid;
+        userFollowingObj[this.userid] = this.profile['feedId'];
         // userFollowing[this.User.feed.userid] = { }
         // userFollowing[this.User.feed.userid][this.userid] = this.userid;
 
         let followerId = this.userid;
         let userFollowerObj = {}
-        userFollowerObj[this.User.feed.userid] = this.User.feed.userid;
+        userFollowerObj[this.User.feed.userid] = this.User.feed.id;
         // userFollower[this.userid] = { }
         // userFollower[this.userid][this.User.feed.userid] = this.User.feed.userid
 
