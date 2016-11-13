@@ -19,7 +19,6 @@ header.feed-header {
 main.feed {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
 }
 
 h6.section-title {
@@ -33,9 +32,12 @@ h6.section-title {
 }
 
 // info panel
-aside.info {
+aside.meta {
   min-width: 22rem;
   max-width: 22rem;
+}
+
+section.info-card {
   // background-color: #56586a;
   background-color: $dark-blue;
   box-shadow: rgba(180, 180, 180, .5) 2px 2px 15px;
@@ -86,8 +88,10 @@ aside.info {
   }
 
   > hr {
-    margin: 1rem 0;
-    opacity: .05;
+    margin: 1.5rem 0;
+    opacity: .1;
+    height: 1px;
+    background-color: white;
   }
 
   > .labels {
@@ -166,7 +170,14 @@ aside.info {
     }
   }
 
-  > .author {
+  .section-title {
+    color: rgba(white, .5);
+    margin-bottom: .75rem;
+    font-size: .85em;
+    display: block;
+  }
+
+  .author {
     display: flex;
     align-items: center;
     line-height: 1;
@@ -176,6 +187,11 @@ aside.info {
       width: 2.5rem;
       height: 2.5rem;
       margin-right: .6rem;
+      transition: .2s transform;
+    }
+
+    &:hover img {
+      transform: scale(1.1);
     }
 
     h6 {
@@ -191,13 +207,28 @@ aside.info {
       font-size: .8em;
     }
   }
+
+  .contributors {
+    img {
+      max-width: 2rem;
+      margin-right: .5rem;
+      transition: .2s transform;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
 }
 
 // posts content
 section.posts {
   flex: 1;
-  border-right: 1px solid darken($tabs-bg-color, 5%);
   padding: 0 1rem;
+
+  &:not(:last-child) {
+    border-right: 1px solid darken($tabs-bg-color, 5%);
+  }
 
   > header {
     padding: 1rem 0;
@@ -337,8 +368,6 @@ aside.activities {
   min-width: 18rem;
   max-width: 18rem;
   padding-left: 1.5rem;
-  border-left: 1px solid darken($tabs-bg-color, 5%);
-  margin-left: -1px;
   opacity: .5;
   transition: opacity .2s;
 

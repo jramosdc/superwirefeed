@@ -15,66 +15,78 @@
 </div>
 
 <main class="feed center-container">
-  <aside class="info">
-    <figure>
-      <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
+  <aside class="meta">
+    <section class="info-card">
+      <figure>
+        <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
 
-      <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
-      <div class="dropdown">
-        <a class="dropdown-button left btn waves-effect waves-light btn-floating"
-            data-activates="feed-options"
-            data-alignment="right">
-          <i class="mdi mdi-pencil"></i>
-        </a>
+        <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
+        <div class="dropdown">
+          <a class="dropdown-button left btn waves-effect waves-light btn-floating"
+              data-activates="feed-options"
+              data-alignment="right">
+            <i class="mdi mdi-pencil"></i>
+          </a>
 
-        <ul id="feed-options" class='dropdown-content'>
-          <li>
-            <a>Modify</a>
-          </li>
-          <li>
-            <a>Remove</a>
-          </li>
-        </ul>
-      </div>
-    </figure>
-
-    <div class="title">
-      <h5>WikiLeaks</h5>
-      <p>Some description here</p>
-    </div>
-
-    <!-- <hr> -->
-
-    <div class="labels">
-      <div class="posts">
-        <span class="label">posts</span>
-        <strong>10</strong>
-      </div>
-
-      <div class="likes">
-        <i class="mdi mdi-thumb-up" (click)="voteUp($event)"></i>
-        <div>
-          <span class="label">likes</span>
-          <strong>77</strong>
+          <ul id="feed-options" class='dropdown-content'>
+            <li>
+              <a>Modify</a>
+            </li>
+            <li>
+              <a>Remove</a>
+            </li>
+          </ul>
         </div>
-        <i class="mdi mdi-thumb-down" (click)="voteDown($event)"></i>
+      </figure>
+
+      <div class="title">
+        <h5>WikiLeaks</h5>
+        <p>Some description here</p>
       </div>
 
-      <div class="time">
-        <strong>2</strong>
-        <span class="label">weeks</span>
+      <div class="labels">
+        <div class="posts">
+          <span class="label">posts</span>
+          <strong>10</strong>
+        </div>
+
+        <div class="likes">
+          <i class="mdi mdi-thumb-up" (click)="voteUp($event)"></i>
+          <div>
+            <span class="label">likes</span>
+            <strong>77</strong>
+          </div>
+          <i class="mdi mdi-thumb-down" (click)="voteDown($event)"></i>
+        </div>
+
+        <div class="time">
+          <strong>2</strong>
+          <span class="label">weeks</span>
+        </div>
       </div>
-    </div>
 
-    <!-- <hr> -->
-
-    <div class="author">
-      <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
       <div>
-        <h6>Nika</h6>
-        <span>@nikoloza</span>
+        <h6 class="section-title">Author</h6>
+
+        <section class="author">
+          <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+          <div>
+            <h6 class="author-name">Nika</h6>
+            <span>@nikoloza</span>
+          </div>
+        </section>
       </div>
-    </div>
+
+      <hr class="line">
+
+      <div class="contributors">
+        <h6 class="section-title">Contributors</h6>
+
+        <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+        <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+        <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+      </div>
+    </section>
   </aside>
 
   <section class="posts" *ngIf="posts">
