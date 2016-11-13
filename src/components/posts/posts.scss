@@ -73,10 +73,12 @@ section.info-card {
       right: 1.5rem;
       color: white;
 
-      .right {
+      .right .btn-floating,
+      .right.btn-floating {
         margin-left: .5rem;
       }
 
+      .add-btn,
       .modify-btn,
       .share-btn {
         transition: opacity .2s;
@@ -106,6 +108,7 @@ section.info-card {
   }
 
   &:hover {
+    .add-btn,
     .modify-btn,
     .share-btn,
     .options-btn {

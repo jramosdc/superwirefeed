@@ -25,24 +25,32 @@
             <i class="mdi mdi-share"></i>
           </a>
 
-          <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
-          <a class="dropdown-button modify-btn right waves-effect waves-light btn-floating"
-              data-activates="edit-options"
-              data-alignment="right">
-            <i class="mdi mdi-pencil"></i>
-          </a>
-          <ul id="edit-options" class='dropdown-content'>
-            <li>
-              <a>Modify</a>
-            </li>
-            <li>
-              <a>Remove</a>
-            </li>
-          </ul>
+           <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
+          <div
+              class="right">
+
+            <a class="dropdown-button modify-btn waves-effect waves-light btn-floating"
+                data-activates="edit-options"
+                data-alignment="right">
+              <i class="mdi mdi-pencil"></i>
+            </a>
+            <ul id="edit-options" class='dropdown-content'>
+              <li>
+                <a>Modify</a>
+              </li>
+              <li>
+                <a>Remove</a>
+              </li>
+            </ul>
+
+            <a class="btn-floating add-btn waves-effect waves-light deep-purple" (click)="navigate('new')">
+              <i class="mdi mdi-plus"></i>
+            </a>
+          </div>
 
           <a class="dropdown-button options-btn left waves-effect waves-light btn-floating"
               data-activates="feed-options"
-              data-alignment="right"
+              data-alignment="left"
               data-constrainwidth="false">
             <i class="mdi mdi-dots-vertical"></i>
           </a>
