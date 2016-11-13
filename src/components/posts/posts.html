@@ -16,15 +16,40 @@
 
 <main class="feed center-container">
   <aside class="info">
-    <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
+    <figure>
+      <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
+    </figure>
 
     <div class="title">
       <h5>WikiLeaks</h5>
       <p>Some description here</p>
     </div>
 
+    <hr>
 
-    <h6 class="section-title"><time>2 months ago</time> by</h6>
+    <div class="labels">
+      <div class="posts">
+        <span class="label">posts</span>
+        <strong>10</strong>
+      </div>
+
+      <div class="likes">
+        <i class="mdi mdi-thumb-up" (click)="voteUp($event)"></i>
+        <div>
+          <span class="label">likes</span>
+          <strong>77</strong>
+        </div>
+        <i class="mdi mdi-thumb-down" (click)="voteDown($event)"></i>
+      </div>
+
+      <div class="time">
+        <strong>2</strong>
+        <span class="label">weeks</span>
+      </div>
+    </div>
+
+    <hr>
+
     <div class="author">
       <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
       <div>
@@ -35,20 +60,7 @@
   </aside>
 
   <section class="posts" *ngIf="posts">
-    <header>
-      <div class="likes">
-        <i class="mdi mdi-thumb-up" (click)="voteUp()"></i>
-        <div>
-          <span class="label">likes</span>
-          <strong>77</strong>
-        </div>
-        <i class="mdi mdi-thumb-down" (click)="voteDown()"></i>
-      </div>
-
-      <div class="posts">
-        <span class="label">posts</span>
-        <strong>10</strong>
-      </div>
+    <header class="hide">
 
       <div class="share">
         <span class="label">share</span>
@@ -88,20 +100,25 @@
       </div>
     </header>
 
+    <!-- (click)="navigate('view', post.$key)" -->
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
         searchPostTitle: search | searchCategory: activeCategory"
-        (click)="navigate('view', post.$key)"
+
         [ngClass]="{'high': post.priority === 'High'}" class="post">
 
-     <!-- <a (click)="navigate('edit', post.$key)"
-          *ngIf="User.password.email && FeedID == User.feed.id">
-        <i class="black-text large mdi mdi-pencil"></i>
-      </a>
+      <!-- *ngIf="User.password.email && FeedID == User.feed.id" -->
+<!--       <div>
+        <a class="dropdown-button btn" data-activates="aaa">Drop Me!</a>
 
-      <a (click)="deleteModel(post.$key)"
-          *ngIf="User.password.email && FeedID == User.feed.id">
-        <i class="black-text large mdi mdi-delete"></i>
-      </a> -->
+        <ul id="aaa" class='dropdown-content'>
+          <li>
+            <a (click)="navigate('edit', post.$key)">Modify</a>
+          </li>
+          <li>
+            <a (click)="deleteModel(post.$key)">Remove</a>
+          </li>
+        </ul>
+      </div> -->
 
       <!-- {{ post.img = post.detail.match() }} -->
 
@@ -109,8 +126,6 @@
 
       <h6 class="title">{{ post.title }}</h6>
       <p>{{ parseShortDescription(post.detail) }}</p>
-
-      <!-- <pre>{{post | json}}</pre> -->
 
       <footer>
         <i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>

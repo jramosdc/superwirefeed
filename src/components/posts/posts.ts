@@ -25,8 +25,6 @@ export class PostsComponent implements OnInit {
 
 	constructor(public as: authService, public route: ActivatedRoute, private router: Router) {
 		this.Domain = this.as.getDomain();
-		console.log('--------++++++++++++Domain')
-		console.log(this)
 		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
 		this.route.params.subscribe(params => {
@@ -55,6 +53,10 @@ export class PostsComponent implements OnInit {
 			}
 		});
 		// $('ul.tabs')['tabs']();
+		window.j = $
+		$('.dropdown-button').each(function() {
+			$(this).dropdown()
+		})
 	}
 
 	navigate(type: string, id: string) {
@@ -68,18 +70,6 @@ export class PostsComponent implements OnInit {
 			this.router.navigate(['post', id]);
 			this.as.setActiveFeedID(this.FeedID);
 		}
-	}
-
-	parseImgUrl(htmlDesc: string) {
-		let regex = /(https?:\/\/[^">]+)(jpg|png)/gi
-		let imgs = htmlDesc.match(regex)
-		return imgs && imgs[0]
-	}
-
-	parseShortDescription(htmlDesc: string) {
-		let regex = /[^-=\>/"%_<:;&]{55,}/gi
-		let descriptions = htmlDesc.match(regex)
-		return descriptions && descriptions[0]
 	}
 
 	checkEmail(email: string) {
@@ -116,12 +106,24 @@ export class PostsComponent implements OnInit {
 		});
 	}
 
-	voteUp() {
+	voteUp(ev) {
 		this.as.voteUp(this.FeedID);
+
+		// for preview only
+		$(ev.target)
+			.toggleClass('active')
+			.siblings('.mdi')
+			.removeClass('active');
 	}
 
-	voteDown() {
+	voteDown(ev) {
 		this.as.voteDown(this.FeedID);
+
+		// for preview only
+		$(ev.target)
+			.toggleClass('active')
+			.siblings('.mdi')
+			.removeClass('active');
 	}
 
 	returnMoment(timestamp) {
@@ -130,6 +132,19 @@ export class PostsComponent implements OnInit {
 		} else {
 			return ''
 		}
+	}
+
+	// temporary solution to parse description
+	// and fill data structure
+	parseImgUrl(htmlDesc: string) {
+		let regex = /(https?:\/\/[^">]+)(jpg|png)/gi
+		let imgs = htmlDesc.match(regex)
+		return imgs && imgs[0]
+	}
+	parseShortDescription(htmlDesc: string) {
+		let regex = /[^-=\>/"%_<:;&]{55,}/gi
+		let descriptions = htmlDesc.match(regex)
+		return descriptions && descriptions[0]
 	}
 
 }
