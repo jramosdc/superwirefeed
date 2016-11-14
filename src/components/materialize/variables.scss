@@ -1,3 +1,6 @@
+// container
+$center-container-size: 1440px;
+
 // navbar
 $navbar-height-mobile: 68px;
 
@@ -11,3 +14,12 @@ $tabs-text-color: $dark-gray;
 $tabs-underline-color: $secondary-color;
 
 $tab-active-bg-color: lighten($quaternary-color, 37.5%);
+
+// posts
+$posts-hover-background: lighten($quaternary-color, 35%);
+
+$posts-highlight-background: lighten($secondary-color, 35%);
+$posts-highlight-hover-background: lighten($secondary-color, 25%);
+
+// dropdown
+$dropdown-color: #333;
