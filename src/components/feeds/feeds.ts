@@ -27,11 +27,8 @@ export class FeedsComponent implements OnInit {
 	}
 
 	returnMoment(timestamp) {
-		if (timestamp) {
-			return moment().to(timestamp);
-		} else {
-			return '';
-		}
+		if (timestamp) moment().to(timestamp)
+		else return ''
 	}
 
 }
