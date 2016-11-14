@@ -90,10 +90,10 @@
             <i class="mdi mdi-dots-vertical"></i>
           </a>
           <ul id="feed-options" class='dropdown-content'>
-            <li><a>@nikoloza's profile</a></li>
-            <li><a>Message @nikoloza</a></li>
+            <li><a>@{{ post.owner.userid }}'s profile</a></li>
+            <li><a>Message @{{ post.owner.userid }}/a></li>
             <li class="divider"></li>
-            <li><a>Block @nikoloza</a></li>
+            <li><a>Block @{{ post.owner.userid }}</a></li>
             <li><a>Block this feed</a></li>
             <li class="divider"></li>
             <li><a>Report this feed</a></li>
@@ -102,8 +102,8 @@
       </figure>
 
       <div class="title">
-        <h5>WikiLeaks</h5>
-        <p>Some description here</p>
+        <h5>Wikileaks</h5>
+        <p>We need feed.name and feed.description here</p>
       </div>
 
       <div class="labels">
@@ -133,8 +133,8 @@
         <section class="author">
           <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
           <div>
-            <h6 class="author-name">Nika</h6>
-            <span>@nikoloza</span>
+            <h6 class="author-name">{{ post.owner.userid }}</h6>
+            <span>@{{ post.owner.userid }}</span>
           </div>
         </section>
       </div>
