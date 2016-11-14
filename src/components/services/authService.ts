@@ -236,6 +236,22 @@ export class authService {
 		});
 	}
 
+	uploadPostImg(base64: string, str = null) {
+		return new Promise((resolve, reject) => {
+			let postImgTask
+			if (str) {
+				postImgTask = this.storageRef.child('img').child('posts').child(str).put(this.base64ToBlob(base64));
+			} else {
+				postImgTask = this.storageRef.child('img').child('posts').child(this.randomStringGenerator(6)).put(this.base64ToBlob(base64));
+			}
+			postImgTask.on('state_changed', null, function (err) {
+				reject(err);
+			}, function () {
+				resolve(postImgTask.snapshot.downloadURL);
+			});
+		});
+	}
+
 	base64ToBlob(base64: string): Blob {
 		var blobBin = atob(base64.split(',')[1]);
 		var array = [];
@@ -407,6 +423,16 @@ export class authService {
 		// 			})
 		// 		})
 		// 	});
+	}
+
+	randomStringGenerator(len: number) {
+		let text = "";
+		let possible = "ABCDEF-GHIJ-KLMNOPQR_STUV-WXYZ#abcdefghijklmnopqrstuv$wxyz012345-6789_";
+
+		for (var i = 0; i < len; i++)
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		return text;
 	}
 
 }
