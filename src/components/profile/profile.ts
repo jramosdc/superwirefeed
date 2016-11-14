@@ -1,9 +1,7 @@
-import { FirebaseListObservable } from 'angularfire2/es6/database';
 import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { User, authService } from '../services/authService';
+import { User, authService, FirebaseListObservable } from '../services/authService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
-import * as firebase from 'firebase';
 
 @Component({
     selector: 'profile',
