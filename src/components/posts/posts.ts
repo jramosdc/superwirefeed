@@ -1,7 +1,8 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnDestroy, Injector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
+import SearchBar from '../services/searchBar';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { User, authService } from '../services/authService';
   },
   template: require('./posts.html')
 })
-export class PostsComponent implements OnInit {
+export class PostsComponent implements OnDestroy {
 
   User: User;
   Domain: string
@@ -23,13 +24,14 @@ export class PostsComponent implements OnInit {
   posts: FirebaseListObservable<any[]>
   emailLoading: Boolean = false
 
-  constructor(public as: authService, public route: ActivatedRoute, private router: Router) {
+  constructor(public as: authService, public route: ActivatedRoute, private router: Router, private sb: SearchBar) {
     this.Domain = this.as.getDomain();
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.route.params.subscribe(params => {
       this.FeedID = params['feedid'];
     });
+
   }
 
   ngOnInit() {
@@ -50,9 +52,24 @@ export class PostsComponent implements OnInit {
         }
       } else {
         this.posts = this.as.loadPosts(this.FeedID);
+        // search posts by title
+        this.sb.search$.debounceTime(30).subscribe(term => {
+          this.posts = <any>this.as.loadPosts(this.FeedID)
+            .map(posts => {
+              return posts.filter(post => {
+                if (post && post.title) {
+                  return post.title.toLowerCase().indexOf(term.toLowerCase()) != -1;
+                } else { return false; }
+              });
+            });
+        });
       }
     });
     // $('ul.tabs')['tabs']();
+  }
+
+  ngOnDestroy() {
+    this.sb.search$.unsubscribe();
   }
 
   navigate(type: string, id: string) {
