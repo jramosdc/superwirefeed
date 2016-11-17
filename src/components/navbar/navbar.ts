@@ -25,12 +25,6 @@ export class NavbarComponent implements OnInit {
     this.search$ = this.sb.search$;
   }
 
-  foo(r: HTMLInputElement) {
-    event.preventDefault();
-    console.log('foo- : ', r, r.value)
-
-  }
-
   ngOnInit() {
     $(".button-collapse")['sideNav']({
       menuWidth: 300,

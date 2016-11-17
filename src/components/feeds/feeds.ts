@@ -21,8 +21,7 @@ export class FeedsComponent implements OnDestroy {
 		this.feeds = this.as.getFeeds();
 		this.categories = this.as.getCategories();
 		this.as.setActivePageTitle('Latest feeds');
-
-		this.sb.search$.debounceTime(30).subscribe(term => {
+		this.sb.search$.subscribe(term => {
 			this.feeds = <any>this.as.getFeeds()
 				.map(feeds => {
 					return feeds.filter(y => {
@@ -39,7 +38,8 @@ export class FeedsComponent implements OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.sb.search$.unsubscribe();
+		// this.sb.search$.unsubscribe()
+
 	}
 
 	searchFeed(str?: string) {
