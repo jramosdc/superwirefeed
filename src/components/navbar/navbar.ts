@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
+import SearchBar from '../services/searchBar';
 
 @Component({
   selector: 'navbar',
@@ -14,12 +15,20 @@ export class NavbarComponent implements OnInit {
   activeFeed: Object;
   loginLoading: boolean = false;
   registerLoading: boolean = false;
+  search$;
 
-  constructor(public as: authService, private router: Router) {
+  constructor(public as: authService, private router: Router, private sb: SearchBar) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.activePage = this.as.getActivePageTitle();
     this.activeFeed = this.as.getActiveFeed();
+    this.search$ = this.sb.search$;
+  }
+
+  foo(r: HTMLInputElement) {
+    event.preventDefault();
+    console.log('foo- : ', r, r.value)
+
   }
 
   ngOnInit() {
