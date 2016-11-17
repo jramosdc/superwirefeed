@@ -16,12 +16,14 @@ export class NavbarComponent implements OnInit {
   loginLoading: boolean = false;
   registerLoading: boolean = false;
   search$;
+  isSearchBarHidden: Object;
 
   constructor(public as: authService, private router: Router, private sb: SearchBar) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.activePage = this.as.getActivePageTitle();
     this.activeFeed = this.as.getActiveFeed();
+    this.isSearchBarHidden = this.sb.searchBar;
     this.search$ = this.sb.search$;
   }
 

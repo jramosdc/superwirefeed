@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService, FirebaseListObservable } from '../services/authService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
+import SearchBar from '../services/searchBar';
 
 @Component({
     selector: 'profile',
@@ -40,7 +41,7 @@ export class ProfileComponent extends Type implements OnInit {
 
     public validEmailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    constructor(private as: authService, private route: ActivatedRoute, private router: Router) {
+    constructor(private as: authService, private route: ActivatedRoute, private router: Router, private sb: SearchBar) {
 
         super();
 
@@ -98,6 +99,8 @@ export class ProfileComponent extends Type implements OnInit {
         this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
         this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
         this.cropperSettings_rectangle.noFileInput = true;
+
+        this.sb.setHiddenSearchBar(true);
 
     }
 

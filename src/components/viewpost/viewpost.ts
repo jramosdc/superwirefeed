@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { FirebaseObjectObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 import { httpService } from '../services/httpService';
+import SearchBar from '../services/searchBar';
 
 @Component({
     selector: 'viewpost',
@@ -19,7 +20,7 @@ export class ViewPostComponent {
     postid: string
     post: FirebaseObjectObservable<{}>
 
-    constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService) {
+    constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBar) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.as.setActivePageTitle('View Post');
@@ -42,6 +43,7 @@ export class ViewPostComponent {
                 });
             }
         });
+        this.sb.setHiddenSearchBar(true);
     }
 
     returnMoment(timestamp) {

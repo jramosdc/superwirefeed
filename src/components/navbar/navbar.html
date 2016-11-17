@@ -18,12 +18,14 @@
 
     <div class="space"></div>
 
-    <form class="searchbar hide-on-small-and-down">
-      <input type="text" name="search1" #search1 placeholder="Search" [(ngModel)]="srch1" (ngModelChange)="search$.next(search1.value)">
-      <button>
-        <i class="mdi mdi-magnify"></i>
-      </button>
-    </form>
+    <span [hidden]="isSearchBarHidden.isHidden" style="margin-right:25px;">
+      <form class="searchbar hide-on-small-and-down" style="width:100%">
+        <input type="text" name="search1" #search1 placeholder="Search" [(ngModel)]="srch1" (ngModelChange)="search$.next(search1.value)">
+        <button>
+          <i class="mdi mdi-magnify"></i>
+        </button>
+      </form>
+    </span>
 
     <a data-activates="slide-out" class="button-collapse right">
       <i class="mdi mdi-dots-vertical"></i>
@@ -33,7 +35,7 @@
 </nav>
 
 <aside class="side-nav" id="slide-out">
-  <form class="searchbar hide-on-med-and-up">
+  <form [hidden]="isSearchBarHidden.isHidden" class="searchbar hide-on-med-and-up">
     <input type="text" name="search2" #search2 [(ngModel)]="srch2" placeholder="Search" (ngModelChange)="search$.next(search2.value)">
     <button>
       <i class="mdi mdi-magnify"></i>

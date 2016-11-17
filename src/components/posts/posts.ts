@@ -4,7 +4,6 @@ import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 import SearchBar from '../services/searchBar';
 
-
 @Component({
     selector: 'posts',
     host: {
@@ -31,6 +30,7 @@ export class PostsComponent implements OnDestroy {
         this.route.params.subscribe(params => {
             this.FeedID = params['feedid'];
         });
+        this.sb.setHiddenSearchBar(false);
         // search posts by title
         this.sb.search$.subscribe(term => {
             this.posts = <any>this.as.loadPosts(this.FeedID)
