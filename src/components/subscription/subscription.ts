@@ -14,6 +14,7 @@ export class SubscriptionComponent {
     // userid
     // User: User;
     FeedId: string;
+    subscription: any[];
     subsObservable;
 
     constructor(private route: ActivatedRoute, private router: Router, private as: authService, ) {
@@ -21,7 +22,36 @@ export class SubscriptionComponent {
         // this.User = this.as.getUser();
         this.route.params.subscribe(params => {
             this.FeedId = params['postid'];
-            this.subsObservable = this.as.getFollowingFeedsPosts(this.FeedId);
+            this.subscription = [];
+            // this.subsObservable = 
+            this.as.getFollowingFeedsPosts(this.FeedId)
+                .subscribe(obj => {
+                    // // console.log(obj['$key'])
+                    // let flag, index;
+                    // this.subscription.map((x, i) => {
+                    //     if (x['$key'] == obj['$key']) {
+                    //         flag = true;
+                    //         index = i;
+                    //     }
+                    // })
+                    // // if (flag) {
+                    // //     // console.log('inflasg ', this.subscription[index]['$key'] == obj['$key'])
+                    // //     // console.log(this.subscription.indexOf(obj))
+                    // //     console.log(this.subscription.length)
+                    // //     this.subscription.filter(x => {
+                    // //         return x['$key'] == obj['$key'];
+                    // //     })
+                    // //     console.log(this.subscription.length)
+                    // //     // this.subscription.splice(0, index);
+                    // // }
+                    this.subscription.push(obj);
+
+                    // let a = this.subscription.filter(y => {
+                    //     console.log(y['$key'] == obj['$key'])
+                    //     return y['$key'] != obj['$key']
+                    // })
+                    // // console.log(a)
+                })
         });
     }
 

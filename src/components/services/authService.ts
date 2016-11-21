@@ -399,7 +399,6 @@ export class authService {
 	getFollowingFeedsPosts(postId) {
 		return this.af.database.object('/feeds/' + postId)
 			.switchMap(feed => {
-				console.log('feed: ', feed)
 				return this.af.database.list('/user-following/' + feed['owner']['userid'])
 					.map((following) => {
 						return following.map((follow) => {
@@ -412,6 +411,20 @@ export class authService {
 						})
 					});
 			})
+			.mergeMap(arrayOfObservable => {
+				return arrayOfObservable.map(obj => {
+					return obj;
+				});
+			}).mergeMap(aRRayObsr => {
+				return aRRayObsr.map(aRray => {
+					return aRray;
+				});
+			}).switchMap(aRRay => {
+				return aRRay.map(obj => {
+					return obj;
+				})
+			}); //.do(x => ('end: ', x));
+
 		// return this.af.database.list('/user-following/' + userId)
 		// 	.map((following) => {
 		// 		return following.map((follow) => {
