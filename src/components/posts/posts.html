@@ -152,12 +152,12 @@
   <section class="posts" *ngIf="posts">
     <!-- posts -->
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
-        searchPostTitle: search | searchCategory: activeCategory" (click)="navigate('view', post.$key)" [ngClass]="{'high': post.priority === 'High'}"
+        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === 'High'}"
       class="post">
 
       <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
-      <h6 class="title">{{ post.title }}</h6>
+      <h6 class="title" (click)="navigate('view', post.$key)" >{{ post.title }}</h6>
       <p>{{ parseShortDescription(post.detail) }}</p>
 
       <footer>
