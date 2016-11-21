@@ -157,7 +157,7 @@ export class ProfileComponent extends Type implements OnInit {
             'category': category.value,
             'authEmail': this.authList,
             'postCategories': this.postCategoryList,
-            'profileImageURL': this.User.password.profileImageURL,
+            'profileImageURL': this.User.password.profileImageURL ? this.User.password.profileImageURL : "http://www.freeiconspng.com/uploads/profile-icon-9.png",
             'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg',
             'useBackgroundImage': useBG.checked
         };
@@ -175,7 +175,7 @@ export class ProfileComponent extends Type implements OnInit {
                     'owner': {
                         'uid': this.User.uid,
                         'userid': this.userid,
-                        'profileImageURL': this.User.password.profileImageURL,
+                        'profileImageURL': this.User.password.profileImageURL ? this.User.password.profileImageURL : 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
                         'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg'
                     }
                 }
