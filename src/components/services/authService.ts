@@ -344,11 +344,12 @@ export class authService {
 	}
 
 	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
+		let multipath = {}
 
 		let setFollowingSys = () => {
-			let multipath = {}
-			multipath['/user-following/' + myid + '/' + followerId] = followersObj[followerId];
-			multipath['/user-followers/' + followerId + '/' + myid] = followingObj[myid];
+			multipath['/user-following/' + myid + '/' + followerId] = followersObj[myid];
+			multipath['/user-followers/' + followerId + '/' + myid] = followingObj[followerId];
+			console.log('multipath: ', multipath)
 			this.mainRef.update(multipath).then(() => {
 				console.log('update multipath');
 			}).catch(err => {
@@ -357,7 +358,6 @@ export class authService {
 		}; // setFollowingSys
 
 		let removeFollowingSys = () => {
-			let multipath = {}
 			multipath['/user-following/' + myid + '/' + followerId] = null;
 			multipath['/user-followers/' + followerId + '/' + myid] = null;
 			this.mainRef.update(multipath).then(() => {
@@ -368,6 +368,7 @@ export class authService {
 		}; // removeFollowingSys
 
 		this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', (following) => {
+			console.log('mainRef: ', following.val())
 			if (following.val()) {
 				removeFollowingSys();
 			} else {

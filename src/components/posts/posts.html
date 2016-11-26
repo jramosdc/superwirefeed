@@ -79,8 +79,8 @@
             </a>
           </div>
 
-          <a class="dropdown-button options-btn left waves-effect waves-light btn-floating" data-activates="feed-options" data-alignment="left"
-            data-constrainwidth="false">
+          <a href="javascript:void(0);" class="dropdown-button options-btn left waves-effect waves-light btn-floating" data-activates="feed-options"
+            data-alignment="left" data-constrainwidth="false">
             <i class="mdi mdi-dots-vertical"></i>
           </a>
           <ul id="feed-options" class='dropdown-content'>
@@ -152,12 +152,11 @@
   <section class="posts" *ngIf="posts">
     <!-- posts -->
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
-        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === 'High'}"
-      class="post">
+        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === 'High'}" class="post">
 
       <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
-      <h6 class="title" (click)="navigate('view', post.$key)" >{{ post.title }}</h6>
+      <h6 class="title" (click)="navigate('view', post.$key)">{{ post.title }}</h6>
       <p>{{ parseShortDescription(post.detail) }}</p>
 
       <footer>

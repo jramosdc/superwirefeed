@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 
@@ -10,21 +10,19 @@ import { User, authService } from '../services/authService';
         require('./subscription.scss')
     ],
 })
-export class SubscriptionComponent {
-    // userid
-    // User: User;
+export class SubscriptionComponent implements OnDestroy {
     FeedId: string;
     subscription: any[];
-    subsObservable;
+    observableSubcription: any[];
 
     constructor(private route: ActivatedRoute, private router: Router, private as: authService, ) {
-        // this.User = this.as.emptyUser();
-        // this.User = this.as.getUser();
-        this.route.params.subscribe(params => {
+        this.observableSubcription = [];
+        this.subscription = [];
+
+        this.observableSubcription[0] = this.route.params.subscribe(params => {
             this.FeedId = params['postid'];
-            this.subscription = [];
             // this.subsObservable = 
-            this.as.getFollowingFeedsPosts(this.FeedId)
+            this.observableSubcription[1] = this.as.getFollowingFeedsPosts(this.FeedId)
                 .subscribe(obj => {
                     // // console.log(obj['$key'])
                     // let flag, index;
@@ -53,6 +51,13 @@ export class SubscriptionComponent {
                     // // console.log(a)
                 })
         });
+    }
+
+    ngOnDestroy() {
+        this.observableSubcription
+            .map(obsr => {
+                obsr['unsubscribe']();
+            });
     }
 
     navigate(id: string) {
