@@ -66,6 +66,7 @@ export class PostsComponent implements OnDestroy {
             }
         });
         // $('ul.tabs')['tabs']();
+        $('.dropdown-button').dropdown('open');
     }
 
     ngOnDestroy() {
