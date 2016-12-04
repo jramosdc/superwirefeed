@@ -135,8 +135,9 @@
 
   <section class="posts" *ngIf="posts">
     <!-- editors panel -->
-    <header class="editors-panel blue-grey lighten-4">
-      <!--  *ngIf="User.password.email && FeedID == User.feed.id" -->
+    <header class="editors-panel blue-grey lighten-4"
+      *ngIf="User.password.email && FeedID == User.feed.id">
+
       <div class="blue-grey-text text-darken-3">Editors panel</div>
 
       <div>
