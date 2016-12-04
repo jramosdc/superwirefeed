@@ -276,6 +276,25 @@ section.posts {
   }
 }
 
+header.editors-panel {
+  display: flex;
+  padding: .5rem;
+  align-items: center;
+  border-radius: 5px;
+  margin-bottom: .5rem;
+
+  div:first-child {
+    flex: 1;
+    text-transform: uppercase;
+    padding-left: .5rem;
+  }
+
+  .btn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 article.post {
   padding: 1rem;
   cursor: pointer;
