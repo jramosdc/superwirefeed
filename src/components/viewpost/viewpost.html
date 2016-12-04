@@ -18,7 +18,7 @@
       <a [routerLink]="['/editpost', postid]"><i class="large mdi mdi-pencil"></i></a>
     </div>
 
-    <p [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</p>
+    <p><a [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</a></p>
 
     <p>Priority: {{post.priority}}</p>
     <p>Category: {{post.category}}</p>

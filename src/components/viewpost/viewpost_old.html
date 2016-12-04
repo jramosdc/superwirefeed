@@ -1,102 +1,112 @@
-<main class="view-post center-container" *ngIf="post">
-  <div>
-    <!--  *ngIf="User.password.email && post.owner.userid == User.feed.userid" -->
-
-    <div>
-      <a class="btn-floating btn-large waves-effect waves-light deep-purple" [routerLink]="['/editpost', postid]">
-        <i class="large mdi mdi-pencil"></i>
-      </a>
-    </div>
-
-    <div class="row">
-      <div class="card panel indigo">
-        <h5 [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</h5>
-      </div>
-    </div>
-
-    <div class="row">
-      <ul class="collapsible" data-collapsible="accordion">
-        <li class="posttitle">
-          <h2><span>{{post.title}}</span></h2>
-          <img [src]="post.embedly.images[0].url" class="img_header" *ngIf="post.embedly && post.embedly.images">
-          <img src="http://www.davidluke.com/wp-content/themes/david-luke/media/ims/placeholder720.gif" class="img_header" *ngIf="!post.mainUrl">
-          <div class="more" *ngIf="post.embedly && post.embedly.url">
-            <a class="btn-floating waves-effect waves-light indigo" href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
-          </div>
-        </li>
-        <li>
-          <div class="collapsible-header">
-            <i *ngFor="let type of post.types" class="mdi {{'mdi-' + type}}"></i> Content
-          </div>
-
-          <div class="collapsible-body">
-            <div id="postDetails" class="demo-container">dddd</div>
-          </div>
-        </li>
-        <li *ngIf="post.pdfLink">
-          <div class="collapsible-header">
-            <i class="mdi mdi-file-pdf"></i> PDF
-          </div>
-
-          <div class="collapsible-body">
-            <iframe [src]="post.purl"></iframe>
-          </div>
-        </li>
-
-        <li *ngIf="post.gsheetLink">
-          <div class="collapsible-header">
-            <i class="mdi mdi-google-drive"></i> Data
-          </div>
-
-          <div class="collapsible-body">
-            <div id="fullTable"></div>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="row">
-      <div class="md-chip red">
-        <div class="md-chip-img">
-          <span class="md-chip-span orange">P</span>
+<div class="row">
+    <form class="col s12 card padding10px" novalidate #f="ngForm" (ngSubmit)="submitPost(f.valid, f.value)">
+        <div class="row">
+            <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name || 'Feed'}}</a><a href="#" class="active">New Post</a>
+            </div>
         </div>
-
-        <span class="md-chip-text">{{post.priority}}</span>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="md-chip indigo">
-        <div class="md-chip-img">
-          <span class="md-chip-span pink">C</span>
+        <!--<small>{{f | json}}</small>
+        -->
+        <div class="row" *ngIf="!User.emailVerified">
+            <label for="verifyEmail" class="red-text">Please verify your Email!</label>
         </div>
+        <div class="row">
+            <label for="title">Title</label>
+            <div class="input-field">
+                <input type="text" class="validate" #title="ngModel" name="title" [(ngModel)]="t" placeholder="Title" required>
+                <small class="red-text" [hidden]="title.valid || (title.pristine && !f._submitted)">
+                    Title is required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <label for="editor">Add text, links, images, embed videos</label>
+            <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="detail" placeholder="Detail" required>
+            <div id="editor"></div>
+            <small class="red-text" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
+                Detail is required.
+            </small>
+        </div>
+        <div class="row">
+            <label for="priority">Priority</label>
+            <div class="input-field">
+                <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="_priority" required>
+                    <option value="" disabled selected>Is it breaking now?</option>
+                    <option value="High">Breaking</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Normal</option>
+                </select>
+                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
+                    Priority is required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <label for="type">Type</label>
+            <div class="input-field">
+                <select class="browser-default" #type="ngModel" multiple name="type" [(ngModel)]="ty" required style="height: 80pt;">
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="file-document">Text</option>
+                    <option value="camera">Image</option>
+                    <option value="play-box-outline">Video</option>
+                    <option value="microphone">Audio</option>
+                </select>
+                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">
+                    Type is required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <label for="category">Category</label>
+            <div class="input-field">
+                <select class="browser-default" id="category" #category="ngModel" name="category" [(ngModel)]="c" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
+                </select>
+                <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">
+                    Category is required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <label for="pdfLink">Add link to PDF</label>
+            <div class="input-field">
+                <input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pl" placeholder="Pdf Link">
+            </div>
+        </div>
+        <div class="row">
+            <label for="gsheetLink">Add dataset in csv format or a Google link</label>
+            <div class="input-field">
+                <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl" placeholder="Google Spread Sheet Link">-->
+                <input type="file" id="browseCSVFile" (change)="handleFiles($event, gsheetLink)" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
+            </div>
+        </div>
+        <div class="row">
+            <label for="mainUrl">Main url (just saving a link? we can make magic with it)</label>
+            <div class="input-field">
+                <input type="url" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="mu" placeholder="Main Url">
+            </div>
+        </div>
+        <div class="row center-align">
+            <span class="red-text" id="errorPost"></span>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="postLoading">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="waves-effect waves-light btn purple white-text right">Wire!</button>
+        </div>
+    </form>
+</div>
 
-        <span class="md-chip-text">{{post.category}}</span>
-      </div>
-    </div>
-
-    <div class="row" *ngIf="post.pdfLink">
-      <a href="{{post.pdfLink}}" target="_blank" class="btn-floating btn-large blue">
-        <i class="mdi mdi-file-pdf"></i>
-      </a>
-    </div>
-
-    <div class="row" *ngIf="post.gsheetLink">
-      <a href="{{post.gsheetLink}}" target="_blank" class="btn-floating btn-large blue">
-        <i class="mdi mdi-google-drive"></i>
-      </a>
-    </div>
-
-    <div class="row">
-      <h5 class="indigo-text">{{returnMoment(post.timestamp)}}</h5>
-    </div>
-  </div>
-
-  <section class="post">
-    <h2 class="title">{{post.title}}</h2>
-  </section>
-
-  <aside class="meta">
-    <!--  -->
-  </aside>
-</main>
+<div id="fullTable">
+</div>
