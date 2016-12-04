@@ -19,6 +19,10 @@ header.feed-header {
 main.feed {
   display: flex;
   justify-content: space-between;
+
+  @media #{$small-and-down} {
+    flex-direction: column;
+  }
 }
 
 h6.section-title {
@@ -43,6 +47,15 @@ aside.meta {
     img {
       width: 300px;
     }
+  }
+
+  @media #{$large-and-down} {
+    min-width: 18rem;
+    max-width: 18rem;
+  }
+
+  @media #{$small-and-down} {
+    max-width: none;
   }
 }
 
@@ -143,8 +156,10 @@ section.info-card {
     margin: 1.5rem -1.5rem;
     background-color: rgba(white, .1);
     padding: 1.5rem 0;
+    text-align: center;
 
     > div {
+      flex: 1;
       padding: 0 1.5rem;
 
       .label {
@@ -173,14 +188,6 @@ section.info-card {
         font-weight: 500;
       }
 
-      &:first-child {
-        padding-left: 0;
-      }
-
-      &:last-child {
-        padding-right: 0;
-      }
-
       &:not(:last-child) {
         border-right: 1px solid rgba(white, .1);
       }
@@ -189,6 +196,7 @@ section.info-card {
     .likes {
       display: flex;
       align-items: flex-end;
+      justify-content: center;
 
       i {
         font-size: 1.8rem;
@@ -274,6 +282,17 @@ section.posts {
   &:not(:last-child) {
     border-right: 1px solid darken($tabs-bg-color, 5%);
   }
+
+  @media #{$large-and-down} {
+    &:not(:last-child) {
+      border-right: 0;
+    }
+  }
+
+  @media #{$small-and-down} {
+    padding: 0;
+    margin-top: 1.5rem;
+  }
 }
 
 header.editors-panel {
@@ -281,7 +300,7 @@ header.editors-panel {
   padding: .5rem;
   align-items: center;
   border-radius: 5px;
-  margin-bottom: .5rem;
+  margin-bottom: 1.5rem;
 
   div:first-child {
     flex: 1;
@@ -363,25 +382,21 @@ article.post {
     }
   }
 
-  .title, p, footer {
-    transition: padding .2s;
-  }
-
   transition: background-color .2s;
 
   &:hover {
     background-color: $light-gray;
+  }
 
-    .title {
-      padding-left: .5rem;
+  @media #{$medium-and-up} {
+    .title, p, footer {
+      transition: padding .2s;
     }
 
-    p {
-      padding-left: .75rem;
-    }
-
-    footer {
-      padding-left: 1rem;
+    &:hover {
+      .title { padding-left: .5rem }
+      p { padding-left: .75rem }
+      footer { padding-left: 1rem }
     }
   }
 }
@@ -417,6 +432,10 @@ aside.activities {
         display: block;
       }
     }
+  }
+
+  @media #{$medium-and-down} {
+    display: none;
   }
 }
 
