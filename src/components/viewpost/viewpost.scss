@@ -1,0 +1,35 @@
+main.view-post {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+
+  @media #{$small-and-down} {
+    flex-direction: column;
+  }
+
+  article.post {
+    flex: 1;
+    position: relative;
+    padding-right: 1rem;
+
+    .title {
+      margin: 0 0 1.5rem;
+    }
+  }
+
+  aside.meta {
+    min-width: 25rem;
+    max-width: 25rem;
+    border-left: 1px solid darken($tabs-bg-color, 5%);
+    padding-left: 1rem;
+
+    @media #{$large-and-down} {
+      min-width: 20rem;
+      max-width: 20rem;
+    }
+
+    @media #{$small-and-down} {
+      max-width: none;
+    }
+  }
+}

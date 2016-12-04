@@ -1,10 +1,6 @@
 html, body {
     margin  : 0px;
     padding : 0px;
-} 
-
-.padding10px {
-    padding: 10px;
 }
 
 .posttitle {
@@ -19,13 +15,13 @@ html, body {
     font-size   : 30px;
 }
 
-h2 span { 
-   color: white; 
-   font: bold 24px/45px Helvetica, Sans-Serif; 
-   letter-spacing: -1px;  
+h2 span {
+   color: white;
+   font: bold 24px/45px Helvetica, Sans-Serif;
+   letter-spacing: -1px;
    background: rgb(0, 0, 0); /* fallback color */
    background: rgba(0, 0, 0, 0.7);
-   padding: 10px; 
+   padding: 10px;
 }
 
 .img_header {
@@ -39,7 +35,7 @@ h2 span {
   position: absolute;
   padding: 10px;
   bottom: 0px;
-  
+
 }
 
 p { word-wrap:break-word;
@@ -47,7 +43,7 @@ p { word-wrap:break-word;
 
 .collapsible-body {
    background-color:#fcfcfc;
-} 
+}
 
 .md-chip {
   display: inline-block;

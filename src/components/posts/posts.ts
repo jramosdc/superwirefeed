@@ -3,16 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 
-
 @Component({
   selector: 'posts',
-  host: {
-    class: 'col s12'
-  },
+  host: {},
   template: require('./posts.html')
 })
-export class PostsComponent implements OnInit {
 
+export class PostsComponent implements OnInit {
   User: User;
   Domain: string
   FeedID: string
