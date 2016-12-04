@@ -10,7 +10,7 @@ main.view-post {
   article.post {
     flex: 1;
     position: relative;
-    padding-right: 1rem;
+    padding-right: 1.5rem;
 
     .title {
       margin: 0 0 1.5rem;
@@ -21,7 +21,7 @@ main.view-post {
     min-width: 25rem;
     max-width: 25rem;
     border-left: 1px solid darken($tabs-bg-color, 5%);
-    padding-left: 1rem;
+    padding-left: 1.5rem;
 
     @media #{$large-and-down} {
       min-width: 20rem;
