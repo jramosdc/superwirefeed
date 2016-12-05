@@ -213,7 +213,8 @@ export class authService {
 		return this.af.database.object('/users/' + userid).set({
 			uid: uid,
 			email: email,
-			profileImageURL: this.User.password.profileImageURL
+			profileImageURL: this.User.password.profileImageURL,
+			useBackgroundImage: true
 		})
 	}
 

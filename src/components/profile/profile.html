@@ -2,11 +2,11 @@
 	.jumbo:hover {
 		opacity: 0.5;
 	}
-
+	
 	.backgroundContainer:hover .camOnHover {
 		display: block;
 	}
-
+	
 	.camOnHover {
 		position: absolute;
 		display: none;
@@ -96,7 +96,7 @@
 			<img *ngIf="profile.profileImageURL" [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
 			<h5 class="col s5 valign">{{profile.displayName || profile.email}}</h5>
 			<span class="col s4 valign">
-        <input type="checkbox" id="useBG" #useBG/>
+        <input type="checkbox" id="useBG" #useBG />
         <label for="useBG" style="float:right;">use Gradiant on feed background</label>
       </span>
 		</div>
@@ -303,14 +303,14 @@
 			<input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
 			<div *ngIf="!profile?.backgroundImageURL">
 				<div [hidden]="!imageSelected">
-					<img src="https://unsplash.it/300/200/?random"
-						alt="default background image" (click)="fileInput2.click(); imageSelected=false;" style="width: 300px; height: auto;"
-					/>
+					<img src="https://unsplash.it/300/200/?random" alt="default background image" (click)="fileInput2.click(); imageSelected=false;"
+						style="width: 300px; height: auto;" />
 				</div>
 			</div>
 			<div *ngIf="profile?.backgroundImageURL">
 				<div [hidden]="!imageSelected">
-					<img [src]="profile.backgroundImageURL" alt="User Profile Image" class="col s12" (click)="fileInput2.click(); imageSelected=false;">
+					<img [src]="profile.backgroundImageURL" alt="User Profile Image" class="col s12" (click)="fileInput2.click(); imageSelected=false;"
+						style="width: 300px; height: auto;">
 				</div>
 			</div>
 			<div [hidden]="imageSelected">
