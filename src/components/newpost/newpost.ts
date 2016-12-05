@@ -5,8 +5,9 @@ import { embedlyService, IEmbedly } from '../services/embedlyService';
 import { FirebaseStorageService } from '../services/firebaseStorageService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
 import SearchBar from '../services/searchBar';
+var Papa = require('../../lib/papaparse');
 
-declare var Papa: any, tinymce: any;
+declare var tinymce: any;
 
 @Component({
     selector: 'newpost',
