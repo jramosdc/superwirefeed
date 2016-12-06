@@ -27,7 +27,8 @@
     }
 
     &:focus {
-      background: rgba(white, .15);
+      color: $dark-blue;
+      background: rgba(white, .9);
     }
   }
 
