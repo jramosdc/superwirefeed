@@ -29,7 +29,7 @@ export class ViewPostComponent {
             if (this.postid) {
                 this.as.loadPost(this.postid).subscribe((post) => {
                     this.post = post;
-                    this.post['purl'] = sanitizer.bypassSecurityTrustResourceUrl(post.pdfLink);
+                    this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace("http:", "")) : post.pdfLink;
                     this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
                     setTimeout(() => {
                         $('.linkify')['linkify']();
