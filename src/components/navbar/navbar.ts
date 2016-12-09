@@ -49,6 +49,7 @@ export class NavbarComponent implements OnInit {
   }
 
   loginModal() {
+    $('#registerModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
     $('#loginModal')['openModal']();
   }
@@ -69,6 +70,7 @@ export class NavbarComponent implements OnInit {
   }
 
   registerModal() {
+    $('#loginModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
     $('#registerModal')['openModal']();
   }
