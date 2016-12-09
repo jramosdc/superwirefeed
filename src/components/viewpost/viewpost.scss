@@ -1,21 +1,21 @@
 main.view-post {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 2rem;
+  margin: 2rem auto;
 
-  @media #{$small-and-down} {
-    flex-direction: column;
+  .poster {
+    margin-bottom: 2rem;
+  }
+
+  .title {
+    margin: 3rem 0;
+    font-weight: bold;
   }
 
   article.post {
-    flex: 1;
     position: relative;
     padding-right: 1.5rem;
-
-    .title {
-      margin: 0 0 1.5rem;
-      font-weight: bold;
-    }
+    max-width: 1000px;
+    margin: 0 auto;
+    color: fade(black, 90%);
   }
 
   aside.meta {

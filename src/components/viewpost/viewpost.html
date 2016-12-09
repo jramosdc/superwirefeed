@@ -1,6 +1,9 @@
 <main class="view-post center-container" *ngIf="post">
+
+  <img [src]="post.embedly.images[0].url" *ngIf="post.embedly && post.embedly.images" class="poster">
+
   <article class="post">
-    <h5 class="title">{{post.title}}</h5>
+    <h4 class="title">{{post.title}}</h4>
 
     <div *ngIf="post.embedly && post.embedly.url">
       <a href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
@@ -10,10 +13,7 @@
     <div id="postDetails" class="content"></div>
   </article>
 
-  <aside class="meta">
-    <img [src]="post.embedly.images[0].url" *ngIf="post.embedly && post.embedly.images">
-    <img src="http://www.davidluke.com/wp-content/themes/david-luke/media/ims/placeholder720.gif" *ngIf="!post.mainUrl">
-
+  <aside class="meta hide">
     <div  *ngIf="User.password.email && post.owner.userid == User.feed.userid">
       <a [routerLink]="['/editpost', postid]"><i class="large mdi mdi-pencil"></i></a>
     </div>
