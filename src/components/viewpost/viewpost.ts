@@ -6,6 +6,8 @@ import { User, authService } from '../services/authService';
 import { httpService } from '../services/httpService';
 import SearchBar from '../services/searchBar';
 
+declare var StripeCheckout: any;
+
 @Component({
     selector: 'viewpost',
     host: {
@@ -19,6 +21,7 @@ export class ViewPostComponent {
     User: User;
     postid: string
     post: FirebaseObjectObservable<{}>
+    stripeHandler: any;
 
     constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBar) {
         this.User = this.as.emptyUser();
@@ -44,6 +47,37 @@ export class ViewPostComponent {
             }
         });
         this.sb.setHiddenSearchBar(true);
+
+        this.initializeStripeModal();
+
+    }
+
+    initializeStripeModal() {
+        this.stripeHandler = StripeCheckout.configure({
+            key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
+            image: 'https://s3.amazonaws.com/stripe-uploads/acct_16lS7BHW1tZsRCeemerchant-icon-1481257880232-logo-white.png',
+            locale: 'auto',
+            token: function (token) {
+                console.log('token: ', token)
+                // You can access the token ID with `token.id`.
+                // Get the token ID to your server-side code for use.
+            }
+        });
+
+        // Close Checkout on page navigation:
+        window.addEventListener('popstate', () => {
+            this.stripeHandler.close();
+        });
+    }
+
+    onStripeBtnClick() {
+        // Open Checkout with further options:
+        event.preventDefault();
+        this.stripeHandler.open({
+            name: 'Superwire, Inc.',
+            description: '2 widgets',
+            amount: 2000
+        });
     }
 
     returnMoment(timestamp) {
