@@ -26,11 +26,15 @@
         </button>
       </form>
     </span>
-
+    <div class="relative-wrap">
+    
     <a data-activates="slide-out" class="button-collapse right">
-      <i class="mdi mdi-dots-vertical"></i>
+      <i class="mdi mdi-settings mdi-36px"></i>
     </a>
-
+       <div *ngIf="User.password.email" class="notification" style="overflow:initial">
+                <h1>!</h1>
+       </div>
+    </div>
   </div>
 </nav>
 
