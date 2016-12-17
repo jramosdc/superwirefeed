@@ -16,6 +16,7 @@ export class PostsComponent implements OnDestroy {
     User: User;
     Domain: string
     FeedID: string
+    feed: Object = {};
     search: string
     activeCategory: string;
     categories: Array<string> = [];
@@ -47,6 +48,7 @@ export class PostsComponent implements OnDestroy {
 
     ngOnInit() {
         this.as.getFeedNameByFeedID(this.FeedID).subscribe(feed => {
+            this.feed = feed;
             this.as.setActivePageTitle(feed.feedName);
             this.categories.splice(0);
             this.categories.push('All');
