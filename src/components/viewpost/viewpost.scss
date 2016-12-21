@@ -153,3 +153,135 @@ main.view-post {
     margin-top: .5rem;
   }
 }
+
+.section-separately {
+  > header {
+    color: $blue-gray;
+    font-size: .85em;
+
+    &,
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      img {
+        margin-right: .35rem;
+      }
+    }
+  }
+
+  > ul {
+    display: flex;
+    width: 100%;
+    margin-top: .75rem;
+
+    > li {
+      background: $blue;
+      color: $dark-blue;
+      line-height: 1;
+      position: relative;
+      padding: 1.5rem;
+      flex: 1;
+      transition: .2s ease;
+      transition-property: background;
+
+      &:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+
+      &:not(:last-child) {
+        &:after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 20%;
+          bottom: 20%;
+          border-right: $dark-blue 1px solid;
+          opacity: .1;
+        }
+      }
+
+      &:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+
+      > ul {
+        background: white;
+        position: absolute;
+        top: 100%;
+        border-radius: 5px;
+        left: 0;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        box-shadow: transparentize(black, .7) 0 2px 7px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translate3d(0, 0, 0);
+        transition: .2s ease;
+        transition-property: opacity, visibility, transform;
+        line-height: 1.8;
+
+        li {
+          font-size: .85em;
+
+          a {
+            display: block;
+            color: $dark-blue;
+
+            &:visited,
+            &.active {
+              color: #039be5;
+            }
+          }
+
+          a:hover {
+            text-decoration: underline;
+          }
+        }
+
+        &:after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 1rem;
+          bottom: 100%;
+        }
+
+        &:before {
+          content: '▴';
+          position: absolute;
+          font-size: 1.5em;
+          margin-left: -.5em;
+          left: 50%;
+          width: 100%;
+          height: 1rem;
+          bottom: 100%;
+          text-shadow: transparentize(black, .9) 0 -2px 3px;
+          line-height: 1;
+          color: white;
+        }
+      }
+
+      &:hover {
+        background: darken(desaturate($blue, 25%), 5%);
+
+        &:not(:last-child) {
+          &:after {
+            display: none;
+          }
+        }
+
+        > ul {
+          opacity: 1;
+          visibility: visible;
+          transform: translate3d(0, 1rem, 0);
+        }
+      }
+    }
+  }
+}

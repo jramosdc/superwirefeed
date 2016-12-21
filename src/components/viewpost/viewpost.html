@@ -68,13 +68,10 @@
         <h4 class="title">{{post.title}}</h4>
       </header>
 
-      <!-- <div *ngIf="post.embedly && post.embedly.url">
-        <a href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
-      </div> -->
-
       <!-- content container -->
       <div id="postDetails" class="content"></div>
 
+      <!-- if download -->
       <div class="section-get">
         <button class="waves-effect waves-light btn-large">
           DOWNLOAD POST AND ASSETS
@@ -82,7 +79,8 @@
         </button>
       </div>
 
-      <div class="section-get">
+      <!-- if buy -->
+      <div class="section-get hide">
         <button class="waves-effect waves-light btn-large">
           BUY CONTENT
         </button>
@@ -90,8 +88,49 @@
         <img src="assets/powered-by-stripe.svg" alt="">
       </div>
 
-      <div class="section-get">
+      <!-- if creative commons -->
+      <div class="section-get hide">
         <img src="assets/cc/by.png" alt="">
+      </div>
+
+      <div class="section-separately">
+        <header>
+          Or, download separatelly
+
+          <div class="logo">
+            <img src="assets/logo.svg" alt="">
+            <span>Powered by Superwire</span>
+          </div>
+        </header>
+
+        <ul>
+          <li>
+            PDF
+            <ul>
+              <li><a href="#post.pdf">post.pdf</a></li>
+            </ul>
+          </li>
+          <li>
+            Images
+            <ul>
+              <li><a href="#hillary_01.jpg">hillary_01.jpg</a></li>
+              <li><a href="#hillary_002.jpg">hillary_002.jpg</a></li>
+            </ul>
+          </li>
+          <li>
+            CSV Databases
+            <ul>
+              <li><a href="#hillary_votes.csv">hillary_votes.csv</a></li>
+              <li><a href="#trump_votes.csv">trump_votes.csv</a></li>
+            </ul>
+          </li>
+          <li>
+            License
+            <ul>
+              <li><a href="#MIT_LICENSE.md">MIT_LICENSE.md</a></li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </article>
   </div>
@@ -99,6 +138,10 @@
   <aside class="meta hide">
     <div  *ngIf="User.password.email && post.owner.userid == User.feed.userid">
       <a [routerLink]="['/editpost', postid]"><i class="large mdi mdi-pencil"></i></a>
+    </div>
+
+    <div *ngIf="post.embedly && post.embedly.url">
+      <a href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
     </div>
 
     <p><a [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</a></p>
