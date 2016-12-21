@@ -18,8 +18,9 @@ export interface User { uid: string, emailVerified: boolean, password: { email: 
 export class authService {
 
 	// ref: Firebase = new firebase("https://superwireapp.firebaseio.com");
-	domain: string = 'https://feed.superwire.io'
-	api: string = 'https://arcane-spire-82869.herokuapp.com'
+	domain: string = 'https://feed.superwire.io';
+	api: string = 'https://feed-superwire.herokuapp.com';
+	// api: string = 'https://arcane-spire-82869.herokuapp.com';
 	User: User;
 	activePage: Object = { title: '' };
 	activeFeed: Object = {
@@ -450,7 +451,7 @@ export class authService {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 		return text;
-	}charge
+	} charge
 
 
 	ccCharge(amount, token) {
