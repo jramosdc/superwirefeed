@@ -58,10 +58,8 @@
     </div>
   </section>
 
-  <figure class="poster">
-    <img [src]="post.embedly.images[0].url"
-      *ngIf="post.embedly && post.embedly.images">
-  </figure>
+  <figure class="poster"><img [src]="post.embedly.images[0].url"
+      *ngIf="post.embedly && post.embedly.images"></figure>
 
   <div class="center-container">
     <article class="post">
@@ -70,12 +68,31 @@
         <h4 class="title">{{post.title}}</h4>
       </header>
 
-      <div *ngIf="post.embedly && post.embedly.url">
+      <!-- <div *ngIf="post.embedly && post.embedly.url">
         <a href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
-      </div>
+      </div> -->
 
       <!-- content container -->
       <div id="postDetails" class="content"></div>
+
+      <div class="section-get">
+        <button class="waves-effect waves-light btn-large">
+          DOWNLOAD POST AND ASSETS
+          <span>Election_fan_fiction_Hillary_Won.zip</span>
+        </button>
+      </div>
+
+      <div class="section-get">
+        <button class="waves-effect waves-light btn-large">
+          BUY CONTENT
+        </button>
+        <br>
+        <img src="assets/powered-by-stripe.svg" alt="">
+      </div>
+
+      <div class="section-get">
+        <img src="assets/cc/by.png" alt="">
+      </div>
     </article>
   </div>
 
