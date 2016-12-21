@@ -154,7 +154,7 @@
 
   <hr class="line">
 
-  <form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value)">
+  <form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value, terms.checked)">
     <div class="row">
       <div class="input-field">
         <input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" required>
@@ -187,11 +187,18 @@
 
     <button type="submit" class="waves-effect waves-blue white-text btn-large submit" [disabled]="!f.valid">Create account</button>
 
-    <div class="error">
-      <span class="red-text" id="errorLogin"></span>
+    <div class="row">
+      <div class="input-field">
+        <input type="checkbox" class="filled-in" id="terms-check" #terms />
+        <label for="terms-check">I agree to the <span class="light-blue-text">terms of services</span></label>
+      </div>
     </div>
 
-    <div class="modal-loading" *ngIf="loginLoading">
+    <div class="error">
+      <span class="red-text" id="errorRegister"></span>
+    </div>
+
+    <div class="modal-loading" *ngIf="registerLoading">
       <div class="preloader-wrapper small active">
         <div class="spinner-layer spinner-blue-only">
           <div class="circle-clipper left">

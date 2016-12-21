@@ -96,21 +96,21 @@
       </figure>
 
       <div class="title">
-        <h5>{{FeedID}}</h5>
-        <p>We need feed.name and feed.description here</p>
+        <h5>{{feed.feedName}}</h5>
+        <p>{{feed.description}}</p>
       </div>
 
       <div class="labels">
         <div class="posts">
           <span class="label">posts</span>
-          <strong>10</strong>
+          <strong>{{ (posts | async)?.length }}</strong>
         </div>
 
         <div class="likes">
           <i class="mdi mdi-thumb-up" (click)="voteUp($event)"></i>
           <div>
             <span class="label">likes</span>
-            <strong>77</strong>
+            <strong>{{feed.likes}}</strong>
           </div>
           <i class="mdi mdi-thumb-down" (click)="voteDown($event)"></i>
         </div>

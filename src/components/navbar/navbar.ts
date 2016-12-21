@@ -75,7 +75,10 @@ export class NavbarComponent implements OnInit {
     $('#registerModal')['openModal']();
   }
 
-  register(user) {
+  register(user, terms) {
+    console.log(terms);
+    if (!terms) return $('#errorRegister').html('You have to agree on Superwire\'s terms to create an account');
+    $('#errorRegister').html('');
     this.registerLoading = true;
     this.as.register(user.email.toLowerCase(), user.password).then((res) => {
       this.as.login(user.email.toLowerCase(), user.password).then((res) => {
