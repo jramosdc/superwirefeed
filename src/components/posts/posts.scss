@@ -451,41 +451,5 @@ main.feed {
     z-index: 1;
     background-color: white;
     box-shadow: rgba(180, 180, 180, .5) 2px 2px 15px;
-
-    svg {
-      width: 1.25em;
-      height: 1.25em;
-    }
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    line-height: 1;
-
-    a {
-      margin-right: 1.15rem;
-    }
-
-    .url {
-      margin-left: .25rem;
-      background-color: lighten($blue-gray, 35%);
-      border-radius: 3px;
-      overflow: hidden;
-      display: flex;
-
-      span {
-        padding: .4rem .5rem;
-        display: inline-block;
-        color: rgba($blue-gray, .85);
-      }
-
-      button {
-        appearance: none;
-        border: 0;
-        background: rgba($blue-gray, .15);
-        color: $blue-gray;
-      }
-    }
   }
 }

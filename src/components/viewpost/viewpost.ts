@@ -15,11 +15,14 @@ export class ViewPostComponent {
   User: User;
   postid: string
   post: FirebaseObjectObservable<{}>
+  activeCategory: string;
+  categories: Array<string>
 
   constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.as.setActivePageTitle('View Post');
+    this.categories = this.as.getCategories();
     this.route.params.subscribe(params => {
       this.postid = params['postid'];
       if (this.postid) {
@@ -80,7 +83,6 @@ export class ViewPostComponent {
       tbl.setAttribute("class", "striped highlight centered responsive-table");
     }, 1000)
   }
-
 }
 
 // Papa.parse('https://docs.google.com/spreadsheets/d/1se-tAna5Nlei8K7weGc-A9jDafoV8DLQP-sqd7Iq0Ns/pubhtml?gid=74699649&single=true', {
