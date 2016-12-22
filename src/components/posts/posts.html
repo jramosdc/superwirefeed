@@ -18,7 +18,11 @@
   <aside class="meta">
     <section class="info-card">
       <figure>
-        <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
+
+        <img class="responsive-img" *ngIf="feed?.useBackgroundImage && feed?.owner?.backgroundImageURL" [src]="feed?.owner?.backgroundImageURL" alt="Background Image">
+        <!-- temporary placeholder image -->
+        <img class="responsive-img" *ngIf="!feed?.useBackgroundImage" src="http://lorempixel.com/300/200/?random=1" alt="Background Image">
+        <img class="responsive-img" *ngIf="feed?.useBackgroundImage  && !feed?.owner?.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
 
         <div class="dropdowns">
           <a class="dropdown-button share-btn right waves-effect  btn-floating" data-activates="sharing-options" data-alignment="left">
@@ -125,7 +129,7 @@
         <h6 class="section-title">Author</h6>
 
         <section class="author">
-          <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
+          <img *ngIf="feed?.owner?.profileImageURL" [src]="feed?.owner?.profileImageURL">
           <div *ngIf="post?.owner?.userid">
             <h6 class="author-name">{{ post.owner.userid }}</h6>
             <span>@{{ post.owner.userid }}</span>
