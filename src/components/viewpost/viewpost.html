@@ -7,7 +7,6 @@
         <div class="row">
             <div class="card panel indigo">
                 <h5 class="white-text" [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</h5>
-                <button type="button" id="customButton" class="waves-effect waves-light btn purple white-text right" (click)="onStripeBtnClick()">Stripe Modal!</button>
             </div>
         </div>
         <div class="row">
@@ -19,6 +18,7 @@
                     <div class="more" *ngIf="post.embedly && post.embedly.url">
                         <a class="btn-floating waves-effect waves-light indigo" href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
                     </div>
+                    <button type="button" id="customButton" class="waves-effect waves-light btn purple white-text right" (click)="onStripeBtnClick()">BUY!</button>
                 </li>
                 <li>
                     <div class="collapsible-header"><i *ngFor="let type of post.types" class="mdi {{'mdi-' + type}}"></i>Content</div>
@@ -66,4 +66,24 @@
             <h5 class="indigo-text">{{returnMoment(post.timestamp)}}</h5>
         </div>
     </div>
+</div>
+
+<div id="agreementModal" class="modal zindex9999">
+    <form class="modal-content">
+        <div class="nav-wrapper center-align">
+            <h4 class="purple-text"> License Agreement</h4>
+        </div>
+        <hr />
+        <div class="row left-align">
+            <ul>
+                <li>Agreement 1</li>
+                <li>Agreement 2</li>
+                <li>Agreement 3</li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="onAgreement();">AGREE!</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="agreementModelClose();">CLOSE</button>
+        </div>
+    </form>
 </div>

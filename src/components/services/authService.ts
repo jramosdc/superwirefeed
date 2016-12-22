@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
+import { httpService } from './httpService';
 
 export {
 	FirebaseListObservable
@@ -17,7 +18,9 @@ export interface User { uid: string, emailVerified: boolean, password: { email: 
 export class authService {
 
 	// ref: Firebase = new firebase("https://superwireapp.firebaseio.com");
-	domain: string = 'https://feed.superwire.io'
+	domain: string = 'https://feed.superwire.io';
+	api: string = 'https://feed-superwire.herokuapp.com';
+	// api: string = 'https://arcane-spire-82869.herokuapp.com';
 	User: User;
 	activePage: Object = { title: '' };
 	activeFeed: Object = {
@@ -30,7 +33,7 @@ export class authService {
 	storageRef = firebase.storage().ref('/');
 	private mainRef = firebase.database().ref('/');
 
-	constructor(private af: AngularFire) {
+	constructor(private af: AngularFire, private http: httpService) {
 		this.User = this.emptyUser();
 		this.authSubscribe()
 		this.loadFeeds();
@@ -448,6 +451,21 @@ export class authService {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 		return text;
+	} charge
+
+
+	ccCharge(amount, token) {
+		return new Promise((res, rej) => {
+			let obj = { amount, token }
+			this.http.addJSON(`${this.api}/api/cc/charge/`, obj, (d) => {
+				console.log(d)
+				if (d.success) {
+					res(d.data);
+				} else {
+					rej(d.error);
+				}
+			});
+		}); // promise
 	}
 
 }

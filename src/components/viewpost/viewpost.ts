@@ -22,6 +22,7 @@ export class ViewPostComponent {
     postid: string
     post: FirebaseObjectObservable<{}>
     stripeHandler: any;
+    stripeTokenId: string;
 
     constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBar) {
         this.User = this.as.emptyUser();
@@ -57,8 +58,10 @@ export class ViewPostComponent {
             key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
             image: 'https://s3.amazonaws.com/stripe-uploads/acct_16lS7BHW1tZsRCeemerchant-icon-1481257880232-logo-white.png',
             locale: 'auto',
-            token: function (token) {
-                console.log('token: ', token)
+            token: (token, args) => {
+                this.stripeTokenId = token.id;
+                console.log('token-----: ', this.stripeTokenId)
+                this.agreementModelPopup();
                 // You can access the token ID with `token.id`.
                 // Get the token ID to your server-side code for use.
             }
@@ -75,9 +78,23 @@ export class ViewPostComponent {
         event.preventDefault();
         this.stripeHandler.open({
             name: 'Superwire, Inc.',
-            description: '2 widgets',
-            amount: 2000
+            description: 'Buy a Post',
+            amount: 100,
+            currency: 'usd',
+            address: false,     
         });
+        // this.stripeHandler.open({        
+        //     key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',        
+        //     address: false,        
+        //     amount: 100, /* expects an integer */        
+        //     currency: 'usd',        
+        //     name: 'Purchase',        
+        //     description: 'Description',        
+        //     panelLabel: 'Checkout',        
+        //     // token: (token) => {
+        //     //     console.log('token: ', token)
+        //     // }   
+        // });
     }
 
     returnMoment(timestamp) {
@@ -118,6 +135,27 @@ export class ViewPostComponent {
         setTimeout(() => {
             tbl.setAttribute("class", "striped highlight centered responsive-table");
         }, 1000)
+    }
+
+
+    agreementModelPopup() {
+        $('#agreementModal')['openModal']();
+    }
+
+    agreementModelClose() {
+        $('#agreementModal')['closeModal']();
+    }
+
+    onAgreement() {
+        console.log('i agree!')
+        this.agreementModelClose();
+        this.as.ccCharge(100, this.stripeTokenId)
+        .then(data => {
+            console.log('on success; ', data)
+        })
+        .catch(err => { 
+            console.log('on err; ', err)
+        })
     }
 
 }
