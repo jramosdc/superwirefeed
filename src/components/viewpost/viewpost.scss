@@ -35,6 +35,15 @@ main.view-post {
       justify-content: space-between;
       align-items: center;
 
+      @media #{$small-and-down} {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .feed-name {
+          margin-bottom: 1rem;
+        }
+      }
+
       .feed-name {
         span {
           font-size: 13px;
@@ -186,6 +195,34 @@ main.view-post {
     width: 100%;
     margin-top: .75rem;
 
+    @media #{$small-and-down} {
+      flex-direction: column;
+      align-items: flex-start;
+
+      > li {
+        width: 100%;
+
+        &:first-child:first-child {
+          border-radius: 5px 5px 0 0;
+        }
+
+        &:last-child:last-child {
+          border-radius: 0 0 5px 5px;
+        }
+
+        &:not(:last-child):not(:last-child) {
+          &:after {
+            left: 1.5rem;
+            right: 1.5rem;
+            top: auto;
+            bottom: 0;
+            border-right: none;
+            border-top: $dark-blue 1px solid;
+          }
+        }
+      }
+    }
+
     > li {
       background: $blue;
       color: $dark-blue;
@@ -220,19 +257,48 @@ main.view-post {
 
       > ul {
         background: white;
-        position: absolute;
-        top: 100%;
         border-radius: 5px;
-        left: 0;
-        width: 100%;
         padding: 1rem 1.5rem;
-        box-shadow: transparentize(black, .7) 0 2px 7px;
-        opacity: 0;
-        visibility: hidden;
-        transform: translate3d(0, 0, 0);
-        transition: .2s ease;
-        transition-property: opacity, visibility, transform;
         line-height: 1.8;
+
+        @media #{$medium-and-up} {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          box-shadow: transparentize(black, .7) 0 2px 7px;
+          opacity: 0;
+          visibility: hidden;
+          transform: translate3d(0, 0, 0);
+          transition: .2s ease;
+          transition-property: opacity, visibility, transform;
+
+          &:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1rem;
+            bottom: 100%;
+          }
+
+          &:before {
+            content: '▴';
+            position: absolute;
+            font-size: 1.5em;
+            margin-left: -.5em;
+            left: 50%;
+            width: 100%;
+            height: 1rem;
+            bottom: 100%;
+            text-shadow: transparentize(black, .9) 0 -2px 3px;
+            line-height: 1;
+            color: white;
+          }
+        }
+
+        @media #{$small-and-down} {
+          margin-top: 1rem;
+        }
 
         li {
           font-size: .85em;
@@ -251,43 +317,23 @@ main.view-post {
             text-decoration: underline;
           }
         }
-
-        &:after {
-          content: '';
-          position: absolute;
-          width: 100%;
-          height: 1rem;
-          bottom: 100%;
-        }
-
-        &:before {
-          content: '▴';
-          position: absolute;
-          font-size: 1.5em;
-          margin-left: -.5em;
-          left: 50%;
-          width: 100%;
-          height: 1rem;
-          bottom: 100%;
-          text-shadow: transparentize(black, .9) 0 -2px 3px;
-          line-height: 1;
-          color: white;
-        }
       }
 
-      &:hover {
-        background: darken(desaturate($blue, 25%), 5%);
+      @media #{$medium-and-up} {
+        &:hover {
+          background: darken(desaturate($blue, 25%), 5%);
 
-        &:not(:last-child) {
-          &:after {
-            display: none;
+          &:not(:last-child) {
+            &:after {
+              display: none;
+            }
           }
-        }
 
-        > ul {
-          opacity: 1;
-          visibility: visible;
-          transform: translate3d(0, 1rem, 0);
+          > ul {
+            opacity: 1;
+            visibility: visible;
+            transform: translate3d(0, 1rem, 0);
+          }
         }
       }
     }
@@ -313,6 +359,16 @@ main.view-post {
       flex: 1;
       white-space: nowrap;
 
+      @media #{$small-and-down} {
+        &:nth-child(1) {
+          display: none;
+        }
+
+        &:nth-child(2) {
+          justify-content: flex-start;
+        }
+      }
+
       &:nth-child(2) {
         flex: 5;
       }
@@ -329,7 +385,6 @@ main.view-post {
     }
 
     > .superwire {
-      text-align: center;
       font-size: .9em;
 
       img {
@@ -384,6 +439,11 @@ main.view-post {
     box-sizing: border-box;
     transition: .2s ease background;
     cursor: pointer;
+
+    @media #{$small-and-down} {
+      max-width: 100%;
+      min-width: 100%;
+    }
 
     > h6 {
       font-size: 20px;
