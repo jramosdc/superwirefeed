@@ -155,6 +155,14 @@ main.view-post {
 }
 
 .section-separately {
+  position: relative;
+  z-index: 2;
+
+  & + .superwire-preview {
+    position: relative;
+    z-index: 1;
+  }
+
   > header {
     color: $blue-gray;
     font-size: .85em;
@@ -281,6 +289,130 @@ main.view-post {
           visibility: visible;
           transform: translate3d(0, 1rem, 0);
         }
+      }
+    }
+  }
+}
+
+.superwire-preview {
+  background: $blue-gray;
+  border-radius: 5px;
+  color: white;
+
+  > header {
+    height: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > span {
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      white-space: nowrap;
+
+      &:nth-child(2) {
+        flex: 5;
+      }
+
+      &:last-child {
+        justify-content: flex-end;
+
+        i {
+          cursor: pointer;
+          font-size: 1.25em;
+          padding: .3em;
+        }
+      }
+    }
+
+    > .superwire {
+      text-align: center;
+      font-size: .9em;
+
+      img {
+        margin-right: .5rem;
+        height: 1.5rem;
+        opacity: .75;
+      }
+
+      span {
+        opacity: .5;
+      }
+    }
+  }
+
+  > .content {
+    padding: 0 .4rem .4rem;
+
+    iframe {
+      background: white;
+      border-radius: 0 0 4px 4px;
+      border: 0;
+      width: 100%;
+      min-height: 4rem;
+      display: block;
+      margin: 0;
+    }
+  }
+}
+
+.other-posts {
+  background: $mid-gray;
+  padding: 60px 0;
+
+  h5.title {
+    color: $quaternary-color;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  li {
+    background: white;
+    border: 1px solid $mid-gray;
+    max-width: 50%;
+    min-width: 50%;
+    flex: 1;
+    padding: 1.2rem 1.5rem;
+    box-sizing: border-box;
+    transition: .2s ease background;
+    cursor: pointer;
+
+    > h6 {
+      font-size: 20px;
+      margin-bottom: .5rem;
+      color: $title-gray;
+    }
+
+    > p {
+      margin: 0;
+      color: $quaternary-color;
+    }
+
+    > h6,
+    > p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: .2s ease padding;
+    }
+
+    &:hover {
+      background: $light-gray;
+
+      > h6 {
+        padding-left: .3em;
+      }
+
+      > p {
+        padding-left: .6em;
       }
     }
   }
