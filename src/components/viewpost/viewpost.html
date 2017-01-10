@@ -18,7 +18,8 @@
                     <div class="more" *ngIf="post.embedly && post.embedly.url">
                         <a class="btn-floating waves-effect waves-light indigo" href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
                     </div>
-                    <button type="button" id="customButton" class="waves-effect waves-light btn purple white-text right" (click)="onStripeBtnClick()">BUY!</button>
+                    <button type="button" id="customButton" class="waves-effect waves-light btn purple white-text right" *ngIf="post.license == 3 || post.license == 4" (click)="onStripeBtnClick()">BUY!</button>
+                    <button type="button" id="customButton" class="waves-effect waves-light btn purple white-text right" *ngIf="post.license != 3 && post.license != 4">CC</button>
                 </li>
                 <li>
                     <div class="collapsible-header"><i *ngFor="let type of post.types" class="mdi {{'mdi-' + type}}"></i>Content</div>

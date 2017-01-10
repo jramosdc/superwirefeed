@@ -24,6 +24,7 @@ export class NewPostComponent implements OnInit {
     postLoading: boolean;
     categories: Array<string> = [];
     _priority: any;                 // priority model for default value in our form
+    _license: any;                 // priority model for default value in our form
     ty: string[];                  // selected types
     csvFile: any = null;
     postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
@@ -68,6 +69,7 @@ export class NewPostComponent implements OnInit {
     defaultModelInitialization() {
         this._priority = 'Low';
         this.ty = null;
+        this._license = '0';
     }
 
     ngOnInit() {
@@ -146,6 +148,7 @@ export class NewPostComponent implements OnInit {
             title: newpost.title,
             detail: newpost.detail,
             priority: newpost.priority,
+            license: newpost.license,
             types: newpost.type,
             category: newpost.category,
             pdfLink: newpost.pdfLink ? newpost.pdfLink : '',

@@ -186,6 +186,10 @@ export class authService {
 		});
 	}
 
+	recover(email: string) {
+		return firebase.auth().sendPasswordResetEmail(email);
+	}
+
 	logout() {
 		this.af.auth.logout();
 		setTimeout(() => {

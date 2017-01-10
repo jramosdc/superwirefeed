@@ -137,7 +137,7 @@
   <footer>
     <h6>Problems with signing in?</h6>
     <button class="btn" (click)="registerModal()">Sign up</button> or
-    <a>recover password</a>
+    <a class="cursor" (click)="recoverModal()">recover password</a>
   </footer>
 
   <hr class="triple line">
@@ -220,8 +220,64 @@
   <footer>
     <h6>Do you already have an account?</h6>
     <button class="btn" (click)="loginModal()">Login</button> Or
-    <a href="#">recover password</a>
+    <a class="cursor" (click)="recoverModal()">recover password</a>
   </footer>
+
+  <hr class="triple line">
+</div>
+
+<div id="recoverModal" class="modal account recover">
+  <header>
+    <h5 class="title">Recover Password</h5>
+    <div class="logo">
+      <img src="assets/logo.svg" alt="">
+      <span>SuperWire</span>
+    </div>
+  </header>
+
+  <hr class="line">
+
+  <form class="modal-content" novalidate #f="ngForm" (ngSubmit)="recover(f.value)">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
+        <label for="regEmail">Email</label>
+        <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
+          Email is required and format should be <i>john@doe.com</i>.
+        </small>
+      </div>
+    </div>
+
+    <button type="submit" class="waves-effect waves-blue white-text btn-large submit" [disabled]="!f.valid">Recover</button>
+
+    <div class="error">
+      <span class="red-text" id="errorRecover"></span>
+    </div>
+
+    <div class="modal-loading" *ngIf="recoverLoading">
+      <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!--<hr class="line">
+
+  <footer>
+    <h6>Do you already have an account?</h6>
+    <button class="btn" (click)="loginModal()">Login</button> Or
+    <a href="#">recover password</a>
+  </footer>-->
 
   <hr class="triple line">
 </div>

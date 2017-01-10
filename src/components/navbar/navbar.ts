@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
 import SearchBar from '../services/searchBar';
@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   activeFeed: Object;
   loginLoading: boolean = false;
   registerLoading: boolean = false;
+  recoverLoading: boolean = false;
   search$;
   isSearchBarHidden: Object;
 
@@ -69,6 +70,28 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  recoverModal() {
+    $('#loginModal')['closeModal']();
+    $('#registerModal')['closeModal']();
+    $('#recoverModal')['openModal']();
+  }
+
+  recover(data) {
+    event.preventDefault();
+    $('#errorRecover').html('');
+    this.recoverLoading = true;
+    this.as.recover(data.email).then(res => {
+      console.log('Email Reset!', res);
+      $('#errorRecover').html('');
+      $('#recoverModal')['closeModal']();
+      this.recoverLoading = false;
+    }).catch((err) => {
+      console.log('Email Reset Failed!', err);
+      $('#errorRecover').html(err['message']);
+      this.recoverLoading = false;
+    });
+  }
+
   registerModal() {
     $('#loginModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
@@ -103,7 +126,11 @@ export class NavbarComponent implements OnInit {
       });
     }).catch((err) => {
       console.log("Register Failed!", err);
-      $('#errorRegister').html(err['message']);
+      if (err.message == 'The email address is already in use by another account.') {
+        $('#errorRegister').html('Email is already in use, please choose a new one or recover password.');
+      } else {
+        $('#errorRegister').html(err['message']);
+      }
       this.registerLoading = false;
     });
   }

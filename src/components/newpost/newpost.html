@@ -32,6 +32,21 @@
             </small>
         </div>
         <div class="row">
+            <label for="license">License</label>
+            <div class="input-field">
+                <select class="browser-default" #license="ngModel" name="license" [(ngModel)]="_license" required>
+                    <option value="0" disabled selected>Choose license</option>
+                    <option value="1">CC-BY</option>
+                    <option value="2">CC-BY-ND</option>
+                    <option value="3">Selling w/ attribution</option>
+                    <option value="4">Selling exclusivly</option>
+                </select>
+                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">
+                    License is required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
             <label for="priority">Priority</label>
             <div class="input-field">
                 <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="_priority" required>
