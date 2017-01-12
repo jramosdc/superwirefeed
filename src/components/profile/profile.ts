@@ -1,9 +1,8 @@
-import { FirebaseListObservable } from 'angularfire2/es6/database';
 import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { User, authService } from '../services/authService';
+import { User, authService, FirebaseListObservable } from '../services/authService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
-import * as firebase from 'firebase';
+import SearchBar from '../services/searchBar';
 
 @Component({
     selector: 'profile',
@@ -42,7 +41,7 @@ export class ProfileComponent extends Type implements OnInit {
 
     public validEmailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    constructor(private as: authService, private route: ActivatedRoute, private router: Router) {
+    constructor(private as: authService, private route: ActivatedRoute, private router: Router, private sb: SearchBar) {
 
         super();
 
@@ -101,6 +100,8 @@ export class ProfileComponent extends Type implements OnInit {
         this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
         this.cropperSettings_rectangle.noFileInput = true;
 
+        this.sb.setHiddenSearchBar(true);
+
     }
 
     ngOnInit() {
@@ -156,7 +157,7 @@ export class ProfileComponent extends Type implements OnInit {
             'category': category.value,
             'authEmail': this.authList,
             'postCategories': this.postCategoryList,
-            'profileImageURL': this.User.password.profileImageURL,
+            'profileImageURL': this.User.password.profileImageURL ? this.User.password.profileImageURL : "http://www.freeiconspng.com/uploads/profile-icon-9.png",
             'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg',
             'useBackgroundImage': useBG.checked
         };
@@ -174,7 +175,7 @@ export class ProfileComponent extends Type implements OnInit {
                     'owner': {
                         'uid': this.User.uid,
                         'userid': this.userid,
-                        'profileImageURL': this.User.password.profileImageURL,
+                        'profileImageURL': this.User.password.profileImageURL ? this.User.password.profileImageURL : 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
                         'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg'
                     }
                 }

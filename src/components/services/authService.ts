@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularfire2';
-import * as firebase from 'firebase';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
+import { httpService } from './httpService';
+
+export {
+	FirebaseListObservable
+}
 
 export interface User { uid: string, emailVerified: boolean, password: { email: string, profileImageURL: string }, feed: { id: string, name: string, userid: string }, backgroundImageURL: string }
 
@@ -14,7 +18,9 @@ export interface User { uid: string, emailVerified: boolean, password: { email: 
 export class authService {
 
 	// ref: Firebase = new firebase("https://superwireapp.firebaseio.com");
-	domain: string = 'https://feed.superwire.io'
+	domain: string = 'https://feed.superwire.io';
+	api: string = 'https://feed-superwire.herokuapp.com';
+	// api: string = 'https://arcane-spire-82869.herokuapp.com';
 	User: User;
 	activePage: Object = { title: '' };
 	activeFeed: Object = {
@@ -27,75 +33,46 @@ export class authService {
 	storageRef = firebase.storage().ref('/');
 	private mainRef = firebase.database().ref('/');
 
-	constructor(private af: AngularFire) {
+	constructor(private af: AngularFire, private http: httpService) {
 		this.User = this.emptyUser();
 		this.authSubscribe()
 		this.loadFeeds();
 	}
 
 	authSubscribe() {
-
-		let res = this.af.auth.getAuth();
-		if (res) {
-			this.User.uid = res.uid;
-			this.User.emailVerified = res.auth.emailVerified;
-			// this.User.password.profileImageURL = res.auth['photoURL']
-			this.User.password.email = res.auth['email'];
-			this.getUserFeedDetail(this.User.uid).subscribe(feed => {
-				this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
-				this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
-				this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
-				this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
-				this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
-				if (feed[0] && feed[0]['postCategories']) {
-					this.postCategories.splice(0);
-					feed[0]['postCategories'].forEach(val => {
-						this.postCategories.push(val);
-					});
-				}
-			});
-		} else { // if getAuth is not null
-			this.User.uid = '';
-			this.User.emailVerified = false;
-			this.User.password.profileImageURL = '';
-			this.User.password.email = '';
-			this.User.feed.id = '';
-			this.User.feed.name = '';
-			this.User.feed.userid = '';
-			this.User.backgroundImageURL = '';
-		}
-
-		// this.af.auth.subscribe((res/*: FirebaseAuthState*/) => {
-		// 	console.log('auth.subscribe');
-		// 	if (res) {
-		// 		this.User.uid = res.uid;
-		// 		this.User.emailVerified = res.auth.emailVerified;
-		// 		// this.User.password.profileImageURL = res.auth['photoURL']
-		// 		this.User.password.email = res.auth['email'];
-		// 		this.getUserFeedDetail(this.User.uid).subscribe(feed => {
-		// 			this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : res.auth['photoURL'];
-		// 			this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
-		// 			this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
-		// 			this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
-		// 			this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
-		// 			if (feed[0] && feed[0]['postCategories']) {
-		// 				this.postCategories.splice(0);
-		// 				feed[0]['postCategories'].forEach(val => {
-		// 					this.postCategories.push(val);
-		// 				});
-		// 			}
-		// 		});
-		// 	} else {
-		// 		this.User.uid = '';
-		// 		this.User.emailVerified = false;
-		// 		this.User.password.profileImageURL = '';
-		// 		this.User.password.email = '';
-		// 		this.User.feed.id = '';
-		// 		this.User.feed.name = '';
-		// 		this.User.feed.userid = '';
-		// 		this.User.backgroundImageURL = '';
-		// 	}
-		// })
+		let once = true;
+		this.af.auth.subscribe(authState => {
+			if (authState) {
+				if (once) {
+					this.User.uid = authState.uid;
+					this.User.emailVerified = authState.auth.emailVerified;
+					// this.User.password.profileImageURL = res.auth['photoURL']
+					this.User.password.email = authState.auth['email'];
+					this.getUserFeedDetail(this.User.uid).subscribe(feed => {
+						this.User.password.profileImageURL = feed[0] ? feed[0]['profileImageURL'] : authState.auth['photoURL'];
+						this.User.feed.id = feed[0] ? feed[0]['feedId'] : '';
+						this.User.feed.name = feed[0] ? feed[0]['feedName'] : '';
+						this.User.feed.userid = feed[0] ? feed[0]['$key'] : '';
+						this.User.backgroundImageURL = feed[0] ? feed[0]['backgroundImageURL'] : '';
+						if (feed[0] && feed[0]['postCategories']) {
+							this.postCategories.splice(0);
+							feed[0]['postCategories'].forEach(val => {
+								this.postCategories.push(val);
+							});
+						}
+					}); // getUserFeedDetail
+				} // once
+			} else { // if authState true
+				this.User.uid = '';
+				this.User.emailVerified = false;
+				this.User.password.profileImageURL = '';
+				this.User.password.email = '';
+				this.User.feed.id = '';
+				this.User.feed.name = '';
+				this.User.feed.userid = '';
+				this.User.backgroundImageURL = '';
+			}
+		}); // auth subscribe
 	}
 
 	emptyUser() {
@@ -209,6 +186,10 @@ export class authService {
 		});
 	}
 
+	recover(email: string) {
+		return firebase.auth().sendPasswordResetEmail(email);
+	}
+
 	logout() {
 		this.af.auth.logout();
 		setTimeout(() => {
@@ -239,7 +220,8 @@ export class authService {
 		return this.af.database.object('/users/' + userid).set({
 			uid: uid,
 			email: email,
-			profileImageURL: this.User.password.profileImageURL
+			profileImageURL: this.User.password.profileImageURL,
+			useBackgroundImage: true
 		})
 	}
 
@@ -258,6 +240,22 @@ export class authService {
 				reject(err);
 			}, function () {
 				resolve(userProfileTask.snapshot.downloadURL);
+			});
+		});
+	}
+
+	uploadPostImg(base64: string, str = null) {
+		return new Promise((resolve, reject) => {
+			let postImgTask
+			if (str) {
+				postImgTask = this.storageRef.child('img').child('posts').child(str).put(this.base64ToBlob(base64));
+			} else {
+				postImgTask = this.storageRef.child('img').child('posts').child(this.randomStringGenerator(6)).put(this.base64ToBlob(base64));
+			}
+			postImgTask.on('state_changed', null, function (err) {
+				reject(err);
+			}, function () {
+				resolve(postImgTask.snapshot.downloadURL);
 			});
 		});
 	}
@@ -354,11 +352,12 @@ export class authService {
 	}
 
 	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
+		let multipath = {}
 
 		let setFollowingSys = () => {
-			let multipath = {}
-			multipath['/user-following/' + myid + '/' + followerId] = followersObj[followerId];
-			multipath['/user-followers/' + followerId + '/' + myid] = followingObj[myid];
+			multipath['/user-following/' + myid + '/' + followerId] = followersObj[myid];
+			multipath['/user-followers/' + followerId + '/' + myid] = followingObj[followerId];
+			console.log('multipath: ', multipath)
 			this.mainRef.update(multipath).then(() => {
 				console.log('update multipath');
 			}).catch(err => {
@@ -367,7 +366,6 @@ export class authService {
 		}; // setFollowingSys
 
 		let removeFollowingSys = () => {
-			let multipath = {}
 			multipath['/user-following/' + myid + '/' + followerId] = null;
 			multipath['/user-followers/' + followerId + '/' + myid] = null;
 			this.mainRef.update(multipath).then(() => {
@@ -378,6 +376,7 @@ export class authService {
 		}; // removeFollowingSys
 
 		this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', (following) => {
+			console.log('mainRef: ', following.val())
 			if (following.val()) {
 				removeFollowingSys();
 			} else {
@@ -409,7 +408,6 @@ export class authService {
 	getFollowingFeedsPosts(postId) {
 		return this.af.database.object('/feeds/' + postId)
 			.switchMap(feed => {
-				console.log('feed: ', feed)
 				return this.af.database.list('/user-following/' + feed['owner']['userid'])
 					.map((following) => {
 						return following.map((follow) => {
@@ -422,6 +420,20 @@ export class authService {
 						})
 					});
 			})
+			.mergeMap(arrayOfObservable => {
+				return arrayOfObservable.map(obj => {
+					return obj;
+				});
+			}).mergeMap(aRRayObsr => {
+				return aRRayObsr.map(aRray => {
+					return aRray;
+				});
+			}).switchMap(aRRay => {
+				return aRRay.map(obj => {
+					return obj;
+				})
+			}); //.do(x => ('end: ', x));
+
 		// return this.af.database.list('/user-following/' + userId)
 		// 	.map((following) => {
 		// 		return following.map((follow) => {
@@ -433,6 +445,31 @@ export class authService {
 		// 			})
 		// 		})
 		// 	});
+	}
+
+	randomStringGenerator(len: number) {
+		let text = "";
+		let possible = "ABCDEF-GHIJ-KLMNOPQR_STUV-WXYZ#abcdefghijklmnopqrstuv$wxyz012345-6789_";
+
+		for (var i = 0; i < len; i++)
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		return text;
+	} charge
+
+
+	ccCharge(amount, token) {
+		return new Promise((res, rej) => {
+			let obj = { amount, token }
+			this.http.addJSON(`${this.api}/api/cc/charge/`, obj, (d) => {
+				console.log(d)
+				if (d.success) {
+					res(d.data);
+				} else {
+					rej(d.error);
+				}
+			});
+		}); // promise
 	}
 
 }

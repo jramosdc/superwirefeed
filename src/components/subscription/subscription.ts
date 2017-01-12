@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService } from '../services/authService';
 
@@ -10,19 +10,54 @@ import { User, authService } from '../services/authService';
         require('./subscription.scss')
     ],
 })
-export class SubscriptionComponent {
-    // userid
-    // User: User;
+export class SubscriptionComponent implements OnDestroy {
     FeedId: string;
-    subsObservable;
+    subscription: any[];
+    observableSubcription: any[];
 
     constructor(private route: ActivatedRoute, private router: Router, private as: authService, ) {
-        // this.User = this.as.emptyUser();
-        // this.User = this.as.getUser();
-        this.route.params.subscribe(params => {
+        this.observableSubcription = [];
+        this.subscription = [];
+
+        this.observableSubcription[0] = this.route.params.subscribe(params => {
             this.FeedId = params['postid'];
-            this.subsObservable = this.as.getFollowingFeedsPosts(this.FeedId);
+            // this.subsObservable = 
+            this.observableSubcription[1] = this.as.getFollowingFeedsPosts(this.FeedId)
+                .subscribe(obj => {
+                    // // console.log(obj['$key'])
+                    // let flag, index;
+                    // this.subscription.map((x, i) => {
+                    //     if (x['$key'] == obj['$key']) {
+                    //         flag = true;
+                    //         index = i;
+                    //     }
+                    // })
+                    // // if (flag) {
+                    // //     // console.log('inflasg ', this.subscription[index]['$key'] == obj['$key'])
+                    // //     // console.log(this.subscription.indexOf(obj))
+                    // //     console.log(this.subscription.length)
+                    // //     this.subscription.filter(x => {
+                    // //         return x['$key'] == obj['$key'];
+                    // //     })
+                    // //     console.log(this.subscription.length)
+                    // //     // this.subscription.splice(0, index);
+                    // // }
+                    this.subscription.push(obj);
+
+                    // let a = this.subscription.filter(y => {
+                    //     console.log(y['$key'] == obj['$key'])
+                    //     return y['$key'] != obj['$key']
+                    // })
+                    // // console.log(a)
+                })
         });
+    }
+
+    ngOnDestroy() {
+        this.observableSubcription
+            .map(obsr => {
+                obsr['unsubscribe']();
+            });
     }
 
     navigate(id: string) {

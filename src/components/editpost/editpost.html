@@ -13,6 +13,11 @@
             </div>
         </div>
         <div class="row">
+            <a *ngIf="!post?.image && !postedImgUrl" class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
+            <img *ngIf="post?.image && !postedImgUrl" [src]="post?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
+            <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
+        </div>
+        <div class="row">
             <label for="editor">Add text, links, images, embed videos</label>
             <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="post.detail" placeholder="Detail" required>
             <div id="editor"></div>
@@ -71,7 +76,8 @@
             <label for="gsheetLink">Add dataset in csv format or a Google link</label>
             <div class="input-field">
                 <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="post.gsheetLink" placeholder="Google Spread Sheet Link">-->
-                <input type="file" id="browseCSVFile" (change)="handleFiles($event)" class="validate" #gsheetLink="ngModel" name="gsheetLink" value="asad" [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
+                <input type="file" id="browseCSVFile" (change)="handleFiles($event)" class="validate" #gsheetLink="ngModel" name="gsheetLink"
+                    value="asad" [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
             </div>
         </div>
         <div class="row">
@@ -98,6 +104,47 @@
                 </div>
             </div>
             <button type="submit" class="waves-effect waves-light btn purple white-text right">Update</button>
+        </div>
+    </form>
+</div>
+
+
+<div id="backgroundModal" class="modal zindex9999">
+    <form class="modal-content">
+        <div class="nav-wrapper center-align">
+            <h2 class="purple-text">Post Image</h2>
+        </div>
+        <div class="row center-align" class="flexCenter">
+            <input id="custom-input2" type="file" style="display:none;" #fileInput2 (change)="backgroundChangeListener($event)">
+            <div *ngIf="!post?.image && imageSelected">
+                <img src="data:image/png;base64,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"
+                    alt="default background image" (click)="fileInput2.click(); imageSelected=false;" alt="selectImage" style="width: 150px; height: auto;"
+                />
+            </div>
+            <div *ngIf="post?.image && imageSelected">
+                <img [src]="post?.image" alt="image" (click)="fileInput2.click(); imageSelected=false;" alt="selectImage" style="width: 150px; height: auto;"
+                />
+            </div>
+            <div [hidden]="imageSelected">
+                <img-cropper id="imgCropper2" #postCropper [image]="postImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"></img-cropper>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="imageUploading">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!postImgData.image">Upload</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
         </div>
     </form>
 </div>

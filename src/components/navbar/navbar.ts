@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
+import SearchBar from '../services/searchBar';
 
 @Component({
   selector: 'navbar',
@@ -14,12 +15,17 @@ export class NavbarComponent implements OnInit {
   activeFeed: Object;
   loginLoading: boolean = false;
   registerLoading: boolean = false;
+  recoverLoading: boolean = false;
+  search$;
+  isSearchBarHidden: Object;
 
-  constructor(public as: authService, private router: Router) {
+  constructor(public as: authService, private router: Router, private sb: SearchBar) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.activePage = this.as.getActivePageTitle();
     this.activeFeed = this.as.getActiveFeed();
+    this.isSearchBarHidden = this.sb.searchBar;
+    this.search$ = this.sb.search$;
   }
 
   ngOnInit() {
@@ -44,6 +50,7 @@ export class NavbarComponent implements OnInit {
   }
 
   loginModal() {
+    $('#registerModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
     $('#loginModal')['openModal']();
   }
@@ -63,12 +70,38 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  recoverModal() {
+    $('#loginModal')['closeModal']();
+    $('#registerModal')['closeModal']();
+    $('#recoverModal')['openModal']();
+  }
+
+  recover(data) {
+    event.preventDefault();
+    $('#errorRecover').html('');
+    this.recoverLoading = true;
+    this.as.recover(data.email).then(res => {
+      console.log('Email Reset!', res);
+      $('#errorRecover').html('');
+      $('#recoverModal')['closeModal']();
+      this.recoverLoading = false;
+    }).catch((err) => {
+      console.log('Email Reset Failed!', err);
+      $('#errorRecover').html(err['message']);
+      this.recoverLoading = false;
+    });
+  }
+
   registerModal() {
+    $('#loginModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
     $('#registerModal')['openModal']();
   }
 
-  register(user) {
+  register(user, terms) {
+    console.log(terms);
+    if (!terms) return $('#errorRegister').html('You have to agree on Superwire\'s terms to create an account');
+    $('#errorRegister').html('');
     this.registerLoading = true;
     this.as.register(user.email.toLowerCase(), user.password).then((res) => {
       this.as.login(user.email.toLowerCase(), user.password).then((res) => {
@@ -93,7 +126,11 @@ export class NavbarComponent implements OnInit {
       });
     }).catch((err) => {
       console.log("Register Failed!", err);
-      $('#errorRegister').html(err['message']);
+      if (err.message == 'The email address is already in use by another account.') {
+        $('#errorRegister').html('Email is already in use, please choose a new one or recover password.');
+      } else {
+        $('#errorRegister').html(err['message']);
+      }
       this.registerLoading = false;
     });
   }

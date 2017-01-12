@@ -18,36 +18,38 @@
   <aside class="meta">
     <section class="info-card">
       <figure>
-        <img class="responsive-img" src="http://lorempixel.com/300/200/?random=1">
+
+        <img class="responsive-img" *ngIf="feed?.useBackgroundImage && feed?.owner?.backgroundImageURL" [src]="feed?.owner?.backgroundImageURL" alt="Background Image">
+        <!-- temporary placeholder image -->
+        <img class="responsive-img" *ngIf="!feed?.useBackgroundImage" src="http://lorempixel.com/300/200/?random=1" alt="Background Image">
+        <img class="responsive-img" *ngIf="feed?.useBackgroundImage  && !feed?.owner?.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
 
         <div class="dropdowns">
-          <a class="dropdown-button share-btn right waves-effect  btn-floating"
-              data-activates="sharing-options"
-              data-alignment="left">
+          <a class="dropdown-button share-btn right waves-effect  btn-floating" data-activates="sharing-options" data-alignment="left">
             <i class="mdi mdi-share"></i>
           </a>
 
           <!-- share -->
           <div id="sharing-options" class="share dropdown-content">
-            <a>
+            <a href="https://www.facebook.com/dialog/feed?app_id=184683071273&link={{Domain + '/posts/' + FeedID}}&picture={{feed.ImageBackgroundUrl}}&name={{FeedID}}&caption=%20&description={{feed.description}}&redirect_uri=http%3A%2F%2Fwww.facebook.com%2F" target="_blank">
               <svg class="social-icon facebook-color" viewBox="0 0 96 96">
                 <use xlink:href="#social-facebook"></use>
               </svg>
             </a>
 
-            <a>
+            <a href="http://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20in%20my%20Superwire%20Feed%20{{FeedID}}20%23smartcontent" target="_blank">
               <svg class="social-icon twitter-color" viewBox="0 0 612 612">
                 <use xlink:href="#social-twitter"></use>
               </svg>
             </a>
 
-            <a>
+            <a href="https://plus.google.com/share?url={{Domain + '/posts/' + FeedID}}" target="_blank">
               <svg class="social-icon google-plus-color" viewBox="0 0 96 96">
                 <use xlink:href="#social-google-plus"></use>
               </svg>
             </a>
 
-            <a>
+            <a :href="https://www.linkedin.com/shareArticle?mini=true&url={{Domain + '/posts/' + FeedID}}&title={{FeedID}}&summary=Check%20out%20my%20Superwire%20Feed.%20I%20post%20smart%20content%20about%20{{feed.description}}&source=" target="_blank">
               <svg class="social-icon linkedin-color" viewBox="0 0 430 430">
                 <use xlink:href="#social-linkedin"></use>
               </svg>
@@ -60,18 +62,35 @@
               </button>
             </label>
           </div>
+          <div *ngIf="User.password.email && FeedID == User.feed.id" class="right">
 
-          <a class="dropdown-button options-btn left waves-effect waves-light btn-floating"
-              data-activates="feed-options"
-              data-alignment="left"
-              data-constrainwidth="false">
+            <a class="dropdown-button options-btn waves-effect waves-light btn-floating blue-grey darken-1" data-activates="edit-options"
+              data-alignment="right">
+              <i class="mdi mdi-pencil"></i>
+            </a>
+            <ul id="edit-options" class='dropdown-content'>
+              <li>
+                <a>Modify</a>
+              </li>
+              <li>
+                <a>Remove</a>
+              </li>
+            </ul>
+
+            <a class="btn-floating add-btn waves-effect waves-light red-grey darken-3" (click)="navigate('new')">
+              <i class="mdi mdi-plus"></i>
+            </a>
+          </div>
+
+          <a href="javascript:void(0);" class="dropdown-button options-btn left waves-effect waves-light btn-floating" data-activates="feed-options"
+            data-alignment="left" data-constrainwidth="false">
             <i class="mdi mdi-dots-vertical"></i>
           </a>
           <ul id="feed-options" class='dropdown-content'>
-            <li><a>@nikoloza's profile</a></li>
-            <li><a>Message @nikoloza</a></li>
+            <li *ngIf="post?.owner?.userid"><a>@{{ post.owner.userid }}'s profile</a></li>
+            <li *ngIf="post?.owner?.userid"><a>Message @{{ post?.owner?.userid }}</a></li>
             <li class="divider"></li>
-            <li><a>Block @nikoloza</a></li>
+            <li *ngIf="post?.owner?.userid"><a>Block @{{ post?.owner?.userid }}</a></li>
             <li><a>Block this feed</a></li>
             <li class="divider"></li>
             <li><a>Report this feed</a></li>
@@ -80,21 +99,21 @@
       </figure>
 
       <div class="title">
-        <h5>WikiLeaks</h5>
-        <p>Some description here</p>
+        <h5>{{feed.feedName}}</h5>
+        <p>{{feed.description}}</p>
       </div>
 
       <div class="labels">
         <div class="posts">
           <span class="label">posts</span>
-          <strong>10</strong>
+          <strong>{{ (posts | async)?.length }}</strong>
         </div>
 
         <div class="likes">
           <i class="mdi mdi-thumb-up" (click)="voteUp($event)"></i>
           <div>
             <span class="label">likes</span>
-            <strong>77</strong>
+            <strong>{{feed.likes}}</strong>
           </div>
           <i class="mdi mdi-thumb-down" (click)="voteDown($event)"></i>
         </div>
@@ -109,10 +128,10 @@
         <h6 class="section-title">Author</h6>
 
         <section class="author">
-          <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
-          <div>
-            <h6 class="author-name">Nika</h6>
-            <span>@nikoloza</span>
+          <img *ngIf="feed?.owner?.profileImageURL" [src]="feed?.owner?.profileImageURL">
+          <div *ngIf="post?.owner?.userid">
+            <h6 class="author-name">{{ post.owner.userid }}</h6>
+            <span>@{{ post.owner.userid }}</span>
           </div>
         </section>
       </div>
@@ -165,13 +184,11 @@
 
     <!-- posts -->
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
-        searchPostTitle: search | searchCategory: activeCategory"
-        (click)="navigate('view', post.$key)"
-        [ngClass]="{'high': post.priority === 'High'}" class="post">
+        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === 'High'}" class="post">
 
       <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
-      <h6 class="title">{{ post.title }}</h6>
+      <h6 class="title" (click)="navigate('view', post.$key)">{{ post.title }}</h6>
       <p>{{ parseShortDescription(post.detail) }}</p>
 
       <footer>
@@ -179,8 +196,7 @@
         <span> • </span>
         <time>{{ returnMoment(post.timestamp) }}</time>
         <span> • </span>
-        <span [routerLink]="['/profile/', post.owner.userid]"
-            class="owner">
+        <span [routerLink]="['/profile/', post.owner.userid]" class="owner">
           {{ post.owner.userid }}
         </span>
 
@@ -198,8 +214,12 @@
     <h6 class="section-title">Activities</h6>
 
     <dl>
-      <dt><a>@jairo</a> liked this feed <time>2 hours ago</time></dt>
-      <dt><a>@nikoloza</a> liked this feed <time>3 hours ago</time></dt>
+      <dt><a>@jairo</a> liked this feed
+        <time>2 hours ago</time>
+      </dt>
+      <dt><a>@nikoloza</a> liked this feed
+        <time>3 hours ago</time>
+      </dt>
     </dl>
   </aside>
 </main>
@@ -264,14 +284,18 @@
 <!-- social icons svg sprite -->
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
   <!-- facebook -->
-  <path id="social-facebook" d="M72.09.02L59.623 0C45.62 0 36.57 9.285 36.57 23.656v10.907H24.037c-1.083 0-1.96.878-1.96 1.96v15.804c0 1.083.878 1.96 1.96 1.96H36.57v39.876c0 1.083.877 1.96 1.96 1.96h16.352c1.083 0 1.96-.878 1.96-1.96V54.287h14.654c1.083 0 1.96-.877 1.96-1.96l.006-15.803c0-.52-.207-1.018-.574-1.386-.367-.368-.867-.575-1.387-.575H56.845v-9.246c0-4.444 1.06-6.7 6.848-6.7l8.398-.003c1.082 0 1.96-.878 1.96-1.96V1.98C74.048.9 73.17.022 72.09.02z"/>
+  <path id="social-facebook" d="M72.09.02L59.623 0C45.62 0 36.57 9.285 36.57 23.656v10.907H24.037c-1.083 0-1.96.878-1.96 1.96v15.804c0 1.083.878 1.96 1.96 1.96H36.57v39.876c0 1.083.877 1.96 1.96 1.96h16.352c1.083 0 1.96-.878 1.96-1.96V54.287h14.654c1.083 0 1.96-.877 1.96-1.96l.006-15.803c0-.52-.207-1.018-.574-1.386-.367-.368-.867-.575-1.387-.575H56.845v-9.246c0-4.444 1.06-6.7 6.848-6.7l8.398-.003c1.082 0 1.96-.878 1.96-1.96V1.98C74.048.9 73.17.022 72.09.02z"
+  />
 
   <!-- google plus -->
-  <path id="social-google-plus" d="M62.617 0H39.525C29.235 0 22.112 2.256 15.7 7.552c-5.04 4.35-8.05 10.672-8.05 16.912 0 9.614 7.33 19.83 20.913 19.83 1.306 0 2.752-.133 4.028-.252l-.18.457c-.54 1.3-1.06 2.54-1.06 4.46 0 3.75 1.81 6.06 3.56 8.3l.22.28-.39.02c-5.61.38-16.05 1.1-23.67 5.79-9.02 5.36-9.72 13.15-9.72 15.41 0 8.99 8.38 18.06 27.09 18.06 21.76 0 33.15-12.01 33.15-23.868.004-8.77-5.14-13.1-10.6-17.698l-4.604-3.58c-1.42-1.18-3.193-2.646-3.193-5.364 0-2.672 1.773-4.436 3.337-5.992l.162-.165c4.97-3.92 10.61-8.36 10.61-17.97 0-9.66-6.038-14.65-8.94-17.05h7.662c.1 0 .19-.03.27-.08l6.6-4.15c.19-.12.28-.35.22-.56-.06-.218-.252-.36-.48-.36zM34.614 91.535c-13.264 0-22.176-6.195-22.176-15.416 0-6.03 3.645-10.4 10.824-13 5.75-1.94 13.17-2.03 13.244-2.03 1.257 0 1.89 0 2.893.12 9.28 6.6 13.74 10.07 13.74 16.68 0 8.41-7.1 13.64-18.53 13.64zm-.125-50.78c-11.14 0-15.76-14.632-15.76-22.467 0-3.984.9-7.042 2.77-9.35 2.02-2.532 5.49-4.168 8.82-4.168 10.22 0 15.87 13.74 15.87 23.235 0 1.498 0 6.055-3.15 9.22-2.12 2.113-5.56 3.532-8.57 3.532zm60.49 4.468H82.81V33.098c0-.276-.225-.5-.5-.5h-5.23c-.276 0-.5.224-.5.5v12.125H64.473c-.276 0-.5.224-.5.5v5.304c0 .275.224.5.5.5H76.58V63.73c0 .275.224.5.5.5h5.234c.275 0 .5-.225.5-.5V51.525h12.168c.276 0 .5-.223.5-.5v-5.302c0-.277-.223-.5-.5-.5z"/>
+  <path id="social-google-plus" d="M62.617 0H39.525C29.235 0 22.112 2.256 15.7 7.552c-5.04 4.35-8.05 10.672-8.05 16.912 0 9.614 7.33 19.83 20.913 19.83 1.306 0 2.752-.133 4.028-.252l-.18.457c-.54 1.3-1.06 2.54-1.06 4.46 0 3.75 1.81 6.06 3.56 8.3l.22.28-.39.02c-5.61.38-16.05 1.1-23.67 5.79-9.02 5.36-9.72 13.15-9.72 15.41 0 8.99 8.38 18.06 27.09 18.06 21.76 0 33.15-12.01 33.15-23.868.004-8.77-5.14-13.1-10.6-17.698l-4.604-3.58c-1.42-1.18-3.193-2.646-3.193-5.364 0-2.672 1.773-4.436 3.337-5.992l.162-.165c4.97-3.92 10.61-8.36 10.61-17.97 0-9.66-6.038-14.65-8.94-17.05h7.662c.1 0 .19-.03.27-.08l6.6-4.15c.19-.12.28-.35.22-.56-.06-.218-.252-.36-.48-.36zM34.614 91.535c-13.264 0-22.176-6.195-22.176-15.416 0-6.03 3.645-10.4 10.824-13 5.75-1.94 13.17-2.03 13.244-2.03 1.257 0 1.89 0 2.893.12 9.28 6.6 13.74 10.07 13.74 16.68 0 8.41-7.1 13.64-18.53 13.64zm-.125-50.78c-11.14 0-15.76-14.632-15.76-22.467 0-3.984.9-7.042 2.77-9.35 2.02-2.532 5.49-4.168 8.82-4.168 10.22 0 15.87 13.74 15.87 23.235 0 1.498 0 6.055-3.15 9.22-2.12 2.113-5.56 3.532-8.57 3.532zm60.49 4.468H82.81V33.098c0-.276-.225-.5-.5-.5h-5.23c-.276 0-.5.224-.5.5v12.125H64.473c-.276 0-.5.224-.5.5v5.304c0 .275.224.5.5.5H76.58V63.73c0 .275.224.5.5.5h5.234c.275 0 .5-.225.5-.5V51.525h12.168c.276 0 .5-.223.5-.5v-5.302c0-.277-.223-.5-.5-.5z"
+  />
 
   <!-- twitter -->
-  <path id="social-twitter" d="M612,116.258c-22.525,9.981-46.694,16.75-72.088,19.772c25.929-15.527,45.777-40.155,55.184-69.411 c-24.322,14.379-51.169,24.82-79.775,30.48c-22.907-24.437-55.49-39.658-91.63-39.658c-69.334,0-125.551,56.217-125.551,125.513 c0,9.828,1.109,19.427,3.251,28.606C197.065,206.32,104.556,156.337,42.641,80.386c-10.823,18.51-16.98,40.078-16.98,63.101 c0,43.559,22.181,81.993,55.835,104.479c-20.575-0.688-39.926-6.348-56.867-15.756v1.568c0,60.806,43.291,111.554,100.693,123.104 c-10.517,2.83-21.607,4.398-33.08,4.398c-8.107,0-15.947-0.803-23.634-2.333c15.985,49.907,62.336,86.199,117.253,87.194 c-42.947,33.654-97.099,53.655-155.916,53.655c-10.134,0-20.116-0.612-29.944-1.721c55.567,35.681,121.536,56.485,192.438,56.485 c230.948,0,357.188-191.291,357.188-357.188l-0.421-16.253C573.872,163.526,595.211,141.422,612,116.258z"/>
+  <path id="social-twitter" d="M612,116.258c-22.525,9.981-46.694,16.75-72.088,19.772c25.929-15.527,45.777-40.155,55.184-69.411 c-24.322,14.379-51.169,24.82-79.775,30.48c-22.907-24.437-55.49-39.658-91.63-39.658c-69.334,0-125.551,56.217-125.551,125.513 c0,9.828,1.109,19.427,3.251,28.606C197.065,206.32,104.556,156.337,42.641,80.386c-10.823,18.51-16.98,40.078-16.98,63.101 c0,43.559,22.181,81.993,55.835,104.479c-20.575-0.688-39.926-6.348-56.867-15.756v1.568c0,60.806,43.291,111.554,100.693,123.104 c-10.517,2.83-21.607,4.398-33.08,4.398c-8.107,0-15.947-0.803-23.634-2.333c15.985,49.907,62.336,86.199,117.253,87.194 c-42.947,33.654-97.099,53.655-155.916,53.655c-10.134,0-20.116-0.612-29.944-1.721c55.567,35.681,121.536,56.485,192.438,56.485 c230.948,0,357.188-191.291,357.188-357.188l-0.421-16.253C573.872,163.526,595.211,141.422,612,116.258z"
+  />
 
   <!-- linkedin -->
-  <path id="social-linkedin" d="M430.117 261.543V420.56H337.93V272.193c0-37.27-13.335-62.707-46.704-62.707-25.473 0-40.632 17.142-47.3 33.724-2.433 5.928-3.06 14.18-3.06 22.477V420.56H148.65s1.242-251.285 0-277.32h92.21v39.31c-.187.293-.43.61-.606.895h.606v-.896c12.25-18.87 34.13-45.826 83.102-45.826 60.673 0 106.157 39.636 106.157 124.818zM52.183 9.558C20.635 9.558 0 30.25 0 57.463c0 26.62 20.038 47.94 50.96 47.94h.615c32.16 0 52.16-21.317 52.16-47.94-.607-27.212-20-47.905-51.552-47.905zM5.477 420.56H97.66V143.24H5.478v277.32z"/>
+  <path id="social-linkedin" d="M430.117 261.543V420.56H337.93V272.193c0-37.27-13.335-62.707-46.704-62.707-25.473 0-40.632 17.142-47.3 33.724-2.433 5.928-3.06 14.18-3.06 22.477V420.56H148.65s1.242-251.285 0-277.32h92.21v39.31c-.187.293-.43.61-.606.895h.606v-.896c12.25-18.87 34.13-45.826 83.102-45.826 60.673 0 106.157 39.636 106.157 124.818zM52.183 9.558C20.635 9.558 0 30.25 0 57.463c0 26.62 20.038 47.94 50.96 47.94h.615c32.16 0 52.16-21.317 52.16-47.94-.607-27.212-20-47.905-51.552-47.905zM5.477 420.56H97.66V143.24H5.478v277.32z"
+  />
 </svg>
