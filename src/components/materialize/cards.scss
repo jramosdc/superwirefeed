@@ -4,6 +4,7 @@
   transition: 0.3s ease all;
   border-radius: 3px;
   overflow: hidden;
+  -webkit-backface-visibility: hidden;
 
   .card-content {
     display: flex;

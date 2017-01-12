@@ -36,7 +36,14 @@
 
   .circle {
     height: 64px;
-    width: 64px
+    width: 64px;
+  }
+
+  i.circle {
+    font-size: 3.2rem;
+    background: white;
+    padding: 0.5rem;
+    text-align: center;
   }
 
   .name,

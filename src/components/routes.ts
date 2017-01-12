@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { UiKit } from './uikit/uikit';
 import { FeedsComponent } from './feeds/feeds';
 import { PostsComponent } from './posts/posts';
 import { NewPostComponent } from './newpost/newpost';
@@ -9,6 +10,7 @@ import { ProfileComponent } from './profile/profile';
 import { SubscriptionComponent } from './subscription/subscription';
 
 export const AppRoutes: Routes = [
+  { path: "uikit", component: UiKit },
   { path: "feeds", component: FeedsComponent },
   { path: "newpost", component: NewPostComponent },
   { path: "posts/:feedid", component: PostsComponent },
@@ -19,4 +21,4 @@ export const AppRoutes: Routes = [
   { path: "", redirectTo: "feeds", pathMatch: 'full' }
 ];
 
-export const ApplicationComponents = [FeedsComponent, PostsComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent, SubscriptionComponent];
+export const ApplicationComponents = [UiKit, FeedsComponent, PostsComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent, SubscriptionComponent];

@@ -2,7 +2,7 @@ import { Component, OnDestroy, Injector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
-import SearchBar from '../services/searchBar';
+import { SearchBar } from '../services/searchBar';
 
 @Component({
     selector: 'posts',
@@ -11,7 +11,7 @@ import SearchBar from '../services/searchBar';
     },
     template: require('./posts.html')
 })
-export class PostsComponent implements OnDestroy {
+export class PostsComponent implements OnInit, OnDestroy {
 
     User: User;
     Domain: string

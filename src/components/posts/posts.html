@@ -62,10 +62,9 @@
               </button>
             </label>
           </div>
-
           <div *ngIf="User.password.email && FeedID == User.feed.id" class="right">
 
-            <a class="dropdown-button modify-btn waves-effect waves-light btn-floating blue-grey darken-1" data-activates="edit-options"
+            <a class="dropdown-button options-btn waves-effect waves-light btn-floating blue-grey darken-1" data-activates="edit-options"
               data-alignment="right">
               <i class="mdi mdi-pencil"></i>
             </a>
@@ -154,6 +153,35 @@
   </aside>
 
   <section class="posts" *ngIf="posts">
+    <!-- editors panel -->
+    <header class="editors-panel blue-grey lighten-4"
+      *ngIf="User.password.email && FeedID == User.feed.id">
+
+      <div class="blue-grey-text text-darken-3">Editors panel</div>
+
+      <div>
+        <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1"
+            data-activates="edit-options"
+            data-alignment="right">
+          <i class="mdi mdi-pencil"></i>
+          Edit feed
+        </a>
+        <ul id="edit-options" class='dropdown-content'>
+          <li>
+            <a>Modify</a>
+          </li>
+          <li>
+            <a>Remove</a>
+          </li>
+        </ul>
+
+        <a class="btn add-btn waves-effect waves-light blue-grey darken-3" (click)="navigate('new')">
+          <i class="mdi mdi-plus"></i>
+          Add Post
+        </a>
+      </div>
+    </header>
+
     <!-- posts -->
     <article *ngFor="let post of posts | async | orderBy: ['-timestamp'] |
         searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === 'High'}" class="post">
