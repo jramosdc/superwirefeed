@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from "@angular/router";
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
-import SearchBar from '../services/searchBar';
+import { SearchBarService } from '../services/searchBar';
 
 @Component({
     selector: 'feeds',
@@ -15,7 +15,7 @@ export class FeedsComponent implements OnDestroy {
     activeCategory: string;
     categories: Array<string>;
 
-    constructor(public as: authService, private router: Router, private sb: SearchBar) {
+    constructor(public as: authService, private router: Router, private sb: SearchBarService) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.feeds = this.as.getFeeds();

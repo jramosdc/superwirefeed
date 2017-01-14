@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()
-export default class SearchBarService {
+export class SearchBarService {
     search$: Subject<string>;
     searchBar: { isHidden: boolean } = <any>{};
     observerable$: Observable<string>;

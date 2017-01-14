@@ -4,7 +4,7 @@ import { User, authService } from '../services/authService';
 import { embedlyService, IEmbedly } from '../services/embedlyService';
 import { FirebaseStorageService } from '../services/firebaseStorageService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
-import SearchBar from '../services/searchBar';
+import { SearchBarService } from '../services/searchBar';
 
 declare var Papa: any, tinymce: any;
 
@@ -35,7 +35,7 @@ export class EditPostComponent implements OnInit {
     postedImgUrl = null;
     @ViewChild('postCropper', undefined) postCropper: ImageCropperComponent;
 
-    constructor(private as: authService, private router: Router, private route: ActivatedRoute, private embedly: embedlyService, private storge: FirebaseStorageService, private sb: SearchBar) {
+    constructor(private as: authService, private router: Router, private route: ActivatedRoute, private embedly: embedlyService, private storge: FirebaseStorageService, private sb: SearchBarService) {
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();
         this.categories = this.as.getPostCategories();

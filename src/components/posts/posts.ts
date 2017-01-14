@@ -1,8 +1,8 @@
-import { Component, OnDestroy, Injector } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
-import { SearchBar } from '../services/searchBar';
+import { SearchBarService } from '../services/searchBar';
 
 @Component({
     selector: 'posts',
@@ -14,17 +14,17 @@ import { SearchBar } from '../services/searchBar';
 export class PostsComponent implements OnInit, OnDestroy {
 
     User: User;
-    Domain: string
-    FeedID: string
+    Domain: string;
+    FeedID: string;
     feed: Object = {};
-    search: string
+    search: string;
     activeCategory: string;
     categories: Array<string> = [];
     deletePostID: string
     posts: FirebaseListObservable<any[]>
     emailLoading: Boolean = false;
 
-    constructor(public as: authService, public route: ActivatedRoute, private router: Router, private sb: SearchBar) {
+    constructor(public as: authService, public route: ActivatedRoute, private router: Router, private sb: SearchBarService) {
         this.Domain = this.as.getDomain();
         this.User = this.as.emptyUser();
         this.User = this.as.getUser();

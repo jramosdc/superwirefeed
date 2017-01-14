@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { FirebaseObjectObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 import { httpService } from '../services/httpService';
-import SearchBar from '../services/searchBar';
+import { SearchBarService } from '../services/searchBar';
 
 declare var StripeCheckout: any;
 
@@ -21,8 +21,8 @@ export class ViewPostComponent {
   categories: Array<string>
   stripeHandler: any;
   stripeTokenId: string;
-  
-  constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBar) {
+
+  constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.as.setActivePageTitle('View Post');
@@ -32,7 +32,7 @@ export class ViewPostComponent {
       if (this.postid) {
         this.as.loadPost(this.postid).subscribe((post) => {
           this.post = post;
-          this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace("http:", "")) : post.pdfLink;
+          this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
           this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
           setTimeout(() => {
             $('.linkify')['linkify']();
@@ -47,58 +47,59 @@ export class ViewPostComponent {
         this.sb.setHiddenSearchBar(true);
 
         this.initializeStripeModal();
+      }
+    });
+  }
 
-    }
+  initializeStripeModal() {
+    this.stripeHandler = StripeCheckout.configure({
+      key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
+      image: 'https://s3.amazonaws.com/stripe-uploads/acct_16lS7BHW1tZsRCeemerchant-icon-1481257880232-logo-white.png',
+      locale: 'auto',
+      token: (token, args) => {
+        this.stripeTokenId = token.id;
+        console.log('token-----: ', this.stripeTokenId)
+        this.agreementModelPopup();
+        // You can access the token ID with `token.id`.
+        // Get the token ID to your server-side code for use.
+      }
+    });
 
-    initializeStripeModal() {
-        this.stripeHandler = StripeCheckout.configure({
-            key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
-            image: 'https://s3.amazonaws.com/stripe-uploads/acct_16lS7BHW1tZsRCeemerchant-icon-1481257880232-logo-white.png',
-            locale: 'auto',
-            token: (token, args) => {
-                this.stripeTokenId = token.id;
-                console.log('token-----: ', this.stripeTokenId)
-                this.agreementModelPopup();
-                // You can access the token ID with `token.id`.
-                // Get the token ID to your server-side code for use.
-            }
-        });
+    // Close Checkout on page navigation:
+    window.addEventListener('popstate', () => {
+      this.stripeHandler.close();
+    });
+  }
 
-        // Close Checkout on page navigation:
-        window.addEventListener('popstate', () => {
-            this.stripeHandler.close();
-        });
-    }
+  onStripeBtnClick() {
+    // Open Checkout with further options:
+    event.preventDefault();
+    this.stripeHandler.open({
+      name: 'Superwire, Inc.',
+      description: 'Buy a Post',
+      amount: 100,
+      currency: 'usd',
+      address: false,
+    });
+    // this.stripeHandler.open({        
+    //     key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',        
+    //     address: false,        
+    //     amount: 100, /* expects an integer */        
+    //     currency: 'usd',        
+    //     name: 'Purchase',        
+    //     description: 'Description',        
+    //     panelLabel: 'Checkout',        
+    //     // token: (token) => {
+    //     //     console.log('token: ', token)
+    //     // }   
+    // });
+  }
 
-    onStripeBtnClick() {
-        // Open Checkout with further options:
-        event.preventDefault();
-        this.stripeHandler.open({
-            name: 'Superwire, Inc.',
-            description: 'Buy a Post',
-            amount: 100,
-            currency: 'usd',
-            address: false,     
-        });
-        // this.stripeHandler.open({        
-        //     key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',        
-        //     address: false,        
-        //     amount: 100, /* expects an integer */        
-        //     currency: 'usd',        
-        //     name: 'Purchase',        
-        //     description: 'Description',        
-        //     panelLabel: 'Checkout',        
-        //     // token: (token) => {
-        //     //     console.log('token: ', token)
-        //     // }   
-        // });
-    }
-      
   returnMoment(timestamp) {
     if (timestamp) {
       return moment().to(timestamp);
     } else {
-      return ''
+      return '';
     }
   }
 
@@ -118,9 +119,9 @@ export class ViewPostComponent {
     // }
     // tblBody.appendChild(Headerrow);
     for (let j = 0; j < data.length; j++) {
-      let row = document.createElement("tr");
+      let row = document.createElement('tr');
       for (let obj in data[j]) {
-        let cell = document.createElement("td");
+        let cell = document.createElement('td');
         let cellText = document.createTextNode(data[j][obj]);
         cell.appendChild(cellText);
         row.appendChild(cell);
@@ -135,25 +136,25 @@ export class ViewPostComponent {
     }, 1000)
   }
 
-    agreementModelPopup() {
-        $('#agreementModal')['openModal']();
-    }
+  agreementModelPopup() {
+    $('#agreementModal')['openModal']();
+  }
 
-    agreementModelClose() {
-        $('#agreementModal')['closeModal']();
-    }
+  agreementModelClose() {
+    $('#agreementModal')['closeModal']();
+  }
 
-    onAgreement() {
-        console.log('i agree!')
-        this.agreementModelClose();
-        this.as.ccCharge(100, this.stripeTokenId)
-        .then(data => {
-            console.log('on success; ', data)
-        })
-        .catch(err => { 
-            console.log('on err; ', err)
-        })
-    }
+  onAgreement() {
+    console.log('i agree!')
+    this.agreementModelClose();
+    this.as.ccCharge(100, this.stripeTokenId)
+      .then(data => {
+        console.log('on success; ', data)
+      })
+      .catch(err => {
+        console.log('on err; ', err)
+      });
+  }
 
 }
 

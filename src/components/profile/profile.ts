@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Type } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { User, authService, FirebaseListObservable } from '../services/authService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
-import SearchBar from '../services/searchBar';
+import { SearchBarService } from '../services/searchBar';
 
 @Component({
     selector: 'profile',
@@ -41,7 +41,7 @@ export class ProfileComponent extends Type implements OnInit {
 
     public validEmailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    constructor(private as: authService, private route: ActivatedRoute, private router: Router, private sb: SearchBar) {
+    constructor(private as: authService, private route: ActivatedRoute, private router: Router, private sb: SearchBarService) {
 
         super();
 

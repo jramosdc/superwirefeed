@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
-import SearchBar from '../services/searchBar';
+import { SearchBarService } from '../services/searchBar';
 
 @Component({
   selector: 'navbar',
@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
   search$;
   isSearchBarHidden: Object;
 
-  constructor(public as: authService, private router: Router, private sb: SearchBar) {
+  constructor(public as: authService, private router: Router, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.activePage = this.as.getActivePageTitle();
