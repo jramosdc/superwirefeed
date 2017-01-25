@@ -21,6 +21,8 @@ export class ViewPostComponent {
   categories: Array<string>
   stripeHandler: any;
   stripeTokenId: string;
+  previewUrl: string;
+  previewType: string;
 
   constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -40,7 +42,7 @@ export class ViewPostComponent {
             $("img").addClass("responsive-img");
             if (this.post['detail']) { $('#postDetails').html(this.post['detail']); }
             if (this.post['csvToJson']) {
-              this.displayTable(post['csvToJson']);
+              this.openInPreview('content', post['csvToJson']);
             }
           });
         });
@@ -71,6 +73,16 @@ export class ViewPostComponent {
     });
   }
 
+  openInPreview (type, url) {
+    this.previewType = type
+
+    if (type === 'url') {
+      this.previewUrl = url
+    } else if (type === 'content') {
+      // this.displayTable(this.post['csvToJson']);
+    }
+  }
+
   onStripeBtnClick() {
     // Open Checkout with further options:
     event.preventDefault();
@@ -81,17 +93,17 @@ export class ViewPostComponent {
       currency: 'usd',
       address: false,
     });
-    // this.stripeHandler.open({        
-    //     key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',        
-    //     address: false,        
-    //     amount: 100, /* expects an integer */        
-    //     currency: 'usd',        
-    //     name: 'Purchase',        
-    //     description: 'Description',        
-    //     panelLabel: 'Checkout',        
+    // this.stripeHandler.open({
+    //     key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
+    //     address: false,
+    //     amount: 100, /* expects an integer */
+    //     currency: 'usd',
+    //     name: 'Purchase',
+    //     description: 'Description',
+    //     panelLabel: 'Checkout',
     //     // token: (token) => {
     //     //     console.log('token: ', token)
-    //     // }   
+    //     // }
     // });
   }
 

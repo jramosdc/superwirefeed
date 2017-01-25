@@ -66,7 +66,7 @@
         </button>
       </div>
       <!-- if buy -->
-      <div class="section-get hide">
+      <div *ngIf="post.license == 3 || post.license == 4" (click)="onStripeBtnClick()" class="section-get">
         <button class="waves-effect waves-light btn-large">
           BUY CONTENT
         </button>
@@ -77,6 +77,7 @@
       <div class="section-get hide">
         <img src="assets/cc/by.png" alt="">
       </div>
+
       <div class="section-separately">
         <header>
           Or, download separatelly:
@@ -89,7 +90,7 @@
           <li>
             PDF
             <ul>
-              <li><a href="#post.pdf">post.pdf</a></li>
+              <li><a (click)="openInPreview('url', post.purl)">post.pdf</a></li>
             </ul>
           </li>
           <li>
@@ -106,7 +107,7 @@
               <li><a href="#trump_votes.csv">trump_votes.csv</a></li>
             </ul>
           </li>
-          <li>
+          <li *ngIf="post.license != 3 && post.license != 4">
             License
             <ul>
               <li><a href="#MIT_LICENSE.md">MIT_LICENSE.md</a></li>
@@ -114,6 +115,8 @@
           </li>
         </ul>
       </div>
+
+      <!-- <section class="superwire-preview" > -->
       <section class="superwire-preview">
         <header>
           <span class="superwire">
@@ -123,63 +126,15 @@
           <span>Hillary_votes.csv</span>
           <span><i class="mdi mdi-close"></i></span>
         </header>
+
         <div class="content">
-          <iframe src=""></iframe>
-          =======
-          <div class="row">
-            <div class="col s12 padding10px" *ngIf="post">
-              <div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;" *ngIf="User.password.email && post.owner.userid == User.feed.userid">
-                <a class="btn-floating btn-large waves-effect waves-light deep-purple" [routerLink]="['/editpost', postid]"><i class="large mdi mdi-pencil"></i></a>
-              </div>
-              <div class="row">
-                <div class="card panel indigo">
-                  <h5 class="white-text" [routerLink]="['/profile', post.owner.userid]">@{{post.owner.userid}}</h5>
-                </div>
-              </div>
-              <div class="row">
-                <ul class="collapsible" data-collapsible="accordion">
-                  <li class="posttitle">
-                    <h2><span>{{post.title}}</span></h2>
-                    <img [src]="post.embedly.images[0].url" class="img_header" *ngIf="post.embedly && post.embedly.images">
-                    <img src="http://www.davidluke.com/wp-content/themes/david-luke/media/ims/placeholder720.gif" class="img_header" *ngIf="!post.mainUrl">
-                    <div class="more" *ngIf="post.embedly && post.embedly.url">
-                      <a class="btn-floating waves-effect waves-light indigo" href="{{post.embedly.url}}" target="_blank"><i class="large mdi mdi-link"></i></a>
-                    </div>
-                    <button type="button" id="customButton" class="waves-effect waves-light btn purple white-text right" *ngIf="post.license == 3 || post.license == 4"
-                      (click)="onStripeBtnClick()">BUY!</button>
-                    <button type="button" id="customButton" class="waves-effect waves-light btn purple white-text right" *ngIf="post.license != 3 && post.license != 4">CC</button>
-                  </li>
-                  <li>
-                    <div class="collapsible-header"><i *ngFor="let type of post.types" class="mdi {{'mdi-' + type}}"></i>Content</div>
-                    <div class="collapsible-body">
-                      <div id="postDetails" class="demo-container">dddd</div>
-                    </div>
-                  </li>
-                  <li *ngIf="post.pdfLink">
-                    <div class="collapsible-header"><i class="mdi mdi-file-pdf"></i>PDF</div>
-                    <div class="collapsible-body">
-                      <!--<object data="//c.ymcdn.com/sites/www.andeglobal.org/resource/resmgr/Annual_Conference_2014/Participant_Bios_ANDE_2014.pdf"
-                            type="application/pdf">
-                            <embed src="//c.ymcdn.com/sites/www.andeglobal.org/resource/resmgr/Annual_Conference_2014/Participant_Bios_ANDE_2014.pdf" type="application/pdf" />
-                        </object>-->
-                      <iframe [src]="post.purl" style="width:90%;"></iframe>
-                    </div>
-                  </li>
-                  <li *ngIf="post.gsheetLink">
-                    <div class="collapsible-header"><i class="mdi mdi-google-drive"></i>Data</div>
-                    <div class="collapsible-body">
-                      <!--<iframe [src]="post.gurl" style="width:90%;"></iframe>-->
-                      <div id="fullTable" style="width: inherit; overflow-y: hidden;"></div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <iframe *ngIf="previewType === 'url'" [src]="previewUrl" frameborder="0"></iframe>
+          <div *ngIf="previewType === 'content'" class="iframe" id="fullTable"></div>
         </div>
       </section>
     </article>
   </div>
+
   <aside class="meta hide">
     <div *ngIf="User.password.email && post.owner.userid == User.feed.userid">
       <a [routerLink]="['/editpost', postid]"><i class="large mdi mdi-pencil"></i></a>
@@ -199,6 +154,7 @@
     </div>
   </aside>
 </main>
+
 <!-- social icons svg sprite -->
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
   <!-- facebook -->
