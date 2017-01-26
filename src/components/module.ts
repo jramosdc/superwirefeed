@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +7,7 @@ import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
 import { AppComponent } from './app/app';
 import { ApplicationComponents, AppRoutes } from './routes';
-import { ApplicationServices } from "./services/bootstrapServices";
+import { ApplicationServices } from './services/bootstrapServices';
 import { ApplicationDirectives } from './directives/sharedDirectives';
 import { TagInputComponent } from './tag-input/tag-input.component';
 import { TagInputItemComponent } from './tag-input/tag-input-item.component';
@@ -16,9 +15,8 @@ import { TagInputItemComponent } from './tag-input/tag-input-item.component';
 // import { ApplicationPipes } from './pipes/sharedPipes';
 
 // pipes
-import { DatePipe } from "@angular/common";
 import { SearchCategory } from './pipes/searchCategory';
-import { OrderBy } from "./pipes/orderby";
+import { OrderBy } from './pipes/orderby';
 import { SearchPostTitlePipe } from './pipes/searchPostTitle';
 
 
@@ -30,10 +28,10 @@ import { SearchPostTitlePipe } from './pipes/searchPostTitle';
     , HttpModule
     , AngularFireModule.initializeApp(
       {
-        apiKey: "AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo",
-        authDomain: "superwireapp.firebaseapp.com",
-        databaseURL: "https://superwireapp.firebaseio.com",
-        storageBucket: "superwireapp.appspot.com",
+        apiKey: 'AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo',
+        authDomain: 'superwireapp.firebaseapp.com',
+        databaseURL: 'https://superwireapp.firebaseio.com',
+        storageBucket: 'superwireapp.appspot.com',
       }
       , {
         provider: AuthProviders.Password,
@@ -41,7 +39,7 @@ import { SearchPostTitlePipe } from './pipes/searchPostTitle';
       })
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
-    //pipes
+    // pipes
     SearchCategory, OrderBy, SearchPostTitlePipe
   ]
   , providers: [...ApplicationServices]

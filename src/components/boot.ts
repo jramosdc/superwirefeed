@@ -3,7 +3,7 @@ import 'core-js';
 import 'zone.js/dist/zone';
 import 'jquery/dist/jquery';
 import 'jquery-embedly/jquery.embedly';
-import 'bootstrap';
+// import 'bootstrap';
 import 'firebase';
 import 'materialize-css/dist/js/materialize';
 import 'materialize-tags';

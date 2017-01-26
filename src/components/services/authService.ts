@@ -424,15 +424,15 @@ export class authService {
 				return arrayOfObservable.map(obj => {
 					return obj;
 				});
-			}).mergeMap(aRRayObsr => {
+			}).mergeMap((aRRayObsr: any) => {
 				return aRRayObsr.map(aRray => {
 					return aRray;
 				});
-			}).switchMap(aRRay => {
+			}).switchMap((aRRay: any) => {
 				return aRRay.map(obj => {
 					return obj;
 				})
-			}); //.do(x => ('end: ', x));
+			}); // .do(x => ('end: ', x));
 
 		// return this.af.database.list('/user-following/' + userId)
 		// 	.map((following) => {
