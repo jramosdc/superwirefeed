@@ -1,4 +1,6 @@
 main.view-post {
+  min-height: 46rem;
+
   > figure.poster {
     margin: 0;
     width: 100%;
@@ -83,7 +85,7 @@ main.view-post {
     padding: 1.5rem 2rem;
     max-width: 1140px;
     margin: 0 auto;
-    color: fade(black, 90%);
+    color: transparentize(black, .1);
     background: white;
     margin-top: -7.5rem;
     box-sizing: border-box;
@@ -108,6 +110,10 @@ main.view-post {
 
     .content {
       color: $title-gray;
+
+      img {
+        max-width: 100%;
+      }
     }
 
     // sizes reset
@@ -404,8 +410,10 @@ main.view-post {
 
   > .content {
     padding: 0 .4rem .4rem;
+    font-size: 12px;
 
-    iframe {
+    > .iframe,
+    > iframe {
       background: white;
       border-radius: 0 0 4px 4px;
       border: 0;
