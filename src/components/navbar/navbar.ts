@@ -51,7 +51,7 @@ export class NavbarComponent implements OnInit {
 
   loginModal() {
     $('#registerModal')['closeModal']();
-    $(".button-collapse")['sideNav']('hide');
+    $('.button-collapse')['sideNav']('hide');
     $('#loginModal')['openModal']();
   }
 
@@ -64,7 +64,7 @@ export class NavbarComponent implements OnInit {
       $('#loginModal')['closeModal']();
       this.loginLoading = false;
     }).catch((err) => {
-      console.log("Login Failed!", err);
+      console.log('Login Failed!', err);
       $('#errorLogin').html(err['message']);
       this.loginLoading = false;
     });
@@ -99,7 +99,6 @@ export class NavbarComponent implements OnInit {
   }
 
   register(user, terms) {
-    console.log(terms);
     if (!terms) return $('#errorRegister').html('You have to agree on Superwire\'s terms to create an account');
     $('#errorRegister').html('');
     this.registerLoading = true;
@@ -120,12 +119,12 @@ export class NavbarComponent implements OnInit {
         this.as.sendEmailVerfication();
 
       }).catch((err) => {
-        console.log("Login Failed after Registration!", err);
+        console.log('Login Failed after Registration!', err);
         $('#errorRegister').html(err['message']);
         this.registerLoading = false;
       });
     }).catch((err) => {
-      console.log("Register Failed!", err);
+      console.log('Register Failed!', err);
       if (err.message == 'The email address is already in use by another account.') {
         $('#errorRegister').html('Email is already in use, please choose a new one or recover password.');
       } else {
@@ -138,7 +137,7 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.as.logout();
     console.log('User is Logged Out!');
-    $(".button-collapse")['sideNav']('hide');
+    $('.button-collapse')['sideNav']('hide');
     this.router.navigate(['feeds']);
   }
 

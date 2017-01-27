@@ -91,7 +91,7 @@
   <form class="modal-content" novalidate #l="ngForm" (submit)="login(l.value)">
     <div class="row">
       <div class="input-field">
-        <input type="email" class="validate" #email="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
+        <input type="email" class="validate" #email="ngModel" name="email" [ngModel]="e" required pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$">
         <label for="email">Email</label>
         <small class="invalid-test" [hidden]="email.valid || (email.pristine && !l._submitted)">
           Email is required and format should be <i>john@doe.com</i>.
@@ -154,12 +154,12 @@
 
   <hr class="line">
 
-  <form class="modal-content" novalidate #f="ngForm" (submit)="register(f.value, terms.checked)">
+  <form class="modal-content" novalidate #reg="ngForm" (submit)="register(reg.value, terms.checked)">
     <div class="row">
       <div class="input-field">
         <input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" required>
-        <label for="reqUserID">User ID</label>
-        <small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !f._submitted)">
+        <label for="regUserID">User ID</label>
+        <small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !reg._submitted)">
           Name is required.
         </small>
       </div>
@@ -167,9 +167,9 @@
 
     <div class="row">
       <div class="input-field">
-        <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
+        <input type="text" class="validate" #regEmail="ngModel" name="email" [(ngModel)]="e" required pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$">
         <label for="regEmail">Email</label>
-        <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
+        <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !reg._submitted)">
           Email is required and format should be <i>john@doe.com</i>.
         </small>
       </div>
@@ -177,15 +177,15 @@
 
     <div class="row">
       <div class="input-field">
-        <input type="password" class="validate" #regPassword="ngModel" name="password" [ngModel]="p" required minlength="6">
+        <input type="password" class="validate" #regPassword="ngModel" name="password" [(ngModel)]="p" required minlength="6">
         <label for="regPassword">Password</label>
-        <small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !f._submitted)">
+        <small class="invalid-test" [hidden]="regPassword.valid || (regPassword.pristine && !reg._submitted)">
           Password is required (minimum 6 characters).
         </small>
       </div>
     </div>
 
-    <button type="submit" class="waves-effect waves-blue white-text btn-large submit" [disabled]="!f.valid">Create account</button>
+    <button type="submit" class="waves-effect waves-blue white-text btn-large submit" [disabled]="!reg.valid">Create account</button>
 
     <div class="row">
       <div class="input-field">
@@ -240,7 +240,7 @@
   <form class="modal-content" novalidate #f="ngForm" (ngSubmit)="recover(f.value)">
     <div class="row">
       <div class="input-field">
-        <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" required pattern=".+\@.+\..+">
+        <input type="text" class="validate" #regEmail="ngModel" name="email" [ngModel]="e" required pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$">
         <label for="regEmail">Email</label>
         <small class="invalid-test" [hidden]="regEmail.valid || (regEmail.pristine && !f._submitted)">
           Email is required and format should be <i>john@doe.com</i>.
