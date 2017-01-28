@@ -29,6 +29,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('ngOnInit');
     $(".button-collapse")['sideNav']({
       menuWidth: 300,
       edge: 'right',
@@ -37,10 +38,12 @@ export class NavbarComponent implements OnInit {
   }
 
   home() {
+    console.log('home');
     this.router.navigate(['feeds']);
   }
 
   navigate() {
+    console.log('Navigate');
     if (this.activeFeed['id']) {
       this.router.navigate(['\posts', this.activeFeed['id']]);
       this.as.setActiveFeedID('');
@@ -50,12 +53,14 @@ export class NavbarComponent implements OnInit {
   }
 
   loginModal() {
+    console.log('Login Modal');
     $('#registerModal')['closeModal']();
     $('.button-collapse')['sideNav']('hide');
     $('#loginModal')['openModal']();
   }
 
   login(user) {
+    console.log('user', user);
     this.loginLoading = true;
     this.as.login(user.email, user.password).then((res) => {
       this.User = this.as.getUser();
@@ -71,12 +76,14 @@ export class NavbarComponent implements OnInit {
   }
 
   recoverModal() {
+    console.log('recover modal');
     $('#loginModal')['closeModal']();
     $('#registerModal')['closeModal']();
     $('#recoverModal')['openModal']();
   }
 
   recover(data) {
+    console.log('recover data', data);
     event.preventDefault();
     $('#errorRecover').html('');
     this.recoverLoading = true;
@@ -93,19 +100,22 @@ export class NavbarComponent implements OnInit {
   }
 
   registerModal() {
+    console.log('create feed modal');
     $('#loginModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
     $('#registerModal')['openModal']();
   }
 
   register(user, terms) {
+    console.log('user', user);
+    console.log('terms', terms);
     if (!terms) return $('#errorRegister').html('You have to agree on Superwire\'s terms to create an account');
     $('#errorRegister').html('');
     this.registerLoading = true;
     this.as.register(user.email.toLowerCase(), user.password).then((res) => {
       this.as.login(user.email.toLowerCase(), user.password).then((res) => {
         this.as.createUserProfile(res.uid, user.name.toLowerCase(), user.email.toLowerCase()).then(() => {
-          console.log('Profile is Created!')
+          console.log('Profile is Created!');
           console.log('User is Registered & Logged In!');
           this.router.navigate(['/profile', user.name.toLowerCase()]);
           $('#errorRegister').html('');

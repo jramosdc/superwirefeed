@@ -15,7 +15,7 @@ export class SubscriptionComponent implements OnDestroy {
     subscription: any[];
     observableSubcription: any[];
 
-    constructor(private route: ActivatedRoute, private router: Router, private as: authService, ) {
+    constructor(private route: ActivatedRoute, private router: Router, private as: authService) {
         this.observableSubcription = [];
         this.subscription = [];
 

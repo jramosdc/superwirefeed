@@ -11,7 +11,20 @@ export {
 	FirebaseListObservable
 }
 
-export interface User { uid: string, emailVerified: boolean, password: { email: string, profileImageURL: string }, feed: { id: string, name: string, userid: string }, backgroundImageURL: string }
+export interface User { 
+	uid: string, 
+	emailVerified: boolean, 
+	password: { 
+		email: string, 
+		profileImageURL: string 
+	}, 
+	feed: { 
+		id: string, 
+		name: string, 
+		userid: string 
+	}, 
+	backgroundImageURL: string 
+}
 
 
 @Injectable()
@@ -246,7 +259,7 @@ export class authService {
 
 	uploadPostImg(base64: string, str = null) {
 		return new Promise((resolve, reject) => {
-			let postImgTask
+			let postImgTask;
 			if (str) {
 				postImgTask = this.storageRef.child('img').child('posts').child(str).put(this.base64ToBlob(base64));
 			} else {
@@ -352,12 +365,12 @@ export class authService {
 	}
 
 	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
-		let multipath = {}
+		let multipath = {};
 
 		let setFollowingSys = () => {
 			multipath['/user-following/' + myid + '/' + followerId] = followersObj[myid];
 			multipath['/user-followers/' + followerId + '/' + myid] = followingObj[followerId];
-			console.log('multipath: ', multipath)
+			console.log('multipath: ', multipath);
 			this.mainRef.update(multipath).then(() => {
 				console.log('update multipath');
 			}).catch(err => {
@@ -462,7 +475,7 @@ export class authService {
 		return new Promise((res, rej) => {
 			let obj = { amount, token }
 			this.http.addJSON(`${this.api}/api/cc/charge/`, obj, (d) => {
-				console.log(d)
+				console.log(d);
 				if (d.success) {
 					res(d.data);
 				} else {

@@ -15,10 +15,11 @@ declare var StripeCheckout: any;
 })
 export class ViewPostComponent {
   User: User;
-  postid: string
-  post: FirebaseObjectObservable<{}>
+  postid: string;
+  Domain: string;
+  post: FirebaseObjectObservable<{}>;
   activeCategory: string;
-  categories: Array<string>
+  categories: Array<string>;
   stripeHandler: any;
   stripeTokenId: string;
   previewUrl: string;
@@ -27,6 +28,7 @@ export class ViewPostComponent {
   constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
+    this.Domain = this.as.getDomain();
     this.as.setActivePageTitle('View Post');
     this.categories = this.as.getCategories();
     this.route.params.subscribe(params => {
@@ -138,6 +140,7 @@ export class ViewPostComponent {
         cell.appendChild(cellText);
         row.appendChild(cell);
       }
+      tblBody.appendChild(row);
       tblBody.appendChild(row);
     }
 

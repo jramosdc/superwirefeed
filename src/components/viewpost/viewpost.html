@@ -13,7 +13,7 @@
     <div class="center-container">
       <div class="feed-name">
         <span>Post from</span>
-        <h5>WikiLeaks</h5>
+        <h5 *ngIf="post?.owner?.userid">{{post.owner.userid}}</h5>
       </div>
       <div class="sharing-options">
         <h6>Share post</h6>
@@ -40,7 +40,7 @@
             </svg>
           </a>
           <label class="url">
-            <span #domain>{{Domain + '/posts/' + FeedID}}</span>
+            <span #domain>{{Domain + '/posts/' + postid}}</span>
             <button [clipboard]="domain">
               <i class="mdi mdi-content-copy"></i>
             </button>
@@ -53,7 +53,7 @@
   <div class="center-container">
     <article class="post">
       <header>
-        <time>1 Dec・8 mins read</time>
+        <time>{{ returnMoment(post.timestamp) }}</time>
         <h4 class="title">{{post.title}}</h4>
       </header>
       <!-- content container -->
