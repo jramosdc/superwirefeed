@@ -139,7 +139,7 @@
         </svg>
       </a>
       <label class="url">
-        <span #domain>{{Domain + '/posts/' + FeedID}}</span>
+        <span #domain>{{ href }}</span>
         <button [clipboard]="domain">
           <i class="mdi mdi-content-copy"></i>
         </button>
@@ -169,7 +169,7 @@
           <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/svg&gt;
         <br>&nbsp;&nbsp;&lt;/a&gt;
         <br>&nbsp;&nbsp;&lt;label class="url"&gt;
-          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;span #domain&gt;{{Domain + '/posts/' + FeedID}}&lt;/span&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;span #domain&gt;&#123; domain-url &#125;&lt;/span&gt;
           <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;button [clipboard]="domain"&gt;
             <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="mdi mdi-content-copy"&gt;&lt;/i&gt;
           <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/button&gt;

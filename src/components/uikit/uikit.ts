@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 })
 
 export class UiKit {
+  href: string;
   constructor () {
-
+    this.href = window.location.href
   }
 }

@@ -11,8 +11,8 @@ import { SearchBarService } from '../services/searchBar';
   },
   template: require('./posts.html')
 })
-export class PostsComponent implements OnInit, OnDestroy {
 
+export class PostsComponent implements OnInit, OnDestroy {
   User: User;
   Domain: string;
   FeedID: string;
