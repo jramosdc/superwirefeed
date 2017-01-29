@@ -1,52 +1,182 @@
 <main class="uikit center-container">
-  <section class="section-get">
-    <button class="waves-effect waves-light btn-large">
-      DOWNLOAD POST AND ASSETS
-      <span>Election_fan_fiction_Hillary_Won.zip</span>
-    </button>
+  <div class="description">
+    <h3>UIKit</h3>
+    <p>This page represents some components from different pages. Some of them are used in several pages and need to be reused. This page aims to help developer for easy reuse and store of that kind of components. It also helps Superwire for brand identity. As we now use <a href="http://materializecss.com/" target="_blank">Materialize.css</a> as our base library, our basic styles are defined in their showcase and we display only SuperWire specific styles here.</p>
+  </div>
+
+
+  <section class="section">
+    <h5>Colors:</h5>
+    <section class="colors">
+      <div class="dark" style="background: #31334a;">
+        <span>$blue-dark</span>
+        <span>#31334a</span>
+      </div>
+      <div class="dark" style="background: #8B989A;">
+        <span class="bold">$quaternary-color</span>
+        <span>$blue-gray</span>
+        <span>#8B989A</span>
+      </div>
+      <div style="background: #CAEBF2;">
+        <span class="bold">$tertiary-color</span>
+        <span>$blue</span>
+        <span>#CAEBF2</span>
+      </div>
+    </section>
+
+    <section class="colors">
+      <div class="dark" style="background: #515151;">
+        <span>$title-gray</span>
+        <span>#515151</span>
+      </div>
+      <div class="dark" style="background: #A9A9A9;">
+        <span class="bold">$primary-color</span>
+        <span>$gray-dark</span>
+        <span>#A9A9A9</span>
+      </div>
+      <div style="background: #EFEFEF;">
+        <span>$gray-mid</span>
+        <span>#EFEFEF</span>
+      </div>
+      <div style="background: #FBFBFB;">
+        <span>$gray-light</span>
+        <span>#FBFBFB</span>
+      </div>
+    </section>
+
+    <section class="colors">
+      <div class="dark" style="background: #FF3B3F;">
+        <span class="bold">$secondary-color</span>
+        <span>$pink</span>
+        <span>#FF3B3F</span>
+      </div>
+    </section>
   </section>
 
-  <div class="section-get">
-    <button class="waves-effect waves-light btn-large">
-      BUY CONTENT
-    </button>
-    <br>
-    <img src="assets/powered-by-stripe.svg" alt="">
-  </div>
+  <section class="section">
+    <h5>Content get buttons:</h5>
 
-  <div class="section-get">
-    <img src="assets/cc/by.png" alt="">
-    <img src="assets/cc/by-sa.png" alt="">
-  </div>
-
-  <div class="share">
-    <a>
-      <svg class="social-icon facebook-color" viewBox="0 0 96 96">
-        <use xlink:href="#social-facebook"></use>
-      </svg>
-    </a>
-    <a>
-      <svg class="social-icon twitter-color" viewBox="0 0 612 612">
-        <use xlink:href="#social-twitter"></use>
-      </svg>
-    </a>
-    <a>
-      <svg class="social-icon google-plus-color" viewBox="0 0 96 96">
-        <use xlink:href="#social-google-plus"></use>
-      </svg>
-    </a>
-    <a>
-      <svg class="social-icon linkedin-color" viewBox="0 0 430 430">
-        <use xlink:href="#social-linkedin"></use>
-      </svg>
-    </a>
-    <label class="url">
-      <span #domain>{{Domain + '/posts/' + FeedID}}</span>
-      <button [clipboard]="domain">
-        <i class="mdi mdi-content-copy"></i>
+    <section class="section section-get">
+      <button class="waves-effect waves-light btn-large">
+        DOWNLOAD POST AND ASSETS
+        <span>Election_fan_fiction_Hillary_Won.zip</span>
       </button>
-    </label>
-  </div>
+    </section>
+
+    <code>
+      &lt;section class="section-get"&gt;
+        <br>&nbsp;&nbsp;&lt;button class="waves-effect waves-light btn-large"&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;DOWNLOAD POST AND ASSETS
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&gt;Election_fan_fiction_Hillary_Won.zip&lt;/span&gt;
+        <br>&nbsp;&nbsp;&lt;/button&gt;
+      <br>&lt;/section&gt;
+    </code>
+
+    <div class="section section-get">
+      <button class="waves-effect waves-light btn-large">
+        BUY CONTENT
+      </button>
+      <br>
+      <img src="assets/powered-by-stripe.svg" alt="">
+    </div>
+
+    <code>
+      &lt;section class="section-get"&gt;
+        <br>&nbsp;&nbsp;&lt;button class="waves-effect waves-light btn-large"&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;BUY CONTENT
+        <br>&nbsp;&nbsp;&lt;/button&gt;
+        <br>&nbsp;&nbsp;&lt;br&gt;
+        <br>&nbsp;&nbsp;&lt;img src="assets/powered-by-stripe.svg" alt="Buy with Sprite"&gt;
+      <br>&lt;/section&gt;
+    </code>
+  </section>
+
+  <section class="section">
+    <h5>CC Labels:</h5>
+    <div class="section section-get">
+      <img src="assets/cc/by.png" alt="">
+    </div>
+
+    <code>
+      &lt;section class="section-get"&gt;
+        <br>&nbsp;&nbsp;&lt;img src="assets/cc/by.png" alt="BY"&gt;
+      <br>&lt;/section&gt;
+    </code>
+
+    <div class="section section-get">
+      <img src="assets/cc/by-sa.png" alt="">
+    </div>
+
+    <code>
+      &lt;section class="section-get"&gt;
+        <br>&nbsp;&nbsp;&lt;img src="assets/cc/by-sa.png" alt="BY-SA"&gt;
+      <br>&lt;/section&gt;
+    </code>
+  </section>
+
+  <section class="section">
+    <h5>Share:</h5>
+
+    <div class="share">
+      <a>
+        <svg class="social-icon facebook-color" viewBox="0 0 96 96">
+          <use xlink:href="#social-facebook"></use>
+        </svg>
+      </a>
+      <a>
+        <svg class="social-icon twitter-color" viewBox="0 0 612 612">
+          <use xlink:href="#social-twitter"></use>
+        </svg>
+      </a>
+      <a>
+        <svg class="social-icon google-plus-color" viewBox="0 0 96 96">
+          <use xlink:href="#social-google-plus"></use>
+        </svg>
+      </a>
+      <a>
+        <svg class="social-icon linkedin-color" viewBox="0 0 430 430">
+          <use xlink:href="#social-linkedin"></use>
+        </svg>
+      </a>
+      <label class="url">
+        <span #domain>{{Domain + '/posts/' + FeedID}}</span>
+        <button [clipboard]="domain">
+          <i class="mdi mdi-content-copy"></i>
+        </button>
+      </label>
+    </div>
+
+    <code>
+      &lt;div class="share"&gt;
+        <br>&nbsp;&nbsp;&lt;a&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;svg class="social-icon facebook-color" viewBox="0 0 96 96"&gt;
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;use xlink:href="#social-facebook"&gt;&lt;/use&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/svg&gt;
+        <br>&nbsp;&nbsp;&lt;/a&gt;
+        <br>&nbsp;&nbsp;&lt;a&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;svg class="social-icon twitter-color" viewBox="0 0 612 612"&gt;
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;use xlink:href="#social-twitter"&gt;&lt;/use&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/svg&gt;
+        <br>&nbsp;&nbsp;&lt;/a&gt;
+        <br>&nbsp;&nbsp;&lt;a&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;svg class="social-icon google-plus-color" viewBox="0 0 96 96"&gt;
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;use xlink:href="#social-google-plus"&gt;&lt;/use&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/svg&gt;
+        <br>&nbsp;&nbsp;&lt;/a&gt;
+        <br>&nbsp;&nbsp;&lt;a&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;svg class="social-icon linkedin-color" viewBox="0 0 430 430"&gt;
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;use xlink:href="#social-linkedin"&gt;&lt;/use&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/svg&gt;
+        <br>&nbsp;&nbsp;&lt;/a&gt;
+        <br>&nbsp;&nbsp;&lt;label class="url"&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;span #domain&gt;{{Domain + '/posts/' + FeedID}}&lt;/span&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;button [clipboard]="domain"&gt;
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="mdi mdi-content-copy"&gt;&lt;/i&gt;
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/button&gt;
+        <br>&nbsp;&nbsp;&lt;/label&gt;
+      <br>&lt;/div&gt;
+    </code>
+  </section>
 
 </main>
 

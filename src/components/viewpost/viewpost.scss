@@ -170,14 +170,16 @@ main.view-post {
       }
     }
   }
+
+  .section-get {
+    padding: 5rem 0;
+    text-align: center;
+  }
 }
 
 .section-get {
-  padding: 5rem 0;
-  text-align: center;
-
   button {
-    background: $dark-blue;
+    background: $blue-dark;
     border-radius: 5px;
     font-weight: normal;
     height: auto;
@@ -192,7 +194,7 @@ main.view-post {
     }
 
     &:hover {
-      background: transparentize($dark-blue, .1);
+      background: transparentize($blue-dark, .1);
     }
   }
 
@@ -255,7 +257,7 @@ main.view-post {
             top: auto;
             bottom: 0;
             border-right: none;
-            border-top: $dark-blue 1px solid;
+            border-top: $blue-dark 1px solid;
           }
         }
       }
@@ -263,7 +265,7 @@ main.view-post {
 
     > li {
       background: $blue;
-      color: $dark-blue;
+      color: $blue-dark;
       line-height: 1;
       position: relative;
       padding: 1.5rem;
@@ -283,7 +285,7 @@ main.view-post {
           right: 0;
           top: 20%;
           bottom: 20%;
-          border-right: $dark-blue 1px solid;
+          border-right: $blue-dark 1px solid;
           opacity: .1;
         }
       }
@@ -343,7 +345,7 @@ main.view-post {
 
           a {
             display: block;
-            color: $dark-blue;
+            color: $blue-dark;
 
             &:visited,
             &.active {
@@ -455,7 +457,7 @@ main.view-post {
 }
 
 .other-posts {
-  background: $mid-gray;
+  background: $gray-mid;
   padding: 60px 0;
 
   h5.title {
@@ -471,7 +473,7 @@ main.view-post {
 
   li {
     background: white;
-    border: 1px solid $mid-gray;
+    border: 1px solid $gray-mid;
     max-width: 50%;
     min-width: 50%;
     flex: 1;
@@ -505,7 +507,7 @@ main.view-post {
     }
 
     &:hover {
-      background: $light-gray;
+      background: $gray-light;
 
       > h6 {
         padding-left: .3em;

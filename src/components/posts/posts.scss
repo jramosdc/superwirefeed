@@ -59,7 +59,7 @@ main.feed {
   }
 
   section.info-card {
-    background-color: $dark-blue;
+    background-color: $blue-dark;
     box-shadow: rgba(180, 180, 180, .5) 2px 2px 15px;
     border-radius: 3px;
     color: white;
@@ -101,14 +101,14 @@ main.feed {
           background-color: white;
 
           i {
-            color: $dark-blue;
+            color: $blue-dark;
           }
         }
 
         .options-btn {
           opacity: 0;
           transition: opacity .2s;
-          background-color: rgba($dark-blue, .5);
+          background-color: rgba($blue-dark, .5);
         }
 
         .dropdown-content {
@@ -384,7 +384,7 @@ main.feed {
     transition: background-color .2s;
 
     &:hover {
-      background-color: $light-gray;
+      background-color: $gray-light;
     }
 
     @media #{$medium-and-up} {

@@ -27,7 +27,7 @@
     }
 
     &:focus {
-      color: $dark-blue;
+      color: $blue-dark;
       background: rgba(white, .9);
     }
   }
@@ -51,7 +51,7 @@
     background: none;
     margin: 0;
     border-radius: 0;
-    border-bottom: 1px solid $mid-gray;
+    border-bottom: 1px solid $gray-mid;
 
     input,
     button {
