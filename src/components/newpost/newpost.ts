@@ -96,6 +96,7 @@ export class NewPostComponent implements OnInit {
                 { start: '* ', cmd: 'InsertUnorderedList' },
                 { start: '- ', cmd: 'InsertUnorderedList' }
             ],
+            valid_elements : '*[*]',
             toolbar: 'insertfile undo redo | bold | bullist | link image',
             setup: (editor) => {
                 editor.on('change', (e) => {

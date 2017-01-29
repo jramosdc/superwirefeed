@@ -140,7 +140,6 @@
 
       <div class="contributors">
         <h6 class="section-title">Contributors</h6>
-
         <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
         <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
         <img src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png">
@@ -204,7 +203,7 @@
           <span> • </span>
           <span (click)="navigate('edit', post.$key)">Modify</span>
           <span> • </span>
-          <span (click)="deleteModel(post.$key)">Remove</span>
+          <span (click)="deleteModel(post.$key, $event)">Remove</span>
         </div>
       </footer>
     </article>

@@ -20,8 +20,8 @@ export class PostsComponent implements OnInit, OnDestroy {
   search: string;
   activeCategory: string;
   categories: Array<string> = [];
-  deletePostID: string
-  posts: FirebaseListObservable<any[]>
+  deletePostID: string;
+  posts: FirebaseListObservable<any[]>;
   emailLoading: Boolean = false;
 
   constructor(public as: authService, public route: ActivatedRoute, private router: Router, private sb: SearchBarService) {
@@ -90,7 +90,7 @@ export class PostsComponent implements OnInit, OnDestroy {
       this.as.setActiveFeedID(this.FeedID);
     }
 
-    console.log(type, id)
+    console.log(type, id);
   }
 
   checkEmail(email: string) {
@@ -116,7 +116,8 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/feeds']);
   }
 
-  deleteModel(postid) {
+  deleteModel(postid, event) {
+    event.stopPropagation();
     this.deletePostID = postid;
     $('#deleteModel')['openModal']();
   }
@@ -158,13 +159,18 @@ export class PostsComponent implements OnInit, OnDestroy {
   // temporary solution to parse description
   // and fill data structure
   parseImgUrl(htmlDesc: string) {
-    let regex = /(https?:\/\/[^">]+)(jpg|png)/gi
-    let imgs = htmlDesc.match(regex)
+    let regex = /(https?:\/\/[^">]+)(jpg|png)/gi;
+    let imgs = htmlDesc.match(regex);
     return imgs && imgs[0]
   }
   parseShortDescription(htmlDesc: string) {
-    let regex = /[^-=\>/"%_<:;&]{55,}/gi
-    let descriptions = htmlDesc.match(regex)
-    return descriptions && descriptions[0]
+
+    let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
+    let descriptions = htmlDesc.replace(htmlRegex, "");
+    
+    /*let regex = /[^-=\>/"%_<:;&]{55,}/gi;
+    let descriptions = htmlDesc.match(regex);
+    return descriptions && descriptions[0];*/
+    return descriptions;
   }
 }
