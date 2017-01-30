@@ -164,13 +164,18 @@ export class PostsComponent implements OnInit, OnDestroy {
     return imgs && imgs[0]
   }
   parseShortDescription(htmlDesc: string) {
-
     let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
     let descriptions = htmlDesc.replace(htmlRegex, "");
+    let truncateLength = 55;
+    if(truncateLength > descriptions.length){
+      return descriptions;
+    } else {
+      descriptions = descriptions.substring(0, truncateLength);
+      return descriptions + "..." ;
+    }
     
     /*let regex = /[^-=\>/"%_<:;&]{55,}/gi;
     let descriptions = htmlDesc.match(regex);
     return descriptions && descriptions[0];*/
-    return descriptions;
   }
 }

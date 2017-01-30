@@ -218,7 +218,7 @@ export class NewPostComponent implements OnInit {
     } // postToFirebase
 
     backgroundImagePopup() {
-        event.preventDefault()
+        event.preventDefault();
         $('#backgroundModal')['openModal']();
     }
 

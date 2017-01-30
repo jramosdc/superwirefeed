@@ -211,7 +211,7 @@ export class EditPostComponent implements OnInit {
 
 
     backgroundImagePopup() {
-        event.preventDefault()
+        event.preventDefault();
         $('#backgroundModal')['openModal']();
     }
 

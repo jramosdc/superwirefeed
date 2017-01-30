@@ -111,10 +111,23 @@ export class ViewPostComponent {
 
   returnMoment(timestamp) {
     if (timestamp) {
-      return moment().to(timestamp);
+      return moment(timestamp).format('DD MMM');
     } else {
       return '';
     }
+  }
+  wordsCount(description){
+    if(description){
+      let wordsCount = description.replace(/(<([^>]+)>)/gi, "").trim().split(/\s+/).length;  //Regex to remove html tags and count number of words
+      let timeInMin = Math.ceil(1/60 * (60/200 * wordsCount));
+      return timeInMin + ' mins read';
+    }else {
+      return '';
+    }
+  }
+  parsePostDetail(description : string){
+    let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
+    return description.replace(htmlRegex, "");
   }
 
   displayTable(dataJSON) {
