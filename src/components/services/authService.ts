@@ -48,7 +48,7 @@ export class authService {
 
 	constructor(private af: AngularFire, private http: httpService) {
 		this.User = this.emptyUser();
-		this.authSubscribe()
+		this.authSubscribe();
 		this.loadFeeds();
 	}
 
@@ -294,6 +294,7 @@ export class authService {
 	}
 
 	updatePost(postid: string, post: Object) {
+		console.log('post', post);
 		return this.af.database.object('/posts/' + postid).update(post);
 	}
 

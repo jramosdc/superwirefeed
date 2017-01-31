@@ -69,7 +69,9 @@
         <div class="row">
             <label for="pdfLink">Add link to PDF</label>
             <div class="input-field">
-                <input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="post.pdfLink" placeholder="Pdf Link">
+                <!--<input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="post.pdfLink" placeholder="Pdf Link">-->
+                <input type="file" id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfLink="ngModel" name="pdfLink"
+                       [(ngModel)]="p1" accept="application/pdf" multiple>
             </div>
         </div>
         <div class="row">

@@ -6,7 +6,8 @@ import { FirebaseStorageService } from '../services/firebaseStorageService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
 import { SearchBarService } from '../services/searchBar';
 
-declare var Papa: any, tinymce: any;
+declare var tinymce: any;
+var Papa = require('../../lib/papaparse');
 
 @Component({
     selector: 'editpost',
@@ -25,6 +26,7 @@ export class EditPostComponent implements OnInit {
     postLoading: boolean;
     categories: Array<string> = [];
     csvFile: any = null;
+    pdfFile: Array<any> = [];
     postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
 
     // Cropper variables postImgData
@@ -70,18 +72,34 @@ export class EditPostComponent implements OnInit {
 
     handleFiles(evt) {
         event.preventDefault();
-        let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
-        if (pattern.test(evt.target.files[0].name)) {
-            let size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
-            if (size <= 1) {
-                this.csvFile = evt.target.files[0];
+        if(evt.target.id == "browseCSVFile"){
+            console.log('evt', evt.target.files[0].name);
+            let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
+            if (pattern.test(evt.target.files[0].name)) {
+                let size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
+                if (size <= 1) {
+                    this.csvFile = evt.target.files[0];
+                } else {
+                    document.getElementById('browseCSVFile')['value'] = null;
+                    alert('Please CSV file size should be max 1mb');
+                }
             } else {
                 document.getElementById('browseCSVFile')['value'] = null;
-                alert('Please CSV file size should be max 1mb');
+                alert('please select *.csv file');
             }
-        } else {
-            document.getElementById('browseCSVFile')['value'] = null;
-            alert('please select *.csv file');
+        }
+        else if(evt.target.id == "browsePdfFile"){
+            this.pdfFile = [];
+            let pattern = new RegExp("[0-9a-z]{1,}.(pdf)$");
+            for(let i = 0; i < evt.target.files.length; i++) {
+                console.log(evt.target.files[i]);
+                if(pattern.test(evt.target.files[i].name)){
+                    this.pdfFile[i] = evt.target.files[i];
+                } else {
+                    document.getElementById('browsePdfFile')['value'] = null;
+                    alert('please select *.pdf file');
+                }
+            }
         }
     }
 
@@ -153,8 +171,10 @@ export class EditPostComponent implements OnInit {
             csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
             timestamp: firebase.database['ServerValue'].TIMESTAMP,
             image: ((this.postedImgUrl) ? this.postedImgUrl : ((this.post['image'] ? this.post['image'] : null))),
-        }
+        };
 
+        if(this.pdfFile){
+        }
         // convert CVS file to JSON
         if (this.csvFile) {
             Papa.parse(this.csvFile, {
@@ -163,8 +183,8 @@ export class EditPostComponent implements OnInit {
                 }
             });
 
-            // after file upload get download link storgae
-            this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
+            // after file upload get download link storage
+            this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.postid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
                 post['gsheetLink'] = url;
                 this.postObjReady.uploadFile = true;
                 this.updateToFirebase(post);             // save to firebase
@@ -216,15 +236,15 @@ export class EditPostComponent implements OnInit {
     }
 
     backgroundModelClose() {
-        event.preventDefault()
+        event.preventDefault();
         $('#backgroundModal')['closeModal']();
         this.imageSelected = true;
         this.postImgData['image'] = null;
     }
 
     backgroundChangeListener($event) {
-        event.preventDefault()
-        console.log($event)
+        event.preventDefault();
+        console.log($event);
         let image: any = new Image();
         let file: File = $event.target.files[0];
         console.log('file: ', file);
