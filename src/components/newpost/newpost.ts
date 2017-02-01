@@ -30,7 +30,6 @@ export class NewPostComponent implements OnInit {
     pdfFile: Array<any> = [];
     pdfFileLinks: any = {};
     postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
-
     // Cropper variables postImgData
     postImgData: any = {};
     cropperSettings_rectangle: CropperSettings = <any>{};
@@ -157,7 +156,6 @@ export class NewPostComponent implements OnInit {
     }
 
     submitPost(valid, newpost) {
-
         event.preventDefault();
         if (!valid) { return; }
         this.as.submitPost({}).then(res => {
@@ -184,57 +182,20 @@ export class NewPostComponent implements OnInit {
                 timestamp: firebase.database['ServerValue'].TIMESTAMP
             };
             if(this.pdfFile){
-                for(let i = 0; i < this.pdfFile.length; i++){
-                    console.log('i', i);
-                    console.log('this.pdfFile.length', this.pdfFile.length);
-                    this.uploadFile(this.pdfFile[i], 'posts/' + this.User.uid + '/' + postid + '/' + this.pdfFile[i].name + '/' + Date.now() + '/', postid)
-                        .then(url => {
-                            this.postObjReady.uploadFile = true;
-                            this.pdfFileLinks[i] = url;
-                            // post['pdfLink'] = this.pdfFileLinks;
-                            // this.postToFirebase(postid, post);
-                        })
-                        .catch(err => {
-                            console.log('file not upload err', err);
-                        });
-                    if(i == this.pdfFile.length-1){
-                        console.log('working');
-                        if(this.pdfFileLinks) {
-                            console.log('Working1');
+                this.uploadFile(this.pdfFile, postid)
+                    .then(urls => {
+                        if(urls) {
+                            for(let i = 0; i < urls.length; i++){
+                                this.pdfFileLinks[i] = urls[i];
+                            }
                             post['pdfLink'] = this.pdfFileLinks;
-                            // this.postObjReady.uploadFile = true;
-                            // console.log('post', post);
+                            this.postObjReady.uploadFile = true;
                             this.postToFirebase(postid, post);
                         }
-                    }
-                }
-                /*setTimeout(() => {
-                    if(this.pdfFileLinks) {
-                        post['pdfLink'] = this.pdfFileLinks;
-                        this.postObjReady.uploadFile = true;
-                        console.log('post', post);
-                        this.postToFirebase(postid, post);
-                    }
-                }, 3000);*/
-                /*this.pdfFile.forEach(file => {
-                    this.uploadFile(file, 'posts/' + this.User.uid + '/' + postid + '/' + file.name + '/' + Date.now() + '/', postid)
-                        .then(url => {
-                            // console.log('url',url);
-                            // this.pdfFileLinks.push(url);
-                            post['pdfLink'] = url;
-                            this.postObjReady.uploadFile = true;
-                            this.postToFirebase(postid, post);             // save to firebase
-                        })
-                        .catch(err => {
-                            console.log('file not upload err', err);
-                        });
-                });*/
-                /*if(this.pdfFileLinks){
-                    post['pdfLink'] = this.pdfFileLinks;
-                    // this.postObjReady.uploadFile = true;
-                    console.log('post', post);
-                    this.postToFirebase(postid, post);
-                }*/
+                    })
+                    .catch(err => {
+                        console.log('err', err);
+                    });
             }
             // convert CVS file to JSON
             if (this.csvFile) {
@@ -244,25 +205,14 @@ export class NewPostComponent implements OnInit {
                     }
                 });
                 // after file upload get download link storage
-                this.uploadFile(this.csvFile, 'posts/' + this.User.uid + '/' + postid + '/' + this.csvFile.name + '/' + Date.now() + '/', postid)
-                    .then(url => {
-                        post['gsheetLink'] = url;
-                        this.postObjReady.uploadFile = true;
-                        this.postToFirebase(postid, post);             // save to firebase
-                    })
-                    .catch(err => {
-                        console.log('file not upload err', err);
-                    });
-                /*// after file upload get download link storage
                 this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + postid + '/' + this.csvFile.name + '/' + Date.now() + '/')
                     .then(url => {
-                        console.log('url', url);
                         post['gsheetLink'] = url;
                         this.postObjReady.uploadFile = true;
                         this.postToFirebase(postid, post);             // save to firebase
                     }).catch(err => {
                     console.log('file not upload err', err);
-                });*/
+                });
             } else {
                 this.postObjReady.uploadFile = true;
                 this.postToFirebase(postid, post);             // save to firebase
@@ -337,25 +287,32 @@ export class NewPostComponent implements OnInit {
 */
     } // submitPost
 
-    private uploadFile(file, path, postid){
-        return new Promise((resolve, reject) => {
-            this.storge.fileUpload(file, path)
-                .then(url => {
-                    resolve(url);
+    private uploadFile(files, postid){
+        let promiseArray: Array<any> = [];
+        for(let i = 0; i < files.length; i++){
+            promiseArray.push(
+                new Promise((resolve, reject) => {
+                    this.storge.fileUpload(files[i],  'posts/' + this.User.uid + '/' + postid + '/' + files[i].name + '/' + Date.now() + '/')
+                        .then(url => {
+                            resolve(url);
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
                 })
-                .catch(err => {
-                    reject(err);
-                });
-        });
+            )
+        }
+         return Promise.all(promiseArray)
+             .then(urls => {
+                 return urls;
+             });
     }
 
     private postToFirebase(postid, post) {
         if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
-            console.log('post', post);
-            console.log('postid', postid);
             // for show updated on top feeds!
             this.as.updateFeed(this.User.feed.id, { 'timestamp': firebase.database['ServerValue'].TIMESTAMP });
-            this.as.updatePost(postid, post).then(res => {
+            this.as.setPost(postid, post).then(res => {
                 console.log('Post is Submitted!');
                 $('#errorPost').html('');
                 this.postedImgUrl = null;

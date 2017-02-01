@@ -292,9 +292,11 @@ export class authService {
 	submitPost(post: Object) {
 		return this.af.database.list('/posts').push(post);
 	}
+	setPost(postid: string, post: Object){
+		return this.af.database.object('/posts/' + postid).set(post);
+	}
 
 	updatePost(postid: string, post: Object) {
-		console.log('post', post);
 		return this.af.database.object('/posts/' + postid).update(post);
 	}
 

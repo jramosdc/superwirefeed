@@ -27,6 +27,7 @@ export class EditPostComponent implements OnInit {
     categories: Array<string> = [];
     csvFile: any = null;
     pdfFile: Array<any> = [];
+    pdfFileLinks: any = {};
     postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
 
     // Cropper variables postImgData
@@ -156,6 +157,7 @@ export class EditPostComponent implements OnInit {
     }
 
     updatePost(valid, editpost) {
+        
         event.preventDefault();
         if (!valid) { return; }
         this.postLoading = true;
@@ -172,8 +174,21 @@ export class EditPostComponent implements OnInit {
             timestamp: firebase.database['ServerValue'].TIMESTAMP,
             image: ((this.postedImgUrl) ? this.postedImgUrl : ((this.post['image'] ? this.post['image'] : null))),
         };
-
         if(this.pdfFile){
+            this.uploadFile(this.pdfFile, this.postid)
+                .then(urls => {
+                    if(urls) {
+                        for(let i = 0; i < urls.length; i++){
+                            this.pdfFileLinks[i] = urls[i];
+                        }
+                        post['pdfLink'] = this.pdfFileLinks;
+                        this.postObjReady.uploadFile = true;
+                        this.updateToFirebase(post);
+                    }
+                })
+                .catch(err => {
+                    console.log('file not upload err', err);
+                });
         }
         // convert CVS file to JSON
         if (this.csvFile) {
@@ -182,7 +197,7 @@ export class EditPostComponent implements OnInit {
                     post["csvToJson"] = result.data;
                 }
             });
-
+            
             // after file upload get download link storage
             this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.postid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
                 post['gsheetLink'] = url;
@@ -211,6 +226,27 @@ export class EditPostComponent implements OnInit {
 
     }
 
+    private uploadFile(files, postid){
+        let promiseArray: Array<any> = [];
+        for(let i = 0; i < files.length; i++){
+            promiseArray.push(
+                new Promise((resolve, reject) => {
+                    this.storge.fileUpload(files[i],  'posts/' + this.User.uid + '/' + postid + '/' + files[i].name + '/' + Date.now() + '/')
+                        .then(url => {
+                            resolve(url);
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                })
+            )
+        }
+        return Promise.all(promiseArray)
+            .then(urls => {
+                return urls;
+            });
+    }
+    
     private updateToFirebase(post) {
         if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
             // for show updated on top feeds!
