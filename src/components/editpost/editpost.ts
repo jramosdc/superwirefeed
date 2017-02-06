@@ -26,8 +26,12 @@ export class EditPostComponent implements OnInit {
     postLoading: boolean;
     categories: Array<string> = [];
     csvFile: any = null;
+    csvLinks: any = {};
     pdfFile: Array<any> = [];
     pdfFileLinks: any = {};
+    pdfFilesName: any = {};
+    images: Array<any> = [];
+    imagesLinks: any = {};
     postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
 
     // Cropper variables postImgData
@@ -102,6 +106,24 @@ export class EditPostComponent implements OnInit {
                 }
             }
         }
+        else if(evt.target.id == "browseImages"){
+            this.images = [];
+            let pattern = new RegExp("[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$");
+            for(let i = 0; i < evt.target.files.length; i++){
+                if (pattern.test(evt.target.files[i].name)) {
+                    let size = parseInt(((evt.target.files[i].size / 1024) / 1024).toFixed(2)); //size in mbs
+                    if (size <= 10) {
+                        this.images[i] = evt.target.files[i];
+                    } else {
+                        document.getElementById('browseImages')['value'] = null;
+                        alert('Image size should be max 10mb');
+                    }
+                } else {
+                    document.getElementById('browseImages')['value'] = null;
+                    alert('please select image with a proper name');
+                }
+            }
+        }
     }
 
 
@@ -110,6 +132,7 @@ export class EditPostComponent implements OnInit {
             this.route.params.subscribe(params => {
                 this.postid = params['postid'];
                 this.as.loadPost(this.postid).subscribe(post => {
+                    console.log('post', post);
                     this.post = post;
                     this.UserID = post.owner.userid;
                     resolve();
@@ -157,7 +180,6 @@ export class EditPostComponent implements OnInit {
     }
 
     updatePost(valid, editpost) {
-        
         event.preventDefault();
         if (!valid) { return; }
         this.postLoading = true;
@@ -167,20 +189,26 @@ export class EditPostComponent implements OnInit {
             priority: editpost.priority,
             types: editpost.type,
             category: editpost.category,
-            pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
-            gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
+            pdfLink: ((this.post['pdfLink']) ? this.post['pdfLink'] : ((this.pdfFile ? this.pdfFile : null))),
+            gsheetLink: ((this.post['gsheetLink']) ? this.post['gsheetLink'] : ((this.csvFile ? this.csvFile : null))),
+            images: ((this.post['images']) ? this.post['images'] : ((this.images ? this.images : null))),
             mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
-            csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
+            // csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
             timestamp: firebase.database['ServerValue'].TIMESTAMP,
-            image: ((this.postedImgUrl) ? this.postedImgUrl : ((this.post['image'] ? this.post['image'] : null))),
+            coverImage: ((this.postedImgUrl) ? this.postedImgUrl : ((this.post['image'] ? this.post['image'] : null))),
+            // pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
+            // gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
+            // images: editpost.images  ? editpost.images : '',
         };
-        if(this.pdfFile){
+        if(this.pdfFile.length > 0){
             this.uploadFile(this.pdfFile, this.postid)
                 .then(urls => {
                     if(urls) {
                         for(let i = 0; i < urls.length; i++){
-                            this.pdfFileLinks[i] = urls[i];
-                        }
+                            let pdfId: any = this.as.getFileId({});
+                            pdfId = pdfId.path.o[1];
+                            this.pdfFileLinks[pdfId] = urls[i];
+                        }   
                         post['pdfLink'] = this.pdfFileLinks;
                         this.postObjReady.uploadFile = true;
                         this.updateToFirebase(post);
@@ -188,6 +216,24 @@ export class EditPostComponent implements OnInit {
                 })
                 .catch(err => {
                     console.log('file not upload err', err);
+                });
+        }
+        if(this.images.length > 0){
+            this.uploadFile(this.images, this.postid)
+                .then(urls => {
+                    if(urls) {
+                        for(let i = 0; i < urls.length; i++){
+                            let imageId: any = this.as.getFileId({});
+                            imageId = imageId.path.o[1];
+                            this.imagesLinks[imageId] = urls[i];
+                        }
+                        post['images'] = this.imagesLinks;
+                        this.postObjReady.uploadFile = true;
+                        this.updateToFirebase(post);
+                    }
+                })
+                .catch(err => {
+                    console.log('err', err);
                 });
         }
         // convert CVS file to JSON
@@ -200,7 +246,10 @@ export class EditPostComponent implements OnInit {
             
             // after file upload get download link storage
             this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.postid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
-                post['gsheetLink'] = url;
+                let csvId: any = this.as.getFileId({});
+                csvId = csvId.path.o[1];
+                this.csvLinks[csvId] = url;
+                post['gsheetLink'] = this.csvLinks;
                 this.postObjReady.uploadFile = true;
                 this.updateToFirebase(post);             // save to firebase
             }).catch(err => {
@@ -248,6 +297,7 @@ export class EditPostComponent implements OnInit {
     }
     
     private updateToFirebase(post) {
+        console.log('post update', post);
         if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
             // for show updated on top feeds!
             this.as.updateFeed(this.User.feed.id, { 'timestamp': firebase.database['ServerValue'].TIMESTAMP });
@@ -304,5 +354,19 @@ export class EditPostComponent implements OnInit {
             this.backgroundModelClose();
         });
     }
-
+    deletePostData(key, data){
+        this.as.deleteFile(data.value.storagePath)
+            .then(res => {
+                this.as.deletePostData(this.postid, key, data.key)
+                    .then(res => {
+                        console.log('Deleted Successfully');
+                    })
+                    .catch(err => {
+                        console.log('Error', err);
+                    });
+            })
+            .catch(err => {
+                console.log('err', err);
+            });
+    }
 }

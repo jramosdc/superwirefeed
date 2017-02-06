@@ -33,11 +33,12 @@ export class ViewPostComponent {
     this.categories = this.as.getCategories();
     this.route.params.subscribe(params => {
       this.postid = params['postid'];
+      console.log('this.postid', this.postid);
       if (this.postid) {
         this.as.loadPost(this.postid).subscribe((post) => {
           this.post = post;
-          this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
-          this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
+          // this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
+          // this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
           setTimeout(() => {
             $('.linkify')['linkify']();
             $('.collapsible')['collapsible']({ accordion: false });
@@ -182,6 +183,11 @@ export class ViewPostComponent {
       .catch(err => {
         console.log('on err; ', err)
       });
+  }
+  navigate(postid: string){
+    console.log('postid', postid);
+    this.router.navigate(['editpost', postid]);
+    // this.as.setActiveFeedID(this.FeedID);
   }
 
 }

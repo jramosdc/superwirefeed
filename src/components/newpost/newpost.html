@@ -19,7 +19,11 @@
             </div>
         </div>
         <div class="row">
-            <a *ngIf="!postImgData?.image && !postedImgUrl" class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
+            <label for="cover">Cover photo</label>
+            <a *ngIf="!postImgData?.image && !postedImgUrl" class="btn-floating waves-effect waves-light pink camOnHover"
+               (click)="backgroundImagePopup();">
+                <i class="mdi mdi-camera"></i>
+            </a>
             <img *ngIf="postImgData?.image" [src]="postImgData?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
         </div>
@@ -88,10 +92,17 @@
             </div>
         </div>
         <div class="row">
+            <label for="images">Select images</label>
+            <div class="input-field">
+                <input type="file"  id="browseImages" (change)="handleFiles($event)" class="validate"  #images="ngModel" name="images"
+                       [(ngModel)]="img" accept="image/*" multiple>
+            </div>
+        </div>
+        <div class="row">
             <label for="pdfLink">Add link to PDF</label>
             <div class="input-field">
                 <!--<input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pl" placeholder="Pdf Link">-->
-                <input type="file" id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfLink="ngModel" name="pdfLink"
+                <input type="file"  id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfLink="ngModel" name="pdfLink"
                        [(ngModel)]="p1" accept="application/pdf" multiple>
             </div>
         </div>

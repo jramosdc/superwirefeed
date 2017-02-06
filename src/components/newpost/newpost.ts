@@ -29,6 +29,10 @@ export class NewPostComponent implements OnInit {
     csvFile: any = null;
     pdfFile: Array<any> = [];
     pdfFileLinks: any = {};
+    pdfFilesName: any = {};
+    images: Array<any> = [];
+    imagesLinks: any = {};
+    csvLinks: any = {};
     postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
     // Cropper variables postImgData
     postImgData: any = {};
@@ -126,8 +130,8 @@ export class NewPostComponent implements OnInit {
 
     handleFiles(evt) {
         event.preventDefault();
-        let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
         if(evt.target.id == "browseCSVFile"){
+            let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
             if (pattern.test(evt.target.files[0].name)) {
                 let size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
                 if (size <= 1) {
@@ -146,16 +150,33 @@ export class NewPostComponent implements OnInit {
             for(let i = 0; i < evt.target.files.length; i++) {
                 if(pattern.test(evt.target.files[i].name)){
                     this.pdfFile[i] = evt.target.files[i];
-                    console.log('this.pdfFile', this.pdfFile);
                 } else {
                     document.getElementById('browsePdfFile')['value'] = null;
                     alert('please select *.pdf file');
+                }
+            }
+        } else if(evt.target.id == "browseImages"){
+            this.images = [];
+            let pattern = new RegExp("[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$");
+            for(let i = 0; i < evt.target.files.length; i++){
+                if (pattern.test(evt.target.files[i].name)) {
+                    let size = parseInt(((evt.target.files[i].size / 1024) / 1024).toFixed(2)); //size in mbs
+                    if (size <= 10) {
+                        this.images[i] = evt.target.files[i];
+                    } else {
+                        document.getElementById('browseImages')['value'] = null;
+                        alert('Image size should be max 10mb');
+                    }
+                } else {
+                    document.getElementById('browseImages')['value'] = null;
+                    alert('please select image with a proper name');
                 }
             }
         }
     }
 
     submitPost(valid, newpost) {
+        console.log('newpost', newpost);
         event.preventDefault();
         if (!valid) { return; }
         this.as.submitPost({}).then(res => {
@@ -170,10 +191,11 @@ export class NewPostComponent implements OnInit {
                 category: newpost.category,
                 pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
                 gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
+                images: newpost.images ? newpost.images : '',
                 mainUrl: newpost.mainUrl ? newpost.mainUrl : '',
-                csvFilename: (this.csvFile) ? this.csvFile.name : '',
+                // csvFilename: (this.csvFile) ? this.csvFile.name : '',
                 csvToJson: '',
-                image: this.postedImgUrl,
+                coverImage: this.postedImgUrl,
                 owner: {
                     uid: this.User.uid,
                     userid: this.User.feed.userid,
@@ -181,14 +203,34 @@ export class NewPostComponent implements OnInit {
                 },
                 timestamp: firebase.database['ServerValue'].TIMESTAMP
             };
-            if(this.pdfFile){
+            if(this.pdfFile.length > 0){
                 this.uploadFile(this.pdfFile, postid)
                     .then(urls => {
                         if(urls) {
                             for(let i = 0; i < urls.length; i++){
-                                this.pdfFileLinks[i] = urls[i];
+                                let pdfId: any = this.as.getFileId({});
+                                pdfId = pdfId.path.o[1];
+                                this.pdfFileLinks[pdfId] = urls[i];
                             }
                             post['pdfLink'] = this.pdfFileLinks;
+                            this.postObjReady.uploadFile = true;
+                            this.postToFirebase(postid, post);
+                        }
+                    })
+                    .catch(err => {
+                        console.log('err', err);
+                    });
+            }
+            if(this.images.length > 0){
+                this.uploadFile(this.images, postid)
+                    .then(urls => {
+                        if(urls) {
+                            for(let i = 0; i < urls.length; i++){
+                                let imageId: any = this.as.getFileId({});
+                                imageId = imageId.path.o[1];
+                                this.imagesLinks[imageId] = urls[i];
+                            }
+                            post['images'] = this.imagesLinks;
                             this.postObjReady.uploadFile = true;
                             this.postToFirebase(postid, post);
                         }
@@ -207,7 +249,11 @@ export class NewPostComponent implements OnInit {
                 // after file upload get download link storage
                 this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + postid + '/' + this.csvFile.name + '/' + Date.now() + '/')
                     .then(url => {
-                        post['gsheetLink'] = url;
+                        console.log('url', url);
+                        let csvId: any = this.as.getFileId({});
+                        csvId = csvId.path.o[1];
+                        this.csvLinks[csvId] = url;
+                        post['gsheetLink'] = this.csvLinks;
                         this.postObjReady.uploadFile = true;
                         this.postToFirebase(postid, post);             // save to firebase
                     }).catch(err => {
@@ -356,10 +402,8 @@ export class NewPostComponent implements OnInit {
 
     backgroundChangeListener($event) {
         event.preventDefault();
-        console.log('$event', $event);
         let image: any = new Image();
         let file: File = $event.target.files[0];
-        console.log('file: ', file);
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (loadEvent: any) => {

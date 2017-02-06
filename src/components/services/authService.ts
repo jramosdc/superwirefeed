@@ -288,7 +288,9 @@ export class authService {
 	updateFeed(userid: string, feed: Object) {
 		return this.af.database.object('/feeds/' + userid).update(feed);
 	}
-
+	getFileId(image: Object){
+		return this.af.database.list('/images').push(image);
+	}
 	submitPost(post: Object) {
 		return this.af.database.list('/posts').push(post);
 	}
@@ -329,9 +331,27 @@ export class authService {
 			}
 		});
 	}
-
+	deleteFile(path: string) {
+		return new Promise((resolve, reject) => {
+			this.storageRef.child(path).delete()
+				.then(()=> {
+					resolve('File Deleted Successfully');
+				})
+				.catch((error) => {
+					reject(error);
+				})
+		});
+	}
 	deletePost(postid: string) {
 		return this.af.database.object('/posts/' + postid).remove();
+	}
+	deletePostData(postid: string, key: string, keyid: string){
+		return this.af.database.object('/posts/' + postid + '/' + key + '/' + keyid).remove();
+		/*if(keyid){
+
+		} else {
+			return this.af.database.object('/posts/' + postid + '/' + key).remove();
+		}*/
 	}
 
 	deleteAll(feedid: string, userid: string, uid: string) {
@@ -352,7 +372,7 @@ export class authService {
 						firebase.auth().currentUser.delete().then(function () {
 							resolve();
 						}).catch(error => {
-							console.log("error in deleting user", error)
+							console.log("error in deleting user", error);
 							reject(error);
 						});
 						// authState.auth.delete().then(() => {
@@ -392,7 +412,7 @@ export class authService {
 		}; // removeFollowingSys
 
 		this.mainRef.child('/user-following/' + myid + '/' + followerId).once('value', (following) => {
-			console.log('mainRef: ', following.val())
+			console.log('mainRef: ', following.val());
 			if (following.val()) {
 				removeFollowingSys();
 			} else {

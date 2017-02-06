@@ -13,6 +13,11 @@
     <div class="center-container">
       <div class="feed-name">
         <span>Post from</span>
+        <div class="fixed-action-btn horizontal" style="bottom: 25px; right: 25px;">
+          <a class="btn-floating btn-large waves-effect waves-light deep-purple" (click)="navigate(postid)">
+            <i class="large mdi mdi-pencil"></i>
+          </a>
+        </div>
         <h5 *ngIf="post?.owner?.userid">{{post.owner.userid}}</h5>
       </div>
       <div class="sharing-options">
