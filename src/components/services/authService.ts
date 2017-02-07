@@ -496,7 +496,7 @@ export class authService {
 
 	ccCharge(amount, token) {
 		return new Promise((res, rej) => {
-			let obj = { amount, token }
+			let obj = { amount, token };
 			this.http.addJSON(`${this.api}/api/cc/charge/`, obj, (d) => {
 				console.log(d);
 				if (d.success) {

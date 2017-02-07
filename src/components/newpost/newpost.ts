@@ -249,7 +249,6 @@ export class NewPostComponent implements OnInit {
                 // after file upload get download link storage
                 this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + postid + '/' + this.csvFile.name + '/' + Date.now() + '/')
                     .then(url => {
-                        console.log('url', url);
                         let csvId: any = this.as.getFileId({});
                         csvId = csvId.path.o[1];
                         this.csvLinks[csvId] = url;

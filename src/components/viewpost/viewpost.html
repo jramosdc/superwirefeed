@@ -54,12 +54,14 @@
       </div>
     </div>
   </section>
-  <figure class="poster"><img [src]="post.embedly.images[0].url" *ngIf="post.embedly && post.embedly.images"></figure>
+  <figure class="poster" *ngIf="post.coverImage">
+    <!--<img [src]="post.embedly.images[0].url" *ngIf="post.embedly && post.embedly.images">-->
+    <img [src]="post.coverImage">
+  </figure>
   <div class="center-container">
-    <article class="post">
+    <article class="post" style="margin-top: 10px">
       <header>
         <time>{{returnMoment(post.timestamp)}}・{{wordsCount(post.detail)}}</time>
-        <!--<time>1 Dec・8 mins read</time>-->
         <h4 class="title">{{post.title}}</h4>
       </header>
       <!-- content container -->
@@ -96,21 +98,31 @@
           <li>
             PDF
             <ul>
-              <li><a (click)="openInPreview('url', post.purl)">post.pdf</a></li>
+              <li *ngFor="let pdf of post.pdfLink | keys">
+                <!--<a href="{{pdf.value.downloadURL}}">{{pdf.value.fileName}}</a>-->
+                <a (click)="openInPreview('url', pdf.value.downloadURL)">{{pdf.value.fileName}}</a>
+              </li>
+              <!--<li><a (click)="openInPreview('url', post.purl)">post.pdf</a></li>-->
             </ul>
           </li>
           <li>
             Images
             <ul>
-              <li><a href="#hillary_01.jpg">hillary_01.jpg</a></li>
-              <li><a href="#hillary_002.jpg">hillary_002.jpg</a></li>
+              <li *ngFor="let img of post.images | keys">
+                <a>{{img.value.fileName}}</a>
+              </li>
+              <!--<li><a href="#hillary_01.jpg">hillary_01.jpg</a></li>
+              <li><a href="#hillary_002.jpg">hillary_002.jpg</a></li>-->
             </ul>
           </li>
           <li>
             CSV Databases
             <ul>
-              <li><a href="#hillary_votes.csv">hillary_votes.csv</a></li>
-              <li><a href="#trump_votes.csv">trump_votes.csv</a></li>
+              <li *ngFor="let csv of post.gsheetLink | keys">
+                <a>{{csv.value.fileName}}</a>
+              </li>
+              <!--<li><a href="#hillary_votes.csv">hillary_votes.csv</a></li>
+              <li><a href="#trump_votes.csv">trump_votes.csv</a></li>-->
             </ul>
           </li>
           <li *ngIf="post.license != 3 && post.license != 4">
@@ -129,13 +141,13 @@
             <img src="assets/logo-white.svg" alt="">
             <span>SuperWire preview</span>
           </span>
-          <span>Hillary_votes.csv</span>
+          <span *ngFor="let csv of post.gsheetLink | keys">{{csv.value.fileName}}</span>
           <span><i class="mdi mdi-close"></i></span>
         </header>
 
         <div class="content">
-          <iframe *ngIf="previewType === 'url'" [src]="previewUrl" frameborder="0"></iframe>
-          <div *ngIf="previewType === 'content'" class="iframe" id="fullTable"></div>
+          <!--<iframe *ngIf="previewType === 'url'" [src]="previewUrl" frameborder="0"></iframe>-->
+          <div class="iframe" id="fullTable"></div>
         </div>
       </section>
     </article>

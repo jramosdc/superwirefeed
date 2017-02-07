@@ -33,7 +33,6 @@ export class ViewPostComponent {
     this.categories = this.as.getCategories();
     this.route.params.subscribe(params => {
       this.postid = params['postid'];
-      console.log('this.postid', this.postid);
       if (this.postid) {
         this.as.loadPost(this.postid).subscribe((post) => {
           this.post = post;
@@ -77,12 +76,11 @@ export class ViewPostComponent {
   }
 
   openInPreview (type, url) {
-    this.previewType = type
-
+    this.previewType = type;
     if (type === 'url') {
       this.previewUrl = url
     } else if (type === 'content') {
-      // this.displayTable(this.post['csvToJson']);
+      this.displayTable(this.post['csvToJson']);
     }
   }
 
@@ -137,16 +135,16 @@ export class ViewPostComponent {
     let tbl = document.createElement("table");
     let tblHead = document.createElement("thead");
     let tblBody = document.createElement("tbody");
-    // var Headerrow = document.createElement("tr");
-    // for (var heading in data[0]) {
-    //   console.log('heading', heading)
-    //   var cell = document.createElement("td");
-    //   var cellText = document.createTextNode(heading);
-    //   cell.appendChild(cellText);
-    //   Headerrow.appendChild(cell);
-    // }
-    // tblBody.appendChild(Headerrow);
-    for (let j = 0; j < data.length; j++) {
+    /*var Headerrow = document.createElement("tr");
+    for (var heading in data[0]) {
+      console.log('heading', heading)
+      var cell = document.createElement("td");
+      var cellText = document.createTextNode(heading);
+      cell.appendChild(cellText);
+      Headerrow.appendChild(cell);
+    }
+    tblBody.appendChild(Headerrow);*/
+    for (let j = 0; j < data.length-1; j++) {
       let row = document.createElement('tr');
       for (let obj in data[j]) {
         let cell = document.createElement('td');
@@ -162,7 +160,7 @@ export class ViewPostComponent {
     tableDiv.appendChild(tbl);
     setTimeout(() => {
       tbl.setAttribute("class", "striped highlight centered responsive-table");
-    }, 1000)
+    }, 1000);
   }
 
   agreementModelPopup() {
