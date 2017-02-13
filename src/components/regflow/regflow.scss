@@ -1,0 +1,62 @@
+main.regflow {
+  .modal.regflow {
+    margin-top: 5rem;
+  }
+}
+
+.modal.regflow {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  max-width: 540px;
+  min-height: 620px;
+  background: linear-gradient($blue, white 80%);
+  box-shadow: transparentize(black, .9) 0 2px 30px;
+
+  > .screen {
+    width: 100%;
+    padding-top: 140px;
+    flex: 1 0 auto;
+    background: url('assets/superwire-modal.svg') top 40px center no-repeat;
+
+    > .first {
+      font-weight: 300;
+      color: $blue-gray;
+      font-size: 24px;
+      margin: 0 0 6px;
+    }
+
+    > .main {
+      font-weight: 600;
+      color: #333;
+      font-size: 42px;
+      margin: 0;
+    }
+
+    > p {
+      max-width: 70%;
+      line-height: 2.2;
+      margin: 90px auto 0;
+      font-weight: 300;
+      color: $blue-gray;
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+
+    &.welcome + .content {
+      padding-top: 0;
+    }
+  }
+
+  > .content {
+    padding: 40px;
+    background: white;
+
+    > button {
+      background: $blue-dark;
+      text-transform: uppercase;
+      color: white;
+      width: 100%;
+    }
+  }
+}
