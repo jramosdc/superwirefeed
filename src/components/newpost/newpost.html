@@ -4,8 +4,7 @@
             <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name || 'Feed'}}</a><a href="#" class="active">New Post</a>
             </div>
         </div>
-        <!--<small>{{f | json}}</small>
-        -->
+        <!--<small>{{f | json}}</small>-->
         <div class="row" *ngIf="!User.emailVerified">
             <label for="verifyEmail" class="red-text">Please verify your Email!</label>
         </div>
@@ -92,6 +91,18 @@
             </div>
         </div>
         <div class="row">
+            <label for="pdfLink">Add link to PDF</label>
+            <div class="input-field">
+                <input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pdf" placeholder="Pdf Link">
+            </div>
+        </div>
+        <div class="row">
+            <label for="csvLink">Add link to Google Spread Sheet</label>
+            <div class="input-field">
+                <input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gsheet" placeholder="Google Spread Sheet Link">
+            </div>
+        </div>
+        <div class="row">
             <label for="images">Select images</label>
             <div class="input-field">
                 <input type="file"  id="browseImages" (change)="handleFiles($event)" class="validate"  #images="ngModel" name="images"
@@ -99,18 +110,18 @@
             </div>
         </div>
         <div class="row">
-            <label for="pdfLink">Add link to PDF</label>
+            <label for="pdfFiles">Add PDF files</label>
             <div class="input-field">
                 <!--<input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pl" placeholder="Pdf Link">-->
-                <input type="file"  id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfLink="ngModel" name="pdfLink"
+                <input type="file"  id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfFile="ngModel" name="pdfFile"
                        [(ngModel)]="p1" accept="application/pdf" multiple>
             </div>
         </div>
         <div class="row">
-            <label for="gsheetLink">Add dataset in csv format or a Google link</label>
+            <label for="gsheetLink">Add dataset in csv format</label>
             <div class="input-field">
                 <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl" placeholder="Google Spread Sheet Link">-->
-                <input type="file" id="browseCSVFile" (change)="handleFiles($event, gsheetLink)" class="validate" #gsheetLink="ngModel" name="gsheetLink"
+                <input type="file" id="browseCSVFile" (change)="handleFiles($event, gsheetLink)" class="validate" #gsheetFile="ngModel" name="gsheetFile"
                     [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
             </div>
         </div>

@@ -24,6 +24,8 @@ export class ViewPostComponent {
   stripeTokenId: string;
   previewUrl: string;
   previewType: string;
+  postPayment: boolean = false;
+  userAsset: boolean = false;
 
   constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -49,20 +51,32 @@ export class ViewPostComponent {
           });
         });
         this.sb.setHiddenSearchBar(true);
-
         this.initializeStripeModal();
       }
+      this.as.user$.subscribe(user => {
+        this.as.getUserAsset(user.uid, this.postid).subscribe((data) => {
+          console.log('data', data);
+          if(data.$value){
+            this.userAsset = data.$value; 
+          }
+          console.log('this.userAsset', this.userAsset);
+        })
+      });
+      /*if(this.User){
+
+      }*/
     });
   }
-
+  
   initializeStripeModal() {
     this.stripeHandler = StripeCheckout.configure({
       key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
       image: 'https://s3.amazonaws.com/stripe-uploads/acct_16lS7BHW1tZsRCeemerchant-icon-1481257880232-logo-white.png',
       locale: 'auto',
       token: (token, args) => {
+        console.log('token', token);
         this.stripeTokenId = token.id;
-        console.log('token-----: ', this.stripeTokenId)
+        console.log('token-----: ', this.stripeTokenId);
         this.agreementModelPopup();
         // You can access the token ID with `token.id`.
         // Get the token ID to your server-side code for use.
@@ -85,6 +99,7 @@ export class ViewPostComponent {
   }
 
   onStripeBtnClick() {
+    console.log('onStripeBtnClick');
     // Open Checkout with further options:
     event.preventDefault();
     this.stripeHandler.open({
@@ -172,20 +187,35 @@ export class ViewPostComponent {
   }
 
   onAgreement() {
-    console.log('i agree!')
-    this.agreementModelClose();
+    // this.agreementModelClose();
+    this.postPayment = true;
     this.as.ccCharge(100, this.stripeTokenId)
       .then(data => {
-        console.log('on success; ', data)
+        console.log('on success; ', data);
+        this.as.buyPost(this.User.uid, this.postid)
+            .then(res => {
+              this.postPayment = false;
+              this.agreementModelClose();
+              console.log('Data Saved');
+            })
+            .catch(err => {
+              console.log('err', err);
+            })
       })
       .catch(err => {
         console.log('on err; ', err)
       });
   }
   navigate(postid: string){
-    console.log('postid', postid);
     this.router.navigate(['editpost', postid]);
     // this.as.setActiveFeedID(this.FeedID);
+  }
+  
+  download(post: Object){
+    this.as.download(post)
+        .then(data => {
+          console.log('data', data);
+        })
   }
 
 }

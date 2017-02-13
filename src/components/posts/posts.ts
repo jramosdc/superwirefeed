@@ -21,8 +21,9 @@ export class PostsComponent implements OnInit, OnDestroy {
   activeCategory: string;
   categories: Array<string> = [];
   deletePostID: string;
-  posts: FirebaseListObservable<any[]>;
+  posts: Array<any>;
   emailLoading: Boolean = false;
+  subscription: Array<any> = [];
 
   constructor(public as: authService, public route: ActivatedRoute, private router: Router, private sb: SearchBarService) {
     this.Domain = this.as.getDomain();
@@ -34,13 +35,15 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.sb.setHiddenSearchBar(false);
     // search posts by title
     this.sb.search$.subscribe(term => {
-      this.posts = <any>this.as.loadPosts(this.FeedID)
+      this.subscription[0] = <any>this.as.loadPosts(this.FeedID)
         .map(posts => {
           return posts.filter(post => {
             if (post && post.title) {
               return post.title.toLowerCase().indexOf(term.toLowerCase()) != -1;
             } else { return false; }
           });
+        }).subscribe(posts => {
+            this.posts = posts;
         });
     });
 
@@ -64,7 +67,9 @@ export class PostsComponent implements OnInit, OnDestroy {
           $('#emailModel')['openModal']({ dismissible: false });
         }
       } else {
-        this.posts = this.as.loadPosts(this.FeedID);
+        this.subscription[1] = this.as.loadPosts(this.FeedID).subscribe(posts => {
+          this.posts = posts;
+        });
       }
     });
     // $('ul.tabs')['tabs']();
@@ -76,6 +81,10 @@ export class PostsComponent implements OnInit, OnDestroy {
     // setTimeout(() => {
     //   this.sb.search$.unsubscribe();
     // }, 500)
+    // this.posts.subscribe().unsubscribe();
+    // this.as.loadPosts(this.FeedID).subscribe().unsubscribe();
+
+    // this.subscription.map(item => item)['unsubscribe']();
   }
 
   navigate(type: string, id: string) {
@@ -97,7 +106,9 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.emailLoading = true;
     this.as.checkEmail(this.FeedID, email).subscribe(res => {
       if (res.length > 0) {
-        this.posts = this.as.loadPosts(this.FeedID);
+        this.subscription[2] = this.as.loadPosts(this.FeedID).subscribe(posts => {
+          this.posts = posts;
+        });
         sessionStorage['email'] = email;
         $('#emailModel')['closeModal']();
         $('#errorEmail').html('');

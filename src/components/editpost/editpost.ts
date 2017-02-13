@@ -189,8 +189,10 @@ export class EditPostComponent implements OnInit {
             priority: editpost.priority,
             types: editpost.type,
             category: editpost.category,
-            pdfLink: ((this.post['pdfLink']) ? this.post['pdfLink'] : ((this.pdfFile ? this.pdfFile : null))),
-            gsheetLink: ((this.post['gsheetLink']) ? this.post['gsheetLink'] : ((this.csvFile ? this.csvFile : null))),
+            pdfFile: ((this.post['pdfFile']) ? this.post['pdfFile'] : ((this.pdfFile ? this.pdfFile : null))),
+            gsheetFile: ((this.post['gsheetFile']) ? this.post['gsheetFile'] : ((this.csvFile ? this.csvFile : null))),
+            pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
+            gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
             images: ((this.post['images']) ? this.post['images'] : ((this.images ? this.images : null))),
             mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
             // csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
@@ -209,7 +211,7 @@ export class EditPostComponent implements OnInit {
                             pdfId = pdfId.path.o[1];
                             this.pdfFileLinks[pdfId] = urls[i];
                         }   
-                        post['pdfLink'] = this.pdfFileLinks;
+                        post['pdfFile'] = this.pdfFileLinks;
                         this.postObjReady.uploadFile = true;
                         this.updateToFirebase(post);
                     }
@@ -249,7 +251,7 @@ export class EditPostComponent implements OnInit {
                 let csvId: any = this.as.getFileId({});
                 csvId = csvId.path.o[1];
                 this.csvLinks[csvId] = url;
-                post['gsheetLink'] = this.csvLinks;
+                post['gsheetFile'] = this.csvLinks;
                 this.postObjReady.uploadFile = true;
                 this.updateToFirebase(post);             // save to firebase
             }).catch(err => {

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable, FirebaseAuthState } from 'angularfire2';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
 import { httpService } from './httpService';
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 export {
 	FirebaseListObservable
@@ -32,9 +33,11 @@ export class authService {
 
 	// ref: Firebase = new firebase("https://superwireapp.firebaseio.com");
 	domain: string = 'https://feed.superwire.io';
-	api: string = 'https://feed-superwire.herokuapp.com';
-	// api: string = 'https://arcane-spire-82869.herokuapp.com';
+	// api: string = 'https://feed-superwire.herokuapp.com';
+	api: string = 'https://arcane-spire-82869.herokuapp.com';
+	// api: string = ' http://localhost:3000';
 	User: User;
+	user$: BehaviorSubject<any>;
 	activePage: Object = { title: '' };
 	activeFeed: Object = {
 		id: null
@@ -47,6 +50,7 @@ export class authService {
 	private mainRef = firebase.database().ref('/');
 
 	constructor(private af: AngularFire, private http: httpService) {
+		this.user$ = new BehaviorSubject<any>(this.emptyUser());
 		this.User = this.emptyUser();
 		this.authSubscribe();
 		this.loadFeeds();
@@ -74,6 +78,7 @@ export class authService {
 							});
 						}
 					}); // getUserFeedDetail
+					this.user$.next(this.User);
 				} // once
 			} else { // if authState true
 				this.User.uid = '';
@@ -84,6 +89,7 @@ export class authService {
 				this.User.feed.name = '';
 				this.User.feed.userid = '';
 				this.User.backgroundImageURL = '';
+				this.user$.next(this.emptyUser());
 			}
 		}); // auth subscribe
 	}
@@ -347,11 +353,6 @@ export class authService {
 	}
 	deletePostData(postid: string, key: string, keyid: string){
 		return this.af.database.object('/posts/' + postid + '/' + key + '/' + keyid).remove();
-		/*if(keyid){
-
-		} else {
-			return this.af.database.object('/posts/' + postid + '/' + key).remove();
-		}*/
 	}
 
 	deleteAll(feedid: string, userid: string, uid: string) {
@@ -387,6 +388,13 @@ export class authService {
 		})
 	}
 
+	buyPost(userid: string, postid: string){
+		return this.af.database.object('/user-assets/' + userid + '/' + postid).set(true);
+	}
+	getUserAsset(userid: string, postid: string){
+		return this.af.database.object('/user-assets/' + userid + '/' + postid);
+	}
+	
 	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
 		let multipath = {};
 
@@ -491,21 +499,28 @@ export class authService {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 		return text;
-	} charge
+	}
 
-
+	//charge
 	ccCharge(amount, token) {
-		return new Promise((res, rej) => {
+		return new Promise((resolve, reject) => {
 			let obj = { amount, token };
-			this.http.addJSON(`${this.api}/api/cc/charge/`, obj, (d) => {
-				console.log(d);
-				if (d.success) {
-					res(d.data);
+			this.http.addJSON(`${this.api}/api/cc/charge`, obj, (res) => {
+				if (res.success) {
+					resolve(res.data);
 				} else {
-					rej(d.error);
+					reject(res.error);
 				}
 			});
 		}); // promise
+	}
+	download(post){
+		console.log('post', post);
+		return new Promise((resolve, reject) => {
+			this.http.addJSON(`${this.api}/api/download`, post, (res) => {
+				console.log('res', res);
+			})
+		})
 	}
 
 }

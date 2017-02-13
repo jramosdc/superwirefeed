@@ -54,36 +54,45 @@
       </div>
     </div>
   </section>
-  <figure class="poster" *ngIf="post.coverImage">
+  <figure class="poster">
     <!--<img [src]="post.embedly.images[0].url" *ngIf="post.embedly && post.embedly.images">-->
-    <img [src]="post.coverImage">
+    <img *ngIf="post.coverImage" [src]="post.coverImage">
   </figure>
   <div class="center-container">
-    <article class="post" style="margin-top: 10px">
+    <article class="post">
       <header>
         <time>{{returnMoment(post.timestamp)}}・{{wordsCount(post.detail)}}</time>
         <h4 class="title">{{post.title}}</h4>
       </header>
       <!-- content container -->
       <div id="postDetails" class="content"></div>
+      <div>
+        <div class="links" *ngIf="post.gsheetLink"><a href="{{post.gsheetLink}}" target="_blank">{{post.gsheetLink}}</a></div>
+        <div class="links" *ngIf="post.pdfLink"><a href="{{post.pdfLink}}" target="_blank">{{post.pdfLink}}</a></div>
+        <div class="links" *ngIf="post.mainURL"><a href="{{post.mainURL}}" target="_blank">{{post.mainURL}}</a></div>
+      </div>
       <!-- if download -->
-      <div class="section-get">
-        <button class="waves-effect waves-light btn-large">
+      <div *ngIf="post.license == 1 || post.license == 2 || userAsset == true" class="section-get">
+        <button (click)="download(post)" class="waves-effect waves-light btn-large">
           DOWNLOAD POST AND ASSETS
-          <span>Election_fan_fiction_Hillary_Won.zip</span>
         </button>
       </div>
       <!-- if buy -->
-      <div *ngIf="post.license == 3 || post.license == 4" (click)="onStripeBtnClick()" class="section-get">
-        <button class="waves-effect waves-light btn-large">
+      <div *ngIf="(post.license == 3 || post.license == 4) && userAsset == false" class="section-get">
+        <button (click)="onStripeBtnClick()"  class="waves-effect waves-light btn-large">
           BUY CONTENT
         </button>
         <br>
         <img src="assets/powered-by-stripe.svg" alt="">
       </div>
       <!-- if creative commons -->
-      <div class="section-get hide">
-        <img src="assets/cc/by.png" alt="">
+      <div class="section-get">
+        <span>License</span>
+        <br>
+        <span *ngIf="post.license == 1">CC-BY</span>
+        <span *ngIf="post.license == 2">CC-BY-ND</span>
+        <span *ngIf="post.license == 3">Selling w/ attribution</span>
+        <span *ngIf="post.license == 4">Selling exclusively</span>
       </div>
 
       <div class="section-separately">
@@ -97,32 +106,37 @@
         <ul>
           <li>
             PDF
-            <ul>
-              <li *ngFor="let pdf of post.pdfLink | keys">
+            <ul *ngIf="post.pdfFile !== ''">
+              <li  *ngFor="let pdf of post?.pdfFile | keys">
                 <!--<a href="{{pdf.value.downloadURL}}">{{pdf.value.fileName}}</a>-->
-                <a (click)="openInPreview('url', pdf.value.downloadURL)">{{pdf.value.fileName}}</a>
+                <a href="{{pdf.value.downloadURL}}" target="_blank">{{pdf.value.fileName}}</a>
               </li>
               <!--<li><a (click)="openInPreview('url', post.purl)">post.pdf</a></li>-->
+            </ul>
+            <ul *ngIf="post.pdfFile == ''">
+              <li>No pdf files</li>
             </ul>
           </li>
           <li>
             Images
-            <ul>
-              <li *ngFor="let img of post.images | keys">
-                <a>{{img.value.fileName}}</a>
+            <ul *ngIf="post.images !== ''">
+              <li *ngFor="let img of post?.images | keys">
+                <a href="{{img.value.downloadURL}}" target="_blank">{{img.value.fileName}}</a>
               </li>
-              <!--<li><a href="#hillary_01.jpg">hillary_01.jpg</a></li>
-              <li><a href="#hillary_002.jpg">hillary_002.jpg</a></li>-->
+            </ul>
+            <ul *ngIf="post.images == ''">
+              <li>No images</li>
             </ul>
           </li>
           <li>
             CSV Databases
-            <ul>
-              <li *ngFor="let csv of post.gsheetLink | keys">
-                <a>{{csv.value.fileName}}</a>
+            <ul *ngIf="post.gsheetFile !== ''">
+              <li *ngFor="let csv of post?.gsheetFile | keys">
+                <a href="{{csv.value.downloadURL}}" target="_blank">{{csv.value.fileName}}</a>
               </li>
-              <!--<li><a href="#hillary_votes.csv">hillary_votes.csv</a></li>
-              <li><a href="#trump_votes.csv">trump_votes.csv</a></li>-->
+            </ul>
+            <ul *ngIf="post.gsheetFile == ''">
+              <li>No CSV file</li>
             </ul>
           </li>
           <li *ngIf="post.license != 3 && post.license != 4">
@@ -135,7 +149,7 @@
       </div>
 
       <!-- <section class="superwire-preview" > -->
-      <section class="superwire-preview">
+      <section class="superwire-preview" *ngIf="post.license != 3 && post.license != 4">
         <header>
           <span class="superwire">
             <img src="assets/logo-white.svg" alt="">
@@ -211,3 +225,38 @@
     </ul>
   </div>
 </section>
+
+
+<div id="agreementModal" class="modal zindex9999">
+  <form class="modal-content">
+    <div class="nav-wrapper center-align">
+      <h4 class="purple-text"> License Agreement</h4>
+    </div>
+    <hr />
+    <div class="row left-align">
+      <!--<ul>
+        <li>Agreement 1</li>
+        <li>Agreement 2</li>
+        <li>Agreement 3</li>
+      </ul>-->
+      <span>The buyer agrees to publish this story giving credit to the creator and to surrender all copyrights to the creator of the content after 30 days, as well as agreeing not to resale content</span>
+    </div>
+    <div class="modal-footer">
+      <div class="preloader-wrapper small active" *ngIf="postPayment">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="waves-effect waves-blue btn white-text" (click)="onAgreement();">AGREE!</button>
+      <button type="button" class="waves-effect waves-blue btn white-text" (click)="agreementModelClose();">CLOSE</button>
+    </div>
+  </form>
+</div>

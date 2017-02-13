@@ -189,6 +189,8 @@ export class NewPostComponent implements OnInit {
                 license: newpost.license,
                 types: newpost.type,
                 category: newpost.category,
+                pdfFile: newpost.pdfFile ? newpost.pdfFile : '',
+                gsheetFile: newpost.gsheetFile ? newpost.gsheetFile : '',
                 pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
                 gsheetLink: newpost.gsheetLink ? newpost.gsheetLink : '',
                 images: newpost.images ? newpost.images : '',
@@ -212,7 +214,7 @@ export class NewPostComponent implements OnInit {
                                 pdfId = pdfId.path.o[1];
                                 this.pdfFileLinks[pdfId] = urls[i];
                             }
-                            post['pdfLink'] = this.pdfFileLinks;
+                            post['pdfFile'] = this.pdfFileLinks;
                             this.postObjReady.uploadFile = true;
                             this.postToFirebase(postid, post);
                         }
@@ -252,7 +254,7 @@ export class NewPostComponent implements OnInit {
                         let csvId: any = this.as.getFileId({});
                         csvId = csvId.path.o[1];
                         this.csvLinks[csvId] = url;
-                        post['gsheetLink'] = this.csvLinks;
+                        post['gsheetFile'] = this.csvLinks;
                         this.postObjReady.uploadFile = true;
                         this.postToFirebase(postid, post);             // save to firebase
                     }).catch(err => {
