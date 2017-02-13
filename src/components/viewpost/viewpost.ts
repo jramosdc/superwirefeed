@@ -26,6 +26,7 @@ export class ViewPostComponent {
   previewType: string;
   postPayment: boolean = false;
   userAsset: boolean = false;
+  filesDownloaidng: boolean = false;
 
   constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -210,12 +211,17 @@ export class ViewPostComponent {
     this.router.navigate(['editpost', postid]);
     // this.as.setActiveFeedID(this.FeedID);
   }
-  
-  download(post: Object){
+
+  download(post: Object) {
+    this.filesDownloaidng = true;
     this.as.download(post)
-        .then(data => {
-          console.log('data', data);
-        })
+      .then(res => {
+        console.log('data', res);
+        if (res['success']) {
+          this.as.getFile(res['data']);
+          this.filesDownloaidng = false;
+        }
+      });
   }
 
 }

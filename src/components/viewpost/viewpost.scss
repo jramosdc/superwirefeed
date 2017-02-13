@@ -1,6 +1,16 @@
 main.view-post {
   min-height: 46rem;
 
+  .flex-center {
+    display: flex;
+    align-items: center;
+    margin: auto;
+  }
+
+  .margin10px {
+    margin: 10px;
+  }
+
   > figure.poster {
     margin: 0;
     width: 100%;

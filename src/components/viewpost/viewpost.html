@@ -73,7 +73,20 @@
       </div>
       <!-- if download -->
       <div *ngIf="post.license == 1 || post.license == 2 || userAsset == true" class="section-get">
-        <button (click)="download(post)" class="waves-effect waves-light btn-large">
+        <button (click)="download(post)" class="waves-effect waves-light btn-large flex-center">
+          <div class="preloader-wrapper small active margin10px" *ngIf="filesDownloaidng">
+              <div class="spinner-layer spinner-blue-only">
+                  <div class="circle-clipper left">
+                      <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                      <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                      <div class="circle"></div>
+                  </div>
+              </div>
+          </div>
           DOWNLOAD POST AND ASSETS
         </button>
       </div>

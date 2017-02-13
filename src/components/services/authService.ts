@@ -495,13 +495,13 @@ export class authService {
 		let text = "";
 		let possible = "ABCDEF-GHIJ-KLMNOPQR_STUV-WXYZ#abcdefghijklmnopqrstuv$wxyz012345-6789_";
 
-		for (var i = 0; i < len; i++)
+		for (var i = 0; i < len; i++) {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-		return text;
+			return text;
+		}
 	}
 
-	//charge
+	// charge
 	ccCharge(amount, token) {
 		return new Promise((resolve, reject) => {
 			let obj = { amount, token };
@@ -514,13 +514,19 @@ export class authService {
 			});
 		}); // promise
 	}
+	
 	download(post){
 		console.log('post', post);
 		return new Promise((resolve, reject) => {
 			this.http.addJSON(`${this.api}/api/download`, post, (res) => {
 				console.log('res', res);
+				resolve(res)
 			})
 		})
+	}
+
+	getFile(url){
+		window.open(this.api + url, "_self");
 	}
 
 }
