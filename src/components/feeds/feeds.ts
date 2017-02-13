@@ -48,14 +48,14 @@ export class FeedsComponent implements OnDestroy {
         // 	return this.feeds = this.as.getFeeds();
         // else
         this.feeds.filter(feed => {
-            console.log(feed);
+            console.log('feed', feed);
             return true;
         });
 
     }
 
     returnMoment(timestamp) {
-        if (timestamp) moment().to(timestamp)
+        if (timestamp) moment().to(timestamp);
         else return ''
     }
 

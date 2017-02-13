@@ -24,6 +24,9 @@ export class ViewPostComponent {
   stripeTokenId: string;
   previewUrl: string;
   previewType: string;
+  postPayment: boolean = false;
+  userAsset: boolean = false;
+  filesDownloaidng: boolean = false;
 
   constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -36,33 +39,50 @@ export class ViewPostComponent {
       if (this.postid) {
         this.as.loadPost(this.postid).subscribe((post) => {
           this.post = post;
-          this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
-          this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
+          // this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
+          // this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
           setTimeout(() => {
-            $('.linkify')['linkify']();
+            // $('.linkify')['linkify']();
             $('.collapsible')['collapsible']({ accordion: false });
             $("img").addClass("responsive-img");
             if (this.post['detail']) { $('#postDetails').html(this.post['detail']); }
-            if (this.post['csvToJson']) {
-              this.openInPreview('content', post['csvToJson']);
-            }
+            // if (this.post['csvToJson']) {
+            //   this.openInPreview('content', post['csvToJson']);
+            // }
           });
         });
         this.sb.setHiddenSearchBar(true);
-
         this.initializeStripeModal();
       }
+      this.as.user$.subscribe(user => {
+        this.as.getUserAsset(user.uid, this.postid).subscribe((data) => {
+          console.log('data', data);
+          if(data.$value){
+            this.userAsset = data.$value;
+            if (this.post['csvToJson']) {
+              setTimeout(() => {
+                this.openInPreview('content', this.post['csvToJson']);
+              })
+            }
+          }
+          console.log('this.userAsset', this.userAsset);
+        })
+      });
+      /*if(this.User){
+
+      }*/
     });
   }
-
+  
   initializeStripeModal() {
     this.stripeHandler = StripeCheckout.configure({
       key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
       image: 'https://s3.amazonaws.com/stripe-uploads/acct_16lS7BHW1tZsRCeemerchant-icon-1481257880232-logo-white.png',
       locale: 'auto',
       token: (token, args) => {
+        console.log('token', token);
         this.stripeTokenId = token.id;
-        console.log('token-----: ', this.stripeTokenId)
+        console.log('token-----: ', this.stripeTokenId);
         this.agreementModelPopup();
         // You can access the token ID with `token.id`.
         // Get the token ID to your server-side code for use.
@@ -76,16 +96,16 @@ export class ViewPostComponent {
   }
 
   openInPreview (type, url) {
-    this.previewType = type
-
+    this.previewType = type;
     if (type === 'url') {
       this.previewUrl = url
     } else if (type === 'content') {
-      // this.displayTable(this.post['csvToJson']);
+      this.displayTable(this.post['csvToJson']);
     }
   }
 
   onStripeBtnClick() {
+    console.log('onStripeBtnClick');
     // Open Checkout with further options:
     event.preventDefault();
     this.stripeHandler.open({
@@ -111,10 +131,23 @@ export class ViewPostComponent {
 
   returnMoment(timestamp) {
     if (timestamp) {
-      return moment().to(timestamp);
+      return moment(timestamp).format('DD MMM');
     } else {
       return '';
     }
+  }
+  wordsCount(description){
+    if(description){
+      let wordsCount = description.replace(/(<([^>]+)>)/gi, "").trim().split(/\s+/).length;  //Regex to remove html tags and count number of words
+      let timeInMin = Math.ceil(1/60 * (60/200 * wordsCount));
+      return timeInMin + ' mins read';
+    }else {
+      return '';
+    }
+  }
+  parsePostDetail(description : string){
+    let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
+    return description.replace(htmlRegex, "");
   }
 
   displayTable(dataJSON) {
@@ -123,16 +156,16 @@ export class ViewPostComponent {
     let tbl = document.createElement("table");
     let tblHead = document.createElement("thead");
     let tblBody = document.createElement("tbody");
-    // var Headerrow = document.createElement("tr");
-    // for (var heading in data[0]) {
-    //   console.log('heading', heading)
-    //   var cell = document.createElement("td");
-    //   var cellText = document.createTextNode(heading);
-    //   cell.appendChild(cellText);
-    //   Headerrow.appendChild(cell);
-    // }
-    // tblBody.appendChild(Headerrow);
-    for (let j = 0; j < data.length; j++) {
+    /*var Headerrow = document.createElement("tr");
+    for (var heading in data[0]) {
+      console.log('heading', heading)
+      var cell = document.createElement("td");
+      var cellText = document.createTextNode(heading);
+      cell.appendChild(cellText);
+      Headerrow.appendChild(cell);
+    }
+    tblBody.appendChild(Headerrow);*/
+    for (let j = 0; j < data.length-1; j++) {
       let row = document.createElement('tr');
       for (let obj in data[j]) {
         let cell = document.createElement('td');
@@ -148,7 +181,7 @@ export class ViewPostComponent {
     tableDiv.appendChild(tbl);
     setTimeout(() => {
       tbl.setAttribute("class", "striped highlight centered responsive-table");
-    }, 1000)
+    }, 1000);
   }
 
   agreementModelPopup() {
@@ -160,14 +193,39 @@ export class ViewPostComponent {
   }
 
   onAgreement() {
-    console.log('i agree!')
-    this.agreementModelClose();
+    // this.agreementModelClose();
+    this.postPayment = true;
     this.as.ccCharge(100, this.stripeTokenId)
       .then(data => {
-        console.log('on success; ', data)
+        console.log('on success; ', data);
+        this.as.buyPost(this.User.uid, this.postid)
+            .then(res => {
+              this.postPayment = false;
+              this.agreementModelClose();
+              console.log('Data Saved');
+            })
+            .catch(err => {
+              console.log('err', err);
+            })
       })
       .catch(err => {
         console.log('on err; ', err)
+      });
+  }
+  navigate(postid: string){
+    this.router.navigate(['editpost', postid]);
+    // this.as.setActiveFeedID(this.FeedID);
+  }
+
+  download(post: Object) {
+    this.filesDownloaidng = true;
+    this.as.download(post)
+      .then(res => {
+        console.log('data', res);
+        if (res['success']) {
+          this.as.getFile(res['data']);
+          this.filesDownloaidng = false;
+        }
       });
   }
 

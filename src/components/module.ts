@@ -18,6 +18,7 @@ import { TagInputItemComponent } from './tag-input/tag-input-item.component';
 import { SearchCategory } from './pipes/searchCategory';
 import { OrderBy } from './pipes/orderby';
 import { SearchPostTitlePipe } from './pipes/searchPostTitle';
+import { ObjectToArray } from './pipes/objectToArrays';
 
 
 @NgModule({
@@ -40,7 +41,7 @@ import { SearchPostTitlePipe } from './pipes/searchPostTitle';
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes
-    SearchCategory, OrderBy, SearchPostTitlePipe
+    SearchCategory, OrderBy, SearchPostTitlePipe, ObjectToArray
   ]
   , providers: [...ApplicationServices]
   , bootstrap: [AppComponent]
