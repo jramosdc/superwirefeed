@@ -16,6 +16,7 @@
 
 <div class="grid center-container">
   <div *ngFor="let feed of feeds | async | searchCategory: activeCategory | orderBy: ['-timestamp']">
+  <!--<div *ngFor="let feed of feeds | async ">-->
     <article class="card feed-card" *ngIf="feed.feedName">
 
       <figure class="card-image" [routerLink]="['/posts', feed.$key]">

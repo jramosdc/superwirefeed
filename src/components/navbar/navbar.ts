@@ -60,7 +60,6 @@ export class NavbarComponent implements OnInit {
   }
 
   login(user) {
-    console.log('user', user);
     this.loginLoading = true;
     this.as.login(user.email, user.password).then((res) => {
       this.User = this.as.getUser();
