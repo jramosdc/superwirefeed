@@ -89,6 +89,7 @@
           </div>
           DOWNLOAD POST AND ASSETS
         </button>
+        <img *ngIf="post.license == 1 || post.license == 2" class="margin10px" src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png" width="150" alt="license logo">
       </div>
       <!-- if buy -->
       <div *ngIf="(post.license == 3 || post.license == 4) && userAsset == false" class="section-get">
@@ -99,14 +100,14 @@
         <img src="assets/powered-by-stripe.svg" alt="">
       </div>
       <!-- if creative commons -->
-      <div class="section-get">
+      <!--<div class="section-get">
         <span>License</span>
         <br>
         <span *ngIf="post.license == 1">CC-BY</span>
         <span *ngIf="post.license == 2">CC-BY-ND</span>
         <span *ngIf="post.license == 3">Selling w/ attribution</span>
         <span *ngIf="post.license == 4">Selling exclusively</span>
-      </div>
+      </div>-->
 
       <div class="section-separately">
         <header>
@@ -119,7 +120,7 @@
         <ul>
           <li>
             PDF
-            <ul *ngIf="post.pdfFile !== ''">
+            <ul *ngIf="post.pdfFile !== '' && (post.license == 1 || post.license == 2 || userAsset == true)">
               <li  *ngFor="let pdf of post?.pdfFile | keys">
                 <!--<a href="{{pdf.value.downloadURL}}">{{pdf.value.fileName}}</a>-->
                 <a href="{{pdf.value.downloadURL}}" target="_blank">{{pdf.value.fileName}}</a>
@@ -132,7 +133,7 @@
           </li>
           <li>
             Images
-            <ul *ngIf="post.images !== ''">
+            <ul *ngIf="post.images !== '' && (post.license == 1 || post.license == 2 || userAsset == true)">
               <li *ngFor="let img of post?.images | keys">
                 <a href="{{img.value.downloadURL}}" target="_blank">{{img.value.fileName}}</a>
               </li>
@@ -143,7 +144,7 @@
           </li>
           <li>
             CSV Databases
-            <ul *ngIf="post.gsheetFile !== ''">
+            <ul *ngIf="post.gsheetFile !== '' && (post.license == 1 || post.license == 2 || userAsset == true)">
               <li *ngFor="let csv of post?.gsheetFile | keys">
                 <a href="{{csv.value.downloadURL}}" target="_blank">{{csv.value.fileName}}</a>
               </li>
@@ -155,14 +156,14 @@
           <li *ngIf="post.license != 3 && post.license != 4">
             License
             <ul>
-              <li><a href="#MIT_LICENSE.md">MIT_LICENSE.md</a></li>
+              <li><a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC-BY</a></li>
             </ul>
           </li>
         </ul>
       </div>
 
       <!-- <section class="superwire-preview" > -->
-      <section class="superwire-preview" *ngIf="post.license != 3 && post.license != 4">
+      <section class="superwire-preview" *ngIf="post.license == 1 || post.license == 2 || userAsset == true">
         <header>
           <span class="superwire">
             <img src="assets/logo-white.svg" alt="">
@@ -174,7 +175,8 @@
 
         <div class="content">
           <!--<iframe *ngIf="previewType === 'url'" [src]="previewUrl" frameborder="0"></iframe>-->
-          <div class="iframe" id="fullTable"></div>
+          <div class="iframe" id="fullTable" *ngIf="post.gsheetFile != ''"></div>
+          <h1 class="no-cvs" *ngIf="post.gsheetFile == ''">No CVS file.</h1>
         </div>
       </section>
     </article>

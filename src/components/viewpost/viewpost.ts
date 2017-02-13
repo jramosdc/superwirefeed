@@ -42,13 +42,13 @@ export class ViewPostComponent {
           // this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
           // this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
           setTimeout(() => {
-            $('.linkify')['linkify']();
+            // $('.linkify')['linkify']();
             $('.collapsible')['collapsible']({ accordion: false });
             $("img").addClass("responsive-img");
             if (this.post['detail']) { $('#postDetails').html(this.post['detail']); }
-            if (this.post['csvToJson']) {
-              this.openInPreview('content', post['csvToJson']);
-            }
+            // if (this.post['csvToJson']) {
+            //   this.openInPreview('content', post['csvToJson']);
+            // }
           });
         });
         this.sb.setHiddenSearchBar(true);
@@ -58,7 +58,12 @@ export class ViewPostComponent {
         this.as.getUserAsset(user.uid, this.postid).subscribe((data) => {
           console.log('data', data);
           if(data.$value){
-            this.userAsset = data.$value; 
+            this.userAsset = data.$value;
+            if (this.post['csvToJson']) {
+              setTimeout(() => {
+                this.openInPreview('content', this.post['csvToJson']);
+              })
+            }
           }
           console.log('this.userAsset', this.userAsset);
         })
