@@ -11,7 +11,7 @@ main.regflow {
   text-align: center;
   max-width: 540px;
   min-height: 620px;
-  background: linear-gradient($blue, white 80%);
+  background: linear-gradient($blue, white 70%);
   box-shadow: transparentize(black, .9) 0 2px 30px;
   overflow: visible;
 
@@ -25,7 +25,7 @@ main.regflow {
       font-weight: 300;
       color: $blue-gray;
       font-size: 24px;
-      margin: 0 0 6px;
+      margin: 0 0 10px;
     }
 
     > .main {
@@ -66,23 +66,21 @@ main.regflow {
       color: white;
       width: 100%;
     }
-  }
-}
 
-.modal.regflow > .content {
-  .input-field {
-    margin: 40px 0;
+    > .input-field {
+      margin: 40px 0;
 
-    .caret {
-      opacity: .5;
-      color: $blue-gray;
-      display: none;
-    }
+      .caret {
+        opacity: .5;
+        color: $blue-gray;
+        display: none;
+      }
 
-    input {
-      opacity: .5;
-      color: $blue-gray;
-      text-align: center;
+      input {
+        opacity: .5;
+        color: $blue-gray;
+        text-align: center;
+      }
     }
   }
 }
@@ -104,7 +102,7 @@ main.regflow {
       height: 10px;
       background: $gray-mid;
       cursor: pointer;
-      margin: 0 10px;
+      margin: 0 7px;
       border-radius: 10px;
 
       &.active {
@@ -131,6 +129,38 @@ main.regflow {
       padding: 0 5px;
       cursor: pointer;
       box-sizing: content-box;
+    }
+  }
+}
+
+.modal.regflow.feed {
+  background: linear-gradient($pink-light, white 70%);
+
+  > .screen {
+    background: url('assets/superwire-modal-pink.svg') top 40px center no-repeat;
+
+    > .first {
+      color: $pink-mid;
+    }
+  }
+
+  > .content {
+    > h6 {
+      // color: $pink-mid;
+    }
+  }
+
+  .pillbar {
+    > .pills {
+      > li.active {
+        background: $pink-light;
+      }
+    }
+
+    > .arrow {
+      > svg {
+        // fill: $pink-light;
+      }
     }
   }
 }
