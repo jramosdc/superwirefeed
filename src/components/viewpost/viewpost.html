@@ -71,16 +71,16 @@
       <div class="row" style="display: flex; justify-content: space-between; flex-wrap: wrap;"> 
         <div class="card" *ngIf="post.gsheetLink" style="width: 500px; height: 220px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
           <i class="mdi mdi-file-excel"  style="font-size: 200px;"></i>
-          <span style="word-break: break-word; padding: 10px;">{{post.gsheetLink | truncate : 100}}</span>
+          <a style="word-break: break-word; padding: 10px;" [href]="post.gsheetLink" target="_blank">{{post.gsheetLink | truncate : 100}}</a>
         </div>
         <div class="card" *ngIf="post.pdfLink" style="width: 500px; height: 220px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
           <i class="mdi mdi-file-pdf"  style="font-size: 200px;"></i>
-          <span style="word-break: break-word; padding: 10px;">{{post.pdfLink | truncate : 100}}</span>
+          <a style="word-break: break-word; padding: 10px;" [href]="post.pdfLink" target="_blank">{{post.pdfLink | truncate : 100}}</a>
         </div>
         <div class="card" *ngIf="post.mainUrl" style="width: 500px; height: 220px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
           <img [src]="post.embedly.favicon_url" alt="favicon" style="position: relative; top: -90px; left: 20px; width: 20px;">
           <img [src]="post.embedly.images[0].url" style="width: 250px; height: 200px; padding: 10px;">
-          <span style="word-break: break-word; padding: 10px;">{{post.mainUrl | truncate : 100}}</span>
+          <a style="word-break: break-word; padding: 10px;" [href]="post.mainUrl" target="_blank">{{post.mainUrl | truncate : 100}}</a>
         </div>
       </div>
       <!-- if download -->
