@@ -10,7 +10,9 @@ declare var $:JQueryStatic;
 
 export class RegFlow {
   constructor () {
+  }
+
+  ngOnInit() {
     $('select')['material_select']()
-    console.log($('select'))
   }
 }

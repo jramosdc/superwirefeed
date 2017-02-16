@@ -13,6 +13,7 @@ main.regflow {
   min-height: 620px;
   background: linear-gradient($blue, white 80%);
   box-shadow: transparentize(black, .9) 0 2px 30px;
+  overflow: visible;
 
   > .screen {
     width: 100%;
@@ -64,6 +65,72 @@ main.regflow {
       text-transform: uppercase;
       color: white;
       width: 100%;
+    }
+  }
+}
+
+.modal.regflow > .content {
+  .input-field {
+    margin: 40px 0;
+
+    .caret {
+      opacity: .5;
+      color: $blue-gray;
+      display: none;
+    }
+
+    input {
+      opacity: .5;
+      color: $blue-gray;
+      text-align: center;
+    }
+  }
+}
+
+.modal.regflow .pillbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px -5px 0;
+
+  > .pills {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+
+    > li {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: $gray-mid;
+      cursor: pointer;
+      margin: 0 10px;
+      border-radius: 10px;
+
+      &.active {
+        background: $purple-light;
+      }
+    }
+  }
+
+  > .arrow {
+    flex-basis: 24px;
+    height: 18px;
+
+    &:first-child {
+      text-align: left;
+    }
+
+    &:last-child {
+      text-align: right;
+    }
+
+    > svg {
+      height: 18px;
+      fill: $purple-light;
+      padding: 0 5px;
+      cursor: pointer;
+      box-sizing: content-box;
     }
   }
 }
