@@ -17,7 +17,7 @@ export class ViewPostComponent {
   User: User;
   postid: string;
   Domain: string;
-  post: FirebaseObjectObservable<{}>;
+  post: Object;
   activeCategory: string;
   categories: Array<string>;
   stripeHandler: any;
@@ -107,11 +107,12 @@ export class ViewPostComponent {
   onStripeBtnClick() {
     console.log('onStripeBtnClick');
     // Open Checkout with further options:
+    let amount = this.post['license'] === "3" ? 35 * 100 : this.post['license'] === "4" ? 200 * 100 : 0;
     event.preventDefault();
     this.stripeHandler.open({
       name: 'Superwire, Inc.',
       description: 'Buy a Post',
-      amount: 100,
+      amount: amount,
       currency: 'usd',
       address: false,
     });
