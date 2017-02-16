@@ -1,6 +1,7 @@
 'use strict'
 
 import { Component } from '@angular/core';
+declare var $:JQueryStatic;
 
 @Component({
   host: {},
@@ -9,5 +10,7 @@ import { Component } from '@angular/core';
 
 export class RegFlow {
   constructor () {
+    $('select')['material_select']()
+    console.log($('select'))
   }
 }

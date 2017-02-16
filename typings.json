@@ -4,7 +4,7 @@
   "globalDependencies": {
     "clipboard": "registry:dt/clipboard#1.5.9+20160316155526",
     "core-js": "registry:dt/core-js#0.0.0+20160602141332",
-    "jquery": "registry:dt/jquery#1.10.0+20170104155652",
+    "jquery": "registry:dt/jquery#1.10.0+20170123093700",
     "moment": "registry:dt/moment#2.11.1+20161010105546",
     "node": "registry:dt/node#6.0.0+20160709063457"
   }

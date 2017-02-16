@@ -1,6 +1,7 @@
 main.regflow {
   .modal.regflow {
-    margin-top: 5rem;
+    margin: 5rem auto;
+    position: relative;
   }
 }
 
@@ -51,6 +52,12 @@ main.regflow {
   > .content {
     padding: 40px;
     background: white;
+
+    > h6 {
+      font-weight: 300;
+      color: $blue-gray;
+      font-size: 18px;
+    }
 
     > button {
       background: $blue-dark;
