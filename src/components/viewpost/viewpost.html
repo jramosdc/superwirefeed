@@ -69,18 +69,18 @@
       <!-- content container -->
       <div id="postDetails" class="content"></div>
       <div class="row" style="display: flex; justify-content: space-between; flex-wrap: wrap;"> 
-        <div class="card" *ngIf="post.gsheetLink" style="width: 500px; height: 220px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
-          <i class="mdi mdi-file-excel"  style="font-size: 200px;"></i>
-          <a style="word-break: break-word; padding: 10px;" [href]="post.gsheetLink" target="_blank">{{post.gsheetLink | truncate : 100}}</a>
+        <div class="card" *ngIf="post.gsheetLink" style="width: 250px; height: 110px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
+          <div style="width: 100px; height: 100px; padding: 10px; background:#8B989A;"><span style="color:white;">DATASET</span></div>
+          <a style="word-break: break-word; padding: 10px;" [href]="post.gsheetLink" target="_blank">{{post.gsheetLink | truncate : 12}}</a>
         </div>
-        <div class="card" *ngIf="post.pdfLink" style="width: 500px; height: 220px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
-          <i class="mdi mdi-file-pdf"  style="font-size: 200px;"></i>
-          <a style="word-break: break-word; padding: 10px;" [href]="post.pdfLink" target="_blank">{{post.pdfLink | truncate : 100}}</a>
+        <div class="card" *ngIf="post.pdfLink" style="width: 250px; height: 110px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
+          <div style="width: 100px; height: 100px; padding: 10px; background:#8B989A;"><span style="color:white;">PDF</span></div>
+          <a style="word-break: break-word; padding: 10px;" [href]="post.pdfLink" target="_blank">{{post.pdfLink | truncate : 12}}</a>
         </div>
-        <div class="card" *ngIf="post.mainUrl" style="width: 500px; height: 220px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
-          <img [src]="post.embedly.favicon_url" alt="favicon" style="position: relative; top: -90px; left: 20px; width: 20px;">
-          <img [src]="post.embedly.images[0].url" style="width: 250px; height: 200px; padding: 10px;">
-          <a style="word-break: break-word; padding: 10px;" [href]="post.mainUrl" target="_blank">{{post.mainUrl | truncate : 100}}</a>
+        <div class="card" *ngIf="post.mainUrl" style="width: 250px; height: 110px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
+          <img [src]="post.embedly.favicon_url" alt="favicon" style="position: relative; top: -43px; left: 20px; width: 20px;">
+          <img [src]="post.embedly.images[0].url" style="width: 125px; height: 100px; padding: 10px;">
+          <a style="word-break: break-word; padding: 10px;" [href]="post.mainUrl" target="_blank">{{post.mainUrl | truncate : 12}}</a>
         </div>
       </div>
       <!-- if download -->
@@ -234,20 +234,8 @@
     <h5 class="title">Other posts from this feed</h5>
     <ul>
       <li>
-        <h6>Type something</h6>
-        <p>tweets, claiming that the election was “bigly rigged,” but no news outlet covers them. He later makes a short </p>
-      </li>
-      <li>
-        <h6>Type something</h6>
-        <p>tweets, claiming that the election was “bigly rigged,” but no news outlet covers them. He later makes a short </p>
-      </li>
-      <li>
-        <h6>Type something</h6>
-        <p>tweets, claiming that the election was “bigly rigged,” but no news outlet covers them. He later makes a short </p>
-      </li>
-      <li>
-        <h6>Type something</h6>
-        <p>tweets, claiming that the election was “bigly rigged,” but no news outlet covers them. He later makes a short </p>
+        <h6>Review by @nikoloza</h6>
+        <p>This is a great work I highly recommend it! </p>
       </li>
     </ul>
   </div>
@@ -265,7 +253,7 @@
         <li>Agreement 2</li>
         <li>Agreement 3</li>
       </ul>-->
-      <span>The buyer agrees to publish this story giving credit to the creator and to surrender all copyrights to the creator of the content after 30 days, as well as agreeing not to resale content</span>
+      <span>The buyer agrees to publish this story giving credit to the creator and to surrender all copyrights to the creator of the content after 30 days, as well as agreeing not to resale content.</span>
     </div>
     <div class="modal-footer">
       <div class="preloader-wrapper small active" *ngIf="postPayment">
