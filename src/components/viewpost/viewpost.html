@@ -135,7 +135,7 @@
             <ul *ngIf="post.pdfFile !== '' && (post.license == 1 || post.license == 2 || userAsset == true)">
               <li  *ngFor="let pdf of post?.pdfFile | keys">
                 <!--<a href="{{pdf.value.downloadURL}}">{{pdf.value.fileName}}</a>-->
-                <a href="{{pdf.value.downloadURL}}" target="_blank">{{pdf.value.fileName}}</a>
+                <a href="{{pdf.value.downloadURL}}" target="_blank">{{pdf.value.fileName | truncate : 30}}</a>
               </li>
               <!--<li><a (click)="openInPreview('url', post.purl)">post.pdf</a></li>-->
             </ul>
@@ -147,7 +147,7 @@
             Images
             <ul *ngIf="post.images !== '' && (post.license == 1 || post.license == 2 || userAsset == true)">
               <li *ngFor="let img of post?.images | keys">
-                <a href="{{img.value.downloadURL}}" target="_blank">{{img.value.fileName}}</a>
+                <a href="{{img.value.downloadURL}}" target="_blank">{{img.value.fileName | truncate : 30}}</a>
               </li>
             </ul>
             <ul *ngIf="post.images == ''">
@@ -158,7 +158,7 @@
             CSV Databases
             <ul *ngIf="post.gsheetFile !== '' && (post.license == 1 || post.license == 2 || userAsset == true)">
               <li *ngFor="let csv of post?.gsheetFile | keys">
-                <a href="{{csv.value.downloadURL}}" target="_blank">{{csv.value.fileName}}</a>
+                <a href="{{csv.value.downloadURL}}" target="_blank">{{csv.value.fileName | truncate : 30}}</a>
               </li>
             </ul>
             <ul *ngIf="post.gsheetFile == ''">
