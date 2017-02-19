@@ -18,14 +18,14 @@ main.regflow {
   background: linear-gradient($blue, white 70%);
   box-shadow: transparentize(black, .9) 0 2px 30px;
   overflow: visible;
-  transition: 0.3s ease background;
+  transition: 0.2s ease background;
 
   > .screen {
     width: 100%;
     padding-top: 140px;
     flex: 1 0 auto;
     background: url('assets/superwire-modal.svg') top 40px center no-repeat;
-    transition: 0.3s ease;
+    transition: 0.2s ease;
     transition-property: padding, background;
 
     .first {
@@ -56,7 +56,7 @@ main.regflow {
   > .content {
     padding: 40px;
     background: white;
-    transition: 0.3s ease;
+    transition: 0.2s ease;
     transition-property: background;
 
     &.transparent {
@@ -147,7 +147,7 @@ main.regflow {
       cursor: pointer;
       margin: 0 7px;
       border-radius: 10px;
-      transition: 0.3s ease;
+      transition: 0.2s ease;
       transition-property: background;
 
       &.active {
@@ -157,7 +157,7 @@ main.regflow {
   }
 
   > .arrow {
-    flex-basis: 24px;
+    flex-basis: 64px;
     height: 18px;
     white-space: nowrap;
     cursor: pointer;
