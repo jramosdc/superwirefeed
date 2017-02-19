@@ -18,28 +18,31 @@ main.regflow {
   background: linear-gradient($blue, white 70%);
   box-shadow: transparentize(black, .9) 0 2px 30px;
   overflow: visible;
+  transition: 0.3s ease background;
 
   > .screen {
     width: 100%;
     padding-top: 140px;
     flex: 1 0 auto;
     background: url('assets/superwire-modal.svg') top 40px center no-repeat;
+    transition: 0.3s ease;
+    transition-property: padding, background;
 
-    > .first {
+    .first {
       font-weight: 300;
       color: $blue-gray;
       font-size: 24px;
       margin: 0 0 10px;
     }
 
-    > .main {
+    .main {
       font-weight: 600;
       color: #333;
       font-size: 42px;
       margin: 0;
     }
 
-    > p {
+    p {
       max-width: 70%;
       line-height: 2.2;
       margin: 90px auto 0;
@@ -53,22 +56,24 @@ main.regflow {
   > .content {
     padding: 40px;
     background: white;
+    transition: 0.3s ease;
+    transition-property: background;
 
     &.transparent {
       background: transparent;
     }
 
-    > h6 {
+    h6 {
       font-weight: 300;
       color: $blue-gray;
       font-size: 18px;
 
-      + button {
+      + .btn-large {
         margin-top: .75rem;
       }
     }
 
-    > p {
+    p {
       font-size: 13px;
       color: $blue-gray;
       text-align: center;
@@ -79,15 +84,19 @@ main.regflow {
       }
     }
 
-    > button {
+    .btn-large {
       background: $blue-dark;
       text-transform: uppercase;
       color: white;
       width: 100%;
     }
 
-    > .input-field {
-      margin: 40px 0;
+    .form-content {
+      margin-bottom: 40px;
+    }
+
+    .input-field {
+      margin: 40px 0 0;
 
       .caret {
         opacity: .5;
@@ -101,6 +110,7 @@ main.regflow {
         color: $blue-gray;
         text-align: center;
         border-bottom-color: $purple-light;
+        margin: 0;
       }
 
       textarea {
@@ -137,6 +147,8 @@ main.regflow {
       cursor: pointer;
       margin: 0 7px;
       border-radius: 10px;
+      transition: 0.3s ease;
+      transition-property: background;
 
       &.active {
         background: $purple-light;
@@ -167,11 +179,17 @@ main.regflow {
       line-height: 1;
     }
 
-    > svg {
+    svg {
       height: 18px;
       fill: $purple-light;
       padding: 0 5px;
       box-sizing: content-box;
+    }
+
+    button {
+      border: 0;
+      background: 0;
+      appearance: none;
     }
   }
 }
@@ -188,10 +206,10 @@ main.regflow {
       &:after {
         content: '';
         position: absolute;
-        width: 110%;
+        width: 106%;
         height: 50%;
-        left: -5%;
-        top: 140px;
+        left: -3%;
+        top: 130px;
         border-radius: 100%;
         background: linear-gradient(transparentize(white, .5), transparent);
         z-index: -1;
@@ -202,14 +220,14 @@ main.regflow {
   > .screen {
     background: url('assets/superwire-modal-pink.svg') top 40px center no-repeat;
 
-    > .first,
-    > p {
+    .first,
+    p {
       color: $pink-mid;
     }
   }
 
   > .content {
-    > h6 {
+    h6 {
       // color: $pink-mid;
     }
   }
@@ -255,11 +273,11 @@ main.regflow {
     }
 
     &:nth-child(2) {
-      left: 40%;
+      left: 39%;
     }
 
     &:nth-child(3) {
-      left: 60%;
+      left: 61%;
     }
 
     &:nth-child(4) {
@@ -284,7 +302,7 @@ main.regflow {
     }
 
     &:nth-child(7) {
-      top: 50px;
+      top: 55px;
       left: 50%;
     }
 
