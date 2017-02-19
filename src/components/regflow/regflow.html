@@ -82,7 +82,7 @@
         <h6 class="caption">To start, please choose what subjects interest you most</h6>
 
         <div class="input-field">
-          <select multiple>
+          <select name="interests">
             <option value="" disabled selected>Choose your option</option>
             <option value="1">Option 1</option>
             <option value="2">Option 2</option>
@@ -95,7 +95,7 @@
         <h6 class="caption">SuperWire is nothing without feeds. Let’s create one.</h6>
 
         <div class="input-field">
-          <input type="text" placeholder="Please type a feed name">
+          <input type="text" name="feedName" placeholder="Please type a feed name">
         </div>
       </div>
 
@@ -103,7 +103,7 @@
         <h6 class="caption">In which category shall we put your feed?</h6>
 
         <div class="input-field">
-          <select>
+          <select name="feedCategory">
             <option value="" disabled selected>Select the feed category</option>
             <option value="1">Option 1</option>
             <option value="2">Option 2</option>
@@ -127,7 +127,10 @@
           </svg>
         </div>
         <ul class="pills">
-          <li *ngFor="let i of [1,2,3,4,5]" [class.active]="i === Step" (click)="onDot(i)"></li>
+          <li *ngFor="let i of [1,2,3,4,5]" [ngClass]="{
+            'active': i === Step,
+            'available': i <= StepLimit
+          }" (click)="onDot(i)"></li>
         </ul>
         <div class="arrow next">
           <button type="submit">

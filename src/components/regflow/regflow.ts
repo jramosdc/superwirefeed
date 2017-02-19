@@ -10,11 +10,16 @@ declare var $:JQueryStatic;
 
 export class RegFlow {
   Step: number;
-  Steps: string[];
+  StepLimit: number;
+  UserInfo: Object;
 
   constructor () {
     this.Step = 0;
-    this.Steps = ['welcome', '']
+    this.StepLimit = 0;
+    this.UserInfo = {
+      interests: {},
+      feedName: ''
+    };
   }
 
   ngOnInit() {
@@ -22,14 +27,21 @@ export class RegFlow {
   }
 
   onSubmit(d) {
-    console.log(d)
-    if (d.valid) this.Step += 1;
-    $('form select')['material_select']()
+    if (d.valid) this.Step += 1
+    if (this.Step > this.StepLimit) this.StepLimit = this.Step
 
-    console.log(this.Step)
+    var t = window.setTimeout(() => {
+      $('form select')['material_select']()
+      window.clearTimeout(t)
+    }, 0)
   }
 
   onDot(step) {
-    this.Step = step;
+    if (step <= this.StepLimit) this.Step = step;
+
+    var t = window.setTimeout(() => {
+      $('form select')['material_select']()
+      window.clearTimeout(t)
+    }, 0)
   }
 }

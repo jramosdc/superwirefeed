@@ -153,6 +153,12 @@ main.regflow {
       &.active {
         background: $purple-light;
       }
+
+      &:not(.available) {
+        cursor: default;
+        pointer-events: none;
+        opacity: .5;
+      }
     }
   }
 
