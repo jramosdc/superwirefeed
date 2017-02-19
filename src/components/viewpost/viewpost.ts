@@ -46,7 +46,11 @@ export class ViewPostComponent {
             // $('.linkify')['linkify']();
             $('.collapsible')['collapsible']({ accordion: false });
             $('img').addClass('responsive-img');
-            if (this.post['detail']) { $('#postDetails').html(this.post['detail']); }
+            if (this.post['detail']) {
+              $('#postDetails').html(this.post['detail']);
+              // prevent materialize-css from overriding lists
+              $('#postDetails ul').addClass('browser-default');
+            }
             console.log(this.userAsset);
             console.log(this.post['csvToJson']);
             if ((this.post['license'] == 1 || this.post['license'] == 2 || this.userAsset) && this.post['csvToJson']) {
