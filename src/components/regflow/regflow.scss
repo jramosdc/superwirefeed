@@ -3,6 +3,10 @@ main.regflow {
     margin: 5rem auto;
     position: relative;
   }
+
+  hr {
+    opacity: .2;
+  }
 }
 
 .modal.regflow {
@@ -44,20 +48,35 @@ main.regflow {
       font-size: 14px;
       letter-spacing: .2px;
     }
-
-    &.welcome + .content {
-      padding-top: 0;
-    }
   }
 
   > .content {
     padding: 40px;
     background: white;
 
+    &.transparent {
+      background: transparent;
+    }
+
     > h6 {
       font-weight: 300;
       color: $blue-gray;
       font-size: 18px;
+
+      + button {
+        margin-top: .75rem;
+      }
+    }
+
+    > p {
+      font-size: 13px;
+      color: $blue-gray;
+      text-align: center;
+
+      > a {
+        color: $blue-gray;
+        font-weight: 500;
+      }
     }
 
     > button {
@@ -76,12 +95,22 @@ main.regflow {
         display: none;
       }
 
+      textarea,
       input {
         opacity: .5;
         color: $blue-gray;
         text-align: center;
+        border-bottom-color: $purple-light;
+      }
+
+      textarea {
+        padding: 0;
       }
     }
+  }
+
+  &.welcome {
+    background: linear-gradient($blue, white 85%);
   }
 }
 
@@ -90,6 +119,10 @@ main.regflow {
   justify-content: center;
   align-items: center;
   margin: 50px -5px 0;
+
+  &:only-child {
+    margin: 0 -5px;
+  }
 
   > .pills {
     flex: 1;
@@ -114,6 +147,8 @@ main.regflow {
   > .arrow {
     flex-basis: 24px;
     height: 18px;
+    white-space: nowrap;
+    cursor: pointer;
 
     &:first-child {
       text-align: left;
@@ -123,11 +158,19 @@ main.regflow {
       text-align: right;
     }
 
+    span {
+      font-size: 12px;
+      color: $purple-light;
+      vertical-align: middle;
+      display: inline-block;
+      margin: -1em 0 0;
+      line-height: 1;
+    }
+
     > svg {
       height: 18px;
       fill: $purple-light;
       padding: 0 5px;
-      cursor: pointer;
       box-sizing: content-box;
     }
   }
@@ -136,10 +179,31 @@ main.regflow {
 .modal.regflow.feed {
   background: linear-gradient($pink-light, white 70%);
 
+  &.welcome {
+    background: linear-gradient($pink-light, white);
+
+    > .screen {
+      padding-top: 200px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        width: 110%;
+        height: 50%;
+        left: -5%;
+        top: 140px;
+        border-radius: 100%;
+        background: linear-gradient(transparentize(white, .5), transparent);
+        z-index: -1;
+      }
+    }
+  }
+
   > .screen {
     background: url('assets/superwire-modal-pink.svg') top 40px center no-repeat;
 
-    > .first {
+    > .first,
+    > p {
       color: $pink-mid;
     }
   }
@@ -161,6 +225,77 @@ main.regflow {
       > svg {
         // fill: $pink-light;
       }
+    }
+  }
+}
+
+.modal.regflow.feed .illustrations {
+  .sw-icon {
+    fill: $pink-mid;
+    position: absolute;
+    transform: translate3d(-50%, 0, 1px);
+
+    // small icons
+    opacity: .2;
+    max-width: 32px;
+    max-height: 32px;
+
+    &:nth-child(2),
+    &:nth-child(3) {
+      top: 15px;
+    }
+
+    &:nth-child(1),
+    &:nth-child(4) {
+      top: 35px;
+    }
+
+    &:nth-child(1) {
+      left: 18%;
+    }
+
+    &:nth-child(2) {
+      left: 40%;
+    }
+
+    &:nth-child(3) {
+      left: 60%;
+    }
+
+    &:nth-child(4) {
+      left: 82%;
+    }
+
+    // big icons
+    &:nth-child(n + 5) {
+      opacity: .3;
+      max-width: 48px;
+      max-height: 48px;
+    }
+
+    &:nth-child(5) {
+      top: 110px;
+      left: 10%;
+    }
+
+    &:nth-child(6) {
+      top: 70px;
+      left: 30%;
+    }
+
+    &:nth-child(7) {
+      top: 50px;
+      left: 50%;
+    }
+
+    &:nth-child(8) {
+      top: 70px;
+      left: 70%;
+    }
+
+    &:nth-child(9) {
+      top: 110px;
+      left: 90%;
     }
   }
 }
