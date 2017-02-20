@@ -1,7 +1,7 @@
 <main class="regflow center-container">
 
   <section class="modal regflow" [ngClass]="{
-      'welcome': Step === 0 || Step === 2,
+      'welcome': Step === 0 || Step === 2 || Step === 6,
       'feed': Step > 1 && Step < 5
     }">
 
@@ -78,7 +78,7 @@
     <form class="content" #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate
       *ngIf="Step > 0 && Step < 6">
 
-      <div class="form-content" *ngIf="Step === 1">
+      <div class="form-content" *ngIf="Step === 1" [@modalSlider]="Step === 1">
         <h6 class="caption">To start, please choose what subjects interest you most</h6>
 
         <div class="input-field">
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <div class="form-content" *ngIf="Step === 3">
+      <div class="form-content" *ngIf="Step === 3" [@modalSlider]="Step === 1">
         <h6 class="caption">SuperWire is nothing without feeds. Let’s create one.</h6>
 
         <div class="input-field">
@@ -99,7 +99,7 @@
         </div>
       </div>
 
-      <div class="form-content" *ngIf="Step === 4">
+      <div class="form-content" *ngIf="Step === 4" [@modalSlider]="Step === 1">
         <h6 class="caption">In which category shall we put your feed?</h6>
 
         <div class="input-field">
@@ -112,7 +112,7 @@
         </div>
       </div>
 
-      <div class="form-content" *ngIf="Step === 5">
+      <div class="form-content" *ngIf="Step === 5" [@modalSlider]="Step === 1">
         <h6 class="caption">Tell us a little about you</h6>
 
         <div class="input-field">
