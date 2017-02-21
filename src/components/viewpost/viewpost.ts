@@ -48,8 +48,8 @@ export class ViewPostComponent {
             $('img').addClass('responsive-img');
             if (this.post['detail']) {
               $('#postDetails').html(this.post['detail']);
-              // prevent materialize-css from overriding lists
-              $('#postDetails ul').addClass('browser-default');
+              // below line not needed until we update materialize-css to 0.98.8 or higher
+              // $('#postDetails ul').addClass('browser-default');
             }
             console.log(this.userAsset);
             console.log(this.post['csvToJson']);
