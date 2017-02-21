@@ -160,6 +160,17 @@ main.view-post {
       img {
         max-width: 100%;
       }
+
+      li { margin-left: 2em; }
+      ul {
+        li { list-style-type: disc; }
+        ul {
+          li { list-style-type: circle;; }
+          ul {
+            li { list-style-type: square;; }
+          }
+        }
+      }
     }
 
     // sizes reset
