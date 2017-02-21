@@ -33,7 +33,7 @@
     "jquery": "2.2.4",
     "jquery-embedly": "git+https://github.com/embedly/embedly-jquery.git",
     "linkifyjs": "2.0.3",
-    "materialize-css": "0.97.8",
+    "materialize-css": "0.97.5",
     "materialize-tags": "1.0.0",
     "mdi": "1.5.54",
     "ng2-img-cropper": "0.5.1",
