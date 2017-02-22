@@ -2,6 +2,7 @@
 
   <section class="modal regflow" [ngClass]="{
       'welcome': Step === 0 || Step === 2 || Step === 6,
+      'goodbye': Step === 6,
       'feed': Step > 1 && Step < 5
     }">
 
