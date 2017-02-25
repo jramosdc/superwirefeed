@@ -55,9 +55,16 @@
               </svg>
             </a>
 
-            <label class="url">
+            <label class="url" style="overflow: visible">
               <span #domain>{{Domain + '/posts/' + FeedID}}</span>
               <button [clipboard]="domain">
+                <i class="mdi mdi-content-copy"></i>
+              </button>
+            </label>
+
+            <label class="url" style="overflow: visible">
+              <span #embed style="text-align: left;">{{ embedStartString + Domain + '/fullpost/' + FeedID + embedEndString }}</span>
+              <button [clipboard]="embed">
                 <i class="mdi mdi-content-copy"></i>
               </button>
             </label>

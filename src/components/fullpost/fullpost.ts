@@ -1,18 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FirebaseListObservable } from 'angularfire2';
 import { User, authService } from '../services/authService';
 import { SearchBarService } from '../services/searchBar';
 
 @Component({
-  selector: 'posts',
+  selector: 'fullpost',
   host: {
     class: 'col s12'
   },
-  template: require('./posts.html')
+  template: require('./fullpost.html')
 })
 
-export class PostsComponent implements OnInit, OnDestroy {
+export class FullPostComponent implements OnInit, OnDestroy {
   User: User;
   Domain: string;
   FeedID: string;
@@ -24,8 +23,6 @@ export class PostsComponent implements OnInit, OnDestroy {
   posts: Array<any>;
   emailLoading: Boolean = false;
   subscription: Array<any> = [];
-  embedStartString = '<iframe src="'
-  embedEndString = '" width="200" height="800" frameborder="0"></iframe>';
 
   constructor(public as: authService, public route: ActivatedRoute, private router: Router, private sb: SearchBarService) {
     this.Domain = this.as.getDomain();
@@ -34,6 +31,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.FeedID = params['feedid'];
     });
+    this.as.hiddenNavbar$.next(true);
     this.sb.setHiddenSearchBar(false);
     // search posts by title
     this.sb.search$.subscribe(term => {
