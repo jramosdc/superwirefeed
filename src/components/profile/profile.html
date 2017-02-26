@@ -32,7 +32,9 @@
 		<section class="meta">
 			<div class="description">
 				<h6>Biography</h6>
-				<p>Washington correspondent and former RISJ fellow at Oxford <a>More</a></p>
+				<p>{{profile.bio}}
+					<!-- <a>More</a> -->
+				</p>
 			</div>
 			<div>
 				<h6>Interests</h6>
@@ -40,15 +42,15 @@
 			</div>
 			<div>
 				<h6>Followers</h6>
-				<h4>121</h4>
+				<h4>{{followers.length}}</h4>
 			</div>
 			<div>
 				<h6>Following</h6>
-				<h4>151</h4>
+				<h4>{{following.length}}</h4>
 			</div>
 			<div>
 				<h6>Posts</h6>
-				<h4>11</h4>
+				<h4>{{ (posts | async)?.length }}</h4>
 			</div>
 		</section>
 
