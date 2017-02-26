@@ -70,24 +70,23 @@
       </span>
     </section>
 
-    <form class="content transparent" #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate *ngIf="Step === 0">
+    <form class="content transparent" #f="ngForm" (ngSubmit)="onSubmit(f)" *ngIf="Step === 0">
       <button type="submit" class="waves-effect waves-light btn-large">
         Lets get started
       </button>
     </form>
 
-    <form class="content" #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate
+    <form class="content" #f="ngForm" (ngSubmit)="onSubmit(f)"
       *ngIf="Step > 0 && Step < 6">
 
       <div class="form-content" *ngIf="Step === 1" [@modalSlider]="Step === 1">
         <h6 class="caption">To start, please choose what subjects interest you most</h6>
 
         <div class="input-field">
-          <select name="interests">
+          <select name="interests" multiple required
+            [(ngModel)]="UserInfo.interests">
             <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
+            <option *ngFor="let i of Interests" [attr.value]="i">{{i}}</option>
           </select>
         </div>
       </div>
@@ -96,7 +95,7 @@
         <h6 class="caption">SuperWire is nothing without feeds. Let’s create one.</h6>
 
         <div class="input-field">
-          <input type="text" name="feedName" placeholder="Please type a feed name">
+          <input type="text" required name="feedName" placeholder="Please type a feed name" [(ngModel)]="UserInfo.feedName">
         </div>
       </div>
 
@@ -104,11 +103,11 @@
         <h6 class="caption">In which category shall we put your feed?</h6>
 
         <div class="input-field">
-          <select name="feedCategory">
+          <select name="feedCategory" required [(ngModel)]="UserInfo.feedCategory">
             <option value="" disabled selected>Select the feed category</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
+            <option [ngValue]="1">Option 1</option>
+            <option [ngValue]="2">Option 2</option>
+            <option [ngValue]="3">Option 3</option>
           </select>
         </div>
       </div>
@@ -117,7 +116,7 @@
         <h6 class="caption">Tell us a little about you</h6>
 
         <div class="input-field">
-          <textarea rows="2" maxlength="140" class="materialize-textarea" placeholder="Please use 140 characters to describe yourself"></textarea>
+          <textarea rows="2" maxlength="140" class="materialize-textarea" placeholder="Please use 140 characters to describe yourself" name="about" [(ngModel)]="UserInfo.about"></textarea>
         </div>
       </div>
 
@@ -155,6 +154,10 @@
 
   <hr>
 
+  <pre>{{ UserInfo | json }}</pre>
+
+  <hr>
+
   <section class="modal regflow welcome">
     <section class="screen">
       <h4 class="first">Welcome to</h4>
@@ -182,7 +185,7 @@
       <h6 class="caption">To start, please choose what subjects interest you most</h6>
 
       <div class="input-field">
-        <select multiple>
+        <select multiple required>
           <option value="" disabled selected>Choose your option</option>
           <option value="1">Option 1</option>
           <option value="2">Option 2</option>

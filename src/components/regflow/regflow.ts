@@ -39,12 +39,17 @@ export class RegFlow {
   StepLimit: number;
   UserInfo: Object;
 
+  Interests: string[] = ['Marketing', 'News'];
+  FeedCategories: string[] = ['Visuals', 'News'];
+
   constructor () {
     this.Step = 0;
     this.StepLimit = 0;
     this.UserInfo = {
       interests: {},
-      feedName: ''
+      feedName: '',
+      feedCategory: {},
+      about: ''
     };
   }
 
@@ -60,6 +65,12 @@ export class RegFlow {
       $('form select')['material_select']()
       window.clearTimeout(t)
     }, 0)
+
+    console.log(this.UserInfo)
+  }
+
+  selectChange(ev) {
+    console.log(ev)
   }
 
   onDot(step) {

@@ -18,6 +18,4 @@ export class AppComponent {
 		this.User = this.as.emptyUser();
 		this.User = this.as.getUser();
 	}
-
 }
-
