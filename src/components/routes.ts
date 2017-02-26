@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { UiKit } from './uikit/uikit';
-import { RegFlow } from './regflow/regflow.ts';
 import { FeedsComponent } from './feeds/feeds';
 import { PostsComponent } from './posts/posts';
 import { FullPostComponent } from './fullpost/fullpost';
@@ -13,7 +12,6 @@ import { SubscriptionComponent } from './subscription/subscription';
 
 export const AppRoutes: Routes = [
   { path: "uikit", component: UiKit },
-  { path: "regflow", component: RegFlow },
   { path: "feeds", component: FeedsComponent },
   { path: "newpost", component: NewPostComponent },
   { path: "posts/:feedid", component: PostsComponent },
