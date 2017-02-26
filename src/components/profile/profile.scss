@@ -166,6 +166,21 @@ main.profile {
       transition: opacity .2s;
       text-align: right;
 
+      .links {
+        margin-top: .6em;
+
+        a {
+          color: $gray-dark;
+          display: block;
+          font-size: 14px;
+          line-height: 2;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
       &:hover {
         opacity: 1;
       }
