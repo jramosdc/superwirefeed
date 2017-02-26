@@ -12,19 +12,19 @@ export {
 	FirebaseListObservable
 }
 
-export interface User { 
-	uid: string, 
-	emailVerified: boolean, 
-	password: { 
-		email: string, 
-		profileImageURL: string 
-	}, 
-	feed: { 
-		id: string, 
-		name: string, 
-		userid: string 
-	}, 
-	backgroundImageURL: string 
+export interface User {
+	uid: string,
+	emailVerified: boolean,
+	password: {
+		email: string,
+		profileImageURL: string
+	},
+	feed: {
+		id: string,
+		name: string,
+		userid: string
+	},
+	backgroundImageURL: string
 }
 
 
@@ -47,7 +47,8 @@ export class authService {
 	Categories: Array<string> = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
 	postCategories: Array<string> = [];
 	storageRef = firebase.storage().ref('/');
-	private mainRef = firebase.database().ref('/');
+  private mainRef = firebase.database().ref('/');
+  hiddenNavbar$: Subject<boolean> = new Subject();
 
 	constructor(private af: AngularFire, private http: httpService) {
 		this.user$ = new BehaviorSubject<any>(this.emptyUser());
@@ -394,7 +395,7 @@ export class authService {
 	getUserAsset(userid: string, postid: string){
 		return this.af.database.object('/user-assets/' + userid + '/' + postid);
 	}
-	
+
 	toggleFollowSystem(myid, followingObj, followerId, followersObj) {
 		let multipath = {};
 
@@ -514,7 +515,7 @@ export class authService {
 			});
 		}); // promise
 	}
-	
+
 	download(post){
 		console.log('post', post);
 		return new Promise((resolve, reject) => {
