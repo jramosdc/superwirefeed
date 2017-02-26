@@ -15,56 +15,92 @@
 </div> -->
 
 <main class="profile" *ngIf="!editMode && profile">
-	<header class="center-container">
-		<section class="avatar">
-			<img [src]="profile.profileImageURL" alt="User Profile Image">
-			<div>
-				<!-- <h4>{{profile.displayName || profile.email}}</h4> -->
-				<h4>{{profile.feedName}}</h4>
-				<span>@{{profile.feedId}}</span>
-			</div>
-		</section>
+  <header class="center-container">
+    <section class="avatar">
+      <img [src]="profile.profileImageURL" alt="User Profile Image">
+      <div>
+        <!-- <h4>{{profile.displayName || profile.email}}</h4> -->
+        <h4>{{profile.feedName}}</h4>
+        <span>@{{profile.feedId}}</span>
+      </div>
+    </section>
 
-		<div class="cover">
-			<img [src]="profile.backgroundImageURL" alt="{{profile.feedName}}">
-		</div>
+    <div class="cover">
+      <img [src]="profile.backgroundImageURL" alt="{{profile.feedName}}">
+    </div>
 
-		<section class="meta">
-			<div class="description">
-				<h6>Biography</h6>
-				<p>{{profile.bio}}
-					<!-- <a>More</a> -->
-				</p>
-			</div>
-			<div>
-				<h6>Interests</h6>
-				<p>Analythics, Politics</p>
-			</div>
-			<div>
-				<h6>Followers</h6>
-				<h4>{{followers.length}}</h4>
-			</div>
-			<div>
-				<h6>Following</h6>
-				<h4>{{following.length}}</h4>
-			</div>
-			<div>
-				<h6>Posts</h6>
-				<h4>{{ (posts | async)?.length }}</h4>
-			</div>
-		</section>
+    <section class="meta">
+      <div class="description">
+        <h6>Biography</h6>
+        <p>{{profile.bio}}
+          <!-- <a>More</a> -->
+        </p>
+      </div>
+      <div>
+        <h6>Interests</h6>
+        <p>Analythics, Politics</p>
+      </div>
+      <div>
+        <h6>Followers</h6>
+        <h4>{{followers.length}}</h4>
+      </div>
+      <div>
+        <h6>Following</h6>
+        <h4>{{following.length}}</h4>
+      </div>
+      <div>
+        <h6>Posts</h6>
+        <h4>{{ (posts | async)?.length }}</h4>
+      </div>
+    </section>
 
     <button class="follow waves-effect waves-light btn-large">
-    	<i class="mdi mdi-plus-circle"></i>
+      <i class="mdi mdi-plus-circle"></i>
       Follow
     </button>
-	</header>
+  </header>
 
   <hr class="line">
 
-	<div class="content">
-		<div class="center-container">
-  		<pre>{{ profile | json }}</pre>
-		</div>
-	</div>
+  <div class="content">
+    <div class="center-container">
+      <aside class="activity">
+        <header>
+          <h6 class="section-title">Activity chart</h6>
+          <select>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+          </select>
+        </header>
+      </aside>
+
+      <section class="reviews">
+        <header>
+          <h6 class="section-title">Reviews</h6>
+        </header>
+      </section>
+
+      <section class="meta">
+        <h6 class="section-title">More content</h6>
+        <div>
+          <a href="">Home Feed</a>
+          <a href="">Followers’ feed</a>
+        </div>
+
+        <hr>
+
+        <h6 class="section-title">Activities</h6>
+        <dl>
+          <dt><a>@jairo</a> liked this feed
+            <time>2 hours ago</time>
+          </dt>
+          <dt><a>@nikoloza</a> liked this feed
+            <time>3 hours ago</time>
+          </dt>
+        </dl>
+      </section>
+    </div>
+  </div>
 </main>
+
+<pre>{{ profile | json }}</pre>
