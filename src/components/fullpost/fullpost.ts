@@ -170,14 +170,14 @@ export class FullPostComponent implements OnInit, OnDestroy {
   // temporary solution to parse description
   // and fill data structure
   parseImgUrl(htmlDesc: string) {
-    let regex = /(https?:\/\/[^">]+)(jpg|png)/gi;
+    let regex = /(https?:\/\/[^">]+)(jpg|png|gif)/gi;
     let imgs = htmlDesc.match(regex);
     return imgs && imgs[0]
   }
   parseShortDescription(htmlDesc: string) {
     let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
     let descriptions = htmlDesc.replace(htmlRegex, "");
-    let truncateLength = 55;
+    let truncateLength = 500;
     if(truncateLength > descriptions.length){
       return descriptions;
     } else {

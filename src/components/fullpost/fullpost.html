@@ -12,7 +12,7 @@
       <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
       <h6 class="title">{{ post.title }}</h6>
-      <p>{{ parseShortDescription(post.detail) }}</p>
+      <p [innerHTML]="parseShortDescription(post.detail)"></p>
 
       <footer>
         <i class="mdi {{'mdi-' + type}}" *ngFor="let type of post.types"></i>
