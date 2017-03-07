@@ -76,6 +76,55 @@
 
       <section class="reviews">
         <h6 class="section-title">Reviews</h6>
+
+        <article class="review">
+          <h5>Super Awesome</h5>
+          <div class="info">
+            <div class="rating">
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+
+              <div class="active" style="width: 95%">
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              </div>
+            </div>
+            <a class="author">@nikoloza</a>
+            <time>15 mins ago</time>
+          </div>
+          <p>It’s getting crowded in the investment crowdfunding space, and that’s excellent news.</p>
+        </article>
+
+        <article class="review">
+          <h5>Really nice feed</h5>
+          <div class="info">
+            <div class="rating">
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+
+              <div class="active" style="width: 90%">
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+              </div>
+            </div>
+
+            <a class="author">@jairo</a>
+            <time>56 mins ago</time>
+          </div>
+          <p>Thousand of white balloons, suspended in a billowing wash of sound</p>
+        </article>
       </section>
 
       <section class="meta">
@@ -85,20 +134,25 @@
           <a href="">Followers’ feed</a>
         </div>
 
-        <hr>
-
-        <h6 class="section-title">Activities</h6>
-        <dl>
-          <dt><a>@jairo</a> liked this feed
-            <time>2 hours ago</time>
-          </dt>
-          <dt><a>@nikoloza</a> liked this feed
-            <time>3 hours ago</time>
-          </dt>
-        </dl>
+        <div class="activities">
+          <h6 class="section-title">Activities</h6>
+          <dl>
+            <dt><a>@jairo</a> liked this feed
+              <time>2 hours ago</time>
+            </dt>
+            <dt><a>@nikoloza</a> liked this feed
+              <time>3 hours ago</time>
+            </dt>
+          </dl>
+        </div>
       </section>
     </div>
   </div>
 </main>
+
+<!-- svg sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+  <polygon id="star" fill="currentColor" fill-rule="evenodd" points="99.739 49.5 94.311 52.281 95.348 46.391 90.956 42.219 97.025 41.359 99.739 36 102.453 41.359 108.522 42.219 104.13 46.391 105.167 52.281" transform="translate(-91 -36)"/>
+</svg>
 
 <pre>{{ profile | json }}</pre>
