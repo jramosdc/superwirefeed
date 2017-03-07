@@ -72,6 +72,18 @@
             <option value="2015">2015</option>
           </select>
         </header>
+
+        <section class="graph">
+          <dl>
+            <dt>Jan</dt>
+            <dd *ngFor="let i of createRange(31)"></dd>
+          </dl>
+
+          <dl>
+            <dt>Feb</dt>
+            <dd *ngFor="let i of createRange(31)"></dd>
+          </dl>
+        </section>
       </aside>
 
       <section class="reviews">

@@ -245,8 +245,10 @@ article.review {
   }
 
   > .info {
-    margin: 10px 0;
+    margin: 10px 0 7px;
     display: flex;
+    font-size: 13px;
+    align-items: center;
 
     .rating {
       color: transparentize($gray-dark, 0.5);
@@ -282,12 +284,39 @@ article.review {
 
     .author {
       display: inline-block;
-      margin: 0 15px;
+      margin: 0 12px;
       color: $gray-dark;
     }
   }
 
   > p {
     margin: 0;
+  }
+}
+
+section.graph {
+  display: flex;
+
+  dl {
+    flex-basis: 33%;
+    font-size: 0;
+    margin: 20px 15px 20px 0;
+  }
+
+  dt {
+    display: block;
+    color: $blue-gray;
+    text-transform: uppercase;
+    font-size: 12px;
+    opacity: .5;
+    margin-bottom: 20px;
+  }
+
+  dd {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 2px 2px 0;
+    background: $gray-mid;
   }
 }

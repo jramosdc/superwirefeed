@@ -143,6 +143,10 @@ export class ProfileComponent extends Type implements OnInit {
     });
   }
 
+  createRange(number: number){
+    return new Array(number);
+  }
+
   update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement, useBG: HTMLInputElement) {
     if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '') return
     this.profileLoading = true;
