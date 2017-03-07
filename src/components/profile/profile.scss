@@ -236,7 +236,7 @@ main.profile {
 
 article.review {
   color: $gray-dark;
-  padding: 15px 0;
+  padding: 20px 0;
 
   > h5 {
     font-size: 22px;
@@ -249,7 +249,7 @@ article.review {
     display: flex;
 
     .rating {
-      color: $gray-mid;
+      color: transparentize($gray-dark, 0.5);
       position: relative;
       font-size: 0;
 
@@ -265,12 +265,16 @@ article.review {
         min-width: 18px; max-width: 18px; flex-basis: 18px;
         margin: 0 3px 0 0;
         display: inline-block;
+
+        &:last-of-type {
+          margin: 0;
+        }
       }
 
       .active {
         position: absolute;
-        left: 0;
-        top: 0;
+        left: 0; top: 0;
+        width: 0; height: 100%;
         overflow: hidden;
         color: $yellow;
       }
