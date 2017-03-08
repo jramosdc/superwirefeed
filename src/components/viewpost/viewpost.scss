@@ -230,16 +230,18 @@ main.view-post {
     margin-top: .5rem;
   }
 }
-.links {
-  display: inline-block;
-  width: 150px;
-  height: 100px;
-  overflow: hidden;
-  padding: 10px;
-  border: 1px solid;
-  background-color: lightgray;
-  word-wrap: break-word;
-}
+
+// .links {
+//   display: inline-block;
+//   width: 150px;
+//   height: 100px;
+//   overflow: hidden;
+//   padding: 10px;
+//   border: 1px solid;
+//   background-color: lightgray;
+//   word-wrap: break-word;
+// }
+
 .section-separately {
   position: relative;
   z-index: 2;

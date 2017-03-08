@@ -16,22 +16,22 @@ header.feed-header {
   }
 }
 
+h6.section-title {
+  color: $blue-gray;
+  font-size: 1em;
+  text-transform: uppercase;
+  margin: 4rem 0 1.25rem;
+  line-height: 1;
+
+  &:first-child { margin-top: 0 }
+}
+
 main.feed {
   display: flex;
   justify-content: space-between;
 
   @media #{$small-and-down} {
     flex-direction: column;
-  }
-
-  h6.section-title {
-    color: $blue-gray;
-    font-size: 1em;
-    text-transform: uppercase;
-    margin: 4rem 0 1.25rem;
-    line-height: 1;
-
-    &:first-child { margin-top: 0 }
   }
 
   // info panel
