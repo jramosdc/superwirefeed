@@ -148,13 +148,13 @@ main.profile {
     padding-bottom: 30px;
 
     .activity {
-      flex-basis: 300px;
+      flex-basis: 335px;
       padding-right: 35px;
     }
 
     .reviews {
       flex: 1;
-      padding: 0 30px;
+      padding: 0 35px;
     }
 
     // info panel
@@ -236,7 +236,8 @@ main.profile {
 
 article.review {
   color: $gray-dark;
-  padding: 20px 0;
+  padding: 20px;
+  margin-left: -20px;
 
   > h5 {
     font-size: 22px;
@@ -296,11 +297,17 @@ article.review {
 
 section.graph {
   display: flex;
+  flex-wrap: wrap;
+  padding-top: 5px;
 
   dl {
-    flex-basis: 33%;
+    flex: 1 0 86px;
     font-size: 0;
-    margin: 20px 15px 20px 0;
+    margin: 15px 6.5% 10px 0;
+
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
   }
 
   dt {
@@ -320,6 +327,12 @@ section.graph {
 
     &:not(.empty) {
       background: $gray-mid;
+      cursor: pointer;
+
+      &:hover {
+        background: transparentize($blue-gray, 0.75);
+        box-shadow: 0 0 0 1px transparentize($blue-gray, 0.25);
+      }
     }
   }
 }

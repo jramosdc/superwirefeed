@@ -74,15 +74,9 @@
         </header>
 
         <section class="graph">
-          <dl>
-            <dt>Jan</dt>
-            <dd *ngFor="let i of createRange(31)"></dd>
-          </dl>
-
-          <dl>
-            <dt>Feb</dt>
-            <dd class="empty" *ngFor="let i of createRange(4)"></dd>
-            <dd *ngFor="let i of createRange(28)"></dd>
+          <dl *ngFor="let month of monthGraph; let i = index;">
+            <dt>{{ monthList[i] }}</dt>
+            <dd *ngFor="let d of month" [ngClass]="{'empty': !d}"></dd>
           </dl>
         </section>
       </aside>
@@ -192,5 +186,3 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
   <polygon id="star" fill="currentColor" fill-rule="evenodd" points="99.739 49.5 94.311 52.281 95.348 46.391 90.956 42.219 97.025 41.359 99.739 36 102.453 41.359 108.522 42.219 104.13 46.391 105.167 52.281" transform="translate(-91 -36)"/>
 </svg>
-
-<pre>{{ profile | json }}</pre>

@@ -11,8 +11,8 @@ import { SearchBarService } from '../services/searchBar';
   },
   template: require('./profile.html')
 })
-export class ProfileComponent extends Type implements OnInit {
 
+export class ProfileComponent extends Type implements OnInit {
   User: User;
   domain: string;
   userid: string;
@@ -36,6 +36,12 @@ export class ProfileComponent extends Type implements OnInit {
   cropperSettings_rectangle: CropperSettings;
   imageSelected: boolean = true;
   imageUploading: boolean = false;
+
+  monthGraph: Array<Object> = [];
+  monthList: Array<string> = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
 
   @ViewChild('profileCropper', undefined) profileCropper: ImageCropperComponent;
   @ViewChild('bgCropper', undefined) bgCropper: ImageCropperComponent;
@@ -104,6 +110,11 @@ export class ProfileComponent extends Type implements OnInit {
 
     this.sb.setHiddenSearchBar(true);
 
+    var year = new Date().getFullYear()
+    var date = new Date(year, 0, 1)
+    console.log(date)
+    this.drawGraph(year, 0)
+    console.log(this.monthGraph)
   }
 
   ngOnInit() {
@@ -145,6 +156,20 @@ export class ProfileComponent extends Type implements OnInit {
 
   createRange(number: number){
     return new Array(number);
+  }
+
+  drawGraph (year: number, month: number) {
+    var date = new Date(year, month, 1)
+    var remainder = date.getDay()
+    var daysAmount = new Date(year, month, 0).getDate()
+
+    var emptySpaces = new Array(remainder).fill(0)
+    var daysArray = new Array(daysAmount).fill(1)
+
+    var currentMonth = this.monthList[month]
+    this.monthGraph[month] = emptySpaces.concat(daysArray)
+
+    if (month !== 11) this.drawGraph(year, (month + 1))
   }
 
   update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement, useBG: HTMLInputElement) {
