@@ -112,9 +112,7 @@ export class ProfileComponent extends Type implements OnInit {
 
     var year = new Date().getFullYear()
     var date = new Date(year, 0, 1)
-    console.log(date)
     this.drawGraph(year, 0)
-    console.log(this.monthGraph)
   }
 
   ngOnInit() {
@@ -170,6 +168,11 @@ export class ProfileComponent extends Type implements OnInit {
     this.monthGraph[month] = emptySpaces.concat(daysArray)
 
     if (month !== 11) this.drawGraph(year, (month + 1))
+  }
+
+  changeGraph (year) {
+    this.monthGraph = []
+    this.drawGraph(year, 0)
   }
 
   update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement, useBG: HTMLInputElement) {

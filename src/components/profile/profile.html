@@ -67,7 +67,8 @@
       <aside class="activity">
         <header>
           <h6 class="section-title">Activity chart</h6>
-          <select>
+          <select (change)="changeGraph($event.target.value)">>
+            <option value="2017">2017</option>
             <option value="2016">2016</option>
             <option value="2015">2015</option>
           </select>

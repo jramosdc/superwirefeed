@@ -150,6 +150,29 @@ main.profile {
     .activity {
       flex-basis: 335px;
       padding-right: 35px;
+
+      > header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+
+        .section-title {
+          margin: 0;
+        }
+
+        select {
+          display: inline-block;
+          height: auto;
+          width: 55px;
+          font-size: 12px;
+          color: $blue-gray;
+          padding-right: 10px;
+          background: none;
+          border: none;
+          opacity: .5;
+        }
+      }
     }
 
     .reviews {
