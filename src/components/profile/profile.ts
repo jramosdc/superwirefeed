@@ -36,6 +36,7 @@ export class ProfileComponent extends Type implements OnInit {
   cropperSettings_rectangle: CropperSettings;
   imageSelected: boolean = true;
   imageUploading: boolean = false;
+  year: number;
 
   monthGraph: Array<Object> = [];
   monthList: Array<string> = [
@@ -113,6 +114,7 @@ export class ProfileComponent extends Type implements OnInit {
     var year = new Date().getFullYear()
     var date = new Date(year, 0, 1)
     this.drawGraph(year, 0)
+    this.year = year
   }
 
   ngOnInit() {

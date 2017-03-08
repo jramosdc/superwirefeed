@@ -75,7 +75,10 @@
         <section class="graph">
           <dl *ngFor="let month of monthGraph; let i = index;">
             <dt>{{ monthList[i] }}</dt>
-            <dd *ngFor="let d of month" [ngClass]="{'empty': !d}"></dd>
+            <dd *ngFor="let d of month; let j = index;"
+              [ngClass]="{'empty': !d}"
+              [attr.data-day]="d ? j+'/'+monthList[i]+'/'+year : ''">
+              </dd>
           </dl>
         </section>
       </aside>
