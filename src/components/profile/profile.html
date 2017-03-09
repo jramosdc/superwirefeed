@@ -76,7 +76,7 @@
           <dl *ngFor="let month of monthGraph; let i = index;">
             <dt>{{ monthList[i] }}</dt>
             <dd *ngFor="let d of month; let j = index"
-              [ngClass]="{'empty': !d}" [attr.data-tooltip]="d ? countIndex(j, month) + ' ' + monthList[i] + ', ' + year : ''"></dd>
+              [ngClass]="{'empty': !d}" [attr.data-tooltip]="d ? countIndex(j, month) + ' ' + monthList[i] + ', ' + year : null"></dd>
           </dl>
         </section>
       </aside>

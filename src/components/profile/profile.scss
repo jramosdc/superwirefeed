@@ -350,6 +350,10 @@ section.graph {
     height: 10px;
     margin: 0 2px 2px 0;
 
+    &.empty {
+      pointer-events: none;
+    }
+
     &:not(.empty) {
       background: $gray-mid;
       cursor: pointer;
