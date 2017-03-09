@@ -112,7 +112,6 @@ export class ProfileComponent extends Type implements OnInit {
     this.sb.setHiddenSearchBar(true);
 
     var year = new Date().getFullYear()
-    var date = new Date(year, 0, 1)
     this.drawGraph(year, 0)
     this.year = year
   }
@@ -154,14 +153,10 @@ export class ProfileComponent extends Type implements OnInit {
     });
   }
 
-  createRange(number: number){
-    return new Array(number);
-  }
-
   drawGraph (year: number, month: number) {
     var date = new Date(year, month, 1)
     var remainder = date.getDay()
-    var daysAmount = new Date(year, month, 0).getDate()
+    var daysAmount = new Date(year, month + 1, 0).getDate()
 
     var emptySpaces = new Array(remainder).fill(0)
     var daysArray = new Array(daysAmount).fill(1)
@@ -174,7 +169,12 @@ export class ProfileComponent extends Type implements OnInit {
 
   changeGraph (year) {
     this.monthGraph = []
+    this.year = year
     this.drawGraph(year, 0)
+  }
+
+  countIndex (i, month) {
+    return (i - month.filter((d) => d == 0).length) + 1
   }
 
   update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement, useBG: HTMLInputElement) {
@@ -405,6 +405,4 @@ export class ProfileComponent extends Type implements OnInit {
   followingModelClose() {
     $('#followingModal')['closeModal']();
   }
-
-
 }
