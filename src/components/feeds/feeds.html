@@ -23,9 +23,9 @@
         <img class="responsive-img" *ngIf="feed.useBackgroundImage && feed.owner.backgroundImageURL" [src]="feed.owner.backgroundImageURL"
           alt="Background Image">
         <!-- temporary placeholder image -->
-        <img class="responsive-img" *ngIf="!feed.useBackgroundImage" [src]="'http://lorempixel.com/300/'+feed.$key.length*20+'/?random='+feed.$key"
+        <img class="responsive-img" *ngIf="!feed.useBackgroundImage" src="https://res.cloudinary.com/dqenlmcw2/image/upload/v1488943412/imageholder_rsgsys.jpg"
           alt="Background Image">
-        <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg"
+        <img class="responsive-img" *ngIf="feed.useBackgroundImage  && !feed.owner.backgroundImageURL" src="https://res.cloudinary.com/dqenlmcw2/image/upload/v1473553595/sample.jpg"
           alt="Background Image">
 
         <time>{{returnMoment(feed.timestamp)}}</time>

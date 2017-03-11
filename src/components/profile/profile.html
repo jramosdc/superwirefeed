@@ -1,21 +1,9 @@
-<!-- <div class="tabs-wrapper">
-  <ul class="tabs center-container">
-    <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories">
-      <a class="" [ngClass]="{active: activeCategory === category}">
-        {{category}}
-      </a>
-    </li>
-  </ul>
-</div>
-
-<div class="progress blue" *ngIf="!profile">
-  <div class="indeterminate"></div>
-</div> -->
 
 <main class="profile" *ngIf="!editMode && profile">
   <header class="center-container">
     <section class="avatar">
-      <img [src]="profile.profileImageURL" alt="User Profile Image">
+      <img *ngIf="profile.profileImageURL" (click)="profileModelOpen();" [src]="profile.profileImageURL" alt="User Profile Image">
+
       <div>
         <!-- <h4>{{profile.displayName || profile.email}}</h4> -->
         <h4>{{profile.feedName}}</h4>
@@ -51,14 +39,16 @@
         <h4>{{ (posts | async)?.length }}</h4>
       </div>
     </section>
-
-    <button class="follow waves-effect waves-light btn-large">
+    <button class="follow waves-effect waves-light btn-large" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()">
+      <i class="mdi mdi-pencil"></i>
+      Edit
+    </button>
+    <button class="follow waves-effect waves-light btn-large" *ngIf="User?.uid && profile && User.uid !== profile.uid" (click)="followingSys();">
       <i class="mdi mdi-plus-circle"></i>
       Follow
     </button>
   </header>
-
-  <hr class="line">
+	
 
   <div class="content">
     <div class="center-container">
@@ -161,8 +151,8 @@
       <section class="meta">
         <h6 class="section-title">More content</h6>
         <div class="links">
-          <a href="">Home Feed</a>
-          <a href="">Followers’ feed</a>
+          <a [routerLink]="['/posts', profile.feedId]">My Feed</a>
+          <a [routerLink]="['/subscription', profile.feedId]">My Community</a>
         </div>
 
         <div class="activities">
@@ -185,3 +175,263 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
   <polygon id="star" fill="currentColor" fill-rule="evenodd" points="99.739 49.5 94.311 52.281 95.348 46.391 90.956 42.219 97.025 41.359 99.739 36 102.453 41.359 108.522 42.219 104.13 46.391 105.167 52.281" transform="translate(-91 -36)"/>
 </svg>
+<!-- old edit mode -->
+<div class="row" *ngIf="editMode">
+	<form class="col s12 card padding10px">
+		<div class="row valign-wrapper">
+			<!--<img *ngIf="!profile.profileImageURL" src="" alt="User Profile Image" class="circle col s1">-->
+			<i *ngIf="!profile.profileImageURL" class="pink-text mdi mdi-account circle col s12" style="font-size: 10em; width: 10px;"></i>
+			<img *ngIf="profile.profileImageURL" [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s1">
+			<h5 class="col s5 valign">{{profile.displayName || profile.email}}</h5>
+			<span class="col s4 valign">
+        <input type="checkbox" id="useBG" #useBG />
+        <label for="useBG" style="float:right;">use Gradiant on feed background</label>
+      </span>
+		</div>
+		<div class="divider"></div>
+		<div class="row">
+			<div class="input-field col s12">
+				<textarea id="bio" #bio class="materialize-textarea validate"></textarea>
+				<label for="bio">Bio</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s4">
+				<input id="feedId" #feedId type="text" class="validate">
+				<label for="feedId">Feed ID</label>
+			</div>
+			<div class="input-field col s8">
+				<input id="feedName" #feedName type="text" class="validate">
+				<label for="feedName">Feed Name</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<input id="description" #description type="text" class="validate">
+				<label for="description">Description</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s12">
+				<span class="paddingright10px">Private?</span>
+				<input type="radio" id="pyes" #pyes name="private" />
+				<label class="paddingright10px" for="pyes">Yes</label>
+				<input type="radio" id="pno" #pno name="private" />
+				<label for="pno">No</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<select id="category" #category class="validate">
+					<option disabled selected>Select Category</option>
+					<option value="Marketing">Marketing</option>
+					<option value="News">News</option>
+					<option value="Visuals">Visuals</option>
+					<option value="Data">Data</option>
+					<option value="Misc">Misc</option>
+				</select>
+				<label for="category">Category dasdsad</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<tag-input placeholder="Add Post Category" [tagArray]="postCategoryList" (updatedList)="tagInputEventCatch($event);"> </tag-input>
+			</div>
+		</div>
+
+		<div class="row center-align">
+			<span class="red-text" id="errorPostCategory"></span>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<tag-input placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);">
+				</tag-input>
+			</div>
+		</div>
+
+		<div class="row center-align">
+			<span class="red-text" id="errorProfile"></span>
+		</div>
+		<div class="row">
+			<div class="col s12 layout-row layout-align-space-between-center">
+				<button class="waves-effect waves-light btn" (click)="confirmDelete()">Delete</button>
+				<div class="preloader-wrapper small active" *ngIf="profileLoading">
+					<div class="spinner-layer spinner-green-only">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div>
+						<div class="gap-patch">
+							<div class="circle"></div>
+						</div>
+						<div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+				</div>
+				<button class="waves-effect waves-light btn" (click)="update(bio, feedId, feedName, description, pyes, pno, category, useBG)">Update</button>
+			</div>
+		</div>
+	</form>
+</div>
+<div id="confirmDeleteModel" class="modal" style="width: 40% ! important">
+	<div class="modal-content">
+		<div class="row">
+			<h4>Do you really want to Delete this Feed?</h4>
+			<h6>Note: It wil also delete your profile and user account.</h6>
+		</div>
+		<div class="row center-align">
+			<span class="red-text" id="errorDelete"></span>
+		</div>
+		<div class="row">
+			<div class="col s12 layout-row layout-align-space-between-center">
+				<a class="waves-effect waves-blue btn white-text" (click)="delete('yes')">Yes</a>
+				<div class="preloader-wrapper small active" *ngIf="deleteLoading">
+					<div class="spinner-layer spinner-blue-only">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div>
+						<div class="gap-patch">
+							<div class="circle"></div>
+						</div>
+						<div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+				</div>
+				<a class="waves-effect waves-blue btn white-text" (click)="delete('no')">No</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="profileModal" class="modal zindex9999">
+	<form class="modal-content">
+		<div class="nav-wrapper center-align">
+			<h2 class="purple-text">Profile Image</h2>
+		</div>
+		<div class="row center-align" class="flexCenter">
+			<input id="custom-input" type="file" class="displayNone" #fileInput (change)="profileChangeListener($event)">
+			<div *ngIf="!profile?.profileImageURL">
+				<div [hidden]="!imageSelected">
+					<i class="black-text mdi mdi-account circle col s12" (click)="fileInput.click(); imageSelected=false;" style="font-size: 10em;"></i>
+				</div>
+			</div>
+			<div *ngIf="profile?.profileImageURL">
+				<div [hidden]="!imageSelected">
+					<img [src]="profile.profileImageURL" alt="User Profile Image" class="circle col s12 rounded" (click)="fileInput.click(); imageSelected=false;">
+				</div>
+			</div>
+			<div [hidden]="imageSelected">
+				<img-cropper id="imgCropper" #profileCropper [image]="profileImgData" [settings]="cropperSettings_round" (onCrop)="cropped($event)"></img-cropper>
+			</div>
+		</div>
+		<div class="row center-align">
+			<span class="red-text" id="errorLogin"></span>
+		</div>
+		<div class="modal-footer">
+			<div class="preloader-wrapper small active" *ngIf="imageUploading">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+						<div class="circle"></div>
+					</div>
+					<div class="gap-patch">
+						<div class="circle"></div>
+					</div>
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+			<button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadProfileImage();" [disabled]="!profileImgData.image">Upload</button>
+			<button type="button" class="waves-effect waves-blue btn white-text" (click)="profileModelClose();">CANCEL</button>
+		</div>
+	</form>
+</div>
+<div id="backgroundModal" class="modal zindex9999">
+	<form class="modal-content">
+		<div class="nav-wrapper center-align">
+			<h2 class="purple-text">Background Image {{imageSelected}}</h2>
+		</div>
+		<div class="row center-align" class="flexCenter">
+			<input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
+			<div *ngIf="!profile?.backgroundImageURL">
+				<div [hidden]="!imageSelected">
+					<img src="https://unsplash.it/300/200/?random" alt="default background image" (click)="fileInput2.click(); imageSelected=false;"
+						style="width: 300px; height: auto;" />
+				</div>
+			</div>
+			<div *ngIf="profile?.backgroundImageURL">
+				<div [hidden]="!imageSelected">
+					<img [src]="profile.backgroundImageURL" alt="User Profile Image" class="col s12" (click)="fileInput2.click(); imageSelected=false;"
+						style="width: 300px; height: auto;">
+				</div>
+			</div>
+			<div [hidden]="imageSelected">
+				<img-cropper id="imgCropper2" #bgCropper [image]="backgroundImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"></img-cropper>
+			</div>
+		</div>
+		<div class="row center-align">
+			<span class="red-text" id="errorLogin"></span>
+		</div>
+		<div class="modal-footer">
+			<div class="preloader-wrapper small active" *ngIf="imageUploading">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+						<div class="circle"></div>
+					</div>
+					<div class="gap-patch">
+						<div class="circle"></div>
+					</div>
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+			<button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!backgroundImgData.image">Upload</button>
+			<button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
+		</div>
+	</form>
+</div>
+
+
+<div id="followersModal" class="modal zindex9999">
+	<form class="modal-content">
+		<div class="nav-wrapper center-align">
+			<h4 class="purple-text">Followers</h4>
+		</div>
+		<hr />
+		<div class="row left-align">
+			<div *ngFor="let f of followers" style="display:flex; align-items:center; margin-bottom: 10px;">
+				<img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f"
+				/>
+				<a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
+					<span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
+				</a>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="waves-effect waves-blue btn white-text" (click)="followerModelClose();">CLOSE</button>
+		</div>
+	</form>
+</div>
+
+<div id="followingModal" class="modal zindex9999">
+	<form class="modal-content">
+		<div class="nav-wrapper center-align">
+			<h4 class="purple-text">Following</h4>
+		</div>
+		<hr />
+		<div class="row left-align">
+			<div *ngFor="let f of following" style="display:flex; align-items:center; margin-bottom: 10px;">
+				<img class="valign profile circle" style="max-height:40px; border: 1px solid grey;" [src]="(f |async)?.profileImageURL" alt="f"
+				/>
+				<a [href]="'https://feed.superwire.io/posts/'+(f | async)?.feedId">
+					<span class="grey-text" style="margin: 10px;">{{(f | async)?.email }}</span>
+				</a>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="waves-effect waves-blue btn white-text" (click)="followingModelClose();">CLOSE</button>
+		</div>
+	</form>
+</div>
+
