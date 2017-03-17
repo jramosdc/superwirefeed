@@ -1,9 +1,30 @@
+<style>
+    
+    .avatar:hover .camOnHover {
+		display: block;
+	}
 
+	.cover:hover .camOnHover {
+		display: block;
+	}
+
+	.camOnHover {
+		position: absolute;
+		display: none;
+		top: 15px;
+		width: 40px;
+		margin: 0 auto;
+		left: 15px;
+		/*z-index:100;*/
+	}
+</style>
 <main class="profile" *ngIf="!editMode && profile">
   <header class="center-container">
+     
     <section class="avatar">
+      <a class="btn-floating waves-effect waves-light pink camOnHover" *ngIf="profile.uid  === User.uid" (click)="profileModelOpen();"><i class="mdi mdi-camera"></i></a>
       <img *ngIf="profile.profileImageURL" (click)="profileModelOpen();" [src]="profile.profileImageURL" alt="User Profile Image">
-
+      <img *ngIf="profile.email && !profile.profileImageURL" (click)="profileModelOpen();" src="https://res.cloudinary.com/dqenlmcw2/image/upload/v1489642182/206ded4566e9574aef3169f3d5f3bc44_lrphze.png">
       <div>
         <!-- <h4>{{profile.displayName || profile.email}}</h4> -->
         <h4>{{profile.feedName}}</h4>
@@ -12,6 +33,7 @@
     </section>
 
     <div class="cover">
+      <a class="btn-floating waves-effect waves-light pink camOnHover" *ngIf="profile.uid  === User.uid" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
       <img [src]="profile.backgroundImageURL" alt="{{profile.feedName}}">
     </div>
 
@@ -41,7 +63,7 @@
     </section>
     <button class="follow waves-effect waves-light btn-large" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()">
       <i class="mdi mdi-pencil"></i>
-      Edit
+      <span *ngIf="(posts | async)?.length == 0">Create Feed and </span>Edit
     </button>
     <button class="follow waves-effect waves-light btn-large" *ngIf="User?.uid && profile && User.uid !== profile.uid" (click)="followingSys();">
       <i class="mdi mdi-plus-circle"></i>
