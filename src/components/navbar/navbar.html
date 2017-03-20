@@ -72,7 +72,15 @@
         <span class="white-text email">{{User.password.email}}</span>
       </a>
     </li>
-
+    <li [routerLink]="['/posts',User.feed.userid]">
+      <a>My Feed</a>
+    </li>
+    <li [routerLink]="['/profile', User.feed.userid]">
+      <a>My Profile</a>
+    </li>
+    <li>
+      <a>Explore</a>
+    </li>
     <li>
       <a (click)="logout()">Logout</a>
     </li>
