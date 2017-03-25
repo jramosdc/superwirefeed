@@ -146,12 +146,14 @@ export class EditPostComponent implements OnInit {
         tinymce.remove();
         tinymce.init({
             selector: '#editor',
-            height: 200,
-            plugins: [
-                'textpattern advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table contextmenu paste code'
-            ],
+            theme:"inlite",
+            plugins: 'image table link paste contextmenu textpattern autolink',
+            insert_toolbar: 'quickimage quicktable',
+            selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+            inline: true,
+            paste_data_images: true,
+            content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i'],
             textpattern_patterns: [
                 { start: '*', end: '*', format: 'italic' },
                 { start: '**', end: '**', format: 'bold' },
@@ -165,7 +167,6 @@ export class EditPostComponent implements OnInit {
                 { start: '* ', cmd: 'InsertUnorderedList' },
                 { start: '- ', cmd: 'InsertUnorderedList' }
             ],
-            toolbar: 'insertfile undo redo | bold | bullist | link image',
             setup: (editor) => {
                 editor.on('change', (e) => {
                     this.post['detail'] = editor.getContent();

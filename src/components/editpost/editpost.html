@@ -5,7 +5,7 @@
         </div>
         <div class="row">
             <label for="title">Title/Headline</label>
-            <div class="input-field">
+            <div class="input-field" id="headline">
                 <input type="text" class="validate" #title="ngModel" name="title" [(ngModel)]="post.title" placeholder="Title" required>
                 <small class="invalid-test" [hidden]="title.valid || (title.pristine && !f._submitted)">
                     Title is required.
@@ -18,11 +18,11 @@
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
         </div>
         <div class="row">
-            <label for="editor">Add text, links, images, embed videos</label>
+            <label for="editor">Add text, links, images, embed videos || *italic*, **bold**</label>
             <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="post.detail" placeholder="Detail" required>
             <div id="editor"></div>
             <small class="invalid-test" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
-                Detail is required.
+                Text is required.
             </small>
         </div>
         <div class="row">
@@ -30,8 +30,7 @@
             <div class="input-field">
                 <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="post.priority" required>
                     <option value="" disabled selected>Is it breaking now?</option>
-                    <option value="High">Breaking</option>
-                    <option value="Medium">Medium</option>
+                    <option value="High">Breaking</option> 
                     <option value="Low">Normal</option>
                 </select>
                 <small class="invalid-test" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
@@ -55,16 +54,22 @@
             </div>
         </div>
         <div class="row">
-            <label for="categories">Categories</label>
+            <label for="categories">Section</label>
             <div class="input-field">
                 <select class="browser-default" #category="ngModel" name="category" [(ngModel)]="post.category" required>
-                    <option value="" disabled selected>Select Category</option>
+                    <option value="" disabled selected>Select a section</option>
                     <option value="All">All</option>
                     <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
                 </select>
                 <small class="invalid-test" [hidden]="category.valid || (category.pristine && !f._submitted)">
-                    Category is required.
+                    Section is required.
                 </small>
+            </div>
+        </div>
+        <div class="row">
+            <label for="mainUrl">Add URL Link</label>
+            <div class="input-field">
+                <input type="text" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="post.mainUrl" placeholder="Main Url">
             </div>
         </div>
         <div class="row">
@@ -127,12 +132,6 @@
                         <i class="close material-icons" (click)="deletePostData('gsheetFile', csv)">x</i>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <label for="mainUrl">Main url (just saving a link? we can make magic with it)</label>
-            <div class="input-field">
-                <input type="text" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="post.mainUrl" placeholder="Main Url">
             </div>
         </div>
         <div class="row center-align">

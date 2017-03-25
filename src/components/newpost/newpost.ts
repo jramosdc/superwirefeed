@@ -88,6 +88,8 @@ export class NewPostComponent implements OnInit {
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table contextmenu paste code'
             ],
+            content_css: [
+            '{font-size:150%;}'],
             textpattern_patterns: [
                 { start: '*', end: '*', format: 'italic' },
                 { start: '**', end: '**', format: 'bold' },

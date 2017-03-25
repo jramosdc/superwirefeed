@@ -48,11 +48,11 @@
         <h6>Interests</h6>
         <p>Analythics, Politics</p>
       </div>
-      <div>
+      <div (click)="followerModelPopup();">
         <h6>Followers</h6>
         <h4>{{followers.length}}</h4>
       </div>
-      <div>
+      <div (click)="followingModelPopup();">
         <h6>Following</h6>
         <h4>{{following.length}}</h4>
       </div>
@@ -63,7 +63,7 @@
     </section>
     <button class="follow waves-effect waves-light btn-large" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()">
       <i class="mdi mdi-pencil"></i>
-      <span *ngIf="(posts | async)?.length == 0">Create Feed and </span>Edit
+      <span *ngIf="!profile.backgroundImageURL">Create Feed and </span>Edit
     </button>
     <button class="follow waves-effect waves-light btn-large" *ngIf="User?.uid && profile && User.uid !== profile.uid" (click)="followingSys();">
       <i class="mdi mdi-plus-circle"></i>
