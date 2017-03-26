@@ -18,7 +18,7 @@
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
         </div>
         <div class="row">
-            <label for="editor">Add text, links, images, embed videos || *italic*, **bold**</label>
+            <label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
             <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="post.detail" placeholder="Detail" required>
             <div id="editor"></div>
             <small class="invalid-test" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
@@ -151,7 +151,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="waves-effect waves-light btn purple white-text right">Update</button>
+            <button type="submit" class="waves-effect waves-light btn-large right">Update</button>
         </div>
     </form>
 </div>

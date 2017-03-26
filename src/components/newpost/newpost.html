@@ -27,56 +27,12 @@
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
         </div>
         <div class="row">
-            <label for="editor">Add text, links, images, embed videos</label>
+            <label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
             <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="detail" placeholder="Detail" required>
             <div id="editor"></div>
             <small class="red-text" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
                 Detail is required.
             </small>
-        </div>
-        <div class="row">
-            <label for="license">License</label>
-            <div class="input-field">
-                <select class="browser-default" #license="ngModel" name="license" [(ngModel)]="_license" required>
-                    <option value="0" disabled selected>Choose license</option>
-                    <option value="1">CC-BY</option>
-                    <option value="2">CC-BY-ND</option>
-                    <option value="3">Selling w/ attribution</option>
-                    <option value="4">Selling exclusively</option>
-                </select>
-                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">
-                    License is required.
-                </small>
-            </div>
-        </div>
-        <div class="row">
-            <label for="priority">Priority</label>
-            <div class="input-field">
-                <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="_priority" required>
-                    <option value="" disabled selected>Is it breaking now?</option>
-                    <option value="High">Breaking</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Normal</option>
-                </select>
-                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
-                    Priority is required.
-                </small>
-            </div>
-        </div>
-        <div class="row">
-            <label for="type">Type</label>
-            <div class="input-field">
-                <select class="browser-default" #type="ngModel" multiple name="type" [(ngModel)]="ty" required style="height: 80pt;">
-                    <option value="" disabled selected>Select Type</option>
-                    <option value="file-document">Text</option>
-                    <option value="camera">Image</option>
-                    <option value="play-box-outline">Video</option>
-                    <option value="microphone">Audio</option>
-                </select>
-                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">
-                    Type is required.
-                </small>
-            </div>
         </div>
         <div class="row">
             <label for="category">Section</label>
@@ -88,6 +44,47 @@
                 </select>
                 <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">
                     Section is required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="input-field col s4">
+                <select class="browser-default" #license="ngModel" name="license" [(ngModel)]="_license" required>
+                    <option value="0" disabled selected>Choose license</option>
+                    <option value="1">CC-BY</option>
+                    <option value="2">CC-BY-ND</option>
+                    <option value="3">Selling w/ attribution</option>
+                    <option value="4">Selling exclusively</option>
+                </select>
+                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">
+                    License is required.
+                </small>
+            </div>
+      
+      
+            <div class="input-field col s4">
+                <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="_priority" required>
+                    <option value="" disabled selected>Is it breaking now?</option>
+                    <option value="High">Breaking</option>
+                    
+                    <option value="Low">Normal</option>
+                </select>
+                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
+                    Priority is required.
+                </small>
+            </div>
+
+            <div class="input-field col s4">
+                <select class="browser-default" #type="ngModel" multiple name="type" [(ngModel)]="ty" required style="height: 80pt;">
+                    <option value="" disabled selected>Select Formats</option>
+                    <option value="file-document">Text</option>
+                    <option value="camera">Image</option>
+                    <option value="play-box-outline">Video</option>
+                    <option value="microphone">Audio</option>
+                </select>
+                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">
+                    Formats are required.
                 </small>
             </div>
         </div>
@@ -149,7 +146,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="waves-effect waves-light btn purple white-text right">Wire!</button>
+            <button type="submit" class="waves-effect waves-light btn-large right">Wire!</button>
         </div>
     </form>
 </div>

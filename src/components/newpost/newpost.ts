@@ -84,13 +84,14 @@ export class NewPostComponent implements OnInit {
             selector: '#editor',
             height: 200,
             menubar: false,
+            statusbar: false,
             plugins: [
                 'textpattern advlist autolink lists link image charmap print preview anchor',
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table contextmenu paste code'
             ],
             content_css: [
-    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+    '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
     '//www.mucholab.net/css/tinymce.css' ],
             textpattern_patterns: [
                 { start: '*', end: '*', format: 'italic' },
