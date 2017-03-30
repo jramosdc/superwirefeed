@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, trigger, transition, style, animate } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
 import { SearchBarService } from '../services/searchBar';
@@ -6,7 +6,33 @@ import { SearchBarService } from '../services/searchBar';
 @Component({
   selector: 'navbar',
   host: {},
-  template: require('./navbar.html')
+  template: require('./navbar.html'),
+  animations: [
+    trigger(
+      'modalSlider', [
+        transition(':enter', [
+          style({transform: 'translateX(100%)', opacity: 0, height: 0}),
+          animate('200ms', style({transform: 'translateX(0)', opacity: 1}))
+        ]),
+        transition(':leave', [
+          style({transform: 'translateX(0)', opacity: 1 }),
+          animate('200ms', style({transform: 'translateX(-100%)', opacity: 0, height: 0}))
+        ])
+      ]
+    ),
+    trigger(
+      'modalFader', [
+        transition(':enter', [
+          style({opacity: 0}),
+          animate('200ms', style({opacity: 1}))
+        ]),
+        transition(':leave', [
+          style({opacity: 1}),
+          animate('200ms', style({opacity: 0}))
+        ])
+      ]
+    )
+  ]
 })
 
 export class NavbarComponent implements OnInit {
@@ -18,6 +44,11 @@ export class NavbarComponent implements OnInit {
   recoverLoading: boolean = false;
   search$;
   isSearchBarHidden: Object;
+  Step: number;
+  StepLimit: number;
+  UserInfo: Object;
+  Interests: string[] = ['Marketing', 'News'];
+  FeedCategories: string[] = ['Visuals', 'News'];
 
   constructor(public as: authService, private router: Router, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -26,6 +57,14 @@ export class NavbarComponent implements OnInit {
     this.activeFeed = this.as.getActiveFeed();
     this.isSearchBarHidden = this.sb.searchBar;
     this.search$ = this.sb.search$;
+    this.Step = 0;
+    this.StepLimit = 0;
+    this.UserInfo = {
+      interests: {},
+      feedName: '',
+      feedCategory: {},
+      about: ''
+    };
   }
 
   ngOnInit() {
@@ -34,11 +73,37 @@ export class NavbarComponent implements OnInit {
       edge: 'right',
       closeOnClick: true
     });
+    // $('#regflowModal')['closeModal']();
   }
 
   home() {
     console.log('home');
     this.router.navigate(['feeds']);
+  }
+
+  onSubmit(d) {
+    if (d.valid) this.Step += 1
+    if (this.Step > this.StepLimit) this.StepLimit = this.Step
+
+    var t = window.setTimeout(() => {
+      $('form select')['material_select']()
+      window.clearTimeout(t)
+    }, 0)
+
+    console.log(this.UserInfo)
+  }
+
+  selectChange(ev) {
+    console.log(ev)
+  }
+
+  onDot(step) {
+    if (step <= this.StepLimit) this.Step = step;
+
+    var t = window.setTimeout(() => {
+      $('form select')['material_select']()
+      window.clearTimeout(t)
+    }, 0)
   }
 
   navigate() {
@@ -77,6 +142,7 @@ export class NavbarComponent implements OnInit {
     console.log('recover modal');
     $('#loginModal')['closeModal']();
     $('#registerModal')['closeModal']();
+    $('#recoverModal').removeClass('hide');
     $('#recoverModal')['openModal']();
   }
 
@@ -101,7 +167,7 @@ export class NavbarComponent implements OnInit {
     console.log('create feed modal');
     $('#loginModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
-    $('#registerModal')['openModal']();
+    $('#regflowModal')['openModal']();
   }
 
   register(user, terms) {

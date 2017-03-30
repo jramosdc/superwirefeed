@@ -82,3 +82,356 @@ nav {
 .cursor {
   cursor: pointer;
 }
+
+.modal.regflow {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  max-width: 540px;
+  height: 620px;
+  background: linear-gradient($blue, white 70%);
+  box-shadow: transparentize(black, .9) 0 2px 30px;
+  overflow: visible;
+  transition: 0.2s ease background;
+
+  > .screen {
+    width: 100%;
+    padding-top: 140px;
+    flex: 1 0 auto;
+    background: url('assets/superwire-modal.svg') top 40px center no-repeat;
+    transition: 0.2s ease;
+    transition-property: padding, background;
+    position: relative;
+
+    .first {
+      font-weight: 300;
+      color: $blue-gray;
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+
+    .main {
+      font-weight: 600;
+      color: #333;
+      font-size: 42px;
+      margin: 0;
+    }
+
+    p {
+      max-width: 70%;
+      line-height: 2.2;
+      margin: 90px auto 0;
+      font-weight: 300;
+      color: $blue-gray;
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+  }
+
+  > .content {
+    background: white;
+    transition: 0.1s linear;
+    transition-property: background;
+    overflow: hidden;
+    overflow-y: auto;
+    min-height: 100px;
+    padding: 40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 135px;
+
+    &.transparent {
+      background: transparent;
+    }
+
+    h6 {
+      font-weight: 300;
+      color: $blue-gray;
+      font-size: 18px;
+
+      + .btn-large {
+        margin-top: .75rem;
+      }
+    }
+
+    p {
+      font-size: 13px;
+      color: $blue-gray;
+      text-align: center;
+
+      > a {
+        color: $blue-gray;
+        font-weight: 500;
+      }
+    }
+
+    .btn-large {
+      background: $blue-dark;
+      text-transform: uppercase;
+      color: white;
+      width: 100%;
+    }
+
+    .form-content {
+      margin-bottom: 40px;
+    }
+
+    .input-field {
+      margin: 40px 0 0;
+
+      .caret {
+        opacity: .5;
+        color: $blue-gray;
+        display: none;
+      }
+
+      textarea,
+      input {
+        opacity: .5;
+        color: $blue-gray;
+        text-align: center;
+        border-bottom-color: $purple-light;
+        margin: 0;
+      }
+
+      textarea {
+        padding: 0;
+      }
+    }
+  }
+
+  &.welcome {
+    background: linear-gradient($blue, white 85%);
+  }
+
+  &.goodbye {
+    > .content {
+      height: 210px;
+    }
+  }
+
+  &:not(.welcome) > .content {
+    box-sizing: border-box;
+    // padding-top: 150px;
+    height: 260px;
+    position: relative;
+
+    > .form-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 40px;
+    }
+  }
+}
+
+.modal.regflow .pillbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background: white;
+
+  > .pills {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+
+    > li {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: $gray-mid;
+      cursor: pointer;
+      margin: 0 7px;
+      border-radius: 10px;
+      transition: 0.2s ease;
+      transition-property: background;
+
+      &.active {
+        background: $purple-light;
+      }
+
+      &:not(.available) {
+        cursor: default;
+        pointer-events: none;
+        opacity: .5;
+      }
+    }
+  }
+
+  > .arrow {
+    flex-basis: 64px;
+    height: 18px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:first-child {
+      text-align: left;
+    }
+
+    &:last-child {
+      text-align: right;
+    }
+
+    span {
+      font-size: 12px;
+      color: $purple-light;
+      vertical-align: middle;
+      display: inline-block;
+      margin: -1em 0 0;
+      line-height: 1;
+    }
+
+    svg {
+      height: 18px;
+      fill: $purple-light;
+      padding: 0 5px;
+      box-sizing: content-box;
+    }
+
+    button {
+      border: 0;
+      background: 0;
+      appearance: none;
+      padding: 0;
+    }
+  }
+}
+
+.modal.regflow.feed {
+  background: linear-gradient($pink-light, white 70%);
+
+  &.welcome {
+    background: linear-gradient($pink-light, white);
+
+    > .screen {
+      padding-top: 200px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        width: 106%;
+        height: 50%;
+        left: -3%;
+        top: 130px;
+        border-radius: 100%;
+        background: linear-gradient(transparentize(white, .5), transparent);
+        z-index: -1;
+      }
+    }
+
+    > .content {
+      height: 105px;
+    }
+  }
+
+  > .screen {
+    background: url('assets/superwire-modal-pink.svg') top 40px center no-repeat;
+
+    .first,
+    p {
+      color: $pink-mid;
+    }
+  }
+
+  .pillbar {
+    > .pills {
+      > li.active {
+        background: $pink-light;
+      }
+    }
+
+    > .arrow {
+      > svg {
+        // fill: $pink-light;
+      }
+    }
+  }
+}
+
+.modal.regflow.feed .illustrations {
+  .sw-icon {
+    fill: $pink-mid;
+    position: absolute;
+    transform: translate3d(-50%, 0, 1px);
+
+    // small icons
+    opacity: .2;
+    max-width: 32px;
+    max-height: 32px;
+
+    &:nth-child(2),
+    &:nth-child(3) {
+      top: 15px;
+    }
+
+    &:nth-child(1),
+    &:nth-child(4) {
+      top: 35px;
+    }
+
+    &:nth-child(1) {
+      left: 18%;
+    }
+
+    &:nth-child(2) {
+      left: 39%;
+    }
+
+    &:nth-child(3) {
+      left: 61%;
+    }
+
+    &:nth-child(4) {
+      left: 82%;
+    }
+
+    // big icons
+    &:nth-child(n + 5) {
+      opacity: .3;
+      max-width: 48px;
+      max-height: 48px;
+    }
+
+    &:nth-child(5) {
+      top: 110px;
+      left: 10%;
+    }
+
+    &:nth-child(6) {
+      top: 70px;
+      left: 30%;
+    }
+
+    &:nth-child(7) {
+      top: 55px;
+      left: 50%;
+    }
+
+    &:nth-child(8) {
+      top: 70px;
+      left: 70%;
+    }
+
+    &:nth-child(9) {
+      top: 110px;
+      left: 90%;
+    }
+  }
+}
+
+.modal.regflow {
+  .ng-touched.ng-invalid {
+    &, input {
+      border-color: $red !important;
+    }
+  }
+}
