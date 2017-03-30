@@ -29,6 +29,7 @@ main.regflow {
     transition: 0.2s ease;
     transition-property: padding, background;
     position: relative;
+    overflow: hidden;
 
     .first {
       font-weight: 300;
