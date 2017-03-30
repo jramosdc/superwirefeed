@@ -1,0 +1,88 @@
+main.uikit {
+  color: #555;
+
+  .description {
+    @extend .amber, .lighten-5;
+    padding: 3rem;
+    margin: 2rem 0;
+    color: #333;
+    border-radius: 5px;
+
+    h3, p {
+      margin: 0;
+    }
+
+    h3 {
+      margin-bottom: 1rem;
+      color: black;
+    }
+
+    a {
+      color: black;
+      text-decoration: underline;
+    }
+  }
+
+  .section {
+    margin: 4rem 0;
+    padding: 0;
+
+    > h5 {
+      margin-bottom: 2rem;
+    }
+
+    .section {
+      margin-top: 2rem;
+    }
+  }
+
+  .share {
+    justify-content: flex-start;
+  }
+
+  .colors {
+    display: flex;
+    margin-bottom: 1rem;
+
+    > div {
+      width: 200px;
+      height: 100px;
+      position: relative;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+
+
+      &.dark > span {
+        color: #eee;
+      }
+
+      span {
+        color: #333;
+        font-size: 12px;
+
+        &.bold {
+          font-weight: bold;
+        }
+
+        &:last-child {
+          opacity: .5;
+        }
+      }
+    }
+  }
+
+  code {
+    background: #eee;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 2rem 0;
+  }
+
+  .section.section-get + code {
+    margin-top: -3rem;
+  }
+}

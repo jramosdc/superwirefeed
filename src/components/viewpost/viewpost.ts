@@ -17,7 +17,7 @@ export class ViewPostComponent {
   User: User;
   postid: string;
   Domain: string;
-  post: FirebaseObjectObservable<{}>;
+  post: Object;
   activeCategory: string;
   categories: Array<string>;
   stripeHandler: any;
@@ -39,41 +39,48 @@ export class ViewPostComponent {
       if (this.postid) {
         this.as.loadPost(this.postid).subscribe((post) => {
           this.post = post;
-          // this.post['purl'] = post.pdfLink ? sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
+          // this.post['purl'] = post.pdfLink ?
+            // sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
           // this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
           setTimeout(() => {
             // $('.linkify')['linkify']();
             $('.collapsible')['collapsible']({ accordion: false });
-            $("img").addClass("responsive-img");
-            if (this.post['detail']) { $('#postDetails').html(this.post['detail']); }
-            // if (this.post['csvToJson']) {
-            //   this.openInPreview('content', post['csvToJson']);
-            // }
+            $('img').addClass('responsive-img');
+            if (this.post['detail']) {
+              $('#postDetails').html(this.post['detail']);
+              // below line not needed until we update materialize-css to 0.98.8 or higher
+              // $('#postDetails ul').addClass('browser-default');
+            }
+            console.log(this.userAsset);
+            console.log(this.post['csvToJson']);
+            if ((this.post['license'] == 1 || this.post['license'] == 2 || this.userAsset) && this.post['csvToJson']) {
+              this.openInPreview('content', post['csvToJson']);
+            }
           });
         });
         this.sb.setHiddenSearchBar(true);
         this.initializeStripeModal();
       }
       this.as.user$.subscribe(user => {
-        this.as.getUserAsset(user.uid, this.postid).subscribe((data) => {
-          console.log('data', data);
-          if(data.$value){
-            this.userAsset = data.$value;
-            if (this.post['csvToJson']) {
-              setTimeout(() => {
-                this.openInPreview('content', this.post['csvToJson']);
-              })
+        if (user.uid) {
+          this.as.getUserAsset(user.uid, this.postid).subscribe((data) => {
+            if (data.$value) {
+              this.userAsset = data.$value;
+              if (this.post['csvToJson']) {
+                setTimeout(() => {
+                  this.openInPreview('content', this.post['csvToJson']);
+                });
+              }
             }
-          }
-          console.log('this.userAsset', this.userAsset);
-        })
+          });
+        }
       });
       /*if(this.User){
 
       }*/
     });
   }
-  
+
   initializeStripeModal() {
     this.stripeHandler = StripeCheckout.configure({
       key: 'pk_test_YRZWal2Y7LLhtMfQsAV0HKa9',
@@ -95,8 +102,9 @@ export class ViewPostComponent {
     });
   }
 
-  openInPreview (type, url) {
+  openInPreview(type, url) {
     this.previewType = type;
+    console.log('type', type);
     if (type === 'url') {
       this.previewUrl = url
     } else if (type === 'content') {
@@ -107,11 +115,12 @@ export class ViewPostComponent {
   onStripeBtnClick() {
     console.log('onStripeBtnClick');
     // Open Checkout with further options:
+    let amount = this.post['license'] === "3" ? 35 * 100 : this.post['license'] === "4" ? 200 * 100 : 0;
     event.preventDefault();
     this.stripeHandler.open({
       name: 'Superwire, Inc.',
       description: 'Buy a Post',
-      amount: 100,
+      amount: amount,
       currency: 'usd',
       address: false,
     });
@@ -151,6 +160,7 @@ export class ViewPostComponent {
   }
 
   displayTable(dataJSON) {
+    console.log(dataJSON);
     let data = dataJSON;
     let tableDiv = document.getElementById("fullTable");
     let tbl = document.createElement("table");

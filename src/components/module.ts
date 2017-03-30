@@ -19,6 +19,7 @@ import { SearchCategory } from './pipes/searchCategory';
 import { OrderBy } from './pipes/orderby';
 import { SearchPostTitlePipe } from './pipes/searchPostTitle';
 import { ObjectToArray } from './pipes/objectToArrays';
+import { TruncatePipe } from './pipes/truncate';
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import { ObjectToArray } from './pipes/objectToArrays';
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes
-    SearchCategory, OrderBy, SearchPostTitlePipe, ObjectToArray
+    SearchCategory, OrderBy, SearchPostTitlePipe, ObjectToArray, TruncatePipe
   ]
   , providers: [...ApplicationServices]
   , bootstrap: [AppComponent]

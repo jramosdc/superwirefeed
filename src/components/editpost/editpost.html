@@ -59,6 +59,7 @@
             <div class="input-field">
                 <select class="browser-default" #category="ngModel" name="category" [(ngModel)]="post.category" required>
                     <option value="" disabled selected>Select Category</option>
+                    <option value="All">All</option>
                     <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
                 </select>
                 <small class="invalid-test" [hidden]="category.valid || (category.pristine && !f._submitted)">
@@ -191,7 +192,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!postImgData.coverImage">Upload</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!postImgData.image">Upload</button>
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
         </div>
     </form>

@@ -30,7 +30,7 @@
        <span *ngIf="!User.password.email"><u>Start here!</u></span>
         <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" alt="User Profile Image" class="circle avatar">
         <i *ngIf="User.password.email && !User.password.profileImageURL" class="mdi mdi-account avatar circle"></i>
-    </a>   
+    </a>
   </div>
 </nav>
 
@@ -70,7 +70,15 @@
         <span class="white-text email">Go to profile</span>
       </a>
     </li>
-
+    <li [routerLink]="['/posts',User.feed.userid]">
+      <a>My Feed</a>
+    </li>
+    <li [routerLink]="['/profile', User.feed.userid]">
+      <a>My Profile</a>
+    </li>
+    <li>
+      <a>Explore</a>
+    </li>
     <li>
       <a (click)="logout()">Logout</a>
     </li>
