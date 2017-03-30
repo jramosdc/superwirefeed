@@ -21,6 +21,4 @@ export class AppComponent {
     this.User = this.as.getUser();
     this.as.hiddenNavbar$.subscribe(result => this.hiddenNavbar = result);
   }
-
 }
-

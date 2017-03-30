@@ -29,7 +29,6 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ngOnInit');
     $(".button-collapse")['sideNav']({
       menuWidth: 300,
       edge: 'right',
