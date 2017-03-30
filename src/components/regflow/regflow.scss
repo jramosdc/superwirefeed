@@ -1,5 +1,5 @@
 main.regflow {
-  .modal.regflow {
+  .modal.slides {
     margin: 5rem auto;
     position: relative;
   }
@@ -9,8 +9,8 @@ main.regflow {
   }
 }
 
-.modal.regflow {
-  display: flex;
+.modal.slides {
+  display: flex !important;
   flex-direction: column;
   text-align: center;
   max-width: 540px;
@@ -19,6 +19,7 @@ main.regflow {
   box-shadow: transparentize(black, .9) 0 2px 30px;
   overflow: visible;
   transition: 0.2s ease background;
+  opacity: 0;
 
   > .screen {
     width: 100%;
@@ -154,7 +155,7 @@ main.regflow {
   }
 }
 
-.modal.regflow .pillbar {
+.modal.slides .pillbar {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -232,7 +233,7 @@ main.regflow {
   }
 }
 
-.modal.regflow.feed {
+.modal.slides.feed {
   background: linear-gradient($pink-light, white 70%);
 
   &.welcome {
@@ -283,7 +284,7 @@ main.regflow {
   }
 }
 
-.modal.regflow.feed .illustrations {
+.modal.slides.feed .illustrations {
   .sw-icon {
     fill: $pink-mid;
     position: absolute;
@@ -354,7 +355,7 @@ main.regflow {
   }
 }
 
-.modal.regflow {
+.modal.slides {
   .ng-touched.ng-invalid {
     &, input {
       border-color: $red !important;
