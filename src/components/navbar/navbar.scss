@@ -82,3 +82,9 @@ nav {
 .cursor {
   cursor: pointer;
 }
+
+svg[width^="0"] {
+  position: absolute;
+  width: 0; height: 0;
+  right: 100%;
+}
