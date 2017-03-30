@@ -46,9 +46,9 @@ export class NavbarComponent implements OnInit {
   isSearchBarHidden: Object;
   Step: number;
   StepLimit: number;
-  UserInfo: Object;
-  Interests: string[] = ['Marketing', 'News'];
-  FeedCategories: string[] = ['Visuals', 'News'];
+  UserInfo: { interests: Array<string>, feedName: string, feedCategory: Array<string>, about: string};
+  Interests: string[] = ['News', 'Communications', 'Marketing', 'Data', 'Visualizations', 'Statistics', 'Design'];
+  FeedCategories: string[] = ['Visuals1', 'News1'];
 
   constructor(public as: authService, private router: Router, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -60,9 +60,9 @@ export class NavbarComponent implements OnInit {
     this.Step = 0;
     this.StepLimit = 0;
     this.UserInfo = {
-      interests: {},
+      interests: [],
       feedName: '',
-      feedCategory: {},
+      feedCategory: [],
       about: ''
     };
   }
@@ -86,22 +86,28 @@ export class NavbarComponent implements OnInit {
     if (this.Step > this.StepLimit) this.StepLimit = this.Step
 
     var t = window.setTimeout(() => {
-      $('form select')['material_select']()
+      $('#interests')['material_select'](this.selectInterestsChange.bind(this))
+      $('#feedCategory')['material_select'](this.selectFeedCategoryChange.bind(this))
       window.clearTimeout(t)
     }, 0)
 
     console.log(this.UserInfo)
   }
 
-  selectChange(ev) {
-    console.log(ev)
+  selectInterestsChange() {
+    this.UserInfo.interests = $('#interests').val();
+  }
+
+  selectFeedCategoryChange() {
+    this.UserInfo.feedCategory = $('#feedCategory').val();
   }
 
   onDot(step) {
     if (step <= this.StepLimit) this.Step = step;
 
     var t = window.setTimeout(() => {
-      $('form select')['material_select']()
+      $('#interests')['material_select'](this.selectInterestsChange.bind(this))
+      $('#feedCategory')['material_select'](this.selectFeedCategoryChange.bind(this))
       window.clearTimeout(t)
     }, 0)
   }

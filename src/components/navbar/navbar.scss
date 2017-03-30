@@ -83,8 +83,8 @@ nav {
   cursor: pointer;
 }
 
-.modal.regflow {
-  display: flex;
+.modal.slides {
+  // display: flex;
   flex-direction: column;
   text-align: center;
   max-width: 540px;
@@ -228,7 +228,7 @@ nav {
   }
 }
 
-.modal.regflow .pillbar {
+.modal.slides .pillbar {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -306,7 +306,7 @@ nav {
   }
 }
 
-.modal.regflow.feed {
+.modal.slides.feed {
   background: linear-gradient($pink-light, white 70%);
 
   &.welcome {
@@ -357,7 +357,7 @@ nav {
   }
 }
 
-.modal.regflow.feed .illustrations {
+.modal.slides.feed .illustrations {
   .sw-icon {
     fill: $pink-mid;
     position: absolute;
@@ -428,7 +428,7 @@ nav {
   }
 }
 
-.modal.regflow {
+.modal.slides {
   .ng-touched.ng-invalid {
     &, input {
       border-color: $red !important;

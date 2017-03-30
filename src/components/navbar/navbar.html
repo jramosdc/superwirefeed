@@ -25,7 +25,7 @@
           <i class="mdi mdi-magnify"></i>
         </button>
       </form>
-    </span>   
+    </span>
     <a data-activates="slide-out" class="button-collapse right">
        <span *ngIf="!User.password.email"><u>Start here!</u></span>
         <img *ngIf="User.password.profileImageURL" [src]="User.password.profileImageURL" alt="User Profile Image" class="circle avatar">
@@ -108,7 +108,7 @@
 
   <hr class="line">
 
-  <form class="modal-content" novalidate #l="ngForm" (submit)="login(l.value)">
+  <form class="modal-content" novalidate #l="ngForm" (submit)="login(l.value)" novalidate>
     <div class="row">
       <div class="input-field">
         <input type="email" class="validate" #email="ngModel" name="email" [ngModel]="e" required pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$">
@@ -302,7 +302,7 @@
   <hr class="triple line">
 </div>
 
-<div id="regflowModal" class="modal regflow" [ngClass]="{
+<div id="regflowModal" class="modal slides" [ngClass]="{
     'welcome': Step === 0 || Step === 2 || Step === 6,
     'goodbye': Step === 6,
     'feed': Step > 1 && Step < 5
@@ -378,14 +378,13 @@
     </button>
   </form>
 
-  <form class="content" #f="ngForm" (ngSubmit)="onSubmit(f)"
-    *ngIf="Step > 0 && Step < 6">
+  <form class="content" #f="ngForm" (ngSubmit)="onSubmit(f)" *ngIf="Step > 0 && Step < 6" novalidate>
 
     <div class="form-content" *ngIf="Step === 1" [@modalSlider]="Step === 1">
       <h6 class="caption">To start, please choose what subjects interest you most</h6>
 
       <div class="input-field">
-        <select name="interests" multiple required
+        <select name="interests" id="interests" multiple required
           [(ngModel)]="UserInfo.interests">
           <option value="" disabled selected>Choose your option</option>
           <option *ngFor="let i of Interests" [attr.value]="i">{{i}}</option>
@@ -405,7 +404,7 @@
       <h6 class="caption">In which category shall we put your feed?</h6>
 
       <div class="input-field">
-        <select name="feedCategory" required [(ngModel)]="UserInfo.feedCategory">
+        <select name="feedCategory" id="feedCategory" required [(ngModel)]="UserInfo.feedCategory">
           <option value="" disabled selected>Select the feed category</option>
           <option [ngValue]="1">Option 1</option>
           <option [ngValue]="2">Option 2</option>
