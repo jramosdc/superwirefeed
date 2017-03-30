@@ -197,7 +197,7 @@ export class EditPostComponent implements OnInit {
             mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
             // csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
             timestamp: firebase.database['ServerValue'].TIMESTAMP,
-            coverImage: ((this.postedImgUrl) ? this.postedImgUrl : ((this.post['image'] ? this.post['image'] : null))),
+            coverImage: ((this.postedImgUrl) ? this.postedImgUrl : ((this.post['coverImage'] ? this.post['coverImage'] : null))),
             // pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
             // gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
             // images: editpost.images  ? editpost.images : '',
@@ -210,7 +210,7 @@ export class EditPostComponent implements OnInit {
                             let pdfId: any = this.as.getFileId({});
                             pdfId = pdfId.path.o[1];
                             this.pdfFileLinks[pdfId] = urls[i];
-                        }   
+                        }
                         post['pdfFile'] = this.pdfFileLinks;
                         this.postObjReady.uploadFile = true;
                         this.updateToFirebase(post);
@@ -245,9 +245,10 @@ export class EditPostComponent implements OnInit {
                     post["csvToJson"] = result.data;
                 }
             });
-            
+
             // after file upload get download link storage
-            this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.postid + '/' + this.csvFile.name + '/' + Date.now() + '/').then(url => {
+            this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.postid + '/' +
+                this.csvFile.name + '/' + Date.now() + '/').then(url => {
                 let csvId: any = this.as.getFileId({});
                 csvId = csvId.path.o[1];
                 this.csvLinks[csvId] = url;
@@ -263,17 +264,19 @@ export class EditPostComponent implements OnInit {
         }
 
         // checking if mailurl has changed then send request else nothing
-        if (editpost.mainUrl !== this.post['mainUrl']) {
+        // if (editpost.mainUrl !== this.post['mainUrl']) {
             // after extract data from embedly API save into post embedly property
+            // console.log('test1');
             this.embedly.extractAPI(editpost.mainUrl).then((data: IEmbedly) => {
                 post['embedly'] = data;
                 this.postObjReady.embedlyApi = true;
                 this.updateToFirebase(post);             // save to firebase
             });
-        } else {
-            this.postObjReady.embedlyApi = true;
-            this.updateToFirebase(post);             // save to firebase
-        }
+        // } else {
+        //     console.log('test2');
+        //     this.postObjReady.embedlyApi = true;
+        //     this.updateToFirebase(post);             // save to firebase
+        // }
 
     }
 
@@ -297,7 +300,7 @@ export class EditPostComponent implements OnInit {
                 return urls;
             });
     }
-    
+
     private updateToFirebase(post) {
         console.log('post update', post);
         if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
@@ -315,8 +318,6 @@ export class EditPostComponent implements OnInit {
             });
         }
     }
-
-
 
     backgroundImagePopup() {
         event.preventDefault();
