@@ -404,11 +404,10 @@
       <h6 class="caption">In which category shall we put your feed?</h6>
 
       <div class="input-field">
-        <select name="feedCategory" id="feedCategory" required [(ngModel)]="UserInfo.feedCategory">
+        <select name="feedCategory" id="feedCategory" required
+          [(ngModel)]="UserInfo.feedCategory">
           <option value="" disabled selected>Select the feed category</option>
-          <option [ngValue]="1">Option 1</option>
-          <option [ngValue]="2">Option 2</option>
-          <option [ngValue]="3">Option 3</option>
+          <option *ngFor="let i of FeedCategories" [attr.value]="i">{{i}}</option>
         </select>
       </div>
     </div>

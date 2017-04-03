@@ -1,3 +1,4 @@
+import { RegFlow } from './../regflow/regflow';
 import { Component, OnInit, ViewChild, trigger, transition, style, animate } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
@@ -46,9 +47,9 @@ export class NavbarComponent implements OnInit {
   isSearchBarHidden: Object;
   Step: number;
   StepLimit: number;
-  UserInfo: { interests: Array<string>, feedName: string, feedCategory: Array<string>, about: string};
-  Interests: string[] = ['News', 'Communications', 'Marketing', 'Data', 'Visualizations', 'Statistics', 'Design'];
-  FeedCategories: string[] = ['Visuals1', 'News1'];
+  UserInfo: { interests: Array<string>, feedId: string, feedName: string, feedCategory: Array<string>, about: string, userName: string};
+  Interests: string[] = ['Politics', 'Economy', 'Sports', 'Geeky', 'Things', 'Design'];
+  FeedCategories: string[] = ['News', 'Communications', 'Marketing', 'Data', 'Visualizations', 'Statistics', 'Design'];
 
   constructor(public as: authService, private router: Router, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -61,9 +62,11 @@ export class NavbarComponent implements OnInit {
     this.StepLimit = 0;
     this.UserInfo = {
       interests: [],
+      feedId: '',
       feedName: '',
       feedCategory: [],
-      about: ''
+      about: '',
+      userName: ''
     };
   }
 
@@ -81,19 +84,6 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['feeds']);
   }
 
-  onSubmit(d) {
-    if (d.valid) this.Step += 1
-    if (this.Step > this.StepLimit) this.StepLimit = this.Step
-
-    var t = window.setTimeout(() => {
-      $('#interests')['material_select'](this.selectInterestsChange.bind(this))
-      $('#feedCategory')['material_select'](this.selectFeedCategoryChange.bind(this))
-      window.clearTimeout(t)
-    }, 0)
-
-    console.log(this.UserInfo)
-  }
-
   selectInterestsChange() {
     this.UserInfo.interests = $('#interests').val();
   }
@@ -102,14 +92,82 @@ export class NavbarComponent implements OnInit {
     this.UserInfo.feedCategory = $('#feedCategory').val();
   }
 
+  onSubmit(d) {
+    if (d.valid) {
+      if (this.Step == 4) {
+        if (this.UserInfo.interests.length > 0) this.Step += 1;
+      } else if (this.Step == 1) {
+        if (this.UserInfo.interests.length > 0) this.Step += 1;
+      } else {
+        this.Step += 1;
+      }
+
+    }
+    if (this.Step > this.StepLimit) this.StepLimit = this.Step
+    this.regflow();
+  }
+
   onDot(step) {
     if (step <= this.StepLimit) this.Step = step;
+    this.regflow();
+  }
 
+  regflow() {
     var t = window.setTimeout(() => {
       $('#interests')['material_select'](this.selectInterestsChange.bind(this))
       $('#feedCategory')['material_select'](this.selectFeedCategoryChange.bind(this))
       window.clearTimeout(t)
-    }, 0)
+    }, 0);
+
+    console.log(this.UserInfo);
+    this.UserInfo.feedId = this.UserInfo.feedName.trim().toLowerCase().split(' ').join('');
+    debugger
+    if (this.UserInfo.feedName && this.UserInfo.feedCategory.length > 0 && this.UserInfo.interests.length > 0 && this.UserInfo.about) {
+        let profile = {
+        'feedId': this.UserInfo.feedId,
+        'feedName': this.UserInfo.feedName,
+        'description': '',
+        'private': 'false',
+        'category': this.UserInfo.feedCategory,
+        'interests': this.UserInfo.interests,
+        'authEmail': [],
+        'postCategories': [],
+        'profileImageURL': 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
+        'backgroundImageURL': 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg',
+        'useBackgroundImage': false
+      };
+      this.as.updateUserProfile(this.UserInfo.userName, profile)
+        .then((res) => {
+          let feed = {
+            'feedName': this.UserInfo.feedName,
+            'description': '',
+            'private': 'false',
+            'category': this.UserInfo.feedCategory,
+            'authEmail': [],
+            'postCategories': [],
+            'timestamp': firebase.database['ServerValue'].TIMESTAMP,
+            'useBackgroundImage': false,
+            'owner': {
+              'uid': this.User.uid,
+              'userid': this.UserInfo.userName,
+              'profileImageURL': 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
+              'backgroundImageURL': 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg'
+            }
+          };
+          this.as.updateFeed(this.UserInfo.feedId, feed)
+            .then((res) => {
+              $('#regflowModal')['closeModal']();
+              console.log('Profile and Feed Updated.');
+            }).catch((err) => {
+              console.log('Feed Update Failed!', err);
+              $('#errorProfile').html(err.toString());
+            });
+        }).catch((err) => {
+          console.log('Profile Update Failed!', err);
+          $('#errorProfile').html(err.toString());
+        });
+      }
+
   }
 
   navigate() {
@@ -173,7 +231,7 @@ export class NavbarComponent implements OnInit {
     console.log('create feed modal');
     $('#loginModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
-    $('#regflowModal')['openModal']();
+    $('#registerModal')['openModal']();
   }
 
   register(user, terms) {
@@ -184,12 +242,13 @@ export class NavbarComponent implements OnInit {
     this.registerLoading = true;
     this.as.register(user.email.toLowerCase(), user.password).then((res) => {
       this.as.login(user.email.toLowerCase(), user.password).then((res) => {
-        this.as.createUserProfile(res.uid, user.name.toLowerCase(), user.email.toLowerCase()).then(() => {
+        this.as.createUserProfile(res.uid, user.name.trim().toLowerCase().split(' ').join(''), user.email.toLowerCase()).then(() => {
           console.log('Profile is Created!');
           console.log('User is Registered & Logged In!');
-          this.router.navigate(['/profile', user.name.toLowerCase()]);
           $('#errorRegister').html('');
           $('#registerModal')['closeModal']();
+          $('#regflowModal')['openModal']();
+          this.UserInfo.userName = user.name.trim().toLowerCase().split(' ').join('');
           this.registerLoading = false;
         }).catch((err) => {
           console.log('Profile Creation Failed!', err)
