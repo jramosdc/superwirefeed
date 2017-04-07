@@ -307,6 +307,24 @@
     'goodbye': Step === 6,
     'feed': Step > 1 && Step < 5
   }">
+  <div class="Loader" *ngIf="regFlowLoading">
+    <div class="preloader-wrapper small active">
+      <div class="spinner-layer spinner-blue-only">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="Loader" *ngIf="regFlowError">
+    <div id="errorRegFlow"></div>
+  </div>
 
   <div class="illustrations" *ngIf="Step === 2">
     <svg class="sw-icon" viewBox="0 0 24 24">

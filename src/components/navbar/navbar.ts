@@ -43,6 +43,8 @@ export class NavbarComponent implements OnInit {
   loginLoading: boolean = false;
   registerLoading: boolean = false;
   recoverLoading: boolean = false;
+  regFlowLoading: boolean = false;
+  regFlowError: boolean = false;
   search$;
   isSearchBarHidden: Object;
   Step: number;
@@ -95,7 +97,7 @@ export class NavbarComponent implements OnInit {
   onSubmit(d) {
     if (d.valid) {
       if (this.Step == 4) {
-        if (this.UserInfo.interests.length > 0) this.Step += 1;
+        if (this.UserInfo.feedCategory.length > 0) this.Step += 1;
       } else if (this.Step == 1) {
         if (this.UserInfo.interests.length > 0) this.Step += 1;
       } else {
@@ -123,7 +125,8 @@ export class NavbarComponent implements OnInit {
     this.UserInfo.feedId = this.UserInfo.feedName.trim().toLowerCase().split(' ').join('');
     debugger
     if (this.UserInfo.feedName && this.UserInfo.feedCategory.length > 0 && this.UserInfo.interests.length > 0 && this.UserInfo.about) {
-        let profile = {
+      this.regFlowLoading = true;
+      let profile = {
         'feedId': this.UserInfo.feedId,
         'feedName': this.UserInfo.feedName,
         'description': '',
@@ -156,15 +159,17 @@ export class NavbarComponent implements OnInit {
           };
           this.as.updateFeed(this.UserInfo.feedId, feed)
             .then((res) => {
-              $('#regflowModal')['closeModal']();
+              this.regFlowLoading = false;
               console.log('Profile and Feed Updated.');
             }).catch((err) => {
-              console.log('Feed Update Failed!', err);
-              $('#errorProfile').html(err.toString());
+              console.log('Reg Flow Update Feed Failed!', err);
+              this.regFlowError = true;
+              $('#errorRegFlow').html(err.toString());
             });
         }).catch((err) => {
-          console.log('Profile Update Failed!', err);
-          $('#errorProfile').html(err.toString());
+          console.log('Req Flow Update Profile Failed!', err);
+          this.regFlowError = true;
+          $('#errorRegFlow').html(err.toString());
         });
       }
 
@@ -231,6 +236,7 @@ export class NavbarComponent implements OnInit {
     console.log('create feed modal');
     $('#loginModal')['closeModal']();
     $(".button-collapse")['sideNav']('hide');
+    // $('#regflowModal')['openModal']();
     $('#registerModal')['openModal']();
   }
 
