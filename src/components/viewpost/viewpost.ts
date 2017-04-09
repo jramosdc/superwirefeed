@@ -114,6 +114,7 @@ export class ViewPostComponent {
 
   onStripeBtnClick() {
     console.log('onStripeBtnClick');
+    if (!this.User.uid) return $('#authModal')['openModal']();
     // Open Checkout with further options:
     let amount = this.post['license'] === "3" ? 35 * 100 : this.post['license'] === "4" ? 200 * 100 : 0;
     event.preventDefault();
@@ -228,6 +229,7 @@ export class ViewPostComponent {
   }
 
   download(post: Object) {
+    if (!this.User.uid) return $('#authModal')['openModal']();
     this.filesDownloaidng = true;
     this.as.download(post)
       .then(res => {
@@ -237,6 +239,22 @@ export class ViewPostComponent {
           this.filesDownloaidng = false;
         }
       });
+  }
+
+  loginModal() {
+    console.log('Login Modal');
+    $('#authModal')['closeModal']();
+    $('#registerModal')['closeModal']();
+    $('.button-collapse')['sideNav']('hide');
+    $('#loginModal')['openModal']();
+  }
+
+  registerModal() {
+    console.log('create feed modal');
+    $('#authModal')['closeModal']();
+    $('#loginModal')['closeModal']();
+    $(".button-collapse")['sideNav']('hide');
+    $('#registerModal')['openModal']();
   }
 
 }

@@ -122,14 +122,13 @@ export class NavbarComponent implements OnInit {
     }, 0);
 
     console.log(this.UserInfo);
-    this.UserInfo.feedId = this.UserInfo.feedName.trim().toLowerCase().split(' ').join('');
-    debugger
+    this.UserInfo.feedId = this.UserInfo.userName;
     if (this.UserInfo.feedName && this.UserInfo.feedCategory.length > 0 && this.UserInfo.interests.length > 0 && this.UserInfo.about) {
       this.regFlowLoading = true;
       let profile = {
         'feedId': this.UserInfo.feedId,
         'feedName': this.UserInfo.feedName,
-        'description': '',
+        'bio': this.UserInfo.about,
         'private': 'false',
         'category': this.UserInfo.feedCategory,
         'interests': this.UserInfo.interests,

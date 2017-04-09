@@ -16,7 +16,7 @@ import { TagInputItemComponent } from './tag-input/tag-input-item.component';
 
 // pipes
 import { SearchCategory } from './pipes/searchCategory';
-import { OrderBy } from './pipes/orderby';
+import { OrderByPipe } from './pipes/orderby';
 import { SearchPostTitlePipe } from './pipes/searchPostTitle';
 import { ObjectToArray } from './pipes/objectToArrays';
 import { TruncatePipe } from './pipes/truncate';
@@ -42,7 +42,7 @@ import { TruncatePipe } from './pipes/truncate';
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes
-    SearchCategory, OrderBy, SearchPostTitlePipe, ObjectToArray, TruncatePipe
+    SearchCategory, OrderByPipe, SearchPostTitlePipe, ObjectToArray, TruncatePipe
   ]
   , providers: [...ApplicationServices]
   , bootstrap: [AppComponent]

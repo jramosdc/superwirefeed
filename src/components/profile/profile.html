@@ -216,22 +216,26 @@
 			<div class="input-field col s12">
 				<textarea id="bio" #bio class="materialize-textarea validate"></textarea>
 				<label for="bio" class="active">Bio</label>
+        <small style="color: red;" *ngIf="!bio.value">Bio is required.</small>
 			</div>
 		</div>
 		<div class="row">
 			<div class="input-field col s4">
 				<input id="feedId" #feedId type="text" class="validate">
 				<label for="feedId" class="active">Feed ID</label>
+        <small style="color: red;" *ngIf="!feedId.value">Feed ID is required.</small>
 			</div>
 			<div class="input-field col s8">
 				<input id="feedName" #feedName type="text" class="validate">
 				<label for="feedName" class="active">Feed Name</label>
+        <small style="color: red;" *ngIf="!feedName.value">Feed Name is required.</small>
 			</div>
 		</div>
 		<div class="row">
 			<div class="input-field col s12">
 				<input id="description" #description type="text" class="validate">
 				<label for="description" class="active">Description</label>
+        <small style="color: red;" *ngIf="!description.value">Description is required.</small>
 			</div>
 		</div>
 		<div class="row">
@@ -243,17 +247,26 @@
 				<label for="pno">No</label>
 			</div>
 		</div>
+    <div class="row" *ngIf="pyes.checked">
+			<div class="input-field col s12">
+				<tag-input placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);">
+				</tag-input>
+			</div>
+		</div>
 		<div class="row">
 			<div class="input-field col s12">
 				<select id="category" #category class="validate">
 					<option disabled selected>Select Category</option>
-					<option value="Marketing">Marketing</option>
 					<option value="News">News</option>
-					<option value="Visuals">Visuals</option>
+					<option value="Communications">Communications</option>
+					<option value="Marketing">Marketing</option>
 					<option value="Data">Data</option>
-					<option value="Misc">Misc</option>
+					<option value="Visualizations">Visualizations</option>
+					<option value="Statistics">Statistics</option>
+					<option value="Design">Design</option>
 				</select>
-				<label for="category">Category dasdsad</label>
+				<label for="category">Category</label>
+        <small style="color: red;" *ngIf="!category.value">Category is required.</small>
 			</div>
 		</div>
 		<div class="row">
@@ -264,12 +277,6 @@
 
 		<div class="row center-align">
 			<span class="red-text" id="errorPostCategory"></span>
-		</div>
-		<div class="row">
-			<div class="input-field col s12">
-				<tag-input placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);">
-				</tag-input>
-			</div>
 		</div>
 
 		<div class="row center-align">
