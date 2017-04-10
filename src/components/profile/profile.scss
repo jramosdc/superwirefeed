@@ -191,10 +191,15 @@ main.profile {
 
       .links {
         margin-top: .6em;
-
+    
         a {
-          color: $gray-dark;
+          background: $red;
+          border-radius: 25px;
+          color: $gray-light; 
+          padding: 1em;
+          background-clip: content-box;
           display: block;
+          text-align: center;
           font-size: 14px;
           line-height: 2;
 

@@ -82,18 +82,7 @@
     <li>
       <a (click)="logout()">Logout</a>
     </li>
-    <li>
-      <a>My Feed</a>
-    </li>
-    <li>
-      <a>My Subscriptions</a>
-    </li>
-    <li>
-      <a>Explore</a>
-    </li>
-    <li>
-      <a>My Analytics</a>
-    </li>
+ 
   </ul>
 </aside>
 
@@ -178,7 +167,7 @@
     <div class="row">
       <div class="input-field">
         <input type="text" class="validate" #regUserID="ngModel" name="name" [(ngModel)]="n" required>
-        <label for="regUserID">User ID</label>
+        <label for="regUserID">Username</label>
         <small class="invalid-test" [hidden]="regUserID.valid || (regUserID.pristine && !reg._submitted)">
           Name is required.
         </small>

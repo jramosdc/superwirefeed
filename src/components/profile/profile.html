@@ -63,7 +63,7 @@
     </section>
     <button class="follow waves-effect waves-light btn-large" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()">
       <i class="mdi mdi-pencil"></i>
-      <span *ngIf="(posts | async)?.length == 0">Create Feed and </span>Edit
+      <span *ngIf="(posts | async)?.length == 0">Finish Profile </span>Edit
     </button>
     <button class="follow waves-effect waves-light btn-large" *ngIf="User?.uid && profile && User.uid !== profile.uid" (click)="followingSys();">
       <i class="mdi mdi-plus-circle"></i>
@@ -220,11 +220,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="input-field col s4">
-				<input id="feedId" #feedId type="text" class="validate">
-				<label for="feedId" class="active">Feed ID</label>
-        <small style="color: red;" *ngIf="!feedId.value">Feed ID is required.</small>
-			</div>
+			
 			<div class="input-field col s8">
 				<input id="feedName" #feedName type="text" class="validate">
 				<label for="feedName" class="active">Feed Name</label>
@@ -234,13 +230,13 @@
 		<div class="row">
 			<div class="input-field col s12">
 				<input id="description" #description type="text" class="validate">
-				<label for="description" class="active">Description</label>
+				<label for="description" class="active">Tell us a bit more about the content you are posting</label>
         <small style="color: red;" *ngIf="!description.value">Description is required.</small>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col s12">
-				<span class="paddingright10px">Private?</span>
+				<span class="paddingright10px">Private Feed?</span>
 				<input type="radio" id="pyes" #pyes name="private" />
 				<label class="paddingright10px" for="pyes">Yes</label>
 				<input type="radio" id="pno" #pno name="private" />
