@@ -1,0 +1,19 @@
+:root {
+  --blue-black: #1C1E35;
+  --blue-dark: #2D2F49;
+  --blue-light: #CAEBF2;
+
+  --greenish-blue-dark: #4B5C5F;
+  --greenish-blue: #8B989A;
+  --greenish-blue-light: #8AA4A8;
+
+  --orange: #F6A623;
+}
+
+:root {
+  --primary: var(--blue-dark);
+  --secondary: var(--greenish-blue);
+  --secondary-dark: var(--greenish-blue-dark);
+  --tertiary: var(--blue-light);
+  --quaternary: var(--orange);
+}

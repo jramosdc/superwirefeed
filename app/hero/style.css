@@ -1,0 +1,52 @@
+.hero {
+  color: var(--secondary);
+  position: relative;
+  overflow: hidden;
+  background: var(--primary) url('../assets/lines.png') center;
+  background-size: cover;
+
+  .horizontal.center {
+    max-width: var(--screen-small);
+    min-height: 960px;
+    display: flex;
+    flex-direction: column;
+    padding: var(--gutter-small) 0;
+  }
+
+  .welcome {
+    flex: 1;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+      font-weight: var(--font-bold);
+      font-size: 8.5rem;
+      line-height: 8.8rem;
+      margin: 0 0 var(--gutter-big);
+    }
+
+    h4 {
+      opacity: .35;
+      max-width: 75%;
+      line-height: 1.5;
+    }
+  }
+
+  .star {
+    text-align: right;
+  }
+
+  footer {
+    height: var(--header-height);
+    padding: 0 var(--gutter-large);
+
+    nav {
+      display: flex;
+      align-items: center;
+
+      a { transition: var(--transition-duration) color; }
+      a:hover { color: white; }
+    }
+  }
+}

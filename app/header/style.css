@@ -1,0 +1,45 @@
+:root {
+  --header-height: 65px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--header-height);
+
+  svg { display: block; }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .slogan {
+    margin-left: var(--gutter-big);
+    font-size: var(--h5);
+    line-height: 1;
+    opacity: .65;
+  }
+
+  .button {
+    padding: var(--gutter-small) var(--gutter-big);
+    color: var(--primary-contrast);
+    border-radius: 100px;
+    border: 1px solid transparent;
+    transition: var(--transition-duration);
+    transition-property: border, background, letter-spacing;
+
+    &:hover {
+      letter-spacing: .5px;
+      background: color(var(--tertiary) alpha(5%));
+      border: 1px solid color(var(--tertiary) alpha(45%));
+    }
+  }
+
+  .button.linear {
+    margin-left: var(--gutter-tiny);
+    border: 1px solid color(var(--tertiary) alpha(25%));
+  }
+}

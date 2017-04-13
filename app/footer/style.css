@@ -1,0 +1,40 @@
+.footer {
+  height: 24rem;
+  display: flex;
+  justify-content: flex-end;
+  background: url('../assets/footer-lines.png') center bottom;
+  color: color(var(--primary) alpha(65%));
+
+  .horizontal.center {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .row {
+    flex: 1;
+    height: var(--header-height);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    color: var(--primary);
+    display: inline-block;
+    opacity: .15;
+    transition: var(--transition-duration) opacity;
+
+    &:hover { opacity: .35; }
+  }
+
+  nav {
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      margin-left: var(--gutter-big);
+      transition: var(--transition-duration) color;
+      &:hover { color: var(--primary); }
+    }
+  }
+}
