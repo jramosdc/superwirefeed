@@ -83,11 +83,16 @@ export class NewPostComponent implements OnInit {
         tinymce['init']({
             selector: '#editor',
             height: 200,
+            menubar: false,
+            statusbar: false,
             plugins: [
                 'textpattern advlist autolink lists link image charmap print preview anchor',
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table contextmenu paste code'
             ],
+            content_css: [
+    '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
+    '//www.mucholab.net/css/tinymce.css' ],
             textpattern_patterns: [
                 { start: '*', end: '*', format: 'italic' },
                 { start: '**', end: '**', format: 'bold' },
@@ -102,7 +107,7 @@ export class NewPostComponent implements OnInit {
                 { start: '- ', cmd: 'InsertUnorderedList' }
             ],
             valid_elements : '*[*]',
-            toolbar: 'insertfile undo redo | bold | bullist | link image',
+            toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
             setup: (editor) => {
                 editor.on('change', (e) => {
                     this.detail = editor.getContent();
@@ -279,7 +284,6 @@ export class NewPostComponent implements OnInit {
         console.log('newpost', newpost);
         event.preventDefault();
         if (!valid) { return; }
-
         this.postLoading = true;
         let post = {
             title: newpost.title,
@@ -309,7 +313,6 @@ export class NewPostComponent implements OnInit {
                     post["csvToJson"] = result.data;
                 }
             });
-
             // after file upload get download link storage
             this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.csvFile.name + '/' + Date.now() + '/')
                 .then(url => {
@@ -324,7 +327,6 @@ export class NewPostComponent implements OnInit {
             this.postObjReady.uploadFile = true;
             this.postToFirebase(post);             // save to firebase
         }
-
         // after extract data from embedly API save into post embedly property
         this.embedly.extractAPI(newpost.mainUrl).then((data: IEmbedly) => {
             post['embedly'] = data;

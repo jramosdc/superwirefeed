@@ -50,8 +50,8 @@ export class NavbarComponent implements OnInit {
   Step: number;
   StepLimit: number;
   UserInfo: { interests: Array<string>, feedId: string, feedName: string, feedCategory: Array<string>, about: string, userName: string};
-  Interests: string[] = ['Politics', 'Economy', 'Sports', 'Technology', 'Science', 'Design'];
-  FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Statistics', 'Design'];
+  Interests: string[] = ['Politics', 'Economy', 'Sports', 'Geeky', 'Design'];
+  FeedCategories: string[] = ['News', 'Visuals', 'Marketing', 'Data', 'Misc'];
 
   constructor(public as: authService, private router: Router, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -126,9 +126,25 @@ export class NavbarComponent implements OnInit {
     if (this.UserInfo.feedName && this.UserInfo.feedCategory.length > 0 && this.UserInfo.interests.length > 0 && this.UserInfo.about) {
       this.regFlowLoading = true;
       let profile = {
-        'feedId': this.UserInfo.feedId,
+        'feedId': this.UserInfo.userName,
         'feedName': this.UserInfo.feedName,
         'bio': this.UserInfo.about,
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+        'description': '',
+>>>>>>> Stashed changes
         'private': 'false',
         'category': this.UserInfo.feedCategory,
         'interests': this.UserInfo.interests,

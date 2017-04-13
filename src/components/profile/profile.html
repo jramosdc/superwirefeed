@@ -46,13 +46,13 @@
       </div>
       <div>
         <h6>Interests</h6>
-        <p>Analythics, Politics</p>
+        <p>{{profile.interests[0]}}, {{profile.interests[1]}}</p>
       </div>
-      <div>
+      <div (click)="followerModelPopup();">
         <h6>Followers</h6>
         <h4>{{followers.length}}</h4>
       </div>
-      <div>
+      <div (click)="followingModelPopup();">
         <h6>Following</h6>
         <h4>{{following.length}}</h4>
       </div>
@@ -255,7 +255,7 @@
 					<option disabled selected>Select Category</option>
 					<option value="News">News</option>
 					<option value="Communications">Communications</option>
-					<option value="Marketing">Marketing</option>
+					<option value="Marketing">Research</option>
 					<option value="Data">Data</option>
 					<option value="Visualizations">Visualizations</option>
 					<option value="Statistics">Statistics</option>
