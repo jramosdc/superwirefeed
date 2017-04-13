@@ -4,7 +4,7 @@
   "description": "",
   "main": "app/index.js",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.config.dev.js --content-base ./ --inline --hot --history-api-fallback --port 2000 --open",
+    "start": "webpack-dev-server --config webpack.config.dev.js --content-base ./ --inline --hot --history-api-fallback --port 4000 --open",
     "build": "webpack ./app/index.js --config webpack.config.production.js  --progress -p",
     "compile": "babel src --presets=babel-preset-es2015,babel-preset-react --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1",
