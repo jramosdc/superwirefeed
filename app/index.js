@@ -129,6 +129,33 @@ class Landing extends Component {
             <a className="more">Find your community <ReactSVG path="assets/icons/arrow-right.svg" /></a>
           </section>
 
+          <section className="feeds section | align-center">
+            <h1>Sneak peek at our feeds</h1>
+
+            <div className="feed">
+              <img src="https://unsplash.it/360/260" />
+              <section className="description">
+                <h5>ECHOSTAR XXIII</h5>
+                <p>SpaceX designs, manufactures and launches advanced rockets and spacecraft</p>
+              </section>
+              <section>
+                <p>Posts</p>
+                <h3>11</h3>
+              </section>
+              <section>
+                <p>Followers</p>
+                <h3>1023</h3>
+              </section>
+              <section className="user">
+                <img src="https://cl.ly/3t3B2y12322Q/avatar.png" />
+                <h6>SpaceX</h6>
+                <p>Tocket Road</p>
+              </section>
+            </div>
+
+            <a className="more">Explore all feeds <ReactSVG path="assets/icons/arrow-right.svg" /></a>
+          </section>
+
           <section className="content-creators section | align-center">
             <h1>Meet our popular content creators</h1>
 
