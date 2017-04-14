@@ -23,6 +23,34 @@ class ContentCreator extends Component {
   }
 }
 
+class Feed extends Component {
+  render () {
+    var { props, key} = this
+    return (
+      <div className="feed">
+        <img src={ props.poster + '?random' } />
+        <section className="description">
+          <h5>{ props.title }</h5>
+          <p>{ props.description }</p>
+        </section>
+        <section>
+          <p>Posts</p>
+          <h3>{ props.posts }</h3>
+        </section>
+        <section>
+          <p>Followers</p>
+          <h3>{ props.followers }</h3>
+        </section>
+        <section className="user">
+          <img src={ props.avatar } />
+          <h6>{ props.author }</h6>
+          <p>{ props.authorType }</p>
+        </section>
+      </div>
+    )
+  }
+}
+
 class Partner extends Component {
   render () {
     var { props } = this
@@ -63,6 +91,11 @@ class Landing extends Component {
     var advisors = []
     props.advisors.forEach((value, key) => {
       advisors.push(<Advisor key={key} {...value} /> )
+    })
+
+    var feeds = []
+    props.feeds.forEach((value, key) => {
+      feeds.push(<Feed key={key} {...value} /> )
     })
 
     return (
@@ -132,26 +165,7 @@ class Landing extends Component {
           <section className="feeds section | align-center">
             <h1>Sneak peek at our feeds</h1>
 
-            <div className="feed">
-              <img src="https://unsplash.it/360/260" />
-              <section className="description">
-                <h5>ECHOSTAR XXIII</h5>
-                <p>SpaceX designs, manufactures and launches advanced rockets and spacecraft</p>
-              </section>
-              <section>
-                <p>Posts</p>
-                <h3>11</h3>
-              </section>
-              <section>
-                <p>Followers</p>
-                <h3>1023</h3>
-              </section>
-              <section className="user">
-                <img src="https://cl.ly/3t3B2y12322Q/avatar.png" />
-                <h6>SpaceX</h6>
-                <p>Tocket Road</p>
-              </section>
-            </div>
+            { feeds }
 
             <a className="more">Explore all feeds <ReactSVG path="assets/icons/arrow-right.svg" /></a>
           </section>
@@ -168,10 +182,8 @@ class Landing extends Component {
 
           <section className="partners section | align-center">
             <h1>Meet our partners and advisors</h1>
-            <div className="standard row">
-              { partners } </div>
-            <div className="standard row">
-              { advisors } </div>
+            <div className="standard row">{ partners }</div>
+            <div className="standard row">{ advisors }</div>
           </section>
         </section>
 
@@ -183,10 +195,30 @@ class Landing extends Component {
 
 Landing.defaultProps = {
   feeds: [{
+    poster: 'https://cl.ly/372j2r1Z472E/echo23_vab.png',
     title: 'ECHOSTAR XXIII',
     description: 'SpaceX designs, manufactures and launches advanced rockets and spacecraft',
     posts: 11,
     followers: 1023,
+    avatar: 'https://cl.ly/3t3B2y12322Q/avatar.png',
+    author: 'SpaceX',
+    authorType: 'Tocket Road'
+  }, {
+    poster: 'https://cl.ly/2Y432V19003c/Bitmap.png',
+    title: 'Launchpad Accelerator',
+    description: 'Launchpad Accelerator is a program to empower founders by supporting their startups through mentorship and equity-free support. The Accelerator leverages all that Google has to offer, to help participating tech startups reach their true potential.',
+    posts: 9,
+    followers: 998,
+    avatar: 'https://cl.ly/3p371I092K2v/avatar.png',
+    author: 'Google Devs',
+    authorType: 'Mentoring startups'
+  }, {
+    poster: 'https://cl.ly/0M3J183f450J/Bitmap.png',
+    title: 'ECHOSTAR XXIII',
+    description: 'SpaceX designs, manufactures and launches advanced rockets and spacecraft',
+    posts: 11,
+    followers: 1023,
+    avatar: 'https://cl.ly/3t3B2y12322Q/avatar.png',
     author: 'SpaceX',
     authorType: 'Tocket Road'
   }],

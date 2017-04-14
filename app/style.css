@@ -115,7 +115,8 @@
 .feed {
   display: flex;
   align-items: center;
-  box-shadow: color(black alpha(5%)) 0 0 25px;
+  box-shadow: color(black alpha(7%)) 0 0 25px;
+  margin: var(--gutter);
   padding: var(--gutter-small);
   border-radius: 3px;
   position: relative;
@@ -132,13 +133,18 @@
     flex: 1;
     text-align: left;
     padding-left: var(--gutter-big);
+
+    > p {
+      overflow: hidden;
+      max-height: 3em;
+    }
   }
 
   > section {
     padding: 0 var(--gutter-large);
     position: relative;
 
-    &:before {
+    &:not(.description):before {
       content: '';
       position: absolute;
       top: 50%; left: 0;
@@ -150,6 +156,8 @@
   }
 
   .user {
+    flex-basis: 17rem;
+
     h6, p {
       margin: 0;
     }
