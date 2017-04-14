@@ -229,3 +229,57 @@
     }
   }
 }
+
+.signup {
+  padding-bottom: 0;
+
+  &:after {
+    display: none;
+  }
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  form {
+    margin: var(--gutter-large) 0 0;
+  }
+
+  input {
+    width: 24rem;
+    color: var(--greenish-blue);
+    border-bottom: color(var(--greenish-blue) alpha(20%)) 1px solid;
+    padding: var(--gutter-small);
+    display: block;
+    margin: var(--gutter) auto;
+    text-align: center;
+    transition: var(--transition-duration);
+    transition-property: border-color, transform;
+
+    &::placeholder {
+      color: color(var(--greenish-blue) alpha(50%));
+    }
+
+    &:hover {
+      border-color: color(var(--greenish-blue) alpha(40%));
+    }
+
+    &:focus {
+      transform: scale(1.05);
+      border-color: color(var(--greenish-blue) alpha(65%));
+    }
+  }
+
+  button {
+    color: white;
+    width: 18rem;
+    margin: var(--gutter-large) auto var(--gutter-big);
+    background: var(--blue-black);
+    text-transform: uppercase;
+    text-align: center;
+    border-radius: 5px;
+    display: block;
+    font-size: var(--h5);
+    line-height: 2.7em;
+  }
+}

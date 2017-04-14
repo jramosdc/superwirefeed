@@ -185,6 +185,20 @@ class Landing extends Component {
             <div className="standard row">{ partners }</div>
             <div className="standard row">{ advisors }</div>
           </section>
+
+          <section className="signup section | align-center">
+            <h1>Become our member</h1>
+            <p>Signing up in Superwire is easy and free. You only get valuable information and loose nothing.</p>
+
+            <form>
+              <input placeholder="Username" />
+              <input placeholder="Your email" />
+              <input placeholder="Password" />
+
+              <button>SIGN UP</button>
+              <a>Read more about our terms and conditions</a>
+            </form>
+          </section>
         </section>
 
         <Footer />
