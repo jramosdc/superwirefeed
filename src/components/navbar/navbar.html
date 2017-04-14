@@ -451,10 +451,10 @@
 
   <form class="content transparent" *ngIf="Step === 6">
     <h6 class="caption">Now you can</h6>
-    <a class="waves-effect waves-light btn-large" href="/newpost">
+    <a class="waves-effect waves-light btn-large" href="/posts//{{UserInfo.feedId}}">
       Start posting
     </a>
-    <p>or <a href="/profile">finish editing profile</a></p>
+    <p>or <a href="/profile/{{UserInfo.feedId}}">finish editing profile</a></p>
   </form>
 </div>
 
