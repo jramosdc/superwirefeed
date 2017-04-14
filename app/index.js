@@ -182,6 +182,14 @@ class Landing extends Component {
 }
 
 Landing.defaultProps = {
+  feeds: [{
+    title: 'ECHOSTAR XXIII',
+    description: 'SpaceX designs, manufactures and launches advanced rockets and spacecraft',
+    posts: 11,
+    followers: 1023,
+    author: 'SpaceX',
+    authorType: 'Tocket Road'
+  }],
   contentCreators: [{
     src: 'assets/content/avatar.png',
     title: 'Vicky Gao',
