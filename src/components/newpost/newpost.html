@@ -1,30 +1,20 @@
 <div class="row">
     <form class="col s12 card padding10px" novalidate #f="ngForm" (ngSubmit)="submitPost(f.valid, f.value)">
-        <div class="row">
+       <!-- <div class="row">
             <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name || 'Feed'}}</a><a href="#" class="active">New Post</a>
             </div>
-        </div>
+        </div>-->
         <!--<small>{{f | json}}</small>-->
         <div class="row" *ngIf="!User.emailVerified">
             <label for="verifyEmail" class="red-text">Please verify your Email!</label>
         </div>
         <div class="row">
-            <label for="title">Title</label>
             <div class="input-field">
                 <input type="text" class="validate" #title="ngModel" name="title" [(ngModel)]="t" placeholder="Title" required>
                 <small class="red-text" [hidden]="title.valid || (title.pristine && !f._submitted)">
                     Title is required.
                 </small>
             </div>
-        </div>
-        <div class="row">
-            <label for="cover">Cover photo</label>
-            <a *ngIf="!postImgData?.image && !postedImgUrl" class="btn-floating waves-effect waves-light pink camOnHover"
-               (click)="backgroundImagePopup();">
-                <i class="mdi mdi-camera"></i>
-            </a>
-            <img *ngIf="postImgData?.image" [src]="postImgData?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
-            <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
         </div>
         <div class="row">
             <label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
@@ -34,100 +24,139 @@
                 Detail is required.
             </small>
         </div>
-        <div class="row">
-            <label for="category">Section</label>
-            <div class="input-field">
-                <select class="browser-default" id="category" #category="ngModel" name="category" [(ngModel)]="c" required>
-                    <option value="" disabled selected>Select Section</option>                    
-                    <option value="All">All</option>
-                    <option *ngFor="let cat of categories" [value]="cat" >{{cat}}</option>
-                </select>
-                <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">
-                    Section is required.
-                </small>
-            </div>
+        <div class="row wrap">
+        <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
+            <img *ngIf="postImgData?.image" [src]="postImgData?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
+            <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">        
+        <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1"
+            data-activates="edit-section"
+            data-alignment="right">
+          <i class="mdi mdi-tab"></i>
+          Section
+        </a>
+        <ul id="edit-section" class='dropdown-content' category="ngModel" name="category" [(ngModel)]="c" required>
+          <li>
+            <a>All</a>
+          </li>
+          <li *ngFor="let cat of categories" [value]="cat">
+            <a>{{cat}}</a>
+          </li>
+        </ul>
+        
+        <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1"
+            data-activates="edit-license"
+            data-alignment="right">
+          <i class="mdi mdi-coin"></i>
+          LICENSE
+        </a>
+        <ul id="edit-license" class='dropdown-content' #license="ngModel" name="license" [(ngModel)]="_license" required>
+          <li>
+            <a>CC-BY (free)</a>
+          </li>
+          <li>
+            <a>CC-BY-ND</a>
+          </li>
+          <li>
+            <a>Selling/Attribution ($35)</a>
+          </li>
+          <li>
+            <a>Selling/Exclusive ($200)</a>
+          </li>
+        </ul>
+       
+        <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1"
+            data-activates="edit-format"
+            data-alignment="right">
+          <i class="mdi mdi-file"></i>
+          FORMAT
+        </a>
+        <ul id="edit-format" class='dropdown-content' #type="ngModel" multiple name="type" [(ngModel)]="ty" required>
+          <li>
+            <a>Text</a>
+          </li>
+          <li>
+            <a>Image</a>
+          </li>
+          <li>
+            <a>Audio/Video</a>
+          </li>
+          <li>
+            <a>Data</a>
+          </li>
+        </ul>
+        
+        <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1"
+            data-activates="edit-breaking"
+            data-alignment="right">
+          <i class="mdi mdi-alert"></i>
+          BREAKING?
+        </a>
+        <ul id="edit-breaking" class='dropdown-content' #priority="ngModel" name="priority" [(ngModel)]="_priority" required>
+          <li>
+            <input type="checkbox" id="yes" />
+            <label for="yes">Yes</label>
+          </li>
+          <li>
+            <input type="checkbox" id="no" />
+            <label for="no">No</label>
+          </li>
+        </ul>
+        <!--<div>
+        <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
+        <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
+        <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
+        <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>      
+        </div>-->
         </div>
+        <div class="container">
         <div class="row">
-            
-            <div class="input-field col s12">
-                <select class="browser-default" #license="ngModel" name="license" [(ngModel)]="_license" required>
-                    <option value="0" disabled selected>Choose license</option>
-                    <option value="1">CC-BY</option>
-                    <option value="2">CC-BY-ND</option>
-                    <option value="3">Selling w/ attribution</option>
-                    <option value="4">Selling exclusively</option>
-                </select>
-                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">
-                    License is required.
-                </small>
-            </div>
-      
-      
-            <div class="input-field col s12">
-                <select class="browser-default" #priority="ngModel" name="priority" [(ngModel)]="_priority" required>
-                    <option value="" disabled selected>Is it breaking now?</option>
-                    <option value="High">Breaking</option>
-                    
-                    <option value="Low">Normal</option>
-                </select>
-                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">
-                    Priority is required.
-                </small>
-            </div>
-
-            <div class="input-field col s12">
-                <select class="browser-default" #type="ngModel" multiple name="type" [(ngModel)]="ty" required style="height: 80pt;">
-                    <option value="" disabled selected>Select Formats</option>
-                    <option value="file-document">Text</option>
-                    <option value="camera">Image</option>
-                    <option value="play-box-outline">Video</option>
-                    <option value="microphone">Audio</option>
-                </select>
-                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">
-                    Formats are required.
-                </small>
-            </div>
-        </div>
-        <div class="row">
-            <label for="mainUrl">Add URL link</label>
-            <div class="input-field">
-                <input type="url" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="mu" placeholder="Main Url">
-            </div>
-        </div>
-        <div class="row">
-            <label for="pdfLink">Add link to PDF</label>
-            <div class="input-field">
-                <input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pdf" placeholder="Pdf Link">
-            </div>
-        </div>
-        <div class="row">
-            <label for="csvLink">Add link to Google Spread Sheet</label>
-            <div class="input-field">
-                <input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gsheet" placeholder="Google Spread Sheet Link">
-            </div>
-        </div>
-        <div class="row">
-            <label for="images">Select images</label>
-            <div class="input-field">
-                <input type="file"  id="browseImages" (change)="handleFiles($event)" class="validate"  #images="ngModel" name="images"
+        	<div class="col s6">
+        	<h6>EXTERNAL ASSETS</h6>
+         <form>
+	     <input type="pdf" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pdf" placeholder="Pdf Link">
+         </form>
+         <form>
+	     <input type="gsheet" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gsheet" placeholder="GSheet Link">
+         </form>
+         <form>
+	     <input type="url" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="mu" placeholder="Link">
+         </form>
+        	</div> 
+        
+        	<div class="col s6">
+        	<h6>INTERNAL ASSETS</h6>
+        		<div class="file-field input-field">
+                  <div class="waves-effect waves-light btn purple-light">
+                     <span>UPLOAD IMAGES</span>
+                     <input type="file"  id="browseImages" (change)="handleFiles($event)" class="validate"  #images="ngModel" name="images"
                        [(ngModel)]="img" accept="image/*" multiple>
-            </div>
-        </div>
-        <div class="row">
-            <label for="pdfFiles">Add PDF files</label>
-            <div class="input-field">
-                <!--<input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pl" placeholder="Pdf Link">-->
-                <input type="file"  id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfFile="ngModel" name="pdfFile"
+                  </div>
+                  <div class="file-path-wrapper">
+                     <input class="file-path validate" type="text" placeholder="Upload files">
+                  </div>
+               </div>
+        		<div class="file-field input-field">
+                  <div class="btn">
+                     <span>UPLOAD PDF</span>
+                     <input type="file"  id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfFile="ngModel" name="pdfFile"
                        [(ngModel)]="p1" accept="application/pdf" multiple>
-            </div>
-        </div>
-        <div class="row">
-            <label for="gsheetLink">Add dataset in csv format</label>
-            <div class="input-field">
-                <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gl" placeholder="Google Spread Sheet Link">-->
-                <input type="file" id="browseCSVFile" (change)="handleFiles($event, gsheetLink)" class="validate" #gsheetFile="ngModel" name="gsheetFile"
+                  </div>
+                  <div class="file-path-wrapper">
+                     <input class="file-path validate" type="text" placeholder="Upload PDF">
+                  </div>
+               </div>
+                <div class="file-field input-field">
+                  <div class="btn">
+                     <span>UPLOAD DATASET</span>
+                     <input type="file"  id="browseCSVFile" (change)="handleFiles($event, gsheetLink)" class="validate" #gsheetFile="ngModel" name="gsheetFile"
                     [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
-            </div>
+                  </div>
+                  <div class="file-path-wrapper">
+                     <input class="file-path validate" type="text" placeholder="Upload data in CSV">
+                  </div>
+               </div>
+			</div>
+        </div>
         </div>
         <div class="row center-align">
             <span class="red-text" id="errorPost"></span>
