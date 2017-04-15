@@ -50,8 +50,8 @@
     transition-property: box-shadow, background, letter-spacing;
 
     > div { display: inline-block; vertical-align: -3px; }
+
     svg {
-      display: block;
       transition: var(--transition-duration) margin;
       margin-left: .4em;
     }
@@ -281,5 +281,12 @@
     display: block;
     font-size: var(--h5);
     line-height: 2.7em;
+    transition: var(--transition-duration);
+    transition-property: box-shadow, transform;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 5px color(var(--blue-black) alpha(10%));
+    }
   }
 }

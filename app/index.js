@@ -66,7 +66,7 @@ class Advisor extends Component {
   render () {
     var { props } = this
     return (
-      <a className="cell cell-3">
+      <a className="cell cell-3" href={ props.href }>
         <h4>{ props.title }</h4>
         <p>Advisor</p>
       </a>
@@ -266,19 +266,19 @@ Landing.defaultProps = {
   partners: [{
     src: 'assets/content/videona.png',
     title: 'Videona',
-    href: ''
+    href: 'http://videona.es/'
   }, {
     src: 'assets/content/creativechain.png',
     title: 'Creativechain',
-    href: ''
+    href: 'http://videona.es/'
   }, {
     src: 'assets/content/elpais.png',
     title: 'El Pais',
-    href: ''
+    href: 'http://elpais.com/'
   }, {
     src: 'assets/content/vizzuality.png',
     title: 'Vizzuality',
-    href: ''
+    href: 'http://www.vizzuality.com/'
   }],
 
   advisors: [{
