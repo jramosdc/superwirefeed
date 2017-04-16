@@ -51,7 +51,7 @@ export class NavbarComponent implements OnInit {
   StepLimit: number;
   UserInfo: { interests: Array<string>, feedId: string, feedName: string, feedCategory: Array<string>, about: string, userName: string};
   Interests: string[] = ['Politics', 'Economy', 'Sports', 'Technology', 'Science', 'Design'];
-  FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Statistics', 'Design'];
+  FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design','Misc'];
 
   constructor(public as: authService, private router: Router, private sb: SearchBarService) {
     this.User = this.as.emptyUser();

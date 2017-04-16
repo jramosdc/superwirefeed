@@ -44,7 +44,7 @@ export class authService {
 	};
 	Feeds: FirebaseListObservable<any[]>;
 	Posts: FirebaseListObservable<any[]>;
-	Categories: Array<string> = ['Marketing', 'News', 'Visuals', 'Data', 'Misc', 'All'];
+	Categories: Array<string> = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design','Misc','All'];
 	postCategories: Array<string> = [];
 	storageRef = firebase.storage().ref('/');
   private mainRef = firebase.database().ref('/');
