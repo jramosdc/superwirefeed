@@ -8,7 +8,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './app/index.js',
-  template: './template.html',
+  template: './index.html',
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.[hash].js',
@@ -65,7 +65,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'template.html'
+      template: 'index.html'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       children: true,
