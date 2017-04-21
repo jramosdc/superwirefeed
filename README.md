@@ -3,7 +3,7 @@ Landing package for Superwire. Built on React and CSSNext.
 
 Pure HTML version is available in [markup.html](markup.html) file. Please double check CSS reference if app run incorrectly.
 
-To run simple HTTP server, you can use [http-server](https://www.npmjs.com/package/http-server) module or python [SimpleHTTPServer](https://docs.python.org/2/library/simplehttpserver.html) built-in module from `markup` folder.
+To run simple HTTP server, you can use [http-server](https://www.npmjs.com/package/http-server) module or python [SimpleHTTPServer](https://docs.python.org/2/library/simplehttpserver.html) built-in module from the same root folder.
 
 You can check the demo [here](https://jramosdc.github.io/superwirefeed/).
 
