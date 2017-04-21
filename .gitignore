@@ -29,9 +29,7 @@ node_modules
 .DS_Store
 
 build
-
-bundle
-bundle.*
+dist
 
 *.sublime-project
 *.sublime-workspace
