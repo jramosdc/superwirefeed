@@ -9,9 +9,11 @@ import { EditPostComponent } from './editpost/editpost';
 import { ViewPostComponent } from './viewpost/viewpost';
 import { ProfileComponent } from './profile/profile';
 import { SubscriptionComponent } from './subscription/subscription';
+import { RegFlow } from './regflow/regflow';
 
 export const AppRoutes: Routes = [
   { path: "uikit", component: UiKit },
+  { path: "regflow", component: RegFlow },
   { path: "feeds", component: FeedsComponent },
   { path: "newpost", component: NewPostComponent },
   { path: "posts/:feedid", component: PostsComponent },
@@ -23,4 +25,4 @@ export const AppRoutes: Routes = [
   { path: "", redirectTo: "feeds", pathMatch: 'full' }
 ];
 
-export const ApplicationComponents = [UiKit, FeedsComponent, PostsComponent, FullPostComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent, SubscriptionComponent];
+export const ApplicationComponents = [UiKit, RegFlow, FeedsComponent, PostsComponent, FullPostComponent, NewPostComponent, EditPostComponent, ViewPostComponent, ProfileComponent, SubscriptionComponent];

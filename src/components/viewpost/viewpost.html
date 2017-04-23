@@ -31,7 +31,7 @@
               <use xlink:href="#social-facebook"></use>
             </svg>
           </a>
-          <a href="http://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20in%20my%20Superwire%20Feed%20{{postid}}20%23smartcontent" target="_blank">
+          <a href="http://twitter.com/share?text=Check out my latest post in Superwire&url=http://feed.superwire.io/post/{{postid}}&hashtags=SuperwireSocial" target="_blank">
             <svg class="social-icon twitter-color" viewBox="0 0 612 612">
               <use xlink:href="#social-twitter"></use>
             </svg>
@@ -68,7 +68,7 @@
       </header>
       <!-- content container -->
       <div id="postDetails" class="content"></div>
-      <div class="row" style="display: flex; justify-content: space-between; flex-wrap: wrap;"> 
+      <div class="row" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
         <div class="card" *ngIf="post.gsheetLink" style="width: 250px; height: 110px; display: flex; align-items: center; background-color: #A9A9A9; margin: 10px;">
           <div style="width: 100px; height: 100px; padding: 10px; background:#8B989A;"><span style="color:white;">DATASET</span></div>
           <a style="word-break: break-word; padding: 10px;" [href]="post.gsheetLink" target="_blank">{{post.gsheetLink | truncate : 12}}</a>
@@ -273,4 +273,25 @@
       <button type="button" class="waves-effect waves-blue btn white-text" (click)="agreementModelClose();">CLOSE</button>
     </div>
   </form>
+</div>
+
+<div id="authModal" class="modal">
+  <header>
+    <h5 class="title">Register First</h5>
+    <div class="logo">
+      <img src="assets/logo.svg" alt="">
+      <span>SuperWire</span>
+    </div>
+  </header>
+  <hr class="line">
+  <div class="row" style="padding: 25px; margin: 0px;">
+    <h5>To download or buy assets, please sign up or login with your credentials</h5>
+  </div>
+  <hr class="line">
+  <footer style="float: right;">
+    <button class="btn" (click)="loginModal()">Login</button> or &nbsp;
+    <button class="btn" (click)="registerModal()">Register</button>
+  </footer>
+
+  <hr class="triple line" style="clear: both;">
 </div>

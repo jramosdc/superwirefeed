@@ -1,12 +1,11 @@
 import { SearchCategory } from './searchCategory';
-import { DatePipe } from "@angular/common";
-import { OrderBy } from "./orderby";
+import { DatePipe } from '@angular/common';
+import { OrderByPipe } from './orderby';
 import { SearchPostTitlePipe } from './searchPostTitle';
-
 
 export const ApplicationPipes: Array<any> = [
     SearchCategory,
-    OrderBy,
+    OrderByPipe,
     DatePipe,
     SearchPostTitlePipe
 ]

@@ -55,7 +55,7 @@ export class FeedsComponent implements OnDestroy {
     }
 
     returnMoment(timestamp) {
-        if (timestamp) moment().to(timestamp);
+        if (timestamp) return moment().to(timestamp);
         else return ''
     }
 

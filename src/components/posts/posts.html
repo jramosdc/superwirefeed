@@ -71,36 +71,30 @@
           </div>
           <div *ngIf="User.password.email && FeedID == User.feed.id" class="right">
 
-            <a class="dropdown-button options-btn waves-effect waves-light btn-floating blue-grey darken-1" data-activates="edit-options"
-              data-alignment="right">
-              <i class="mdi mdi-pencil"></i>
-            </a>
-            <ul id="edit-options" class='dropdown-content'>
-              <li>
-                <a>Modify</a>
-              </li>
-              <li>
-                <a>Remove</a>
-              </li>
-            </ul>
-
             <a class="btn-floating add-btn waves-effect waves-light red-grey darken-3" (click)="navigate('new')">
               <i class="mdi mdi-plus"></i>
             </a>
           </div>
-
-          <a href="javascript:void(0);" class="dropdown-button options-btn left waves-effect waves-light btn-floating" data-activates="feed-options"
+            <a class="dropdown-button modify-btn waves-effect waves-light btn-floating blue-grey darken-1" data-activates="edit-options" data-constrainwidth="false">
+              <i class="mdi mdi-pencil"></i>
+            </a>
+            <ul id="edit-options" class="dropdown-content">
+              <li>
+                <a>Profile</a>
+              </li>
+              <li>
+                <a>Drafts</a>
+              </li>
+            </ul>
+          <a  class="dropdown-button options-btn left waves-effect waves-light btn-floating" data-activates="feed-options"
             data-alignment="left" data-constrainwidth="false">
             <i class="mdi mdi-dots-vertical"></i>
           </a>
           <ul id="feed-options" class='dropdown-content'>
-            <li *ngIf="post?.owner?.userid"><a>@{{ post.owner.userid }}'s profile</a></li>
-            <li *ngIf="post?.owner?.userid"><a>Message @{{ post?.owner?.userid }}</a></li>
+            <li *ngIf="feed?.owner?.userid"><a [routerLink]="['/profile/', feed.owner.userid]">@{{ feed.owner.userid }}'s profile</a></li>
+            <li *ngIf="feed?.owner?.userid"><a>Message @{{ feed?.owner?.userid }}</a></li>
             <li class="divider"></li>
-            <li *ngIf="post?.owner?.userid"><a>Block @{{ post?.owner?.userid }}</a></li>
-            <li><a>Block this feed</a></li>
-            <li class="divider"></li>
-            <li><a>Report this feed</a></li>
+            <li *ngIf="feed?.owner?.userid"><a>Block @{{ feed?.owner?.userid }}</a></li>     
           </ul>
         </div>
       </figure>
@@ -136,9 +130,9 @@
 
         <section class="author">
           <img *ngIf="feed?.owner?.profileImageURL" [src]="feed?.owner?.profileImageURL">
-          <div *ngIf="post?.owner?.userid">
-            <h6 class="author-name">{{ post.owner.userid }}</h6>
-            <span>@{{ post.owner.userid }}</span>
+          <div *ngIf="feed?.owner?.userid">
+            <h6 class="author-name" [routerLink]="['/profile/', feed.owner.userid]">{{ feed.owner.userid }}</h6>
+            <span>@{{ feed.owner.userid }}</span>
           </div>
         </section>
       </div>
