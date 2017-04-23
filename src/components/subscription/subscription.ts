@@ -74,26 +74,24 @@ export class SubscriptionComponent implements OnDestroy {
         }
     }
 
-  parseImgUrl(htmlDesc: string) {
-    let regex = /(https?:\/\/[^">]+)(jpg|png|gif)/gi;
-    let imgs = htmlDesc.match(regex);
-    return imgs && imgs[0]
-  }
-  parseShortDescription(htmlDesc: string) {
-    let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
-    let descriptions = htmlDesc.replace(htmlRegex, "");
-    let truncateLength = 500;
-    if(truncateLength > descriptions.length){
-      return descriptions;
-    } else {
-      descriptions = descriptions.substring(0, truncateLength);
-      return descriptions + "..." ;
+    parseImgUrl(htmlDesc: string) {
+        let regex = /(https?:\/\/[^">]+)(jpg|png|gif)/gi;
+        let imgs = htmlDesc.match(regex);
+        return imgs && imgs[0]
     }
+    parseShortDescription(htmlDesc: string) {
+        let htmlRegex = /(<([^>]+)>)/gi;    // Regex to remove html tags
+        let descriptions = htmlDesc.replace(htmlRegex, '');
+        let truncateLength = 500;
+        if (truncateLength > descriptions.length) {
+            return descriptions;
+        } else {
+            descriptions = descriptions.substring(0, truncateLength);
+            return descriptions + "...";
+        }
 
-    /*let regex = /[^-=\>/"%_<:;&]{55,}/gi;
-    let descriptions = htmlDesc.match(regex);
-    return descriptions && descriptions[0];*/
-  }
-}
-
+        /*let regex = /[^-=\>/"%_<:;&]{55,}/gi;
+        let descriptions = htmlDesc.match(regex);
+        return descriptions && descriptions[0];*/
+    }
 }

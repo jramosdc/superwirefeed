@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Type } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router } from '@angular/router';
 import { User, authService, FirebaseListObservable } from '../services/authService';
 import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
 import { SearchBarService } from '../services/searchBar';
@@ -18,7 +18,7 @@ export class ProfileComponent extends Type implements OnInit {
   userid: string;
   editMode: boolean = false;
   profileLoading: boolean = false;
-  profile: Object;
+  profile: Object = { interests: [] };
   deleteLoading: boolean;
   authList: Array<string> = [];
   authNew: Array<string> = [];
@@ -65,10 +65,11 @@ export class ProfileComponent extends Type implements OnInit {
         this.as.getFollowing(this.userid).subscribe((following) => this.following = following);
         this.as.getUserProfile(this.userid).subscribe((profile) => {
           this.profile = profile;
+          if (!this.profile['interests']) this.profile['interests'] = []
           this.posts = this.as.loadPosts(this.profile['feedId']);   // geting posts for item published
           if (profile['backgroundImageURL']) {
             setTimeout(() => {
-              $('#bgImage').attr("style", 'width: 100%; height: 200px; background: url("' + profile['backgroundImageURL'] + '") center center no-repeat; background-size: cover;');
+              $('#bgImage').attr('style', 'width: 100%; height: 200px; background: url("' + profile['backgroundImageURL'] + '") center center no-repeat; background-size: cover;');
             }, 100);
           }
         });
@@ -153,7 +154,7 @@ export class ProfileComponent extends Type implements OnInit {
     });
   }
 
-  drawGraph (year: number, month: number) {
+  drawGraph(year: number, month: number) {
     var date = new Date(year, month, 1)
     var remainder = date.getDay()
     var daysAmount = new Date(year, month + 1, 0).getDate()
@@ -167,18 +168,18 @@ export class ProfileComponent extends Type implements OnInit {
     if (month !== 11) this.drawGraph(year, (month + 1))
   }
 
-  changeGraph (year) {
+  changeGraph(year) {
     this.monthGraph = []
     this.year = year
     this.drawGraph(year, 0)
   }
 
-  countIndex (i, month) {
+  countIndex(i, month) {
     return (i - month.filter((d) => d == 0).length) + 1
   }
 
   update(bio: HTMLSelectElement, feedId: HTMLSelectElement, feedName: HTMLSelectElement, description: HTMLSelectElement, pyes: HTMLInputElement, pno: HTMLInputElement, category: HTMLSelectElement, useBG: HTMLInputElement) {
-    if (bio.value === '' || feedId.value === '' || feedName.value === '' || description.value === '' || category.value === '') return
+    if (bio.value === '' || feedName.value === '' || description.value === '' || category.value === '') return
     this.profileLoading = true;
     // $.merge(this.authList, this.authNew)
     this.authNew.splice(0);
@@ -186,14 +187,14 @@ export class ProfileComponent extends Type implements OnInit {
     this.postCategoryNew.splice(0);
     let profile = {
       'bio': bio.value,
-      'feedId': feedId.value.toLowerCase(),
+      // 'feedId': feedId.value.toLowerCase(),
       'feedName': feedName.value,
       'description': description.value,
       'private': $(pyes).prop('checked') ? 'true' : 'false',
       'category': category.value,
       'authEmail': this.authList,
       'postCategories': this.postCategoryList,
-      'profileImageURL': this.User.password.profileImageURL ? this.User.password.profileImageURL : "http://www.freeiconspng.com/uploads/profile-icon-9.png",
+      'profileImageURL': this.User.password.profileImageURL ? this.User.password.profileImageURL : 'http://www.freeiconspng.com/uploads/profile-icon-9.png',
       'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg',
       'useBackgroundImage': useBG.checked
     };
@@ -215,7 +216,7 @@ export class ProfileComponent extends Type implements OnInit {
             'backgroundImageURL': this.User.backgroundImageURL ? this.User.backgroundImageURL : 'http://cdn.allwallpaper.in/wallpapers/2048x1152/13547/light-minimalistic-soft-shading-gradient-background-2048x1152-wallpaper.jpg'
           }
         }
-        this.as.updateFeed(feedId.value.toLowerCase(), feed)
+        this.as.updateFeed(this.profile['feedId'], feed)
           .then((res) => {
             this.editMode = false;
             this.profileLoading = false;
@@ -322,7 +323,7 @@ export class ProfileComponent extends Type implements OnInit {
     myReader.onloadend = (loadEvent: any) => {
       image.src = loadEvent.target.result;
       this.profileCropper.setImage(image);
-      //data2 image on select image
+      // data2 image on select image
       this.profileImgData.image = loadEvent.target.result
     };
     myReader.readAsDataURL(file);
@@ -337,7 +338,7 @@ export class ProfileComponent extends Type implements OnInit {
     myReader.onloadend = (loadEvent: any) => {
       image.src = loadEvent.target.result;
       this.bgCropper.setImage(image);
-      //data2 image on select image
+      // data2 image on select image
       this.backgroundImgData.image = loadEvent.target.result
     };
     myReader.readAsDataURL(file);
