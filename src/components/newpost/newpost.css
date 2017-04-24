@@ -124,7 +124,7 @@ input::-webkit-search-cancel-button {
 input[type=url] {
 	background: #ededed url(http://cssreel.com/wp-content/themes/cssreel/images/link.png) no-repeat 9px center;
 	border: solid 1px #ccc;
-	padding: 9px 10px 9px 32px;
+	padding: 0px 10px 0px 32px;
 	width: 45px;
 	
 	-webkit-border-radius: 10em;

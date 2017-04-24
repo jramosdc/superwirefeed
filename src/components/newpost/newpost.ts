@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { User, authService } from '../services/authService';
 import { embedlyService, IEmbedly } from '../services/embedlyService';
 import { FirebaseStorageService } from '../services/firebaseStorageService';
@@ -23,9 +23,8 @@ export class NewPostComponent implements OnInit {
     detail: string;
     postLoading: boolean;
     categories: Array<string> = [];
-    _priority: any;                 // priority model for default value in our form
-    _license: any;                 // priority model for default value in our form
-    ty: string[];                  // selected types
+    licenses: Array<string> = ['CC-BY (free)', 'CC-BY-ND', 'Selling/Attribution ($35)', 'Selling/Exclusive ($200)'];
+    dropdown = { breaking: false, types: [] };
     csvFile: any = null;
     pdfFile: Array<any> = [];
     pdfFileLinks: any = {};
@@ -64,17 +63,7 @@ export class NewPostComponent implements OnInit {
         this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
         this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
         this.cropperSettings_rectangle.noFileInput = true;
-
-        this.defaultModelInitialization();
         this.sb.setHiddenSearchBar(true);
-
-
-    }
-
-    defaultModelInitialization() {
-        this._priority = 'Low';
-        this.ty = null;
-        this._license = '0';
     }
 
     ngOnInit() {
@@ -91,8 +80,8 @@ export class NewPostComponent implements OnInit {
                 'insertdatetime media table contextmenu paste code'
             ],
             content_css: [
-    '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
-    '//www.mucholab.net/css/tinymce.css' ],
+                '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
+                '//www.mucholab.net/css/tinymce.css'],
             textpattern_patterns: [
                 { start: '*', end: '*', format: 'italic' },
                 { start: '**', end: '**', format: 'bold' },
@@ -106,7 +95,7 @@ export class NewPostComponent implements OnInit {
                 { start: '* ', cmd: 'InsertUnorderedList' },
                 { start: '- ', cmd: 'InsertUnorderedList' }
             ],
-            valid_elements : '*[*]',
+            valid_elements: '*[*]',
             toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
             setup: (editor) => {
                 editor.on('change', (e) => {
@@ -115,28 +104,39 @@ export class NewPostComponent implements OnInit {
             }
         });
 
-        let that = this;
+        // let that = this;
         // multiple select options
-        $('select[multiple] option').mousedown(function (e) {
-            that.ty = (that.ty == null) ? [] : that.ty;
-            e.preventDefault();
-            let value = $(this).val().split(': ')[1].replace(/'/g, '');
-            if (!$(this).prop('selected')) {
-                that.ty.push(value)
-            } else {
-                that.ty.splice(that.ty.indexOf(value), 1);
-                that.ty = (that.ty.length === 0) ? null : that.ty;
+        // $('select[multiple] option').mousedown(function (e) {
+        //     that.ty = (that.ty == null) ? [] : that.ty;
+        //     e.preventDefault();
+        //     let value = $(this).val().split(': ')[1].replace(/'/g, '');
+        //     if (!$(this).prop('selected')) {
+        //         that.ty.push(value)
+        //     } else {
+        //         that.ty.splice(that.ty.indexOf(value), 1);
+        //         that.ty = (that.ty.length === 0) ? null : that.ty;
+        //     }
+        //     $(this).prop('selected', $(this).prop('selected') ? false : true);
+        //     // $(this).prop('selected', !$(this).prop('selected'));
+        //     return false;
+        // });
+    }
+
+    typeAddRemove(type: string) {
+        let add = true;
+        this.dropdown.types.map((ty, I) => {
+            if (ty === type) {
+                this.dropdown.types.splice(I, 1);
+                add = false;
             }
-            $(this).prop('selected', $(this).prop('selected') ? false : true);
-            // $(this).prop('selected', !$(this).prop('selected'));
-            return false;
-        });
+        })
+        if (add) this.dropdown.types.push(type);
     }
 
     handleFiles(evt) {
         event.preventDefault();
-        if(evt.target.id == "browseCSVFile"){
-            let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
+        if (evt.target.id == 'browseCSVFile') {
+            let pattern = new RegExp('[0-9a-z]{1,}.(csv)$');
             if (pattern.test(evt.target.files[0].name)) {
                 let size = parseInt(((evt.target.files[0].size / 1024) / 1024).toFixed(2));
                 if (size <= 1) {
@@ -149,21 +149,21 @@ export class NewPostComponent implements OnInit {
                 document.getElementById('browseCSVFile')['value'] = null;
                 alert('please select *.csv file');
             }
-        } else if(evt.target.id == "browsePdfFile"){
+        } else if (evt.target.id == 'browsePdfFile') {
             this.pdfFile = [];
-            let pattern = new RegExp("[0-9a-z]{1,}.(pdf)$");
-            for(let i = 0; i < evt.target.files.length; i++) {
-                if(pattern.test(evt.target.files[i].name)){
+            let pattern = new RegExp('[0-9a-z]{1,}.(pdf)$');
+            for (let i = 0; i < evt.target.files.length; i++) {
+                if (pattern.test(evt.target.files[i].name)) {
                     this.pdfFile[i] = evt.target.files[i];
                 } else {
                     document.getElementById('browsePdfFile')['value'] = null;
                     alert('please select *.pdf file');
                 }
             }
-        } else if(evt.target.id == "browseImages"){
+        } else if (evt.target.id == 'browseImages') {
             this.images = [];
-            let pattern = new RegExp("[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$");
-            for(let i = 0; i < evt.target.files.length; i++){
+            let pattern = new RegExp('[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$');
+            for (let i = 0; i < evt.target.files.length; i++) {
                 if (pattern.test(evt.target.files[i].name)) {
                     let size = parseInt(((evt.target.files[i].size / 1024) / 1024).toFixed(2)); //size in mbs
                     if (size <= 10) {
@@ -181,8 +181,11 @@ export class NewPostComponent implements OnInit {
     }
 
     submitPost(valid, newpost) {
+        console.log('valid', valid);
         console.log('newpost', newpost);
+        console.log('dropdown', this.dropdown);
         event.preventDefault();
+        return
         if (!valid) { return; }
         this.as.submitPost({}).then(res => {
             let postid = res.path.o[1];
@@ -192,7 +195,7 @@ export class NewPostComponent implements OnInit {
                 detail: newpost.detail,
                 priority: newpost.priority,
                 license: newpost.license,
-                types: newpost.type,
+                types: this.dropdown.types,
                 category: newpost.category,
                 pdfFile: newpost.pdfFile ? newpost.pdfFile : '',
                 gsheetFile: newpost.gsheetFile ? newpost.gsheetFile : '',
@@ -210,11 +213,11 @@ export class NewPostComponent implements OnInit {
                 },
                 timestamp: firebase.database['ServerValue'].TIMESTAMP
             };
-            if(this.pdfFile.length > 0){
+            if (this.pdfFile.length > 0) {
                 this.uploadFile(this.pdfFile, postid)
                     .then(urls => {
-                        if(urls) {
-                            for(let i = 0; i < urls.length; i++){
+                        if (urls) {
+                            for (let i = 0; i < urls.length; i++) {
                                 let pdfId: any = this.as.getFileId({});
                                 pdfId = pdfId.path.o[1];
                                 this.pdfFileLinks[pdfId] = urls[i];
@@ -228,11 +231,11 @@ export class NewPostComponent implements OnInit {
                         console.log('err', err);
                     });
             }
-            if(this.images.length > 0){
+            if (this.images.length > 0) {
                 this.uploadFile(this.images, postid)
                     .then(urls => {
-                        if(urls) {
-                            for(let i = 0; i < urls.length; i++){
+                        if (urls) {
+                            for (let i = 0; i < urls.length; i++) {
                                 let imageId: any = this.as.getFileId({});
                                 imageId = imageId.path.o[1];
                                 this.imagesLinks[imageId] = urls[i];
@@ -250,7 +253,7 @@ export class NewPostComponent implements OnInit {
             if (this.csvFile) {
                 Papa.parse(this.csvFile, {
                     complete: (result) => {
-                        post["csvToJson"] = result.data;
+                        post['csvToJson'] = result.data;
                     }
                 });
                 // after file upload get download link storage
@@ -263,8 +266,8 @@ export class NewPostComponent implements OnInit {
                         this.postObjReady.uploadFile = true;
                         this.postToFirebase(postid, post);             // save to firebase
                     }).catch(err => {
-                    console.log('file not upload err', err);
-                });
+                        console.log('file not upload err', err);
+                    });
             } else {
                 this.postObjReady.uploadFile = true;
                 this.postToFirebase(postid, post);             // save to firebase
@@ -336,12 +339,12 @@ export class NewPostComponent implements OnInit {
 */
     } // submitPost
 
-    private uploadFile(files, postid){
+    private uploadFile(files, postid) {
         let promiseArray: Array<any> = [];
-        for(let i = 0; i < files.length; i++){
+        for (let i = 0; i < files.length; i++) {
             promiseArray.push(
                 new Promise((resolve, reject) => {
-                    this.storge.fileUpload(files[i],  'posts/' + this.User.uid + '/' + postid + '/' + files[i].name + '/' + Date.now() + '/')
+                    this.storge.fileUpload(files[i], 'posts/' + this.User.uid + '/' + postid + '/' + files[i].name + '/' + Date.now() + '/')
                         .then(url => {
                             resolve(url);
                         })
@@ -351,10 +354,10 @@ export class NewPostComponent implements OnInit {
                 })
             )
         }
-         return Promise.all(promiseArray)
-             .then(urls => {
-                 return urls;
-             });
+        return Promise.all(promiseArray)
+            .then(urls => {
+                return urls;
+            });
     }
 
     private postToFirebase(postid, post) {
@@ -412,8 +415,8 @@ export class NewPostComponent implements OnInit {
         myReader.onloadend = (loadEvent: any) => {
             image.src = loadEvent.target.result;
             this.postCropper.setImage(image);
-            //data2 image on select image
-            this.postImgData.image = loadEvent.target.result
+            // data2 image on select image
+            // this.postImgData.image = loadEvent.target.result
         };
         myReader.readAsDataURL(file);
     }
