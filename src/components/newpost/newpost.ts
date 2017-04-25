@@ -185,8 +185,8 @@ export class NewPostComponent implements OnInit {
         console.log('newpost', newpost);
         console.log('dropdown', this.dropdown);
         event.preventDefault();
-        return
         if (!valid) { return; }
+        if (this.dropdown.types.length === 0) { return; }
         this.as.submitPost({}).then(res => {
             let postid = res.path.o[1];
             this.postLoading = true;

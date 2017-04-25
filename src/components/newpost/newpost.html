@@ -54,8 +54,7 @@
             <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-format" data-alignment="right">
                 <i class="mdi mdi-file"></i> FORMAT
             </a>
-            <ul id="edit-format" class='dropdown-content' #type="ngModel" multiple name="type" [(ngModel)]="dropdown.type" ngDefaultControl
-                required>
+            <ul id="edit-format" class='dropdown-content' #type="ngModel" multiple name="type" [(ngModel)]="dropdown.type" ngDefaultControl>
                 <!--<li (click)="dropdown.type = 'file-document'" [value]="file-document">
                     <a>Text</a>
                 </li>
@@ -75,6 +74,14 @@
                 <li>
                     <input type="checkbox" id="image" name="type" (change)="typeAddRemove('camera')" />
                     <label for="image">Image</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="video" name="type" (change)="typeAddRemove('play-box-outline')" />
+                    <label for="video">Video</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="audio" name="type" (change)="typeAddRemove('microphone')" />
+                    <label for="audio">Audio</label>
                 </li>
             </ul>
 
