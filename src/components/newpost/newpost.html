@@ -67,19 +67,19 @@
                 <li (click)="dropdown.type = 'microphone'" [value]="microphone">
                     <a>Audio</a>
                 </li>-->
-                <li>
+                <li class="padding">
                     <input type="checkbox" id="text" name="type" (change)="typeAddRemove('file-document')" />
                     <label for="text">Text</label>
                 </li>
-                <li>
+                <li class="padding">
                     <input type="checkbox" id="image" name="type" (change)="typeAddRemove('camera')" />
                     <label for="image">Image</label>
                 </li>
-                <li>
+                <li class="padding">
                     <input type="checkbox" id="video" name="type" (change)="typeAddRemove('play-box-outline')" />
                     <label for="video">Video</label>
                 </li>
-                <li>
+                <li class="padding">
                     <input type="checkbox" id="audio" name="type" (change)="typeAddRemove('microphone')" />
                     <label for="audio">Audio</label>
                 </li>
@@ -90,11 +90,11 @@
             </a>
             <ul id="edit-breaking" class='dropdown-content' #priority="ngModel" name="priority" [(ngModel)]="dropdown.breaking" ngDefaultControl
                 required>
-                <li>
+                <li class="padding">
                     <input type="radio" id="yes" name="breaking" (change)="dropdown.breaking = true" />
                     <label for="yes">Yes</label>
                 </li>
-                <li>
+                <li class="padding">
                     <input type="radio" id="no" name="breaking" (change)="dropdown.breaking = false" />
                     <label for="no">No</label>
                 </li>

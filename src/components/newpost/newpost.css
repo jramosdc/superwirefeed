@@ -227,3 +227,7 @@ input::-webkit-input-placeholder {
 btn {
  color: $purple-light;
 }
+
+.padding {
+	padding: 10px;
+}
