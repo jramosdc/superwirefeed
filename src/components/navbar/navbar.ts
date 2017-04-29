@@ -1,6 +1,6 @@
 import { RegFlow } from './../regflow/regflow';
 import { Component, OnInit, ViewChild, trigger, transition, style, animate } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { User, authService } from '../services/authService';
 import { SearchBarService } from '../services/searchBar';
 
@@ -12,24 +12,24 @@ import { SearchBarService } from '../services/searchBar';
     trigger(
       'modalSlider', [
         transition(':enter', [
-          style({transform: 'translateX(100%)', opacity: 0, height: 0}),
-          animate('200ms', style({transform: 'translateX(0)', opacity: 1}))
+          style({ transform: 'translateX(100%)', opacity: 0, height: 0 }),
+          animate('200ms', style({ transform: 'translateX(0)', opacity: 1 }))
         ]),
         transition(':leave', [
-          style({transform: 'translateX(0)', opacity: 1 }),
-          animate('200ms', style({transform: 'translateX(-100%)', opacity: 0, height: 0}))
+          style({ transform: 'translateX(0)', opacity: 1 }),
+          animate('200ms', style({ transform: 'translateX(-100%)', opacity: 0, height: 0 }))
         ])
       ]
     ),
     trigger(
       'modalFader', [
         transition(':enter', [
-          style({opacity: 0}),
-          animate('200ms', style({opacity: 1}))
+          style({ opacity: 0 }),
+          animate('200ms', style({ opacity: 1 }))
         ]),
         transition(':leave', [
-          style({opacity: 1}),
-          animate('200ms', style({opacity: 0}))
+          style({ opacity: 1 }),
+          animate('200ms', style({ opacity: 0 }))
         ])
       ]
     )
@@ -49,11 +49,11 @@ export class NavbarComponent implements OnInit {
   isSearchBarHidden: Object;
   Step: number;
   StepLimit: number;
-  UserInfo: { interests: Array<string>, feedId: string, feedName: string, feedCategory: Array<string>, about: string, userName: string};
+  UserInfo: { interests: Array<string>, feedId: string, feedName: string, feedCategory: Array<string>, about: string, userName: string };
   Interests: string[] = ['Politics', 'Economy', 'Sports', 'Technology', 'Science', 'Design'];
-  FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design','Misc'];
+  FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design', 'Misc'];
 
-  constructor(public as: authService, private router: Router, private sb: SearchBarService) {
+  constructor(public as: authService, private router: Router, private route: ActivatedRoute, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.activePage = this.as.getActivePageTitle();
@@ -70,6 +70,10 @@ export class NavbarComponent implements OnInit {
       about: '',
       userName: ''
     };
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params['login']) this.loginModal();
+      if (params['reg']) $('#regflowModal')['openModal']();
+    })
   }
 
   ngOnInit() {
@@ -170,7 +174,7 @@ export class NavbarComponent implements OnInit {
           this.regFlowError = true;
           $('#errorRegFlow').html(err.toString());
         });
-      }
+    }
 
   }
 
