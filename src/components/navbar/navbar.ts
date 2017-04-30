@@ -72,7 +72,13 @@ export class NavbarComponent implements OnInit {
     };
     this.route.queryParams.subscribe((params: Params) => {
       if (params['login']) this.loginModal();
-      if (params['reg']) $('#regflowModal')['openModal']();
+      if (params['auth']) {
+        localStorage.setItem('firebase:authUser:AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo:[DEFAULT]', params['auth']);
+      }
+      if (params['reg']) {
+        $('#regflowModal')['openModal']();
+        this.UserInfo.userName = params['userid'] ? params['userid'] : '';
+      }
     })
   }
 
