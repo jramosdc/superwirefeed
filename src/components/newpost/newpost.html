@@ -25,7 +25,7 @@
             </small>
         </div>
         <div class="row wrap">
-            <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
+            <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
             <img *ngIf="postImgData?.image" [src]="postImgData?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
             <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-section" data-alignment="right">
@@ -46,7 +46,7 @@
             </a>
             <ul id="edit-license" class='dropdown-content' #license="ngModel" name="license" [(ngModel)]="dropdown.license" ngDefaultControl
                 required>
-                <li *ngFor="let lic of licenses" (click)="dropdown.license = lic" [value]="lic">
+                <li *ngFor="let lic of licenses; let i = index" (click)="dropdown.license = i" [value]="i">
                     <a>{{lic}}</a>
                 </li>
             </ul>
@@ -99,12 +99,7 @@
                     <label for="no">No</label>
                 </li>
             </ul>
-            <!--<div>
-        <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
-        <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
-        <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
-        <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>      
-        </div>-->
+        
         </div>
         <div class="container">
             <div class="row">
@@ -124,7 +119,7 @@
                 <div class="col s6">
                     <h6>INTERNAL ASSETS</h6>
                     <div class="file-field input-field">
-                        <div class="waves-effect waves-light btn purple-light">
+                        <div class="waves-effect waves-light btn blue">
                             <span>UPLOAD IMAGES</span>
                             <input type="file" id="browseImages" (change)="handleFiles($event)" class="validate" #images="ngModel" name="images" [(ngModel)]="img"
                                 accept="image/*" multiple>
@@ -134,7 +129,7 @@
                         </div>
                     </div>
                     <div class="file-field input-field">
-                        <div class="btn">
+                        <div class="waves-effect waves-light btn blue">
                             <span>UPLOAD PDF</span>
                             <input type="file" id="browsePdfFile" (change)="handleFiles($event)" class="validate" #pdfFile="ngModel" name="pdfFile" [(ngModel)]="p1"
                                 accept="application/pdf" multiple>
@@ -144,7 +139,7 @@
                         </div>
                     </div>
                     <div class="file-field input-field">
-                        <div class="btn">
+                        <div class="waves-effect waves-light btn blue">
                             <span>UPLOAD DATASET</span>
                             <input type="file" id="browseCSVFile" (change)="handleFiles($event, gsheetFile)" class="validate" #gsheetFile="ngModel" name="gsheetFile"
                                 [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
@@ -157,6 +152,12 @@
             </div>
         </div>
         <div class="row center-align">
+            <div>
+        <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
+        <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
+        <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
+        <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>      
+        </div>
             <span class="red-text" id="errorPost"></span>
         </div>
         <div class="modal-footer">

@@ -67,7 +67,7 @@ export class NewPostComponent implements OnInit {
     }
 
     ngOnInit() {
-        // $('select').material_select();
+     
         $('.dropdown-button')['dropdown']();
         tinymce['remove']();
         tinymce['init']({
