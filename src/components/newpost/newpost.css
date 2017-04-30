@@ -223,10 +223,9 @@ input:-moz-placeholder {
 input::-webkit-input-placeholder {
 	color: #999;
 }
-
-btn {
- color: $purple-light;
-}
+.btn {
+  background: $blue-dark;
+} 
 
 .padding {
 	padding: 10px;

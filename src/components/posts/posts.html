@@ -19,10 +19,9 @@
     <section class="info-card">
       <figure>
 
-        <img class="responsive-img" *ngIf="feed?.useBackgroundImage && feed?.owner?.backgroundImageURL" [src]="feed?.owner?.backgroundImageURL" alt="Background Image">
+        <img class="responsive-img" *ngIf="feed?.owner?.backgroundImageURL" [src]="feed?.owner?.backgroundImageURL" alt="Background Image">
         <!-- temporary placeholder image -->
-        <img class="responsive-img" *ngIf="!feed?.useBackgroundImage" src="http://lorempixel.com/300/200/?random=1" alt="Background Image">
-        <img class="responsive-img" *ngIf="feed?.useBackgroundImage  && !feed?.owner?.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
+
 
         <div class="dropdowns">
           <a class="dropdown-button share-btn right waves-effect  btn-floating" data-activates="sharing-options" data-alignment="left">
@@ -184,7 +183,7 @@
 
     <!-- posts -->
     <article *ngFor="let post of posts | orderBy: ['-timestamp'] |
-        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === 'High'}" class="post" (click)="navigate('view', post.$key)">
+        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === true}" class="post" (click)="navigate('view', post.$key)">
       <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
       <h6 class="title">{{ post.title }}</h6>
