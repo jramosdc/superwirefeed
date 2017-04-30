@@ -542,6 +542,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
   <script>
     $(document).ready(function () {
       var config = {
@@ -576,9 +577,11 @@
           if (!done) return toastr.error(data);
           firebaseLogin(email, password, function (done, data) {
             if (!done) return toastr.error(data);
+            var auth = localStorage.getItem("firebase:authUser:AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo:[DEFAULT]");
+            var encrypted = CryptoJS.AES.encrypt(auth, "Superwire");
             firebaseCreateUserProfile(data.uid, userid, email, function (done, data) {
               if (!done) return toastr.error(data);
-              window.location.href = 'https://feed.superwire.io?reg=true'
+              window.location.href = 'https://feed.superwire.io?reg=true&auth=' + encrypted
             });
           });
         });
