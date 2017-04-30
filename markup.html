@@ -581,7 +581,7 @@
             var encrypted = CryptoJS.AES.encrypt(auth, "Superwire");
             firebaseCreateUserProfile(data.uid, userid, email, function (done, data) {
               if (!done) return toastr.error(data);
-              window.location.href = 'https://feed.superwire.io?reg=true&auth=' + encrypted
+              window.location.href = 'https://feed.superwire.io?reg=true&auth=' + encrypted + '&userid=' + userid
             });
           });
         });
