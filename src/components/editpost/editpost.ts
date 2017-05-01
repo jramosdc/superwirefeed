@@ -21,10 +21,13 @@ export class EditPostComponent implements OnInit {
 
     User: User;
     postid: string;
+    detail: string;
     post: Object = {};
     UserID: string;
     postLoading: boolean;
     categories: Array<string> = [];
+    licenses: Array<string> = ['CC-BY (free)', 'CC-BY-ND', 'Selling/Attribution ($35)', 'Selling/Exclusive ($200)'];
+    dropdown = { breaking: false, types: [] };
     csvFile: any = null;
     csvLinks: any = {};
     pdfFile: Array<any> = [];
@@ -142,21 +145,21 @@ export class EditPostComponent implements OnInit {
     }
 
     private viewInitialize() {
-        $('select')['material_select']();
-        tinymce.remove();
-        tinymce.init({
+        $('.dropdown-button')['dropdown']();
+        tinymce['remove']();
+        tinymce['init']({
             selector: '#editor',
             height: 200,
-            menubar:false,
-            statusbar:false,
+            menubar: false,
+            statusbar: false,
             plugins: [
                 'textpattern advlist autolink lists link image charmap print preview anchor',
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table contextmenu paste code'
             ],
             content_css: [
-    '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
-    '//www.mucholab.net/css/tinymce.css' ],
+                '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
+                '//www.mucholab.net/css/tinymce.css'],
             textpattern_patterns: [
                 { start: '*', end: '*', format: 'italic' },
                 { start: '**', end: '**', format: 'bold' },
@@ -170,14 +173,11 @@ export class EditPostComponent implements OnInit {
                 { start: '* ', cmd: 'InsertUnorderedList' },
                 { start: '- ', cmd: 'InsertUnorderedList' }
             ],
+            valid_elements: '*[*]',
             toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
             setup: (editor) => {
                 editor.on('change', (e) => {
-                    this.post['detail'] = editor.getContent();
-                });
-                editor.on('init', (e) => {
-                    // console.log('tiny init', this.post['detail']);
-                    tinymce.activeEditor.setContent(this.post['detail']);
+                    this.detail = editor.getContent();
                 });
             }
         });
@@ -192,7 +192,8 @@ export class EditPostComponent implements OnInit {
             title: editpost.title,
             detail: editpost.detail,
             priority: editpost.priority,
-            types: editpost.type,
+            license: editpost.license,
+            types: this.dropdown.types,
             category: editpost.category,
             pdfFile: ((this.post['pdfFile']) ? this.post['pdfFile'] : ((this.pdfFile ? this.pdfFile : null))),
             gsheetFile: ((this.post['gsheetFile']) ? this.post['gsheetFile'] : ((this.csvFile ? this.csvFile : null))),

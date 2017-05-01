@@ -380,6 +380,18 @@ main.feed {
           text-decoration: underline;
         }
       }
+      
+      .breaking {
+          background: $yellow;
+          border-radius: 20px;
+          color: $gray-light; 
+          padding: 1em;
+          background-clip: content-box;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
     }
 
     transition: background-color .2s;

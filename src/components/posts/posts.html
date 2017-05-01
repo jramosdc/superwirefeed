@@ -197,9 +197,11 @@
         <span [routerLink]="['/profile/', post.owner.userid]" class="owner">
           {{ post.owner.userid }}
         </span>
+        
+        <span class="breaking" *ngIf="post.priority === true">BREAKING</span>
 
         <div *ngIf="User.password.email && FeedID == User.feed.id">
-          <span> • </span>
+          
           <span (click)="navigate('edit', post.$key)">Modify</span>
           <span> • </span>
           <span (click)="deleteModel(post.$key, $event)">Remove</span>
