@@ -1,4 +1,224 @@
 <div class="row">
+    <form class="col s12 card padding10px" novalidate #f="ngForm" (ngSubmit)="updatePost(f.valid, f.value, category)">
+        <!-- <div class="row">
+            <div class="breadcrumb flat"><a href="#">Home Feeds</a><a href="#">{{User.feed.name || 'Feed'}}</a><a href="#" class="active">New Post</a>
+            </div>
+        </div>-->
+        <!--<small>{{f | json}}</small>-->
+        <div class="row" *ngIf="!User.emailVerified">
+            <label for="verifyEmail" class="red-text">Please verify your Email!</label>
+        </div>
+        <div class="row">
+            <div class="input-field">
+                <input type="text" class="validate" #title="ngModel" name="title" [(ngModel)]="post.title" placeholder="Title" required>
+                <small class="red-text" [hidden]="title.valid || (title.pristine && !f._submitted)">
+                    Title is required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
+            <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="detail" placeholder="Detail">
+            <div id="editor"></div>
+            <small class="red-text" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
+                Detail is required.
+            </small>
+        </div>
+        <div class="row wrap">
+            <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
+            <img *ngIf="postImgData?.image" [src]="postImgData?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
+            <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
+            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-section" data-alignment="right">
+                <i class="mdi mdi-tab"></i> Section
+            </a>
+            <ul id="edit-section" class='dropdown-content' #category="ngModel" name="category" [(ngModel)]="post.category" ngDefaultControl
+                required>
+                <li>
+                    <a>All</a>
+                </li>
+                <li *ngFor="let cat of categories" (click)="post.category = cat" [value]="cat">
+                    <a>{{cat}}<i class="mdi mdi-check right-align" *ngIf="cat === post.category"></i></a>
+                </li>
+            </ul>
+
+            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-license" data-alignment="right">
+                <i class="mdi mdi-coin"></i> LICENSE
+            </a>
+            <ul id="edit-license" class='dropdown-content' #license="ngModel" name="license" [(ngModel)]="post.license" ngDefaultControl
+                required>
+                <li *ngFor="let lic of licenses; let i = index" (click)="post.license = i" [value]="i">
+                    <a>{{lic}}<i class="mdi mdi-check right-align" *ngIf="i === post.license"></i></a>
+                </li>
+            </ul>
+
+            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-format" data-alignment="right">
+                <i class="mdi mdi-file"></i> FORMAT
+            </a>
+            <ul id="edit-format" class='dropdown-content' #type="ngModel" multiple name="type" [(ngModel)]="dropdown.type" ngDefaultControl>
+                <!--<li (click)="dropdown.type = 'file-document'" [value]="file-document">
+                    <a>Text</a>
+                </li>
+                <li (click)="dropdown.type = 'camera'" [value]="camera">
+                    <a>Image</a>
+                </li>
+                <li (click)="dropdown.type = 'play-box-outline'" [value]="play-box-outline">
+                    <a>Video</a>
+                </li>
+                <li (click)="dropdown.type = 'microphone'" [value]="microphone">
+                    <a>Audio</a>
+                </li>-->
+                <li class="padding">
+                    <input type="checkbox" id="text" name="type" (change)="typeAddRemove('file-document')" />
+                    <label for="text">Text</label>
+                </li>
+                <li class="padding">
+                    <input type="checkbox" id="image" name="type" (change)="typeAddRemove('camera')" />
+                    <label for="image">Image</label>
+                </li>
+                <li class="padding">
+                    <input type="checkbox" id="video" name="type" (change)="typeAddRemove('play-box-outline')" />
+                    <label for="video">Video</label>
+                </li>
+                <li class="padding">
+                    <input type="checkbox" id="audio" name="type" (change)="typeAddRemove('microphone')" />
+                    <label for="audio">Audio</label>
+                </li>
+            </ul>
+
+            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-breaking" data-alignment="right">
+                <i class="mdi mdi-alert"></i> BREAKING?
+            </a>
+            <ul id="edit-breaking" class='dropdown-content' #priority="ngModel" name="priority" [(ngModel)]="post.priority" ngDefaultControl
+                required>
+                <li class="padding">
+                    <input type="radio" id="yes" name="breaking" (change)="post.priority = true" />
+                    <label for="yes">Yes</label>
+                </li>
+                <li class="padding">
+                    <input type="radio" id="no" name="breaking" (change)="post.priority = false" />
+                    <label for="no">No</label>
+                </li>
+            </ul>
+
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col s6">
+                    <h6>EXTERNAL ASSETS</h6>
+                    <p>
+                        <input type="pdf" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="post.pdfLink" placeholder="Pdf Link">
+                    </p>
+                    <p>
+                        <input type="gsheet" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="post.gsheetLink" placeholder="GSheet Link">
+                    </p>
+                    <p>
+                        <input type="url" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="post.mainUrl" placeholder="Link">
+                    </p>
+                </div>
+
+                <div class="col s6">
+                    <h6>INTERNAL ASSETS</h6>
+                    <div class="file-field input-field">
+                        <div class="waves-effect waves-light btn blue">
+                            <span>UPLOAD IMAGES</span>
+                            <input type="file" id="browseImages" (change)="handleFiles($event)" class="validate" #images="ngModel" name="images" [(ngModel)]="img"
+                                accept="image/*" multiple>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Upload files">
+                        </div>
+                    </div>
+                    <div class="file-field input-field">
+                        <div class="waves-effect waves-light btn blue">
+                            <span>UPLOAD PDF</span>
+                            <input type="file" id="browsePdfFile" (change)="handleFiles($event)" class="validate" #pdfFile="ngModel" name="pdfFile" [(ngModel)]="p1"
+                                accept="application/pdf" multiple>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Upload PDF">
+                        </div>
+                    </div>
+                    <div class="file-field input-field">
+                        <div class="waves-effect waves-light btn blue">
+                            <span>UPLOAD DATASET</span>
+                            <input type="file" id="browseCSVFile" (change)="handleFiles($event, gsheetFile)" class="validate" #gsheetFile="ngModel" name="gsheetFile"
+                                [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Upload data in CSV">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row center-align">
+            <div>
+                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
+                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
+                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
+                <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>
+            </div>
+            <span class="red-text" id="errorPost"></span>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="postLoading">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="waves-effect waves-light btn-large right">Wire!</button>
+        </div>
+    </form>
+</div>
+
+<div id="backgroundModal" class="modal zindex9999">
+    <form class="modal-content">
+        <div class="nav-wrapper center-align">
+            <h2 class="purple-text">Post Image</h2>
+        </div>
+        <div class="row center-align" class="flexCenter">
+            <input id="custom-input2" type="file" style="display:none;" #fileInput2 (change)="backgroundChangeListener($event)">
+            <div *ngIf="!postImgData?.image && imageSelected">
+                <img src="data:image/false;base64,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"
+                    alt="default background image" (click)="fileInput2.click(); imageSelected=false;" alt="selectImage" style="width: 150px; height: auto;"
+                />
+            </div>
+            <div [hidden]="imageSelected">
+                <img-cropper id="imgCropper2" #postCropper [image]="postImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"
+                    style="height: 200px;"></img-cropper>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="preloader-wrapper small active" *ngIf="imageUploading">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="uploadBackgroundImage();" [disabled]="!postImgData.image">Upload</button>
+            <button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
+        </div>
+    </form>
+</div>
+
+<div id="fullTable">
+</div>
+<!--<div class="row">
     <form class="col s12 card padding10px" novalidate #f="ngForm" (ngSubmit)="updatePost(f.valid, f.value)">
         <div class="row">
             <h5 class="pink-text">{{User.feed.name}}</h5>
@@ -94,67 +314,67 @@
                 <!--<div *ngFor="let img of post.images">
                     <div style="float: right">x</div>
                     <img [src]="img" width="100px" height="100px" alt="">
-                </div>-->
+                </div>->
+</div>
+</div>
+<div class="row">
+    <label for="pdfLink">Add PDF files</label>
+    <div class="input-field">
+        <!--<input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="post.pdfLink" placeholder="Pdf Link">->
+        <input type="file" id="browsePdfFile" (change)="handleFiles($event)" class="validate" #pdfFile="ngModel" name="pdfFile" [(ngModel)]="p1"
+            accept="application/pdf" multiple>
+    </div>
+    <br>
+    <div *ngIf="post?.pdfFile">
+        <div *ngFor="let pdf of post.pdfFile | keys" class="chip">
+            {{pdf.value.fileName}}
+            <i class="close material-icons" (click)="deletePostData('pdfFile', pdf)">x</i>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <label for="gsheetLink">Add dataset in csv format</label>
+    <div class="input-field">
+        <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="post.gsheetLink" placeholder="Google Spread Sheet Link">->
+        <input type="file" id="browseCSVFile" (change)="handleFiles($event)" class="validate" #gsheetFile="ngModel" name="gsheetFile"
+            value="asad" [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
+    </div>
+    <br>
+    <div *ngIf="post?.gsheetFile">
+        <div class="chip">
+            <div *ngFor="let csv of post.gsheetFile | keys" class="chip">
+                {{csv.value.fileName}}
+                <i class="close material-icons" (click)="deletePostData('gsheetFile', csv)">x</i>
             </div>
         </div>
-        <div class="row">
-            <label for="pdfLink">Add PDF files</label>
-            <div class="input-field">
-                <!--<input type="text" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="post.pdfLink" placeholder="Pdf Link">-->
-                <input type="file" id="browsePdfFile" (change)="handleFiles($event)" class="validate"  #pdfFile="ngModel" name="pdfFile"
-                       [(ngModel)]="p1" accept="application/pdf" multiple>
+    </div>
+</div>
+<div class="row">
+    <label for="mainUrl">Main url (just saving a link? we can make magic with it)</label>
+    <div class="input-field">
+        <input type="text" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="post.mainUrl" placeholder="Main Url">
+    </div>
+</div>
+<div class="row center-align">
+    <span class="red-text" id="errorPost"></span>
+</div>
+<div class="modal-footer">
+    <div class="preloader-wrapper small active" *ngIf="postLoading">
+        <div class="spinner-layer spinner-green-only">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
             </div>
-            <br>
-            <div *ngIf="post?.pdfFile">
-                <div *ngFor="let pdf of post.pdfFile | keys" class="chip">
-                    {{pdf.value.fileName}}
-                    <i class="close material-icons" (click)="deletePostData('pdfFile', pdf)">x</i>
-                </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
             </div>
-        </div>
-        <div class="row">
-            <label for="gsheetLink">Add dataset in csv format</label>
-            <div class="input-field">
-                <!--<input type="text" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="post.gsheetLink" placeholder="Google Spread Sheet Link">-->
-                <input type="file" id="browseCSVFile" (change)="handleFiles($event)" class="validate" #gsheetFile="ngModel" name="gsheetFile"
-                    value="asad" [(ngModel)]="gl" pattern="[0-9a-z]{1,}.(csv)$">
-            </div>
-            <br>
-            <div *ngIf="post?.gsheetFile">
-                <div class="chip">
-                    <div *ngFor="let csv of post.gsheetFile | keys" class="chip">
-                        {{csv.value.fileName}}
-                        <i class="close material-icons" (click)="deletePostData('gsheetFile', csv)">x</i>
-                    </div>
-                </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
             </div>
         </div>
-        <div class="row">
-            <label for="mainUrl">Main url (just saving a link? we can make magic with it)</label>
-            <div class="input-field">
-                <input type="text" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="post.mainUrl" placeholder="Main Url">
-            </div>
-        </div>
-        <div class="row center-align">
-            <span class="red-text" id="errorPost"></span>
-        </div>
-        <div class="modal-footer">
-            <div class="preloader-wrapper small active" *ngIf="postLoading">
-                <div class="spinner-layer spinner-green-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <button type="submit" class="waves-effect waves-light btn purple white-text right">Update</button>
-        </div>
-    </form>
+    </div>
+    <button type="submit" class="waves-effect waves-light btn purple white-text right">Update</button>
+</div>
+</form>
 </div>
 
 
@@ -196,4 +416,4 @@
             <button type="button" class="waves-effect waves-blue btn white-text" (click)="backgroundModelClose();">CANCEL</button>
         </div>
     </form>
-</div>
+</div>-->
