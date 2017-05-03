@@ -112,6 +112,11 @@ export class PostsComponent implements OnInit, OnDestroy {
     console.log(type, id);
   }
 
+  openNewPost() {
+    console.log('test')
+    $('#newpostModal')['openModal']();
+  }
+
   checkEmail(email: string) {
     this.emailLoading = true;
     this.as.checkEmail(this.FeedID, email).subscribe(res => {

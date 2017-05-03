@@ -67,7 +67,7 @@ export class NewPostComponent implements OnInit {
     }
 
     ngOnInit() {
-     
+
         $('.dropdown-button')['dropdown']();
         tinymce['remove']();
         tinymce['init']({
@@ -371,6 +371,7 @@ export class NewPostComponent implements OnInit {
                 this.postedImgUrl = null;
                 this.postLoading = false;
                 this.router.navigate(['posts', this.User.feed.id]);
+                $('#newpostModal')['closeModal']();
             }).catch(err => {
                 console.log('Post Submit Failed!', err);
                 $('#errorPost').html(err.toString());
