@@ -235,11 +235,16 @@
 </svg>
 <section class="other-posts">
   <div class="center-container">
-    <h5 class="title">Other posts from this feed</h5>
+    <div style="display: flex;justify-content: space-between;align-items: center;">
+      <h5 class="title">Comments from this Post</h5>
+      <button class="btn" (click)="openCommentModal()">
+        <i class="mdi mdi-comment-plus-outline small"></i>
+      </button>
+    </div>
     <ul>
-      <li>
-        <h6>Review by @nikoloza</h6>
-        <p>This is a great work I highly recommend it! </p>
+      <li *ngFor="let comment of comments">
+        <h6>Comment by @{{comment.owner.userid}}</h6>
+        <p>{{comment.comment}}</p>
       </li>
     </ul>
   </div>

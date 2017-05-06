@@ -101,5 +101,17 @@ svg[width^="0"] {
   align-items: center;
 }
 .dropdown-content{
-     max-height:200px;
-    }
+  max-height:200px;
+}
+.nopadding {
+  padding: 0px ! important;
+}
+
+.nomargin {
+  margin: 0px ! important;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

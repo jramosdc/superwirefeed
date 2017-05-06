@@ -251,7 +251,7 @@ export class NavbarComponent implements OnInit {
   registerModal() {
     console.log('create feed modal');
     $('#loginModal')['closeModal']();
-    $(".button-collapse")['sideNav']('hide');
+    $('.button-collapse')['sideNav']('hide');
     // $('#regflowModal')['openModal']();
     $('#registerModal')['openModal']();
   }
@@ -300,6 +300,31 @@ export class NavbarComponent implements OnInit {
     console.log('User is Logged Out!');
     $('.button-collapse')['sideNav']('hide');
     this.router.navigate(['feeds']);
+  }
+
+  saveComment(commentbox: any) {
+    if (!commentbox.value) return;
+    let comment = {
+      comment: commentbox.value,
+      postId: this.as.getActivePost().id,
+      owner: {
+        uid: this.User.uid,
+        userid: this.User.feed.userid,
+        feedid: this.User.feed.id
+      },
+      timestamp: firebase.database['ServerValue'].TIMESTAMP
+    }
+    this.as.addComment(comment).then(res => {
+      console.log('Comment is Submitted!');
+      $('#errorComment').html('');
+      // this.postLoading = false;
+      commentbox.value = '';
+      $('#commentModal')['closeModal']();
+    }).catch(err => {
+      console.log('Comment Submit Failed!', err);
+      $('#errorComment').html(err.toString());
+      // this.postLoading = false;
+    });
   }
 
 }

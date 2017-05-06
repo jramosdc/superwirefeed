@@ -309,6 +309,42 @@
   <hr class="triple line">
 </div>
 
+<div id="commentModal" class="modal">
+  <header>
+    <h5 class="title">New Comment</h5>
+    <div class="logo">
+      <img src="assets/logo.svg" alt="">
+      <span>SuperWire</span>
+    </div>
+  </header>
+
+  <hr class="line">
+
+  <div class="modal-content">
+    <div class="row">
+      <form class="col s12 nopadding">
+        <div class="row nomargin flex-center">
+          <div class="col s1">
+            <i class="mdi mdi-comment small prefix material-icons"></i>
+          </div>
+          <div class="input-field col s11">
+            <textarea #textarea class="materialize-textarea nopadding nomargin"></textarea>
+            <label for="textarea" style="margin-left: 10px;">Comment</label>
+          </div>
+          <div class="error">
+            <span class="red-text" id="errorComment"></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <hr class="line">
+  <footer class="nopadding flex-center">
+    <button class="btn" (click)="saveComment(textarea)">Save</button>
+  </footer>
+  <hr class="triple line">
+</div>
+
 <div id="regflowModal" class="modal slides" [ngClass]="{
     'welcome': Step === 0 || Step === 2 || Step === 6,
     'goodbye': Step === 6,
