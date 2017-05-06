@@ -17,7 +17,7 @@ export class ViewPostComponent {
   User: User;
   postid: string;
   Domain: string;
-  comments: Array<object>;
+  comments: Array<Object>;
   post: Object;
   activeCategory: string;
   categories: Array<string>;
