@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
+import { TinymceModule } from 'angular2-tinymce';
 
 import { AppComponent } from './app/app';
 import { ApplicationComponents, AppRoutes } from './routes';
@@ -21,6 +22,7 @@ import { SearchPostTitlePipe } from './pipes/searchPostTitle';
 import { ObjectToArray } from './pipes/objectToArrays';
 import { TruncatePipe } from './pipes/truncate';
 
+import tinymceconfig from './tinymceconfig';
 
 @NgModule({
   imports: [
@@ -39,6 +41,7 @@ import { TruncatePipe } from './pipes/truncate';
         provider: AuthProviders.Password,
         method: AuthMethods.Password
       })
+    , TinymceModule.withConfig(<any>tinymceconfig)
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes

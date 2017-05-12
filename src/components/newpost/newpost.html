@@ -17,12 +17,13 @@
             </div>
         </div>
         <div class="row">
-            <label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
+            <!--<label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
             <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="detail" placeholder="Detail" required>
             <div id="editor"></div>
             <small class="red-text" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
                 Detail is required.
-            </small>
+            </small>-->
+            <app-tinymce name="detail" [(ngModel)]="detail"></app-tinymce>
         </div>
         <div class="row wrap">
             <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
@@ -99,7 +100,7 @@
                     <label for="no">No</label>
                 </li>
             </ul>
-        
+
         </div>
         <div class="container">
             <div class="row">
@@ -153,11 +154,11 @@
         </div>
         <div class="row center-align">
             <div>
-        <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
-        <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
-        <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
-        <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>      
-        </div>
+                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
+                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
+                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
+                <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>
+            </div>
             <span class="red-text" id="errorPost"></span>
         </div>
         <div class="modal-footer">

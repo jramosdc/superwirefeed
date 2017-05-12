@@ -107,8 +107,7 @@ export class EditPostComponent implements OnInit {
                     alert('please select *.pdf file');
                 }
             }
-        }
-        else if (evt.target.id === 'browseImages') {
+        } else if (evt.target.id === 'browseImages') {
             this.images = [];
             let pattern = new RegExp('[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$');
             for (let i = 0; i < evt.target.files.length; i++) {
@@ -198,12 +197,12 @@ export class EditPostComponent implements OnInit {
                     this.post['detail'] = editor.getContent();
                 });
                 editor.on('init', (e) => {
-                    // console.log('tiny init', this.post['detail']);
+                    console.log('tiny init', this.post['detail']);
                     tinymce.activeEditor.setContent(this.post['detail']);
                 });
             }
         });
-        // console.log('ng init');
+        console.log('ng init');
     }
 
     typeAddRemove(type: string) {

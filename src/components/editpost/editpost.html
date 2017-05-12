@@ -17,12 +17,13 @@
             </div>
         </div>
         <div class="row">
-            <label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
+            <!--<label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
             <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="detail" placeholder="Detail">
             <div id="editor"></div>
             <small class="red-text" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
                 Detail is required.
-            </small>
+            </small>-->
+            <app-tinymce name="detail" [(ngModel)]="post.detail"></app-tinymce>
         </div>
         <div class="row wrap">
             <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
