@@ -1,26 +1,22 @@
 main.profile {
   position: relative;
   padding-top: .1rem;
-
-  > header {
+  >header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     padding-top: 15px;
     padding-bottom: 15px;
-
     .avatar {
       margin: 15px 0;
       display: flex;
       align-items: center;
       flex-basis: 25%;
       padding-right: 15px;
-
       input {
         display: none;
       }
-
       img {
         width: 100px;
         height: 100px;
@@ -28,31 +24,27 @@ main.profile {
         margin-right: 15px;
         background: white;
       }
-
       h4 {
         font-size: 24px;
         font-weight: 500;
         color: $title-gray;
       }
-
       span {
         color: $blue-gray;
         font-size: 13px;
       }
-
-      h4, span {
+      h4,
+      span {
         line-height: 1;
         margin: 3px 0;
       }
     }
-
     .cover {
       flex-basis: 75%;
       height: 100px;
       overflow: hidden;
       position: relative;
       margin: 15px 0;
-
       img {
         position: absolute;
         top: 50%;
@@ -61,45 +53,37 @@ main.profile {
         width: 100%;
       }
     }
-
     .meta {
       display: flex;
       margin: 15px 0;
-
-      > div {
+      >div {
         max-width: 300px;
         border-right: 1px solid transparentize(#5E5E5E, .9);
         padding: 0 30px;
-
         &.description {
           flex: 1;
           margin-left: -30px;
         }
-
         &:last-child {
           border: none;
         }
       }
-
-      h6, p {
+      h6,
+      p {
         margin: 5px 0;
         font-size: 14px;
       }
-
       h6 {
         color: $blue-gray;
       }
-
       p {
         font-weight: 300;
         color: $title-gray;
-
         a {
           color: $blue-gray;
           cursor: pointer;
         }
       }
-
       h4 {
         color: $title-gray;
         font-size: 28px;
@@ -108,11 +92,9 @@ main.profile {
         text-align: center;
       }
     }
-
     .follow {
       background: $blue-dark;
       border-radius: 5px;
-
       i {
         font-size: 18px;
         display: inline-block;
@@ -120,13 +102,11 @@ main.profile {
         line-height: 1;
         vertical-align: -2px;
       }
-
       &:hover {
         background: transparentize($blue-dark, .1);
       }
     }
   }
-
   &:before {
     content: '';
     height: 15rem;
@@ -135,34 +115,25 @@ main.profile {
     z-index: -1;
     width: 100%;
     left: 0;
-    background-image: linear-gradient(
-      to bottom,
-      rgba($tertiary-color, .75) 0%,
-      white 100%
-    );
+    background-image: linear-gradient( to bottom, rgba($tertiary-color, .75) 0%, white 100%);
   }
-
-  > .content {
+  >.content {
     background: $gray-light;
     padding-top: .1rem;
     min-height: 46rem;
     padding-top: 30px;
     padding-bottom: 30px;
-
     .activity {
       flex-basis: 335px;
       padding-right: 35px;
-
-      > header {
+      >header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 1.25rem;
-
         .section-title {
           margin: 0;
         }
-
         select {
           display: inline-block;
           height: auto;
@@ -176,88 +147,71 @@ main.profile {
         }
       }
     }
-
     .reviews {
       flex: 1;
       padding: 0 35px;
-    }
-
-    // info panel
+    } // info panel
     .meta {
       min-width: 14rem;
       max-width: 14rem;
       padding-left: 1.5rem;
       text-align: right;
-
       .links {
         margin-top: .6em;
-    
         a {
           background: $red;
           border-radius: 25px;
-          color: $gray-light; 
+          color: $gray-light;
           padding: 1em;
           background-clip: content-box;
           display: block;
           text-align: center;
           font-size: 14px;
           line-height: 2;
-
           &:hover {
             text-decoration: underline;
           }
         }
       }
-
       .activities {
         opacity: .5;
         transition: opacity .2s;
       }
-
       &:hover .activities {
         opacity: 1;
       }
-
       .section-title {
         margin: 0;
       }
-
       dl {
         dt {
           color: rgba($blue-gray, .6);
           padding: .5rem 0;
           font-size: .9em;
-
           a {
             color: $blue-gray;
           }
-
           time {
             display: block;
           }
         }
       }
-
       .links {
         margin-bottom: 45px;
       }
-
       hr {
         border: 0 $border-gray solid;
         border-bottom-width: 1px;
         margin: 30px 0;
       }
     }
-
     .center-container {
       display: flex;
       justify-content: space-between;
-
       @media #{$small-and-down} {
         flex-direction: column;
       }
-
-      > section {
+      >section {
         border-left: $border-gray 1px solid;
       }
     }
@@ -268,59 +222,55 @@ article.review {
   color: $gray-dark;
   padding: 20px;
   margin-left: -20px;
-
-  > h5 {
+  >h5 {
     font-size: 22px;
     color: $blue-dark;
     margin: 0;
   }
-
-  > .info {
+  >.info {
     margin: 10px 0 7px;
     display: flex;
     font-size: 13px;
     align-items: center;
-
     .rating {
       color: transparentize($gray-dark, 0.5);
       position: relative;
       font-size: 0;
-
-      &, .active {
+      &,
+      .active {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         line-height: 1;
         height: 18px;
       }
-
       svg {
-        min-width: 18px; max-width: 18px; flex-basis: 18px;
+        min-width: 18px;
+        max-width: 18px;
+        flex-basis: 18px;
         margin: 0 3px 0 0;
         display: inline-block;
-
         &:last-of-type {
           margin: 0;
         }
       }
-
       .active {
         position: absolute;
-        left: 0; top: 0;
-        width: 0; height: 100%;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 100%;
         overflow: hidden;
         color: $yellow;
       }
     }
-
     .author {
       display: inline-block;
       margin: 0 12px;
       color: $gray-dark;
     }
   }
-
-  > p {
+  >p {
     margin: 0;
   }
 }
@@ -329,17 +279,14 @@ section.graph {
   display: flex;
   flex-wrap: wrap;
   padding-top: 5px;
-
   dl {
     flex: 1 0 86px;
     font-size: 0;
     margin: 15px 6.5% 10px 0;
-
     &:nth-child(3n) {
       margin-right: 0;
     }
   }
-
   dt {
     display: block;
     color: $blue-gray;
@@ -348,25 +295,35 @@ section.graph {
     opacity: .5;
     margin-bottom: 10px;
   }
-
   dd {
     display: inline-block;
     width: 10px;
     height: 10px;
     margin: 0 2px 2px 0;
-
     &.empty {
       pointer-events: none;
     }
-
     &:not(.empty) {
       background: $gray-mid;
       cursor: pointer;
-
       &:hover {
         background: transparentize($blue-gray, 0.75);
         box-shadow: 0 0 0 1px transparentize($blue-gray, 0.25);
       }
     }
   }
+}
+
+.nopadding {
+  padding: 0px;
+}
+
+.nomargin {
+  margin: 0px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

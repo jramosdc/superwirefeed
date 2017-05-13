@@ -545,11 +545,24 @@ export class authService {
 		return this.af.database.list('/comments').push(comment);
 	}
 
+	addReview(review: any) {
+		return this.af.database.list('/reviews').push(review);
+	}
+
 	getPostComment(postId: string) {
 		return this.af.database.list('/comments', {
 			query: {
 				orderByChild: 'postId',
 				equalTo: postId
+			}
+		})
+	}
+
+	getUserReviews(userId: string) {
+		return this.af.database.list('/reviews', {
+			query: {
+				orderByChild: 'userId',
+				equalTo: userId
 			}
 		})
 	}

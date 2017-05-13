@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 import { TinymceModule } from 'angular2-tinymce';
+import { RatingModule } from 'ngx-rating';
+import { MomentModule } from 'angular2-moment';
 
 import { AppComponent } from './app/app';
 import { ApplicationComponents, AppRoutes } from './routes';
@@ -42,6 +44,8 @@ import tinymceconfig from './tinymceconfig';
         method: AuthMethods.Password
       })
     , TinymceModule.withConfig(<any>tinymceconfig)
+    , RatingModule
+    , MomentModule
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes
