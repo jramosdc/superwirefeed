@@ -23,7 +23,8 @@
             <small class="red-text" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
                 Detail is required.
             </small>-->
-            <app-tinymce name="detail" [(ngModel)]="detail"></app-tinymce>
+            <!--<app-tinymce name="detail" [(ngModel)]="detail"></app-tinymce>-->
+            <p-editor name="detail" [(ngModel)]="detail" [style]="{'height':'200px'}"></p-editor>
         </div>
         <div class="row wrap">
             <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>

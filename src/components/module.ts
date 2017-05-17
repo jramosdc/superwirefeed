@@ -7,6 +7,7 @@ import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 import { TinymceModule } from 'angular2-tinymce';
 import { RatingModule } from 'ngx-rating';
 import { MomentModule } from 'angular2-moment';
+import { EditorModule, SharedModule } from 'primeng/primeng';
 
 import { AppComponent } from './app/app';
 import { ApplicationComponents, AppRoutes } from './routes';
@@ -46,6 +47,7 @@ import tinymceconfig from './tinymceconfig';
     , TinymceModule.withConfig(<any>tinymceconfig)
     , RatingModule
     , MomentModule
+    , EditorModule, SharedModule
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes

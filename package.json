@@ -9,7 +9,8 @@
     "build:prod2": "webpack --progress --optimize-minimize",
     "serve": "webpack-dev-server --progress --profile --colors --display-error-details --inline --history-api-fallback true",
     "start": "npm run serve",
-    "postinstall": "typings install"
+    "postinstall": "typings install",
+    "typings": "typings"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "author": "Muhammad Kamran <smkamranqadri@yahoo.com>",
   "license": "ISC",
   "dependencies": {
+    "@angular/animations": "^4.1.2",
     "@angular/common": "2.4.1",
     "@angular/compiler": "2.4.1",
     "@angular/core": "2.4.1",
@@ -41,12 +43,14 @@
     "moment": "^2.15.2",
     "ng2-img-cropper": "0.5.1",
     "ngx-rating": "0.0.9",
+    "primeng": "^4.0.1",
     "reflect-metadata": "0.1.8",
     "rxjs": "5.0.1",
     "tinymce": "4.3.11",
     "zone.js": "0.7.4"
   },
   "devDependencies": {
+    "@types/quill": "0.0.29",
     "compression-webpack-plugin": "0.3.2",
     "copy-webpack-plugin": "3.0.1",
     "file-loader": "0.9.0",

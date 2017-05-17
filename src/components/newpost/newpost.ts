@@ -67,8 +67,9 @@ export class NewPostComponent implements OnInit {
     }
 
     ngOnInit() {
-
-        $('.dropdown-button')['dropdown']();
+        setTimeout(() => {
+            $('.dropdown-button')['dropdown']();
+        })
         // tinymce['remove']();
         // tinymce['init']({
         //     selector: '#editor',
