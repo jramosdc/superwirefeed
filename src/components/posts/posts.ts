@@ -181,18 +181,18 @@ export class PostsComponent implements OnInit, OnDestroy {
   // and fill data structure
   parseImgUrl(htmlDesc: string) {
     let regex = /(https?:\/\/[^">]+)(jpg|png)/gi;
-    let imgs = htmlDesc.match(regex);
+    let imgs = htmlDesc ? htmlDesc.match(regex) : false;
     return imgs && imgs[0]
   }
   parseShortDescription(htmlDesc: string) {
-    let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
-    let descriptions = htmlDesc.replace(htmlRegex, "");
+    let htmlRegex = /(<([^>]+)>)/gi;    // Regex to remove html tags
+    let descriptions = htmlDesc ? htmlDesc.replace(htmlRegex, '') : '';
     let truncateLength = 120;
     if (truncateLength > descriptions.length) {
       return descriptions;
     } else {
       descriptions = descriptions.substring(0, truncateLength);
-      return descriptions + "...";
+      return descriptions + '...';
     }
 
     /*let regex = /[^-=\>/"%_<:;&]{55,}/gi;

@@ -37,6 +37,7 @@
     "materialize-tags": "1.0.0",
     "mdi": "1.5.54",
     "ng2-img-cropper": "0.5.1",
+    "primeng": "^4.0.1",
     "reflect-metadata": "0.1.8",
     "rxjs": "5.0.1",
     "tinymce": "4.3.11",

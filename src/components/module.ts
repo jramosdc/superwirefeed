@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
+import { EditorModule, SharedModule } from 'primeng/primeng';
 
 import { AppComponent } from './app/app';
 import { ApplicationComponents, AppRoutes } from './routes';
@@ -39,6 +40,7 @@ import { TruncatePipe } from './pipes/truncate';
         provider: AuthProviders.Password,
         method: AuthMethods.Password
       })
+    , EditorModule, SharedModule
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes
