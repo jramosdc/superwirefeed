@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
-import { TinymceModule } from 'angular2-tinymce';
 import { RatingModule } from 'ngx-rating';
 import { MomentModule } from 'angular2-moment';
 import { EditorModule, SharedModule } from 'primeng/primeng';
@@ -25,8 +24,6 @@ import { SearchPostTitlePipe } from './pipes/searchPostTitle';
 import { ObjectToArray } from './pipes/objectToArrays';
 import { TruncatePipe } from './pipes/truncate';
 
-import tinymceconfig from './tinymceconfig';
-
 @NgModule({
   imports: [
     BrowserModule
@@ -44,7 +41,6 @@ import tinymceconfig from './tinymceconfig';
         provider: AuthProviders.Password,
         method: AuthMethods.Password
       })
-    , TinymceModule.withConfig(<any>tinymceconfig)
     , RatingModule
     , MomentModule
     , EditorModule, SharedModule
