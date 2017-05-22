@@ -24,7 +24,28 @@
                 Detail is required.
             </small>-->
             <!--<app-tinymce name="detail" [(ngModel)]="detail"></app-tinymce>-->
-            <p-editor name="detail" [(ngModel)]="detail" [style]="{'height':'200px'}"></p-editor>
+            <p-editor name="detail" [(ngModel)]="detail" [style]="{'height':'200px'}">
+                <p-header>
+                    <span class="ql-format-group">
+                        <span class="ql-formats">
+                            <select class="ql-header">
+                            <option value="1">Heading</option>
+                            <option value="2">Subheading</option>
+                            <option selected>Normal</option>
+                            </select>
+                        </span>
+                    <span class="ql-formats">      
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                        </span>
+                    <span class="ql-formats">
+                            <button class="ql-image"></button>
+                            <button class="ql-video"></button>
+                            <button class="ql-link"></button>
+                        </span>
+                    </span>
+                </p-header>
+            </p-editor>
         </div>
         <div class="row wrap">
             <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
@@ -38,7 +59,7 @@
                 <li>
                     <a>All</a>
                 </li>
-                <li *ngFor="let cat of categories" (click)="dropdown.category = cat" [value]="cat">
+                <li *ngFor="let cat of categories" (click)="dropdown.category = cat; test(category.value);" [value]="cat">
                     <a>{{cat}}</a>
                 </li>
             </ul>
