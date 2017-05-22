@@ -38,8 +38,11 @@ export class authService {
 	// api: string = ' http://localhost:3000';
 	User: User;
 	user$: BehaviorSubject<any>;
-	activePage: Object = { title: '' };
-	activeFeed: Object = {
+	private activePage = { title: '' };
+	private activeFeed = {
+		id: null
+	};
+	private activePost = {
 		id: null
 	};
 	Feeds: FirebaseListObservable<any[]>;
@@ -160,6 +163,14 @@ export class authService {
 
 	getActiveFeed() {
 		return this.activeFeed;
+	}
+
+	setActivePostID(postId: string) {
+		this.activePost['id'] = postId;
+	}
+
+	getActivePost() {
+		return this.activePost;
 	}
 
 	loadFeeds() {
@@ -542,5 +553,19 @@ export class authService {
 	getFile(url) {
 		window.open(this.api + url, "_self");
 	}
+
+	addComment(comment: any) {
+		return this.af.database.list('/comments').push(comment);
+	}
+
+	getPostComment(postId: string) {
+		return this.af.database.list('/comments', {
+			query: {
+				orderByChild: 'postId',
+				equalTo: postId
+			}
+		})
+	}
+
 
 }

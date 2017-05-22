@@ -476,6 +476,42 @@
   <hr class="triple line">
 </div>
 
+<div id="commentModal" class="modal">
+  <header>
+    <h5 class="title">New Comment</h5>
+    <div class="logo">
+      <img src="assets/logo.svg" alt="">
+      <span>SuperWire</span>
+    </div>
+  </header>
+
+  <hr class="line">
+
+  <div class="modal-content">
+    <div class="row">
+      <form class="col s12 nopadding">
+        <div class="row nomargin flex-center">
+          <div class="col s1">
+            <i class="mdi mdi-comment small prefix material-icons"></i>
+          </div>
+          <div class="input-field col s11">
+            <textarea #textarea class="materialize-textarea nopadding nomargin"></textarea>
+            <label for="textarea" style="margin-left: 10px;">Comment</label>
+          </div>
+          <div class="error">
+            <span class="red-text" id="errorComment"></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <hr class="line">
+  <footer class="nopadding flex-center">
+    <button class="btn" (click)="saveComment(textarea)">Save</button>
+  </footer>
+  <hr class="triple line">
+</div>
+
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
   <!-- arrow-left: 13 24 -->
   <path id="arrow-left" stroke="red" fill-rule="evenodd" d="M47.0206897,590 C47.2482759,590 47.4551724,589.917241 47.6206897,589.751724 C47.9517241,589.42069 47.9517241,588.882759 47.6206897,588.551724 L37.0689655,578 L47.6206897,567.448276 C47.9517241,567.117241 47.9517241,566.57931 47.6206897,566.248276 C47.2896552,565.917241 46.7517241,565.917241 46.4206897,566.248276 L35.2482759,577.4 C34.9172414,577.731034 34.9172414,578.268966 35.2482759,578.6 L46.4206897,589.751724 C46.5862069,589.917241 46.7931034,590 47.0206897,590 Z"

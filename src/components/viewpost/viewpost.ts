@@ -17,6 +17,7 @@ export class ViewPostComponent {
   User: User;
   postid: string;
   Domain: string;
+  comments: Array<Object>;
   post: Object;
   activeCategory: string;
   categories: Array<string>;
@@ -37,10 +38,14 @@ export class ViewPostComponent {
     this.route.params.subscribe(params => {
       this.postid = params['postid'];
       if (this.postid) {
+        this.as.setActivePostID(this.postid);
+        this.as.getPostComment(this.postid).subscribe(comments => {
+          this.comments = comments;
+        })
         this.as.loadPost(this.postid).subscribe((post) => {
           this.post = post;
           // this.post['purl'] = post.pdfLink ?
-            // sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
+          // sanitizer.bypassSecurityTrustResourceUrl((post.pdfLink).replace('http:', '')) : post.pdfLink;
           // this.post['gurl'] = sanitizer.bypassSecurityTrustResourceUrl(post.gsheetLink);
           setTimeout(() => {
             // $('.linkify')['linkify']();
@@ -146,27 +151,27 @@ export class ViewPostComponent {
       return '';
     }
   }
-  wordsCount(description){
-    if(description){
+  wordsCount(description) {
+    if (description) {
       let wordsCount = description.replace(/(<([^>]+)>)/gi, "").trim().split(/\s+/).length;  //Regex to remove html tags and count number of words
-      let timeInMin = Math.ceil(1/60 * (60/200 * wordsCount));
+      let timeInMin = Math.ceil(1 / 60 * (60 / 200 * wordsCount));
       return timeInMin + ' mins read';
-    }else {
+    } else {
       return '';
     }
   }
-  parsePostDetail(description : string){
+  parsePostDetail(description: string) {
     let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
-    return description.replace(htmlRegex, "");
+    return description.replace(htmlRegex, '');
   }
 
   displayTable(dataJSON) {
     console.log(dataJSON);
     let data = dataJSON;
-    let tableDiv = document.getElementById("fullTable");
-    let tbl = document.createElement("table");
-    let tblHead = document.createElement("thead");
-    let tblBody = document.createElement("tbody");
+    let tableDiv = document.getElementById('fullTable');
+    let tbl = document.createElement('table');
+    let tblHead = document.createElement('thead');
+    let tblBody = document.createElement('tbody');
     /*var Headerrow = document.createElement("tr");
     for (var heading in data[0]) {
       console.log('heading', heading)
@@ -176,7 +181,7 @@ export class ViewPostComponent {
       Headerrow.appendChild(cell);
     }
     tblBody.appendChild(Headerrow);*/
-    for (let j = 0; j < data.length-1; j++) {
+    for (let j = 0; j < data.length - 1; j++) {
       let row = document.createElement('tr');
       for (let obj in data[j]) {
         let cell = document.createElement('td');
@@ -191,7 +196,7 @@ export class ViewPostComponent {
     tbl.appendChild(tblBody);
     tableDiv.appendChild(tbl);
     setTimeout(() => {
-      tbl.setAttribute("class", "striped highlight centered responsive-table");
+      tbl.setAttribute('class', 'striped highlight centered responsive-table');
     }, 1000);
   }
 
@@ -210,20 +215,20 @@ export class ViewPostComponent {
       .then(data => {
         console.log('on success; ', data);
         this.as.buyPost(this.User.uid, this.postid)
-            .then(res => {
-              this.postPayment = false;
-              this.agreementModelClose();
-              console.log('Data Saved');
-            })
-            .catch(err => {
-              console.log('err', err);
-            })
+          .then(res => {
+            this.postPayment = false;
+            this.agreementModelClose();
+            console.log('Data Saved');
+          })
+          .catch(err => {
+            console.log('err', err);
+          })
       })
       .catch(err => {
         console.log('on err; ', err)
       });
   }
-  navigate(postid: string){
+  navigate(postid: string) {
     this.router.navigate(['editpost', postid]);
     // this.as.setActiveFeedID(this.FeedID);
   }
@@ -253,8 +258,12 @@ export class ViewPostComponent {
     console.log('create feed modal');
     $('#authModal')['closeModal']();
     $('#loginModal')['closeModal']();
-    $(".button-collapse")['sideNav']('hide');
+    $('.button-collapse')['sideNav']('hide');
     $('#registerModal')['openModal']();
+  }
+
+  openCommentModal() {
+    $('#commentModal')['openModal']();
   }
 
 }
