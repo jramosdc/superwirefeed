@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
 import { httpService } from './httpService';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 export {
 	FirebaseListObservable
@@ -44,11 +44,11 @@ export class authService {
 	};
 	Feeds: FirebaseListObservable<any[]>;
 	Posts: FirebaseListObservable<any[]>;
-	Categories: Array<string> = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design','Misc','All'];
+	Categories: Array<string> = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design', 'Misc', 'All'];
 	postCategories: Array<string> = [];
 	storageRef = firebase.storage().ref('/');
-  private mainRef = firebase.database().ref('/');
-  hiddenNavbar$: Subject<boolean> = new Subject();
+	private mainRef = firebase.database().ref('/');
+	hiddenNavbar$: Subject<boolean> = new Subject();
 
 	constructor(private af: AngularFire, private http: httpService) {
 		this.user$ = new BehaviorSubject<any>(this.emptyUser());
@@ -178,6 +178,19 @@ export class authService {
 			});
 	}
 
+	getUserReviews(userId: string) {
+		return this.af.database.list('/reviews', {
+			query: {
+				orderByChild: 'userId',
+				equalTo: userId
+			}
+		})
+	}
+
+	addReview(review: any) {
+		return this.af.database.list('/reviews').push(review);
+	}
+
 	checkEmail(feedid: string, email: string) {
 		return this.af.database.object('/feeds/' + feedid + '/authEmail').map(emails => {
 			return emails.filter(eMail => {
@@ -295,13 +308,13 @@ export class authService {
 	updateFeed(userid: string, feed: Object) {
 		return this.af.database.object('/feeds/' + userid).update(feed);
 	}
-	getFileId(image: Object){
+	getFileId(image: Object) {
 		return this.af.database.list('/images').push(image);
 	}
 	submitPost(post: Object) {
 		return this.af.database.list('/posts').push(post);
 	}
-	setPost(postid: string, post: Object){
+	setPost(postid: string, post: Object) {
 		return this.af.database.object('/posts/' + postid).set(post);
 	}
 
@@ -341,7 +354,7 @@ export class authService {
 	deleteFile(path: string) {
 		return new Promise((resolve, reject) => {
 			this.storageRef.child(path).delete()
-				.then(()=> {
+				.then(() => {
 					resolve('File Deleted Successfully');
 				})
 				.catch((error) => {
@@ -352,7 +365,7 @@ export class authService {
 	deletePost(postid: string) {
 		return this.af.database.object('/posts/' + postid).remove();
 	}
-	deletePostData(postid: string, key: string, keyid: string){
+	deletePostData(postid: string, key: string, keyid: string) {
 		return this.af.database.object('/posts/' + postid + '/' + key + '/' + keyid).remove();
 	}
 
@@ -389,10 +402,10 @@ export class authService {
 		})
 	}
 
-	buyPost(userid: string, postid: string){
+	buyPost(userid: string, postid: string) {
 		return this.af.database.object('/user-assets/' + userid + '/' + postid).set(true);
 	}
-	getUserAsset(userid: string, postid: string){
+	getUserAsset(userid: string, postid: string) {
 		return this.af.database.object('/user-assets/' + userid + '/' + postid);
 	}
 
@@ -516,7 +529,7 @@ export class authService {
 		}); // promise
 	}
 
-	download(post){
+	download(post) {
 		console.log('post', post);
 		return new Promise((resolve, reject) => {
 			this.http.addJSON(`${this.api}/api/download`, post, (res) => {
@@ -526,7 +539,7 @@ export class authService {
 		})
 	}
 
-	getFile(url){
+	getFile(url) {
 		window.open(this.api + url, "_self");
 	}
 

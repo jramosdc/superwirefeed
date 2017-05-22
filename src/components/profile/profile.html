@@ -1,6 +1,5 @@
 <style>
-
-    .avatar:hover .camOnHover {
+	.avatar:hover .camOnHover {
 		display: block;
 	}
 
@@ -19,184 +18,159 @@
 	}
 </style>
 <main class="profile" *ngIf="!editMode && profile">
-  <header class="center-container">
+	<header class="center-container">
 
-    <section class="avatar">
-      <a class="btn-floating waves-effect waves-light pink camOnHover" *ngIf="profile.uid  === User.uid" (click)="profileModelOpen();"><i class="mdi mdi-camera"></i></a>
-      <img *ngIf="profile.profileImageURL" (click)="profileModelOpen();" [src]="profile.profileImageURL" alt="User Profile Image">
-      <img *ngIf="profile.email && !profile.profileImageURL" (click)="profileModelOpen();" src="https://res.cloudinary.com/dqenlmcw2/image/upload/v1489642182/206ded4566e9574aef3169f3d5f3bc44_lrphze.png">
-      <div>
-        <!-- <h4>{{profile.displayName || profile.email}}</h4> -->
-        <h4>{{profile.feedName}}</h4>
-        <span>@{{profile.feedId}}</span>
-      </div>
-    </section>
+		<section class="avatar">
+			<a class="btn-floating waves-effect waves-light pink camOnHover" *ngIf="profile.uid  === User.uid" (click)="profileModelOpen();"><i class="mdi mdi-camera"></i></a>
+			<img *ngIf="profile.profileImageURL" (click)="profileModelOpen();" [src]="profile.profileImageURL" alt="User Profile Image">
+			<img *ngIf="profile.email && !profile.profileImageURL" (click)="profileModelOpen();" src="https://res.cloudinary.com/dqenlmcw2/image/upload/v1489642182/206ded4566e9574aef3169f3d5f3bc44_lrphze.png">
+			<div>
+				<!-- <h4>{{profile.displayName || profile.email}}</h4> -->
+				<h4>{{profile.feedName}}</h4>
+				<span>@{{profile.feedId}}</span>
+			</div>
+		</section>
 
-    <figure class="cover">
-      <a class="btn-floating waves-effect waves-light pink camOnHover" *ngIf="profile.uid  === User.uid" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
-      <img [src]="profile.backgroundImageURL" alt="{{profile.feedName}}">
-    </figure>
+		<figure class="cover">
+			<a class="btn-floating waves-effect waves-light pink camOnHover" *ngIf="profile.uid  === User.uid" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
+			<img [src]="profile.backgroundImageURL" alt="{{profile.feedName}}">
+		</figure>
 
-    <section class="meta">
-      <div class="description">
-        <h6>Biography</h6>
-        <p>{{profile.bio}}
-          <!-- <a>More</a> -->
-        </p>
-      </div>
-      <div>
-        <h6>Interests</h6>
-        <p>{{profile.interests[0]}}, {{profile.interests[1]}}</p>
-      </div>
-      <div (click)="followerModelPopup();">
-        <h6>Followers</h6>
-        <h4>{{followers.length}}</h4>
-      </div>
-      <div (click)="followingModelPopup();">
-        <h6>Following</h6>
-        <h4>{{following.length}}</h4>
-      </div>
-      <div>
-        <h6>Posts</h6>
-        <h4>{{ (posts | async)?.length }}</h4>
-      </div>
-    </section>
-    <button class="follow waves-effect waves-light btn-large" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()">
+		<section class="meta">
+			<div class="description">
+				<h6>Biography</h6>
+				<p>{{profile.bio}}
+					<!-- <a>More</a> -->
+				</p>
+			</div>
+			<div>
+				<h6>Interests</h6>
+				<p>{{profile.interests[0]}}, {{profile.interests[1]}}</p>
+			</div>
+			<div (click)="followerModelPopup();">
+				<h6>Followers</h6>
+				<h4>{{followers.length}}</h4>
+			</div>
+			<div (click)="followingModelPopup();">
+				<h6>Following</h6>
+				<h4>{{following.length}}</h4>
+			</div>
+			<div>
+				<h6>Posts</h6>
+				<h4>{{ (posts | async)?.length }}</h4>
+			</div>
+		</section>
+		<button class="follow waves-effect waves-light btn-large" *ngIf="profile && User.uid === profile.uid && !editMode" (click)="edit()">
       <i class="mdi mdi-pencil"></i>
       <span *ngIf="(posts | async)?.length == 0">Finish Profile </span>Edit
     </button>
-    <button class="follow waves-effect waves-light btn-large" *ngIf="User?.uid && profile && User.uid !== profile.uid" (click)="followingSys();">
+		<button class="follow waves-effect waves-light btn-large" *ngIf="User?.uid && profile && User.uid !== profile.uid" (click)="followingSys();">
       <i class="mdi mdi-plus-circle"></i>
       Follow
     </button>
-  </header>
+	</header>
 
 
-  <div class="content">
-    <div class="center-container">
-      <aside class="activity">
-        <header>
-          <h6 class="section-title">Activity chart</h6>
-          <select (change)="changeGraph($event.target.value)">>
+	<div class="content">
+		<div class="center-container">
+			<aside class="activity">
+				<header>
+					<h6 class="section-title">Activity chart</h6>
+					<select (change)="changeGraph($event.target.value)">>
             <option value="2017">2017</option>
             <option value="2016">2016</option>
             <option value="2015">2015</option>
           </select>
-        </header>
+				</header>
 
-        <section class="graph">
-          <dl *ngFor="let month of monthGraph; let i = index;">
-            <dt>{{ monthList[i] }}</dt>
-            <dd *ngFor="let d of month; let j = index"
-              [ngClass]="{'empty': !d}" [attr.data-tooltip]="d ? countIndex(j, month) + ' ' + monthList[i] + ', ' + year : null"></dd>
-          </dl>
-        </section>
-      </aside>
+				<section class="graph">
+					<dl *ngFor="let month of monthGraph; let i = index;">
+						<dt>{{ monthList[i] }}</dt>
+						<dd *ngFor="let d of month; let j = index" [ngClass]="{'empty': !d}" [attr.data-tooltip]="d ? countIndex(j, month) + ' ' + monthList[i] + ', ' + year : null"></dd>
+					</dl>
+				</section>
+			</aside>
 
-      <section class="reviews">
-        <h6 class="section-title">Reviews</h6>
+			<section class="reviews">
+				<div class="header">
+					<h6 class="section-title nomargin">Reviews</h6>
+					<button class="btn" (click)="openReviewModal()" style="padding: 0px 10px;">
+						<i class="mdi mdi-comment-plus-outline small"></i>
+					</button>
+				</div>
 
-        <article class="review">
-          <h5>Super Awesome</h5>
-          <div class="info">
-            <div class="rating">
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+				<article class="review" *ngFor="let review of reviews | orderBy : ['-timestamp']">
+					<h5>{{review.title}}</h5>
+					<div class="info">
+						<div class="rating">
+							<svg viewBox="0 0 18 18">
+								<use xlink:href="#star"></use>
+							</svg>
+							<svg viewBox="0 0 18 18">
+								<use xlink:href="#star"></use>
+							</svg>
+							<svg viewBox="0 0 18 18">
+								<use xlink:href="#star"></use>
+							</svg>
+							<svg viewBox="0 0 18 18">
+								<use xlink:href="#star"></use>
+							</svg>
+							<svg viewBox="0 0 18 18">
+								<use xlink:href="#star"></use>
+							</svg>
 
-              <div class="active" style="width: 90%">
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              </div>
-            </div>
-            <a class="author">@nikoloza</a>
-            <time>15 mins ago</time>
-          </div>
-          <p>It’s getting crowded in the investment crowdfunding space, and that’s excellent news.</p>
-        </article>
+							<div class="active" style="width: 100%">
+								<svg viewBox="0 0 18 18" *ngIf="review.rating >= 1">
+									<use xlink:href="#star"></use>
+								</svg>
+								<svg viewBox="0 0 18 18" *ngIf="review.rating >= 2">
+									<use xlink:href="#star"></use>
+								</svg>
+								<svg viewBox="0 0 18 18" *ngIf="review.rating >= 3">
+									<use xlink:href="#star"></use>
+								</svg>
+								<svg viewBox="0 0 18 18" *ngIf="review.rating >= 4">
+									<use xlink:href="#star"></use>
+								</svg>
+								<svg viewBox="0 0 18 18" *ngIf="review.rating >= 5">
+									<use xlink:href="#star"></use>
+								</svg>
+							</div>
+						</div>
+						<a class="author">@{{review.owner.userid}}</a>
+						<time>{{returnMoment(review.timestamp)}}</time>
+					</div>
+					<p>{{review.review}}</p>
+				</article>
+			</section>
 
-        <article class="review">
-          <h5>Really nice feed</h5>
-          <div class="info">
-            <div class="rating">
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
+			<section class="meta">
+				<h6 class="section-title">More content</h6>
+				<div class="links">
+					<a [routerLink]="['/posts', profile.feedId]">My Feed</a>
+					<a [routerLink]="['/subscription', profile.feedId]">My Community</a>
+				</div>
 
-              <div class="active" style="width: 80%">
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              </div>
-            </div>
-
-            <a class="author">@jairo</a>
-            <time>56 mins ago</time>
-          </div>
-          <p>Thousand of white balloons, suspended in a billowing wash of sound</p>
-        </article>
-
-        <article class="review">
-          <h5>Fantastic!!</h5>
-          <div class="info">
-            <div class="rating">
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-
-              <div class="active" style="width: 100%">
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-                <svg viewBox="0 0 18 18"><use xlink:href="#star"></use></svg>
-              </div>
-            </div>
-
-            <a class="author">@jairo</a>
-            <time>1 hour ago</time>
-          </div>
-          <p>Thousand of white balloons, suspended in a billowing wash of sound</p>
-        </article>
-      </section>
-
-      <section class="meta">
-        <h6 class="section-title">More content</h6>
-        <div class="links">
-          <a [routerLink]="['/posts', profile.feedId]">My Feed</a>
-          <a [routerLink]="['/subscription', profile.feedId]">My Community</a>
-        </div>
-
-        <div class="activities">
-          <h6 class="section-title">Activities</h6>
-          <dl>
-            <dt><a>@jairo</a> liked this feed
-              <time>2 hours ago</time>
-            </dt>
-            <dt><a>@nikoloza</a> liked this feed
-              <time>3 hours ago</time>
-            </dt>
-          </dl>
-        </div>
-      </section>
-    </div>
-  </div>
+				<div class="activities">
+					<h6 class="section-title">Activities</h6>
+					<dl>
+						<dt><a>@jairo</a> liked this feed
+							<time>2 hours ago</time>
+						</dt>
+						<dt><a>@nikoloza</a> liked this feed
+							<time>3 hours ago</time>
+						</dt>
+					</dl>
+				</div>
+			</section>
+		</div>
+	</div>
 </main>
 
 <!-- svg sprite -->
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
-  <polygon id="star" fill="currentColor" fill-rule="evenodd" points="99.739 49.5 94.311 52.281 95.348 46.391 90.956 42.219 97.025 41.359 99.739 36 102.453 41.359 108.522 42.219 104.13 46.391 105.167 52.281" transform="translate(-91 -36)"/>
+	<polygon id="star" fill="currentColor" fill-rule="evenodd" points="99.739 49.5 94.311 52.281 95.348 46.391 90.956 42.219 97.025 41.359 99.739 36 102.453 41.359 108.522 42.219 104.13 46.391 105.167 52.281"
+	 transform="translate(-91 -36)" />
 </svg>
 <!-- old edit mode -->
 <div class="row" *ngIf="editMode">
@@ -216,22 +190,22 @@
 			<div class="input-field col s12">
 				<textarea id="bio" #bio class="materialize-textarea validate"></textarea>
 				<label for="bio" class="active">Bio</label>
-        <small style="color: red;" *ngIf="!bio.value">Bio is required.</small>
+				<small style="color: red;" *ngIf="!bio.value">Bio is required.</small>
 			</div>
 		</div>
 		<div class="row">
-			
+
 			<div class="input-field col s8">
 				<input id="feedName" #feedName type="text" class="validate">
 				<label for="feedName" class="active">Feed Name</label>
-        <small style="color: red;" *ngIf="!feedName.value">Feed Name is required.</small>
+				<small style="color: red;" *ngIf="!feedName.value">Feed Name is required.</small>
 			</div>
 		</div>
 		<div class="row">
 			<div class="input-field col s12">
 				<input id="description" #description type="text" class="validate">
 				<label for="description" class="active">Tell us a bit more about the content you are posting</label>
-        <small style="color: red;" *ngIf="!description.value">Description is required.</small>
+				<small style="color: red;" *ngIf="!description.value">Description is required.</small>
 			</div>
 		</div>
 		<div class="row">
@@ -243,7 +217,7 @@
 				<label for="pno">No</label>
 			</div>
 		</div>
-    <div class="row" *ngIf="pyes.checked">
+		<div class="row" *ngIf="pyes.checked">
 			<div class="input-field col s12">
 				<tag-input placeholder="Add Authorized Email" [tagArray]="authList" [allowedTagsPattern]="validEmailPattern" (updatedList)="emailInputEventCatch($event);">
 				</tag-input>
@@ -262,7 +236,7 @@
 					<option value="Misc">Misc</option>
 				</select>
 				<label for="category">Category</label>
-        <small style="color: red;" *ngIf="!category.value">Category is required.</small>
+				<small style="color: red;" *ngIf="!category.value">Category is required.</small>
 			</div>
 		</div>
 		<div class="row">
@@ -382,13 +356,13 @@
 			<div *ngIf="!profile?.backgroundImageURL">
 				<div [hidden]="!imageSelected">
 					<img src="https://unsplash.it/300/200/?random" alt="default background image" (click)="fileInput2.click(); imageSelected=false;"
-						style="width: 300px; height: auto;" />
+					 style="width: 300px; height: auto;" />
 				</div>
 			</div>
 			<div *ngIf="profile?.backgroundImageURL">
 				<div [hidden]="!imageSelected">
 					<img [src]="profile.backgroundImageURL" alt="User Profile Image" class="col s12" (click)="fileInput2.click(); imageSelected=false;"
-						style="width: 300px; height: auto;">
+					 style="width: 300px; height: auto;">
 				</div>
 			</div>
 			<div [hidden]="imageSelected">
@@ -460,3 +434,54 @@
 		</div>
 	</form>
 </div>
+<div id="reviewModal" class="modal">
+	<header>
+		<h5 class="title">New Review</h5>
+		<div class="logo">
+			<img src="assets/logo.svg" alt="">
+			<span>SuperWire</span>
+		</div>
+	</header>
+
+	<hr class="line">
+
+	<div class="modal-content">
+		<div class="row nomargin">
+			<div class="row nomargin">
+				<form #reviewForm="ngForm" class="col s12 nopadding">
+					<div class="row nomargin flex-center">
+						<div class="col s1">
+							<i class="mdi mdi-format-title small prefix material-icons"></i>
+						</div>
+						<div class="input-field col s11">
+							<label for="title" style="margin-left: 10px;">Title</label>
+							<input type="text" class="validate" name="title" [(ngModel)]="title" required>
+						</div>
+					</div>
+					<div class="row nomargin flex-center">
+						<div class="col s1">
+							<i class="mdi mdi-comment small prefix material-icons"></i>
+						</div>
+						<div class="input-field col s11">
+							<textarea name="review" [(ngModel)]="review" class="materialize-textarea nopadding nomargin" required></textarea>
+							<label for="textarea" style="margin-left: 10px;">Comment</label>
+						</div>
+					</div>
+					<div class="row nomargin flex-center">
+						<rating name="rating" [(ngModel)]="rating" required>
+						</rating>
+					</div>
+					<div class="row nomargin flex-center">
+						<div class="error nomargin">
+							<span class="red-text" id="errorReview"></span>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<hr class="line">
+		<footer class="nopadding flex-center">
+			<button class="btn" (click)="saveReview(reviewForm)">Save</button>
+		</footer>
+		<hr class="triple line">
+	</div>

@@ -26,6 +26,7 @@ export class ProfileComponent extends Type implements OnInit {
   postCategoryNew: Array<string> = [];
   following: any[] = [];
   followers: any[] = [];
+  reviews: any[] = [];
   posts: FirebaseListObservable<any[]>;
   categories: Array<string>;
 
@@ -63,6 +64,7 @@ export class ProfileComponent extends Type implements OnInit {
       if (this.userid) {
         this.as.getFollowers(this.userid).subscribe((followers) => this.followers = followers);
         this.as.getFollowing(this.userid).subscribe((following) => this.following = following);
+        this.as.getUserReviews(this.userid).subscribe((reviews) => this.reviews = reviews);
         this.as.getUserProfile(this.userid).subscribe((profile) => {
           this.profile = profile;
           if (!this.profile['interests']) this.profile['interests'] = []
@@ -124,6 +126,47 @@ export class ProfileComponent extends Type implements OnInit {
         $('.fab').css('margin-bottom', '150px');
       }
     });
+  }
+
+  openReviewModal() {
+    $('#reviewModal')['openModal']();
+  }
+
+  saveReview(reviewForm) {
+    console.log(reviewForm)
+    if (!reviewForm.valid) return $('#errorReview').html('Input fields are missing!');
+    let review = {
+      title: reviewForm.value.title,
+      review: reviewForm.value.review,
+      rating: reviewForm.value.rating,
+      userId: this.userid,
+      owner: {
+        uid: this.User.uid,
+        userid: this.User.feed.userid,
+        feedid: this.User.feed.id
+      },
+      timestamp: firebase.database['ServerValue'].TIMESTAMP
+    }
+    console.log('review, ', review)
+    this.as.addReview(review).then(res => {
+      console.log('Review is Submitted!');
+      $('#errorReview').html('');
+      // this.postLoading = false;
+      reviewForm.reset();
+      $('#reviewModal')['closeModal']();
+    }).catch(err => {
+      console.log('Review Submit Failed!', err);
+      $('#errorReview').html(err.toString());
+      // this.postLoading = false;
+    });
+  }
+
+  returnMoment(timestamp) {
+    if (timestamp) {
+      return moment().to(timestamp);
+    } else {
+      return ''
+    }
   }
 
   edit() {

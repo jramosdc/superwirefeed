@@ -12,6 +12,7 @@ import { ApplicationServices } from './services/bootstrapServices';
 import { ApplicationDirectives } from './directives/sharedDirectives';
 import { TagInputComponent } from './tag-input/tag-input.component';
 import { TagInputItemComponent } from './tag-input/tag-input-item.component';
+import { RatingModule } from 'ngx-rating';
 
 // import { ApplicationPipes } from './pipes/sharedPipes';
 
@@ -41,6 +42,7 @@ import { TruncatePipe } from './pipes/truncate';
         method: AuthMethods.Password
       })
     , EditorModule, SharedModule
+    , RatingModule
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes
