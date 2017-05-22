@@ -12,43 +12,65 @@
                 </small>
             </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
             <a *ngIf="!post?.coverImage && !postedImgUrl" class="btn-floating waves-effect waves-light pink camOnHover" (click)="backgroundImagePopup();"><i class="mdi mdi-camera"></i></a>
             <img *ngIf="post?.coverImage && !postedImgUrl" [src]="post?.coverImage" alt="img-post" width="100px" (click)="backgroundImagePopup();">
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
-        </div>
+        </div>-->
         <div class="row">
             <label for="editor">Add text, links, images, embed videos || *italic*, **bold**, #H1</label>
-            <input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="post.detail" placeholder="Detail" required>
-            <div id="editor"></div>
+            <!--<input type="hidden" class="validate" #editor="ngModel" name="detail" [(ngModel)]="post.detail" placeholder="Detail" required>
+            <div id="editor"></div>-->
+            <p-editor name="detail" #editor="ngModel" [(ngModel)]="post.detail" [style]="{'height':'320px'}">
+                <p-header>
+                    <span class="ql-format-group">
+            <span class="ql-formats">
+                    <select class="ql-header">
+                      <option value="1">Heading</option>
+                      <option value="2">Subheading</option>
+                      <option selected>Normal</option>
+                    </select>
+            </span>
+                    <span class="ql-formats">      
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            </span>
+                    <span class="ql-formats">
+            <button class="ql-image"></button>
+            <button class="ql-video"></button>
+            <button class="ql-link"></button>
+            </span>
+                    </span>
+                </p-header>
+            </p-editor>
             <small class="invalid-test" [hidden]="editor.valid || (editor.pristine && !f._submitted)">
                 Detail is required.
             </small>
         </div>
-                <div class="row wrap">
+        <div class="row wrap">
             <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
             <img *ngIf="postImgData?.image" [src]="postImgData?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
             <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-section" data-alignment="right">
                 <i class="mdi mdi-tab"></i> Section
             </a>
-            <ul id="edit-section" class='dropdown-content' #category="ngModel" name="category" [(ngModel)]="dropdown.category" ngDefaultControl
+            <ul id="edit-section" class='dropdown-content' #category="ngModel" name="category" [(ngModel)]="post.category" ngDefaultControl
                 required>
                 <li>
                     <a>All</a>
                 </li>
-                <li *ngFor="let cat of categories" (click)="dropdown.category = cat" [value]="cat">
-                    <a>{{cat}}</a>
+                <li *ngFor="let cat of categories" (click)="post.category = cat" [value]="cat">
+                    <a>{{cat}}<i class="mdi mdi-check right-align" *ngIf="cat === post.category"></i></a>
                 </li>
             </ul>
 
             <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-license" data-alignment="right">
                 <i class="mdi mdi-coin"></i> LICENSE
             </a>
-            <ul id="edit-license" class='dropdown-content' #license="ngModel" name="license" [(ngModel)]="dropdown.license" ngDefaultControl
+            <ul id="edit-license" class='dropdown-content' #license="ngModel" name="license" [(ngModel)]="post.license" ngDefaultControl
                 required>
-                <li *ngFor="let lic of licenses; let i = index" (click)="dropdown.license = i" [value]="i">
-                    <a>{{lic}}</a>
+                <li *ngFor="let lic of licenses; let i = index" (click)="post.license = i" [value]="i">
+                    <a>{{lic}}<i class="mdi mdi-check right-align" *ngIf="i === post.license"></i></a>
                 </li>
             </ul>
 
@@ -89,31 +111,31 @@
             <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-breaking" data-alignment="right">
                 <i class="mdi mdi-alert"></i> BREAKING?
             </a>
-            <ul id="edit-breaking" class='dropdown-content' #priority="ngModel" name="priority" [(ngModel)]="dropdown.breaking" ngDefaultControl
+            <ul id="edit-breaking" class='dropdown-content' #priority="ngModel" name="priority" [(ngModel)]="post.priority" ngDefaultControl
                 required>
                 <li class="padding">
-                    <input type="radio" id="yes" name="breaking" (change)="dropdown.breaking = true" />
+                    <input type="radio" id="yes" name="breaking" (change)="post.priority = true" />
                     <label for="yes">Yes</label>
                 </li>
                 <li class="padding">
-                    <input type="radio" id="no" name="breaking" (change)="dropdown.breaking = false" />
+                    <input type="radio" id="no" name="breaking" (change)="post.priority = false" />
                     <label for="no">No</label>
                 </li>
             </ul>
-        
+
         </div>
         <div class="container">
             <div class="row">
                 <div class="col s6">
                     <h6>EXTERNAL ASSETS</h6>
                     <p>
-                        <input type="pdf" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="pdf" placeholder="Pdf Link">
+                        <input type="pdf" class="validate" #pdfLink="ngModel" name="pdfLink" [(ngModel)]="post.pdfLink" placeholder="Pdf Link">
                     </p>
                     <p>
-                        <input type="gsheet" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="gsheet" placeholder="GSheet Link">
+                        <input type="gsheet" class="validate" #gsheetLink="ngModel" name="gsheetLink" [(ngModel)]="post.gsheetLink" placeholder="GSheet Link">
                     </p>
                     <p>
-                        <input type="url" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="mu" placeholder="Link">
+                        <input type="url" class="validate" #mainUrl="ngModel" name="mainUrl" [(ngModel)]="post.mainUrl" placeholder="Link">
                     </p>
                 </div>
 
@@ -154,11 +176,11 @@
         </div>
         <div class="row center-align">
             <div>
-        <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
-        <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
-        <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
-        <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>      
-        </div>
+                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
+                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
+                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
+                <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>
+            </div>
             <span class="red-text" id="errorPost"></span>
         </div>
         <div class="modal-footer">
