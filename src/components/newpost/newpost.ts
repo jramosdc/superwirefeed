@@ -33,13 +33,6 @@ export class NewPostComponent implements OnInit {
     imagesLinks: any = {};
     csvLinks: any = {};
     postObjReady: { embedlyApi: boolean, uploadFile: boolean } = { embedlyApi: false, uploadFile: false };
-    // Cropper variables postImgData
-    postImgData: any = {};
-    cropperSettings_rectangle: CropperSettings = <any>{};
-    imageSelected: boolean = true;
-    imageUploading: boolean = false;
-    postedImgUrl = null;
-    @ViewChild('postCropper', undefined) postCropper: ImageCropperComponent;
 
     constructor(private as: authService, private router: Router, private embedly: embedlyService, private storge: FirebaseStorageService, private sb: SearchBarService) {
         this.User = this.as.emptyUser();
@@ -47,28 +40,13 @@ export class NewPostComponent implements OnInit {
         this.categories = this.as.getPostCategories();
         this.as.setActivePageTitle('New Post');
 
-        // for angular2 Corpper (rectangle)
-        this.cropperSettings_rectangle = new CropperSettings();
-        this.cropperSettings_rectangle.width = 400;
-        this.cropperSettings_rectangle.height = 200;
-        this.cropperSettings_rectangle.keepAspect = false;
-        this.cropperSettings_rectangle.croppedWidth = 400;
-        this.cropperSettings_rectangle.croppedHeight = 200;
-        this.cropperSettings_rectangle.canvasWidth = 400;
-        this.cropperSettings_rectangle.canvasHeight = 200;
-        this.cropperSettings_rectangle.minWidth = 200;
-        this.cropperSettings_rectangle.minHeight = 100;
-        this.cropperSettings_rectangle.rounded = false;
-        this.cropperSettings_rectangle.minWithRelativeToResolution = false;
-        this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
-        this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
-        this.cropperSettings_rectangle.noFileInput = true;
         this.sb.setHiddenSearchBar(true);
     }
 
     ngOnInit() {
 
-        $('.dropdown-button')['dropdown']();
+        $('.dropdown-button')['dropdown']({
+        });
         // tinymce['remove']();
         // tinymce['init']({
         //     selector: '#editor',
@@ -206,7 +184,7 @@ export class NewPostComponent implements OnInit {
                 mainUrl: newpost.mainUrl ? newpost.mainUrl : '',
                 // csvFilename: (this.csvFile) ? this.csvFile.name : '',
                 csvToJson: '',
-                coverImage: this.postedImgUrl,
+                coverImage: this.as.getPostedImage().url,
                 owner: {
                     uid: this.User.uid,
                     userid: this.User.feed.userid,
@@ -275,7 +253,9 @@ export class NewPostComponent implements OnInit {
             }
             // after extract data from embedly API save into post embedly property
             this.embedly.extractAPI(newpost.mainUrl).then((data: IEmbedly) => {
+                console.log('embdly', data);
                 post['embedly'] = data;
+                // post['embedly']['data']['images'] = post['embedly']['data']['images'] ? post['embedly']['data']['images'] : ' ';
                 this.postObjReady.embedlyApi = true;
                 this.postToFirebase(postid, post);             // save to firebase
             });
@@ -365,10 +345,10 @@ export class NewPostComponent implements OnInit {
         if (this.postObjReady.uploadFile && this.postObjReady.embedlyApi) {
             // for show updated on top feeds!
             this.as.updateFeed(this.User.feed.id, { 'timestamp': firebase.database['ServerValue'].TIMESTAMP });
+            console.log('post', post)
             this.as.setPost(postid, post).then(res => {
                 console.log('Post is Submitted!');
                 $('#errorPost').html('');
-                this.postedImgUrl = null;
                 this.postLoading = false;
                 this.router.navigate(['posts', this.User.feed.id]);
                 $('#newpostModal')['closeModal']();
@@ -399,38 +379,6 @@ export class NewPostComponent implements OnInit {
     backgroundImagePopup() {
         event.preventDefault();
         $('#backgroundModal')['openModal']();
-    }
-
-    backgroundModelClose() {
-        event.preventDefault();
-        $('#backgroundModal')['closeModal']();
-        this.imageSelected = true;
-        this.postImgData['image'] = null;
-    }
-
-    backgroundChangeListener($event) {
-        event.preventDefault();
-        let image: any = new Image();
-        let file: File = $event.target.files[0];
-        let myReader: FileReader = new FileReader();
-
-        myReader.onloadend = (loadEvent: any) => {
-            image.src = loadEvent.target.result;
-            this.postCropper.setImage(image);
-            // data2 image on select image
-            // this.postImgData.image = loadEvent.target.result
-        };
-        myReader.readAsDataURL(file);
-    }
-
-    uploadBackgroundImage() {
-        this.imageUploading = true;
-        this.as.uploadPostImg(this.postImgData.image).then(imgUrl => {
-            console.log('imgUrl: ', imgUrl);
-            this.postedImgUrl = imgUrl;
-            this.imageUploading = false;
-            this.backgroundModelClose();
-        });
     }
 
 }

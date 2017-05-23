@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
 import { httpService } from './httpService';
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export {
 	FirebaseListObservable
@@ -44,6 +44,9 @@ export class authService {
 	};
 	private activePost = {
 		id: null
+	};
+	private postedImage = {
+		url: null
 	};
 	Feeds: FirebaseListObservable<any[]>;
 	Posts: FirebaseListObservable<any[]>;
@@ -171,6 +174,14 @@ export class authService {
 
 	getActivePost() {
 		return this.activePost;
+	}
+
+	setPostedImageUrl(url) {
+		this.postedImage['url'] = url;
+	}
+
+	getPostedImage() {
+		return this.postedImage;
 	}
 
 	loadFeeds() {
@@ -398,7 +409,7 @@ export class authService {
 						firebase.auth().currentUser.delete().then(function () {
 							resolve();
 						}).catch(error => {
-							console.log("error in deleting user", error);
+							console.log('error in deleting user', error);
 							reject(error);
 						});
 						// authState.auth.delete().then(() => {
@@ -517,8 +528,8 @@ export class authService {
 	}
 
 	randomStringGenerator(len: number) {
-		let text = "";
-		let possible = "ABCDEF-GHIJ-KLMNOPQR_STUV-WXYZ#abcdefghijklmnopqrstuv$wxyz012345-6789_";
+		let text = '';
+		let possible = 'ABCDEF-GHIJ-KLMNOPQR_STUV-WXYZ#abcdefghijklmnopqrstuv$wxyz012345-6789_';
 
 		for (var i = 0; i < len; i++) {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -551,7 +562,7 @@ export class authService {
 	}
 
 	getFile(url) {
-		window.open(this.api + url, "_self");
+		window.open(this.api + url, '_self');
 	}
 
 	addComment(comment: any) {

@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, trigger, transition, style, animate } fro
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { User, authService } from '../services/authService';
 import { SearchBarService } from '../services/searchBar';
+import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
 
 declare var CryptoJS;
 
@@ -55,6 +56,14 @@ export class NavbarComponent implements OnInit {
   Interests: string[] = ['Politics', 'Economy', 'Sports', 'Technology', 'Science', 'Design'];
   FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design', 'Misc'];
 
+  // Image Cropper
+
+  postImgData = { image: '' };
+  cropperSettings_rectangle: CropperSettings = <any>{};
+  imageSelected: boolean = true;
+  imageUploading: boolean = false;
+  @ViewChild('postCropper', undefined) postCropper: ImageCropperComponent;
+
   constructor(public as: authService, private router: Router, private route: ActivatedRoute, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
@@ -87,6 +96,23 @@ export class NavbarComponent implements OnInit {
         this.UserInfo.userName = params['userid'] ? params['userid'] : '';
       }
     })
+
+    this.cropperSettings_rectangle = new CropperSettings();
+    this.cropperSettings_rectangle.width = 400;
+    this.cropperSettings_rectangle.height = 200;
+    this.cropperSettings_rectangle.keepAspect = false;
+    this.cropperSettings_rectangle.croppedWidth = 400;
+    this.cropperSettings_rectangle.croppedHeight = 200;
+    this.cropperSettings_rectangle.canvasWidth = 400;
+    this.cropperSettings_rectangle.canvasHeight = 200;
+    this.cropperSettings_rectangle.minWidth = 200;
+    this.cropperSettings_rectangle.minHeight = 100;
+    this.cropperSettings_rectangle.rounded = false;
+    this.cropperSettings_rectangle.minWithRelativeToResolution = false;
+    this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+    this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
+    this.cropperSettings_rectangle.noFileInput = true;
+
   }
 
   ngOnInit() {
@@ -96,6 +122,38 @@ export class NavbarComponent implements OnInit {
       closeOnClick: true
     });
     // $('#regflowModal')['closeModal']();
+  }
+
+  backgroundModelClose() {
+    event.preventDefault();
+    $('#backgroundModal')['closeModal']();
+    this.imageSelected = true;
+    this.postImgData.image = null;
+  }
+
+  backgroundChangeListener($event) {
+    event.preventDefault();
+    let image: any = new Image();
+    let file: File = $event.target.files[0];
+    let myReader: FileReader = new FileReader();
+
+    myReader.onloadend = (loadEvent: any) => {
+      image.src = loadEvent.target.result;
+      setTimeout(() => {
+        this.postCropper.setImage(image)
+      })
+    };
+    myReader.readAsDataURL(file);
+  }
+
+  uploadBackgroundImage() {
+    this.imageUploading = true;
+    this.as.uploadPostImg(this.postImgData.image).then(imgUrl => {
+      console.log('imgUrl: ', imgUrl);
+      this.as.setPostedImageUrl(imgUrl);
+      this.imageUploading = false;
+      this.backgroundModelClose();
+    });
   }
 
   home() {
