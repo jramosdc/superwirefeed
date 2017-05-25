@@ -27,7 +27,7 @@ export class EditPostComponent implements OnInit {
     postLoading: boolean;
     categories: Array<string> = [];
     licenses: Array<string> = ['CC-BY (free)', 'CC-BY-ND', 'Selling/Attribution ($35)', 'Selling/Exclusive ($200)'];
-    dropdown = { breaking: false, types: [] };
+    dropdown = { breaking: false, types: [], license: -1, category: '' };
     csvFile: any = null;
     csvLinks: any = {};
     pdfFile: Array<any> = [];
@@ -98,7 +98,7 @@ export class EditPostComponent implements OnInit {
         }
         else if (evt.target.id == "browsePdfFile") {
             this.pdfFile = [];
-            let pattern = new RegExp("[0-9a-z]{1,}.(pdf)$");
+            let pattern = new RegExp('[0-9a-z]{1,}.(pdf)$');
             for (let i = 0; i < evt.target.files.length; i++) {
                 console.log(evt.target.files[i]);
                 if (pattern.test(evt.target.files[i].name)) {
@@ -109,9 +109,9 @@ export class EditPostComponent implements OnInit {
                 }
             }
         }
-        else if (evt.target.id == "browseImages") {
+        else if (evt.target.id == 'browseImages') {
             this.images = [];
-            let pattern = new RegExp("[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$");
+            let pattern = new RegExp('[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$');
             for (let i = 0; i < evt.target.files.length; i++) {
                 if (pattern.test(evt.target.files[i].name)) {
                     let size = parseInt(((evt.target.files[i].size / 1024) / 1024).toFixed(2)); //size in mbs
@@ -138,30 +138,15 @@ export class EditPostComponent implements OnInit {
                     console.log('post', post);
                     this.post = post;
                     this.postedImgUrl = post.coverImage;
-                    if (this.post['types']) {
-                        this.post['types'].map(type => {
-                            switch (type) {
-                                case 'file-document':
-                                    $('#text').prop('checked', true);
-                                    break;
-                                case 'camera':
-                                    $('#image').prop('checked', true);
-                                    break;
-                                case 'play-box-outline':
-                                    $('#video').prop('checked', true);
-                                    break;
-                                case 'microphone':
-                                    $('#audio').prop('checked', true);
-                                    break;
-                            }
-                        });
-                    }
-                    this.post['priority'] ? $('#yes').prop('checked', true) : $('#no').prop('checked', true);
                     this.UserID = post.owner.userid;
                     resolve();
                 });
             });
         });
+    }
+
+    typeSelected(selectedType: string) {
+        return this.post && this.post['types'] && this.post['types'].indexOf(selectedType) !== -1;
     }
 
     typeAddRemove(type: string) {
@@ -222,10 +207,10 @@ export class EditPostComponent implements OnInit {
         let post = {
             title: editpost.title,
             detail: this.post['detail'],
-            priority: editpost.priority,
-            license: editpost.license,
+            priority: this.post['priority'],
+            license: this.post['license'],
             types: this.post['types'],
-            category: editpost.category,
+            category: this.post['category'],
             pdfFile: ((this.post['pdfFile']) ? this.post['pdfFile'] : ((this.pdfFile ? this.pdfFile : null))),
             gsheetFile: ((this.post['gsheetFile']) ? this.post['gsheetFile'] : ((this.csvFile ? this.csvFile : null))),
             pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
@@ -279,7 +264,7 @@ export class EditPostComponent implements OnInit {
         if (this.csvFile) {
             Papa.parse(this.csvFile, {
                 complete: (result) => {
-                    post["csvToJson"] = result.data;
+                    post['csvToJson'] = result.data;
                 }
             });
 
@@ -305,6 +290,7 @@ export class EditPostComponent implements OnInit {
         // after extract data from embedly API save into post embedly property
         // console.log('test1');
         this.embedly.extractAPI(editpost.mainUrl).then((data: IEmbedly) => {
+            if (data && data['images'] && data['images'].length == 0) data['images'] = ' ';
             post['embedly'] = data;
             this.postObjReady.embedlyApi = true;
             this.updateToFirebase(post);             // save to firebase
