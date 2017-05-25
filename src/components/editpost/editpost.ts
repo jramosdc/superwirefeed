@@ -240,7 +240,7 @@ export class EditPostComponent implements OnInit {
                 })
                 .catch(err => {
                     console.log('file not upload err', err);
-                }); if (data && data['images'] && data['images'].length == 0) data['images'] = ' ';
+                });
         }
         if (this.images.length > 0) {
             this.uploadFile(this.images, this.postid)
