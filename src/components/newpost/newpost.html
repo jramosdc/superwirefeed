@@ -50,78 +50,76 @@
             <a *ngIf="!postImgData?.image && !postedImgUrl" class="waves-effect waves-light btn yellow" (click)="backgroundImagePopup();"><i class="mdi mdi-cloud"></i>COVER PHOTO</a>
             <img *ngIf="postImgData?.image" [src]="postImgData?.image" alt="img-post" width="100px" (click)="backgroundImagePopup();">
             <img *ngIf="postedImgUrl" [src]="postedImgUrl" alt="img-post" width="100px" (click)="backgroundImagePopup();">
-            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-section" data-alignment="right">
-                <i class="mdi mdi-tab"></i> Section
-            </a>
-            <ul id="edit-section" class='dropdown-content' #category="ngModel" name="category" [(ngModel)]="dropdown.category" ngDefaultControl
-                required>
-                <li>
-                    <a>All</a>
-                </li>
-                <li *ngFor="let cat of categories" (click)="dropdown.category = cat" [value]="cat">
-                    <a>{{cat}}</a>
-                </li>
-            </ul>
+            <ng2-dropdown (onItemClicked)="dropdown.category = $event.value">
+                <ng2-dropdown-button style="width: auto;" [showCaret]="false">
+                    <span class="btn blue-grey darken-1">Section</span>
+                </ng2-dropdown-button>
+                <ng2-dropdown-menu>
+                    <ng2-menu-item *ngFor="let cat of categories" [value]="cat">
+                        {{ cat }}
+                    </ng2-menu-item>
 
-            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-license" data-alignment="right">
-                <i class="mdi mdi-coin"></i> LICENSE
-            </a>
-            <ul id="edit-license" class='dropdown-content' #license="ngModel" name="license" [(ngModel)]="dropdown.license" ngDefaultControl
-                required>
-                <li *ngFor="let lic of licenses; let i = index" (click)="dropdown.license = i" [value]="i">
-                    <a>{{lic}}</a>
-                </li>
-            </ul>
+                    <div class='ng2-menu-divider'></div>
 
-            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-format" data-alignment="right">
-                <i class="mdi mdi-file"></i> FORMAT
-            </a>
-            <ul id="edit-format" class='dropdown-content' #type="ngModel" multiple name="type" [(ngModel)]="dropdown.type" ngDefaultControl>
-                <!--<li (click)="dropdown.type = 'file-document'" [value]="file-document">
-                    <a>Text</a>
-                </li>
-                <li (click)="dropdown.type = 'camera'" [value]="camera">
-                    <a>Image</a>
-                </li>
-                <li (click)="dropdown.type = 'play-box-outline'" [value]="play-box-outline">
-                    <a>Video</a>
-                </li>
-                <li (click)="dropdown.type = 'microphone'" [value]="microphone">
-                    <a>Audio</a>
-                </li>-->
-                <li class="padding">
-                    <input type="checkbox" id="text" name="type" (change)="typeAddRemove('file-document')" />
-                    <label for="text">Text</label>
-                </li>
-                <li class="padding">
-                    <input type="checkbox" id="image" name="type" (change)="typeAddRemove('camera')" />
-                    <label for="image">Image</label>
-                </li>
-                <li class="padding">
-                    <input type="checkbox" id="video" name="type" (change)="typeAddRemove('play-box-outline')" />
-                    <label for="video">Video</label>
-                </li>
-                <li class="padding">
-                    <input type="checkbox" id="audio" name="type" (change)="typeAddRemove('microphone')" />
-                    <label for="audio">Audio</label>
-                </li>
-            </ul>
-
-            <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-breaking" data-alignment="right">
-                <i class="mdi mdi-alert"></i> BREAKING?
-            </a>
-            <ul id="edit-breaking" class='dropdown-content' #priority="ngModel" name="priority" [(ngModel)]="dropdown.breaking" ngDefaultControl
-                required>
-                <li class="padding">
-                    <input type="radio" id="yes" name="breaking" (change)="dropdown.breaking = true" />
-                    <label for="yes">Yes</label>
-                </li>
-                <li class="padding">
-                    <input type="radio" id="no" name="breaking" (change)="dropdown.breaking = false" />
-                    <label for="no">No</label>
-                </li>
-            </ul>
-
+                    <ng2-menu-item value="ALL">
+                        All
+                    </ng2-menu-item>
+                </ng2-dropdown-menu>
+            </ng2-dropdown>
+            <ng2-dropdown (onItemClicked)="dropdown.license = $event.value">
+                <ng2-dropdown-button style="width: auto;" [showCaret]="false">
+                    <span class="btn blue-grey darken-1">License</span>
+                </ng2-dropdown-button>
+                <ng2-dropdown-menu>
+                    <ng2-menu-item *ngFor="let lic of licenses; let i = index" [value]="i">
+                        {{ lic }}
+                    </ng2-menu-item>
+                </ng2-dropdown-menu>
+            </ng2-dropdown>
+            <ng2-dropdown (onItemClicked)="typeAddRemove($event.value)">
+                <ng2-dropdown-button style="width: auto;" [showCaret]="false">
+                    <span class="btn blue-grey darken-1"><i class="mdi mdi-file"></i> FORMAT</span>
+                </ng2-dropdown-button>
+                <ng2-dropdown-menu>
+                    <ng2-menu-item [value]="'file-document'">
+                        <i class="mdi mdi-checkbox-marked" *ngIf="typeSelected('file-document')"></i>
+                        <i class="mdi mdi-checkbox-blank-outline" *ngIf="!typeSelected('file-document')"></i>
+                        <label for="text">Text</label>
+                    </ng2-menu-item>
+                    <ng2-menu-item [value]="'camera'">
+                        <i class="mdi mdi-checkbox-marked" *ngIf="typeSelected('camera')"></i>
+                        <i class="mdi mdi-checkbox-blank-outline" *ngIf="!typeSelected('camera')"></i>
+                        <label for="image">Image</label>
+                    </ng2-menu-item>
+                    <ng2-menu-item [value]="'play-box-outline'">
+                        <i class="mdi mdi-checkbox-marked" *ngIf="typeSelected('play-box-outline')"></i>
+                        <i class="mdi mdi-checkbox-blank-outline" *ngIf="!typeSelected('play-box-outline')"></i>
+                        <label for="video">Video</label>
+                    </ng2-menu-item>
+                    <ng2-menu-item [value]="'microphone'">
+                        <i class="mdi mdi-checkbox-marked" *ngIf="typeSelected('microphone')"></i>
+                        <i class="mdi mdi-checkbox-blank-outline" *ngIf="!typeSelected('microphone')"></i>
+                        <label for="audio">Audio</label>
+                    </ng2-menu-item>
+                </ng2-dropdown-menu>
+            </ng2-dropdown>
+            <ng2-dropdown (onItemClicked)="dropdown.breaking = $event.value">
+                <ng2-dropdown-button style="width: auto;" [showCaret]="false">
+                    <span class="btn blue-grey darken-1"><i class="mdi mdi-alert"></i> BREAKING?</span>
+                </ng2-dropdown-button>
+                <ng2-dropdown-menu>
+                    <ng2-menu-item [value]="true">
+                        <i class="mdi mdi-checkbox-blank-circle-outline" *ngIf="!dropdown.breaking"></i>
+                        <i class="mdi mdi-checkbox-blank-circle" *ngIf="dropdown.breaking"></i>
+                        <label for="text">Yes</label>
+                    </ng2-menu-item>
+                    <ng2-menu-item [value]="false">
+                        <i class="mdi mdi-checkbox-blank-circle-outline" *ngIf="dropdown.breaking"></i>
+                        <i class="mdi mdi-checkbox-blank-circle" *ngIf="!dropdown.breaking"></i>
+                        <label for="image">No</label>
+                    </ng2-menu-item>
+                </ng2-dropdown-menu>
+            </ng2-dropdown>
         </div>
         <div class="container">
             <div class="row">
@@ -175,10 +173,9 @@
         </div>
         <div class="row center-align">
             <div>
-                <small class="red-text" [hidden]="license.valid || (license.pristine && !f._submitted)">License is required.</small>
-                <small class="red-text" [hidden]="priority.valid || (priority.pristine && !f._submitted)">Priority is required.</small>
-                <small class="red-text" [hidden]="type.valid || (type.pristine && !f._submitted)">Type is required.</small>
-                <small class="red-text" [hidden]="category.valid || (category.pristine && !f._submitted)">Category is required.</small>
+                <small class="red-text" [hidden]="dropdown.license >= 0 || !f._submitted">License is required.</small>
+                <small class="red-text" [hidden]="dropdown.types.length >= 1 || !f._submitted">Type is required.</small>
+                <small class="red-text" [hidden]="dropdown.category || !f._submitted">Category is required.</small>
             </div>
             <span class="red-text" id="errorPost"></span>
         </div>

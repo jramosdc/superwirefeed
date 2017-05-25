@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 import { EditorModule, SharedModule } from 'primeng/primeng';
+import { RatingModule } from 'ngx-rating';
+import { Ng2DropdownModule } from 'ng2-material-dropdown';
 
 import { AppComponent } from './app/app';
 import { ApplicationComponents, AppRoutes } from './routes';
@@ -12,7 +14,6 @@ import { ApplicationServices } from './services/bootstrapServices';
 import { ApplicationDirectives } from './directives/sharedDirectives';
 import { TagInputComponent } from './tag-input/tag-input.component';
 import { TagInputItemComponent } from './tag-input/tag-input-item.component';
-import { RatingModule } from 'ngx-rating';
 
 // import { ApplicationPipes } from './pipes/sharedPipes';
 
@@ -43,6 +44,7 @@ import { TruncatePipe } from './pipes/truncate';
       })
     , EditorModule, SharedModule
     , RatingModule
+    , Ng2DropdownModule
   ]
   , declarations: [AppComponent, ...ApplicationComponents, ...ApplicationDirectives, TagInputComponent, TagInputItemComponent,
     // pipes

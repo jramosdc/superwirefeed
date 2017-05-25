@@ -14,7 +14,6 @@ declare var tinymce: any;
     host: {
         class: 'col s12'
     },
-    styles: [require('./newpost.css')],
     template: require('./newpost.html')
 })
 export class NewPostComponent implements OnInit {
@@ -24,7 +23,7 @@ export class NewPostComponent implements OnInit {
     postLoading: boolean;
     categories: Array<string> = [];
     licenses: Array<string> = ['CC-BY (free)', 'CC-BY-ND', 'Selling/Attribution ($35)', 'Selling/Exclusive ($200)'];
-    dropdown = { breaking: false, types: [] };
+    dropdown = { breaking: false, types: [], license: -1, category: '' };
     csvFile: any = null;
     pdfFile: Array<any> = [];
     pdfFileLinks: any = {};
@@ -45,8 +44,8 @@ export class NewPostComponent implements OnInit {
 
     ngOnInit() {
 
-        $('.dropdown-button')['dropdown']({
-        });
+        // $('.dropdown-button')['dropdown']({
+        // });
         // tinymce['remove']();
         // tinymce['init']({
         //     selector: '#editor',
@@ -101,7 +100,12 @@ export class NewPostComponent implements OnInit {
         // });
     }
 
+    typeSelected(selectedType: string) {
+        return this.dropdown.types.indexOf(selectedType) !== -1;
+    }
+
     typeAddRemove(type: string) {
+        console.log('type', type)
         let add = true;
         this.dropdown.types.map((ty, I) => {
             if (ty === type) {
@@ -160,9 +164,9 @@ export class NewPostComponent implements OnInit {
     }
 
     submitPost(valid, newpost) {
-        console.log('valid', valid);
-        console.log('newpost', newpost);
-        console.log('dropdown', this.dropdown);
+        // console.log('valid', valid);
+        // console.log('newpost', newpost);
+        // console.log('dropdown', this.dropdown);
         event.preventDefault();
         if (!valid) { return; }
         if (this.dropdown.types.length === 0) { return; }
@@ -172,10 +176,10 @@ export class NewPostComponent implements OnInit {
             let post = {
                 title: newpost.title,
                 detail: newpost.detail,
-                priority: newpost.priority,
-                license: newpost.license,
+                priority: this.dropdown.breaking,
+                license: this.dropdown.license,
                 types: this.dropdown.types,
-                category: newpost.category,
+                category: this.dropdown.category,
                 pdfFile: newpost.pdfFile ? newpost.pdfFile : '',
                 gsheetFile: newpost.gsheetFile ? newpost.gsheetFile : '',
                 pdfLink: newpost.pdfLink ? newpost.pdfLink : '',
@@ -253,9 +257,8 @@ export class NewPostComponent implements OnInit {
             }
             // after extract data from embedly API save into post embedly property
             this.embedly.extractAPI(newpost.mainUrl).then((data: IEmbedly) => {
-                console.log('embdly', data);
+                if (data && data['images'] && data['images'].length == 0) data['images'] = ' ';
                 post['embedly'] = data;
-                // post['embedly']['data']['images'] = post['embedly']['data']['images'] ? post['embedly']['data']['images'] : ' ';
                 this.postObjReady.embedlyApi = true;
                 this.postToFirebase(postid, post);             // save to firebase
             });
