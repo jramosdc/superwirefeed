@@ -82,7 +82,6 @@ export class NavbarComponent implements OnInit {
       userName: ''
     };
     this.route.queryParams.subscribe((params: Params) => {
-      if (params['login']) this.loginModal();
       if (params['auth']) {
         let auth = params['auth'];
         console.log('auth', auth)
@@ -122,6 +121,9 @@ export class NavbarComponent implements OnInit {
       closeOnClick: true
     });
     // $('#regflowModal')['closeModal']();
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params['login']) this.loginModal();
+    });
   }
 
   backgroundModelClose() {
