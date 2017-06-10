@@ -81,20 +81,6 @@ export class NavbarComponent implements OnInit {
       about: '',
       userName: ''
     };
-    this.route.queryParams.subscribe((params: Params) => {
-      if (params['auth']) {
-        let auth = params['auth'];
-        console.log('auth', auth)
-        let decrypted = CryptoJS.AES.decrypt(auth, 'Superwire');
-        console.log('auth2', decrypted.toString(CryptoJS.enc.Utf8));
-        localStorage.setItem('firebase:authUser:AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo:[DEFAULT]', decrypted.toString(CryptoJS.enc.Utf8));
-      }
-      if (params['reg']) {
-        $('#regflowModal')['openModal']();
-        console.log('useid', params['userid'])
-        this.UserInfo.userName = params['userid'] ? params['userid'] : '';
-      }
-    })
 
     this.cropperSettings_rectangle = new CropperSettings();
     this.cropperSettings_rectangle.width = 400;
@@ -122,6 +108,18 @@ export class NavbarComponent implements OnInit {
     });
     // $('#regflowModal')['closeModal']();
     this.route.queryParams.subscribe((params: Params) => {
+      if (params['auth']) {
+        let auth = params['auth'];
+        console.log('auth', auth)
+        let decrypted = CryptoJS.AES.decrypt(auth, 'Superwire');
+        console.log('auth2', decrypted.toString(CryptoJS.enc.Utf8));
+        localStorage.setItem('firebase:authUser:AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo:[DEFAULT]', decrypted.toString(CryptoJS.enc.Utf8));
+      }
+      if (params['reg']) {
+        $('#regflowModal')['openModal']();
+        console.log('useid', params['userid'])
+        this.UserInfo.userName = params['userid'] ? params['userid'] : '';
+      }
       if (params['login']) this.loginModal();
     });
   }
