@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
 import { httpService } from './httpService';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export {
 	FirebaseListObservable
@@ -38,17 +38,23 @@ export class authService {
 	// api: string = ' http://localhost:3000';
 	User: User;
 	user$: BehaviorSubject<any>;
-	activePage: Object = { title: '' };
-	activeFeed: Object = {
+	private activePage = { title: '' };
+	private activeFeed = {
 		id: null
+	};
+	private activePost = {
+		id: null
+	};
+	private postedImage = {
+		url: null
 	};
 	Feeds: FirebaseListObservable<any[]>;
 	Posts: FirebaseListObservable<any[]>;
-	Categories: Array<string> = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design','Misc','All'];
+	Categories: Array<string> = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design', 'Misc', 'All'];
 	postCategories: Array<string> = [];
 	storageRef = firebase.storage().ref('/');
-  private mainRef = firebase.database().ref('/');
-  hiddenNavbar$: Subject<boolean> = new Subject();
+	private mainRef = firebase.database().ref('/');
+	hiddenNavbar$: Subject<boolean> = new Subject();
 
 	constructor(private af: AngularFire, private http: httpService) {
 		this.user$ = new BehaviorSubject<any>(this.emptyUser());
@@ -162,6 +168,22 @@ export class authService {
 		return this.activeFeed;
 	}
 
+	setActivePostID(postId: string) {
+		this.activePost['id'] = postId;
+	}
+
+	getActivePost() {
+		return this.activePost;
+	}
+
+	setPostedImageUrl(url) {
+		this.postedImage['url'] = url;
+	}
+
+	getPostedImage() {
+		return this.postedImage;
+	}
+
 	loadFeeds() {
 		this.Feeds = <FirebaseListObservable<any[]>>this.af.database.list('/feeds')
 			.map(feeds => {
@@ -176,6 +198,19 @@ export class authService {
 					return feed;
 				});
 			});
+	}
+
+	getUserReviews(userId: string) {
+		return this.af.database.list('/reviews', {
+			query: {
+				orderByChild: 'userId',
+				equalTo: userId
+			}
+		})
+	}
+
+	addReview(review: any) {
+		return this.af.database.list('/reviews').push(review);
 	}
 
 	checkEmail(feedid: string, email: string) {
@@ -295,13 +330,13 @@ export class authService {
 	updateFeed(userid: string, feed: Object) {
 		return this.af.database.object('/feeds/' + userid).update(feed);
 	}
-	getFileId(image: Object){
+	getFileId(image: Object) {
 		return this.af.database.list('/images').push(image);
 	}
 	submitPost(post: Object) {
 		return this.af.database.list('/posts').push(post);
 	}
-	setPost(postid: string, post: Object){
+	setPost(postid: string, post: Object) {
 		return this.af.database.object('/posts/' + postid).set(post);
 	}
 
@@ -341,7 +376,7 @@ export class authService {
 	deleteFile(path: string) {
 		return new Promise((resolve, reject) => {
 			this.storageRef.child(path).delete()
-				.then(()=> {
+				.then(() => {
 					resolve('File Deleted Successfully');
 				})
 				.catch((error) => {
@@ -352,7 +387,7 @@ export class authService {
 	deletePost(postid: string) {
 		return this.af.database.object('/posts/' + postid).remove();
 	}
-	deletePostData(postid: string, key: string, keyid: string){
+	deletePostData(postid: string, key: string, keyid: string) {
 		return this.af.database.object('/posts/' + postid + '/' + key + '/' + keyid).remove();
 	}
 
@@ -374,7 +409,7 @@ export class authService {
 						firebase.auth().currentUser.delete().then(function () {
 							resolve();
 						}).catch(error => {
-							console.log("error in deleting user", error);
+							console.log('error in deleting user', error);
 							reject(error);
 						});
 						// authState.auth.delete().then(() => {
@@ -389,10 +424,10 @@ export class authService {
 		})
 	}
 
-	buyPost(userid: string, postid: string){
+	buyPost(userid: string, postid: string) {
 		return this.af.database.object('/user-assets/' + userid + '/' + postid).set(true);
 	}
-	getUserAsset(userid: string, postid: string){
+	getUserAsset(userid: string, postid: string) {
 		return this.af.database.object('/user-assets/' + userid + '/' + postid);
 	}
 
@@ -493,8 +528,8 @@ export class authService {
 	}
 
 	randomStringGenerator(len: number) {
-		let text = "";
-		let possible = "ABCDEF-GHIJ-KLMNOPQR_STUV-WXYZ#abcdefghijklmnopqrstuv$wxyz012345-6789_";
+		let text = '';
+		let possible = 'ABCDEF-GHIJ-KLMNOPQR_STUV-WXYZ#abcdefghijklmnopqrstuv$wxyz012345-6789_';
 
 		for (var i = 0; i < len; i++) {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -516,7 +551,7 @@ export class authService {
 		}); // promise
 	}
 
-	download(post){
+	download(post) {
 		console.log('post', post);
 		return new Promise((resolve, reject) => {
 			this.http.addJSON(`${this.api}/api/download`, post, (res) => {
@@ -526,8 +561,22 @@ export class authService {
 		})
 	}
 
-	getFile(url){
-		window.open(this.api + url, "_self");
+	getFile(url) {
+		window.open(this.api + url, '_self');
 	}
+
+	addComment(comment: any) {
+		return this.af.database.list('/comments').push(comment);
+	}
+
+	getPostComment(postId: string) {
+		return this.af.database.list('/comments', {
+			query: {
+				orderByChild: 'postId',
+				equalTo: postId
+			}
+		})
+	}
+
 
 }

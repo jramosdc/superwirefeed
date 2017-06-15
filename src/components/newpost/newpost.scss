@@ -2,6 +2,128 @@
   padding: 10px;
 }
 
+.invalid-test {
+  color: red;
+}
+
+.md {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 638px;
+}
+
+
+/* ------------------------- Separate line ------------------------- */
+
+.breadcrumb {
+  text-align: center;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border-radius: 5px;
+  counter-reset: flag;
+}
+
+.breadcrumb>a {
+  text-decoration: none;
+  outline: none;
+  display: block;
+  float: left;
+  font-size: 12px;
+  line-height: 36px;
+  color: #fff;
+  padding: 0 10px 0 60px;
+  position: relative;
+}
+
+.breadcrumb>a:first-child {
+  padding-left: 46px;
+  border-radius: 5px 0 0 5px;
+}
+
+.breadcrumb>a:first-child::before {
+  left: 14px;
+}
+
+.breadcrumb>a:last-child {
+  border-radius: 0 5px 5px 0;
+  padding-right: 20px;
+}
+
+.breadcrumb>a:last-child::after {
+  content: none;
+}
+
+.breadcrumb>a::before {
+  content: counter(flag);
+  counter-increment: flag;
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 8px 0;
+  position: absolute;
+  top: 0;
+  left: 30px;
+  font-weight: bold;
+}
+
+.breadcrumb>a::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -18px;
+  width: 36px;
+  height: 36px;
+  transform: scale(0.707) rotate(45deg);
+  z-index: 1;
+  box-shadow: 2px -2px 0 2px #ca1e58;
+  border-radius: 0 5px 0 50px;
+}
+
+.flat a,
+.flat a::after {
+  background: #fff;
+  color: #ec407a;
+  transition: all 0.5s;
+}
+
+.flat a::before {
+  background: #fff;
+  box-shadow: 0 0 0 1px #ec407a;
+}
+
+.flat a:hover,
+.flat a.active,
+.flat a:hover::after,
+.flat a.active::after {
+  background: #ec407a;
+}
+
+.flat a.active:hover {
+  background: #d81b60;
+}
+
+.flat a:hover,
+.flat a.active {
+  color: #fff;
+}
+
+.flat a:hover::before,
+.flat a.active::before {
+  color: #ec407a;
+}
+
+.wrap {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
 input {
   outline: none;
 }
@@ -116,6 +238,16 @@ input::-webkit-input-placeholder {
   color: #999;
 }
 
+.btn {
+  background: $blue-dark;
+}
+
 .padding {
   padding: 10px;
+}
+
+ng2-dropdown-button {
+  button {
+    width: auto !important;
+  }
 }

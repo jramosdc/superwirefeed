@@ -45,7 +45,7 @@ export class PostsComponent implements OnInit, OnDestroy {
             } else { return false; }
           });
         }).subscribe(posts => {
-            this.posts = posts;
+          this.posts = posts;
         });
     });
 
@@ -75,7 +75,7 @@ export class PostsComponent implements OnInit, OnDestroy {
       }
     });
     // $('ul.tabs')['tabs']();
-      $('.dropdown-button').dropdown({
+    $('.dropdown-button')['dropdown']({
       inDuration: 300,
       outDuration: 225,
       constrainWidth: false, // Does not change width of dropdown to that of the activator
@@ -84,8 +84,7 @@ export class PostsComponent implements OnInit, OnDestroy {
       belowOrigin: false, // Displays dropdown below the button
       alignment: 'left', // Displays dropdown with edge aligned to the left of button
       stopPropagation: false // Stops event propagation
-    }
-  );
+    });
   }
 
   ngOnDestroy() {
@@ -111,6 +110,11 @@ export class PostsComponent implements OnInit, OnDestroy {
     }
 
     console.log(type, id);
+  }
+
+  openNewPost() {
+    console.log('test')
+    $('#newpostModal')['openModal']();
   }
 
   checkEmail(email: string) {
@@ -182,18 +186,18 @@ export class PostsComponent implements OnInit, OnDestroy {
   // and fill data structure
   parseImgUrl(htmlDesc: string) {
     let regex = /(https?:\/\/[^">]+)(jpg|png)/gi;
-    let imgs = htmlDesc.match(regex);
+    let imgs = htmlDesc ? htmlDesc.match(regex) : false;
     return imgs && imgs[0]
   }
   parseShortDescription(htmlDesc: string) {
-    let htmlRegex = /(<([^>]+)>)/gi;    //Regex to remove html tags
-    let descriptions = htmlDesc.replace(htmlRegex, "");
+    let htmlRegex = /(<([^>]+)>)/gi;    // Regex to remove html tags
+    let descriptions = htmlDesc ? htmlDesc.replace(htmlRegex, '') : '';
     let truncateLength = 120;
-    if(truncateLength > descriptions.length){
+    if (truncateLength > descriptions.length) {
       return descriptions;
     } else {
       descriptions = descriptions.substring(0, truncateLength);
-      return descriptions + "..." ;
+      return descriptions + '...';
     }
 
     /*let regex = /[^-=\>/"%_<:;&]{55,}/gi;

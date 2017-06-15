@@ -21,10 +21,13 @@ export class EditPostComponent implements OnInit {
 
     User: User;
     postid: string;
+    detail: string;
     post: Object = {};
     UserID: string;
     postLoading: boolean;
     categories: Array<string> = [];
+    licenses: Array<string> = ['CC-BY (free)', 'CC-BY-ND', 'Selling/Attribution ($35)', 'Selling/Exclusive ($200)'];
+    dropdown = { breaking: false, types: [], license: -1, category: '' };
     csvFile: any = null;
     csvLinks: any = {};
     pdfFile: Array<any> = [];
@@ -77,7 +80,7 @@ export class EditPostComponent implements OnInit {
 
     handleFiles(evt) {
         event.preventDefault();
-        if(evt.target.id == "browseCSVFile"){
+        if (evt.target.id == "browseCSVFile") {
             console.log('evt', evt.target.files[0].name);
             let pattern = new RegExp("[0-9a-z]{1,}.(csv)$");
             if (pattern.test(evt.target.files[0].name)) {
@@ -93,12 +96,12 @@ export class EditPostComponent implements OnInit {
                 alert('please select *.csv file');
             }
         }
-        else if(evt.target.id == "browsePdfFile"){
+        else if (evt.target.id == "browsePdfFile") {
             this.pdfFile = [];
-            let pattern = new RegExp("[0-9a-z]{1,}.(pdf)$");
-            for(let i = 0; i < evt.target.files.length; i++) {
+            let pattern = new RegExp('[0-9a-z]{1,}.(pdf)$');
+            for (let i = 0; i < evt.target.files.length; i++) {
                 console.log(evt.target.files[i]);
-                if(pattern.test(evt.target.files[i].name)){
+                if (pattern.test(evt.target.files[i].name)) {
                     this.pdfFile[i] = evt.target.files[i];
                 } else {
                     document.getElementById('browsePdfFile')['value'] = null;
@@ -106,10 +109,10 @@ export class EditPostComponent implements OnInit {
                 }
             }
         }
-        else if(evt.target.id == "browseImages"){
+        else if (evt.target.id == 'browseImages') {
             this.images = [];
-            let pattern = new RegExp("[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$");
-            for(let i = 0; i < evt.target.files.length; i++){
+            let pattern = new RegExp('[0-9a-z]{1,}.(jpe?g|png|gif|bmp)$');
+            for (let i = 0; i < evt.target.files.length; i++) {
                 if (pattern.test(evt.target.files[i].name)) {
                     let size = parseInt(((evt.target.files[i].size / 1024) / 1024).toFixed(2)); //size in mbs
                     if (size <= 10) {
@@ -134,6 +137,7 @@ export class EditPostComponent implements OnInit {
                 this.as.loadPost(this.postid).subscribe(post => {
                     console.log('post', post);
                     this.post = post;
+                    this.postedImgUrl = post.coverImage;
                     this.UserID = post.owner.userid;
                     resolve();
                 });
@@ -141,46 +145,58 @@ export class EditPostComponent implements OnInit {
         });
     }
 
-    private viewInitialize() {
-        $('select')['material_select']();
-        tinymce.remove();
-        tinymce.init({
-            selector: '#editor',
-            height: 200,
-            menubar:false,
-            statusbar:false,
-            plugins: [
-                'textpattern advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table contextmenu paste code'
-            ],
-            content_css: [
-    '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
-    '//www.mucholab.net/css/tinymce.css' ],
-            textpattern_patterns: [
-                { start: '*', end: '*', format: 'italic' },
-                { start: '**', end: '**', format: 'bold' },
-                { start: '#', format: 'h1' },
-                { start: '##', format: 'h2' },
-                { start: '###', format: 'h3' },
-                { start: '####', format: 'h4' },
-                { start: '#####', format: 'h5' },
-                { start: '######', format: 'h6' },
-                { start: '1. ', cmd: 'InsertOrderedList' },
-                { start: '* ', cmd: 'InsertUnorderedList' },
-                { start: '- ', cmd: 'InsertUnorderedList' }
-            ],
-            toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
-            setup: (editor) => {
-                editor.on('change', (e) => {
-                    this.post['detail'] = editor.getContent();
-                });
-                editor.on('init', (e) => {
-                    // console.log('tiny init', this.post['detail']);
-                    tinymce.activeEditor.setContent(this.post['detail']);
-                });
+    typeSelected(selectedType: string) {
+        return this.post && this.post['types'] && this.post['types'].indexOf(selectedType) !== -1;
+    }
+
+    typeAddRemove(type: string) {
+        let add = true;
+        this.post['types'].map((ty, I) => {
+            if (ty === type) {
+                this.post['types'].splice(I, 1);
+                add = false;
             }
-        });
+        })
+        if (add) this.post['types'].push(type);
+    }
+
+    private viewInitialize() {
+        $('.dropdown-button')['dropdown']();
+        // tinymce['remove']();
+        // tinymce['init']({
+        //     selector: '#editor',
+        //     height: 200,
+        //     menubar: false,
+        //     statusbar: false,
+        //     plugins: [
+        //         'textpattern advlist autolink lists link image charmap print preview anchor',
+        //         'searchreplace visualblocks code fullscreen',
+        //         'insertdatetime media table contextmenu paste code'
+        //     ],
+        //     content_css: [
+        //         '//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i',
+        //         '//www.mucholab.net/css/tinymce.css'],
+        //     textpattern_patterns: [
+        //         { start: '*', end: '*', format: 'italic' },
+        //         { start: '**', end: '**', format: 'bold' },
+        //         { start: '#', format: 'h1' },
+        //         { start: '##', format: 'h2' },
+        //         { start: '###', format: 'h3' },
+        //         { start: '####', format: 'h4' },
+        //         { start: '#####', format: 'h5' },
+        //         { start: '######', format: 'h6' },
+        //         { start: '1. ', cmd: 'InsertOrderedList' },
+        //         { start: '* ', cmd: 'InsertUnorderedList' },
+        //         { start: '- ', cmd: 'InsertUnorderedList' }
+        //     ],
+        //     valid_elements: '*[*]',
+        //     toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
+        //     setup: (editor) => {
+        //         editor.on('change', (e) => {
+        //             this.detail = editor.getContent();
+        //         });
+        //     }
+        // });
         // console.log('ng init');
     }
 
@@ -190,10 +206,11 @@ export class EditPostComponent implements OnInit {
         this.postLoading = true;
         let post = {
             title: editpost.title,
-            detail: editpost.detail,
-            priority: editpost.priority,
-            types: editpost.type,
-            category: editpost.category,
+            detail: this.post['detail'],
+            priority: this.post['priority'],
+            license: this.post['license'],
+            types: this.post['types'],
+            category: this.post['category'],
             pdfFile: ((this.post['pdfFile']) ? this.post['pdfFile'] : ((this.pdfFile ? this.pdfFile : null))),
             gsheetFile: ((this.post['gsheetFile']) ? this.post['gsheetFile'] : ((this.csvFile ? this.csvFile : null))),
             pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
@@ -207,11 +224,11 @@ export class EditPostComponent implements OnInit {
             // gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
             // images: editpost.images  ? editpost.images : '',
         };
-        if(this.pdfFile.length > 0){
+        if (this.pdfFile.length > 0) {
             this.uploadFile(this.pdfFile, this.postid)
                 .then(urls => {
-                    if(urls) {
-                        for(let i = 0; i < urls.length; i++){
+                    if (urls) {
+                        for (let i = 0; i < urls.length; i++) {
                             let pdfId: any = this.as.getFileId({});
                             pdfId = pdfId.path.o[1];
                             this.pdfFileLinks[pdfId] = urls[i];
@@ -225,11 +242,11 @@ export class EditPostComponent implements OnInit {
                     console.log('file not upload err', err);
                 });
         }
-        if(this.images.length > 0){
+        if (this.images.length > 0) {
             this.uploadFile(this.images, this.postid)
                 .then(urls => {
-                    if(urls) {
-                        for(let i = 0; i < urls.length; i++){
+                    if (urls) {
+                        for (let i = 0; i < urls.length; i++) {
                             let imageId: any = this.as.getFileId({});
                             imageId = imageId.path.o[1];
                             this.imagesLinks[imageId] = urls[i];
@@ -247,22 +264,22 @@ export class EditPostComponent implements OnInit {
         if (this.csvFile) {
             Papa.parse(this.csvFile, {
                 complete: (result) => {
-                    post["csvToJson"] = result.data;
+                    post['csvToJson'] = result.data;
                 }
             });
 
             // after file upload get download link storage
             this.storge.fileUpload(this.csvFile, 'posts/' + this.User.uid + '/' + this.postid + '/' +
                 this.csvFile.name + '/' + Date.now() + '/').then(url => {
-                let csvId: any = this.as.getFileId({});
-                csvId = csvId.path.o[1];
-                this.csvLinks[csvId] = url;
-                post['gsheetFile'] = this.csvLinks;
-                this.postObjReady.uploadFile = true;
-                this.updateToFirebase(post);             // save to firebase
-            }).catch(err => {
-                console.log('file not upload err', err);
-            });
+                    let csvId: any = this.as.getFileId({});
+                    csvId = csvId.path.o[1];
+                    this.csvLinks[csvId] = url;
+                    post['gsheetFile'] = this.csvLinks;
+                    this.postObjReady.uploadFile = true;
+                    this.updateToFirebase(post);             // save to firebase
+                }).catch(err => {
+                    console.log('file not upload err', err);
+                });
         } else {
             this.postObjReady.uploadFile = true;
             this.updateToFirebase(post);             // save to firebase
@@ -270,13 +287,14 @@ export class EditPostComponent implements OnInit {
 
         // checking if mailurl has changed then send request else nothing
         // if (editpost.mainUrl !== this.post['mainUrl']) {
-            // after extract data from embedly API save into post embedly property
-            // console.log('test1');
-            this.embedly.extractAPI(editpost.mainUrl).then((data: IEmbedly) => {
-                post['embedly'] = data;
-                this.postObjReady.embedlyApi = true;
-                this.updateToFirebase(post);             // save to firebase
-            });
+        // after extract data from embedly API save into post embedly property
+        // console.log('test1');
+        this.embedly.extractAPI(editpost.mainUrl).then((data: IEmbedly) => {
+            if (data && data['images'] && data['images'].length == 0) data['images'] = ' ';
+            post['embedly'] = data;
+            this.postObjReady.embedlyApi = true;
+            this.updateToFirebase(post);             // save to firebase
+        });
         // } else {
         //     console.log('test2');
         //     this.postObjReady.embedlyApi = true;
@@ -285,12 +303,12 @@ export class EditPostComponent implements OnInit {
 
     }
 
-    private uploadFile(files, postid){
+    private uploadFile(files, postid) {
         let promiseArray: Array<any> = [];
-        for(let i = 0; i < files.length; i++){
+        for (let i = 0; i < files.length; i++) {
             promiseArray.push(
                 new Promise((resolve, reject) => {
-                    this.storge.fileUpload(files[i],  'posts/' + this.User.uid + '/' + postid + '/' + files[i].name + '/' + Date.now() + '/')
+                    this.storge.fileUpload(files[i], 'posts/' + this.User.uid + '/' + postid + '/' + files[i].name + '/' + Date.now() + '/')
                         .then(url => {
                             resolve(url);
                         })
@@ -362,7 +380,7 @@ export class EditPostComponent implements OnInit {
             this.backgroundModelClose();
         });
     }
-    deletePostData(key, data){
+    deletePostData(key, data) {
         this.as.deleteFile(data.value.storagePath)
             .then(res => {
                 this.as.deletePostData(this.postid, key, data.key)

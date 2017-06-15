@@ -1,8 +1,11 @@
 import { RegFlow } from './../regflow/regflow';
 import { Component, OnInit, ViewChild, trigger, transition, style, animate } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { User, authService } from '../services/authService';
 import { SearchBarService } from '../services/searchBar';
+import { ImageCropperComponent, Bounds, CropperSettings } from 'ng2-img-cropper';
+
+declare var CryptoJS;
 
 @Component({
   selector: 'navbar',
@@ -12,24 +15,24 @@ import { SearchBarService } from '../services/searchBar';
     trigger(
       'modalSlider', [
         transition(':enter', [
-          style({transform: 'translateX(100%)', opacity: 0, height: 0}),
-          animate('200ms', style({transform: 'translateX(0)', opacity: 1}))
+          style({ transform: 'translateX(100%)', opacity: 0, height: 0 }),
+          animate('200ms', style({ transform: 'translateX(0)', opacity: 1 }))
         ]),
         transition(':leave', [
-          style({transform: 'translateX(0)', opacity: 1 }),
-          animate('200ms', style({transform: 'translateX(-100%)', opacity: 0, height: 0}))
+          style({ transform: 'translateX(0)', opacity: 1 }),
+          animate('200ms', style({ transform: 'translateX(-100%)', opacity: 0, height: 0 }))
         ])
       ]
     ),
     trigger(
       'modalFader', [
         transition(':enter', [
-          style({opacity: 0}),
-          animate('200ms', style({opacity: 1}))
+          style({ opacity: 0 }),
+          animate('200ms', style({ opacity: 1 }))
         ]),
         transition(':leave', [
-          style({opacity: 1}),
-          animate('200ms', style({opacity: 0}))
+          style({ opacity: 1 }),
+          animate('200ms', style({ opacity: 0 }))
         ])
       ]
     )
@@ -49,11 +52,19 @@ export class NavbarComponent implements OnInit {
   isSearchBarHidden: Object;
   Step: number;
   StepLimit: number;
-  UserInfo: { interests: Array<string>, feedId: string, feedName: string, feedCategory: Array<string>, about: string, userName: string};
+  UserInfo: { interests: Array<string>, feedId: string, feedName: string, feedCategory: Array<string>, about: string, userName: string };
   Interests: string[] = ['Politics', 'Economy', 'Sports', 'Technology', 'Science', 'Design'];
-  FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design','Misc'];
+  FeedCategories: string[] = ['News', 'Communications', 'Research', 'Data', 'Visualizations', 'Design', 'Misc'];
 
-  constructor(public as: authService, private router: Router, private sb: SearchBarService) {
+  // Image Cropper
+
+  postImgData = { image: '' };
+  cropperSettings_rectangle: CropperSettings = <any>{};
+  imageSelected: boolean = true;
+  imageUploading: boolean = false;
+  @ViewChild('postCropper', undefined) postCropper: ImageCropperComponent;
+
+  constructor(public as: authService, private router: Router, private route: ActivatedRoute, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
     this.User = this.as.getUser();
     this.activePage = this.as.getActivePageTitle();
@@ -70,15 +81,79 @@ export class NavbarComponent implements OnInit {
       about: '',
       userName: ''
     };
+
+    this.cropperSettings_rectangle = new CropperSettings();
+    this.cropperSettings_rectangle.width = 400;
+    this.cropperSettings_rectangle.height = 200;
+    this.cropperSettings_rectangle.keepAspect = false;
+    this.cropperSettings_rectangle.croppedWidth = 400;
+    this.cropperSettings_rectangle.croppedHeight = 200;
+    this.cropperSettings_rectangle.canvasWidth = 400;
+    this.cropperSettings_rectangle.canvasHeight = 200;
+    this.cropperSettings_rectangle.minWidth = 200;
+    this.cropperSettings_rectangle.minHeight = 100;
+    this.cropperSettings_rectangle.rounded = false;
+    this.cropperSettings_rectangle.minWithRelativeToResolution = false;
+    this.cropperSettings_rectangle.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+    this.cropperSettings_rectangle.cropperDrawSettings.strokeWidth = 1;
+    this.cropperSettings_rectangle.noFileInput = true;
+
   }
 
   ngOnInit() {
-    $(".button-collapse")['sideNav']({
+    $('.button-collapse')['sideNav']({
       menuWidth: 300,
       edge: 'right',
       closeOnClick: true
     });
     // $('#regflowModal')['closeModal']();
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params['auth']) {
+        let auth = params['auth'];
+        console.log('auth', auth)
+        let decrypted = CryptoJS.AES.decrypt(auth, 'Superwire');
+        console.log('auth2', decrypted.toString(CryptoJS.enc.Utf8));
+        localStorage.setItem('firebase:authUser:AIzaSyCAmbNu5u6Pqguv3jRLx9ElyhhnIyIZnEo:[DEFAULT]', decrypted.toString(CryptoJS.enc.Utf8));
+      }
+      if (params['reg']) {
+        $('#regflowModal')['openModal']();
+        console.log('useid', params['userid'])
+        this.UserInfo.userName = params['userid'] ? params['userid'] : '';
+      }
+      if (params['login']) this.loginModal();
+    });
+  }
+
+  backgroundModelClose() {
+    event.preventDefault();
+    $('#backgroundModal')['closeModal']();
+    this.imageSelected = true;
+    this.postImgData.image = null;
+  }
+
+  backgroundChangeListener($event) {
+    event.preventDefault();
+    let image: any = new Image();
+    let file: File = $event.target.files[0];
+    let myReader: FileReader = new FileReader();
+
+    myReader.onloadend = (loadEvent: any) => {
+      image.src = loadEvent.target.result;
+      setTimeout(() => {
+        this.postCropper.setImage(image)
+      })
+    };
+    myReader.readAsDataURL(file);
+  }
+
+  uploadBackgroundImage() {
+    this.imageUploading = true;
+    this.as.uploadPostImg(this.postImgData.image).then(imgUrl => {
+      console.log('imgUrl: ', imgUrl);
+      this.as.setPostedImageUrl(imgUrl);
+      this.imageUploading = false;
+      this.backgroundModelClose();
+    });
   }
 
   home() {
@@ -170,7 +245,7 @@ export class NavbarComponent implements OnInit {
           this.regFlowError = true;
           $('#errorRegFlow').html(err.toString());
         });
-      }
+    }
 
   }
 
@@ -234,7 +309,7 @@ export class NavbarComponent implements OnInit {
   registerModal() {
     console.log('create feed modal');
     $('#loginModal')['closeModal']();
-    $(".button-collapse")['sideNav']('hide');
+    $('.button-collapse')['sideNav']('hide');
     // $('#regflowModal')['openModal']();
     $('#registerModal')['openModal']();
   }
@@ -283,6 +358,31 @@ export class NavbarComponent implements OnInit {
     console.log('User is Logged Out!');
     $('.button-collapse')['sideNav']('hide');
     this.router.navigate(['feeds']);
+  }
+
+  saveComment(commentbox: any) {
+    if (!commentbox.value) return;
+    let comment = {
+      comment: commentbox.value,
+      postId: this.as.getActivePost().id,
+      owner: {
+        uid: this.User.uid,
+        userid: this.User.feed.userid,
+        feedid: this.User.feed.id
+      },
+      timestamp: firebase.database['ServerValue'].TIMESTAMP
+    }
+    this.as.addComment(comment).then(res => {
+      console.log('Comment is Submitted!');
+      $('#errorComment').html('');
+      // this.postLoading = false;
+      commentbox.value = '';
+      $('#commentModal')['closeModal']();
+    }).catch(err => {
+      console.log('Comment Submit Failed!', err);
+      $('#errorComment').html(err.toString());
+      // this.postLoading = false;
+    });
   }
 
 }

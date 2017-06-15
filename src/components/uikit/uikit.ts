@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @NgModule({
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 @Component({
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 
 export class UiKit {
   href: string;
-  constructor () {
+  constructor() {
     this.href = window.location.href
   }
 }

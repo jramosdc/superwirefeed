@@ -1,7 +1,7 @@
 <div class="tabs-wrapper">
   <ul class="tabs center-container">
     <li class="tab col s2" (click)="activeCategory = category" *ngFor="let category of categories">
-      <a class="" [ngClass]="{active: activeCategory === category}">
+      <a href="#" class="" [ngClass]="{active: activeCategory === category}">
         {{category}}
       </a>
     </li>
@@ -19,10 +19,9 @@
     <section class="info-card">
       <figure>
 
-        <img class="responsive-img" *ngIf="feed?.useBackgroundImage && feed?.owner?.backgroundImageURL" [src]="feed?.owner?.backgroundImageURL" alt="Background Image">
+        <img class="responsive-img" *ngIf="feed?.owner?.backgroundImageURL" [src]="feed?.owner?.backgroundImageURL" alt="Background Image">
         <!-- temporary placeholder image -->
-        <img class="responsive-img" *ngIf="!feed?.useBackgroundImage" src="http://lorempixel.com/300/200/?random=1" alt="Background Image">
-        <img class="responsive-img" *ngIf="feed?.useBackgroundImage  && !feed?.owner?.backgroundImageURL" src="http://www.qqxxzx.com/images/gradient-wallpaper/gradient-wallpaper-3.jpg" alt="Background Image">
+
 
         <div class="dropdowns">
           <a class="dropdown-button share-btn right waves-effect  btn-floating" data-activates="sharing-options" data-alignment="left">
@@ -31,13 +30,15 @@
 
           <!-- share -->
           <div id="sharing-options" class="share dropdown-content">
-            <a href="https://www.facebook.com/dialog/feed?app_id=184683071273&link={{Domain + '/posts/' + FeedID}}&picture={{feed.ImageBackgroundUrl}}&name={{FeedID}}&caption=%20&description={{feed.description}}&redirect_uri=http%3A%2F%2Fwww.facebook.com%2F" target="_blank">
+            <a href="https://www.facebook.com/dialog/feed?app_id=184683071273&link={{Domain + '/posts/' + FeedID}}&picture={{feed.ImageBackgroundUrl}}&name={{FeedID}}&caption=%20&description={{feed.description}}&redirect_uri=http%3A%2F%2Fwww.facebook.com%2F"
+              target="_blank">
               <svg class="social-icon facebook-color" viewBox="0 0 96 96">
                 <use xlink:href="#social-facebook"></use>
               </svg>
             </a>
 
-            <a href="http://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20in%20my%20Superwire%20Feed%20{{FeedID}}20%23smartcontent" target="_blank">
+            <a href="http://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20in%20my%20Superwire%20Feed%20{{FeedID}}20%23smartcontent"
+              target="_blank">
               <svg class="social-icon twitter-color" viewBox="0 0 612 612">
                 <use xlink:href="#social-twitter"></use>
               </svg>
@@ -49,7 +50,8 @@
               </svg>
             </a>
 
-            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{Domain + '/posts/' + FeedID}}&title={{FeedID}}&summary=Check%20out%20my%20Superwire%20Feed.%20I%20post%20smart%20content%20about%20{{feed.description}}&source=" target="_blank">
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{Domain + '/posts/' + FeedID}}&title={{FeedID}}&summary=Check%20out%20my%20Superwire%20Feed.%20I%20post%20smart%20content%20about%20{{feed.description}}&source="
+              target="_blank">
               <svg class="social-icon linkedin-color" viewBox="0 0 430 430">
                 <use xlink:href="#social-linkedin"></use>
               </svg>
@@ -75,26 +77,27 @@
               <i class="mdi mdi-plus"></i>
             </a>
           </div>
-            <a class="dropdown-button modify-btn waves-effect waves-light btn-floating blue-grey darken-1" data-activates="edit-options" data-constrainwidth="false">
+          <a class="dropdown-button modify-btn waves-effect waves-light btn-floating blue-grey darken-1" data-activates="edit-options"
+            data-constrainwidth="false">
               <i class="mdi mdi-pencil"></i>
             </a>
-            <ul id="edit-options" class="dropdown-content">
-              <li>
-                <a>Profile</a>
-              </li>
-              <li>
-                <a>Drafts</a>
-              </li>
-            </ul>
-          <a  class="dropdown-button options-btn left waves-effect waves-light btn-floating" data-activates="feed-options"
-            data-alignment="left" data-constrainwidth="false">
+          <ul id="edit-options" class="dropdown-content">
+            <li>
+              <a>Profile</a>
+            </li>
+            <li>
+              <a>Drafts</a>
+            </li>
+          </ul>
+          <a class="dropdown-button options-btn left waves-effect waves-light btn-floating" data-activates="feed-options" data-alignment="left"
+            data-constrainwidth="false">
             <i class="mdi mdi-dots-vertical"></i>
           </a>
           <ul id="feed-options" class='dropdown-content'>
             <li *ngIf="feed?.owner?.userid"><a [routerLink]="['/profile/', feed.owner.userid]">@{{ feed.owner.userid }}'s profile</a></li>
             <li *ngIf="feed?.owner?.userid"><a>Message @{{ feed?.owner?.userid }}</a></li>
             <li class="divider"></li>
-            <li *ngIf="feed?.owner?.userid"><a>Block @{{ feed?.owner?.userid }}</a></li>     
+            <li *ngIf="feed?.owner?.userid"><a>Block @{{ feed?.owner?.userid }}</a></li>
           </ul>
         </div>
       </figure>
@@ -154,15 +157,12 @@
 
   <section class="posts" *ngIf="posts">
     <!-- editors panel -->
-    <header class="editors-panel blue-grey lighten-4"
-      *ngIf="User.password.email && FeedID == User.feed.id">
+    <header class="editors-panel blue-grey lighten-4" *ngIf="User.password.email && FeedID == User.feed.id">
 
       <div class="blue-grey-text text-darken-3">Editors panel</div>
 
       <div>
-        <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1"
-            data-activates="edit-options"
-            data-alignment="right">
+        <a class="dropdown-button modify-btn waves-effect waves-light btn blue-grey darken-1" data-activates="edit-options" data-alignment="right">
           <i class="mdi mdi-pencil"></i>
           Edit feed
         </a>
@@ -184,7 +184,8 @@
 
     <!-- posts -->
     <article *ngFor="let post of posts | orderBy: ['-timestamp'] |
-        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === 'High'}" class="post" (click)="navigate('view', post.$key)">
+        searchPostTitle: search | searchCategory: activeCategory" [ngClass]="{'high': post.priority === true}" class="post"
+      (click)="navigate('view', post.$key)">
       <img *ngIf="parseImgUrl(post.detail)" [src]="parseImgUrl(post.detail)">
 
       <h6 class="title">{{ post.title }}</h6>
@@ -199,8 +200,10 @@
           {{ post.owner.userid }}
         </span>
 
+        <span class="breaking" *ngIf="post.priority === true">BREAKING</span>
+
         <div *ngIf="User.password.email && FeedID == User.feed.id">
-          <span> • </span>
+
           <span (click)="navigate('edit', post.$key)">Modify</span>
           <span> • </span>
           <span (click)="deleteModel(post.$key, $event)">Remove</span>
