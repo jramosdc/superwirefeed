@@ -34,6 +34,7 @@
                     <span class="ql-formats">      
             <button class="ql-bold"></button>
             <button class="ql-italic"></button>
+            <button class="ql-clean"></button>
             </span>
                     <span class="ql-formats">
             <button class="ql-image"></button>
@@ -79,7 +80,7 @@
             </ng2-dropdown>
             <ng2-dropdown (onItemClicked)="typeAddRemove($event.value)">
                 <ng2-dropdown-button style="width: auto;" [showCaret]="false">
-                    <span class="btn blue-grey darken-1"><i class="mdi mdi-file"></i> FORMAT</span>
+                    <span class="btn blue-grey darken-1">Format</span>
                 </ng2-dropdown-button>
                 <ng2-dropdown-menu>
                     <ng2-menu-item [value]="'file-document'">
@@ -106,7 +107,7 @@
             </ng2-dropdown>
             <ng2-dropdown (onItemClicked)="post.priority = $event.value">
                 <ng2-dropdown-button style="width: auto;" [showCaret]="false">
-                    <span class="btn blue-grey darken-1"><i class="mdi mdi-alert"></i> BREAKING?</span>
+                    <span class="btn blue-grey darken-1">Breaking?</span>
                 </ng2-dropdown-button>
                 <ng2-dropdown-menu>
                     <ng2-menu-item [value]="true">
@@ -195,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="waves-effect waves-light btn purple white-text right">Update</button>
+            <button type="submit" class="waves-effect waves-light btn-large right" style="right:80px;" >Update</button>
         </div>
     </form>
 </div>
