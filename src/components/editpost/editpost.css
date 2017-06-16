@@ -23,6 +23,7 @@ input[type=url] {
   border: solid 1px #ccc;
   padding: 0px 10px 0px 32px;
   width: 45px;
+  height: 36px;
   -webkit-border-radius: 10em;
   -moz-border-radius: 10em;
   border-radius: 10em;
