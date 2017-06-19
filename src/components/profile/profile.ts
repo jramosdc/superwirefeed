@@ -373,16 +373,18 @@ export class ProfileComponent extends Type implements OnInit {
   }
 
   backgroundChangeListener($event) {
-    console.log($event)
+    event.preventDefault();
     let image: any = new Image();
     let file: File = $event.target.files[0];
     let myReader: FileReader = new FileReader();
 
     myReader.onloadend = (loadEvent: any) => {
       image.src = loadEvent.target.result;
-      this.bgCropper.setImage(image);
-      // data2 image on select image
-      this.backgroundImgData.image = loadEvent.target.result
+      setTimeout(() => {
+        this.bgCropper.setImage(image);
+        // data2 image on select image
+        this.backgroundImgData.image = loadEvent.target.result
+      })
     };
     myReader.readAsDataURL(file);
   }
@@ -396,12 +398,12 @@ export class ProfileComponent extends Type implements OnInit {
   }
 
   backgroundImagePopup() {
-    $('#backgroundModal')['openModal']();
+    $('#backgroundModalProfile')['openModal']();
     //  $('#bgInputFile').click();
   }
 
   backgroundModelClose() {
-    $('#backgroundModal')['closeModal']();
+    $('#backgroundModalProfile')['closeModal']();
     this.imageSelected = true;
     this.backgroundImgData = {};
   }

@@ -346,10 +346,10 @@
 		</div>
 	</form>
 </div>
-<div id="backgroundModal" class="modal zindex9999">
+<div id="backgroundModalProfile" class="modal zindex9999">
 	<form class="modal-content">
 		<div class="nav-wrapper center-align">
-			<h2 class="purple-text">Background Image {{imageSelected}}</h2>
+			<h2 class="purple-text">Background Image</h2>
 		</div>
 		<div class="row center-align" class="flexCenter">
 			<input id="custom-input2" type="file" class="displayNone" #fileInput2 (change)="backgroundChangeListener($event)">
@@ -366,7 +366,8 @@
 				</div>
 			</div>
 			<div [hidden]="imageSelected">
-				<img-cropper id="imgCropper2" #bgCropper [image]="backgroundImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"></img-cropper>
+				<img-cropper id="imgCropper2" #bgCropper [image]="backgroundImgData" [settings]="cropperSettings_rectangle" (onCrop)="cropped($event)"
+				 style="height: 200px;"></img-cropper>
 			</div>
 		</div>
 		<div class="row center-align">
