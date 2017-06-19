@@ -28,6 +28,7 @@ export class ViewPostComponent {
   postPayment: boolean = false;
   userAsset: boolean = false;
   filesDownloaidng: boolean = false;
+  contentLoaded: boolean = false;
 
   constructor(private as: authService, private router: Router, private route: ActivatedRoute, sanitizer: DomSanitizer, private http: httpService, private sb: SearchBarService) {
     this.User = this.as.emptyUser();
@@ -166,7 +167,8 @@ export class ViewPostComponent {
   }
 
   displayTable(dataJSON) {
-    console.log(dataJSON);
+    if (this.contentLoaded) return;
+    this.contentLoaded = true;
     let data = dataJSON;
     let tableDiv = document.getElementById('fullTable');
     let tbl = document.createElement('table');
@@ -189,7 +191,6 @@ export class ViewPostComponent {
         cell.appendChild(cellText);
         row.appendChild(cell);
       }
-      tblBody.appendChild(row);
       tblBody.appendChild(row);
     }
 
