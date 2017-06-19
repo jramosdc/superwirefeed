@@ -43,6 +43,7 @@ export class EditPostComponent implements OnInit {
     imageSelected: boolean = true;
     imageUploading: boolean = false;
     postedImgUrl = null;
+    newImgUrl = null;
     @ViewChild('postCropper', undefined) postCropper: ImageCropperComponent;
 
     constructor(private as: authService, private router: Router, private route: ActivatedRoute, private embedly: embedlyService, private storge: FirebaseStorageService, private sb: SearchBarService) {
@@ -50,7 +51,7 @@ export class EditPostComponent implements OnInit {
         this.User = this.as.getUser();
         this.categories = this.as.getPostCategories();
         this.as.setActivePageTitle('Edit Post');
-
+        this.newImgUrl = this.as.getPostedImage();
         // for angular2 Corpper (rectangle)
         this.cropperSettings_rectangle = new CropperSettings();
         this.cropperSettings_rectangle.width = 400;
@@ -219,7 +220,7 @@ export class EditPostComponent implements OnInit {
             mainUrl: editpost.mainUrl ? editpost.mainUrl : '',
             // csvFilename: (this.csvFile) ? this.csvFile.name : this.post['csvFilename'],
             timestamp: firebase.database['ServerValue'].TIMESTAMP,
-            coverImage: ((this.postedImgUrl) ? this.postedImgUrl : ((this.post['coverImage'] ? this.post['coverImage'] : null))),
+            coverImage: ((this.as.getPostedImage().url) ? this.as.getPostedImage().url : ((this.post['coverImage'] ? this.post['coverImage'] : null))),
             // pdfLink: editpost.pdfLink ? editpost.pdfLink : '',
             // gsheetLink: editpost.gsheetLink ? editpost.gsheetLink : '',
             // images: editpost.images  ? editpost.images : '',
@@ -365,7 +366,7 @@ export class EditPostComponent implements OnInit {
         myReader.onloadend = (loadEvent: any) => {
             image.src = loadEvent.target.result;
             this.postCropper.setImage(image);
-            //data2 image on select image
+            // data2 image on select image
             this.postImgData.image = loadEvent.target.result
         };
         myReader.readAsDataURL(file);
@@ -374,7 +375,6 @@ export class EditPostComponent implements OnInit {
     uploadBackgroundImage() {
         this.imageUploading = true;
         this.as.uploadPostImg(this.postImgData.image).then(imgUrl => {
-            console.log('imgUrl: ', imgUrl);
             this.postedImgUrl = imgUrl;
             this.imageUploading = false;
             this.backgroundModelClose();
