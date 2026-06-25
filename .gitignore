@@ -41,3 +41,4 @@ ui-debug.log
 
 # typescript
 *.tsbuildinfo
+*-debug.log
