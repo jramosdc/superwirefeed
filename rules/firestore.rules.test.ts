@@ -1,0 +1,90 @@
+import { readFileSync } from "node:fs";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import {
+  initializeTestEnvironment,
+  assertFails,
+  assertSucceeds,
+  type RulesTestEnvironment,
+} from "@firebase/rules-unit-testing";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+
+// Verifies the Firestore rules close the holes the old app had:
+//  - a non-purchaser cannot forge a `purchases` doc
+//  - a user can read only their OWN purchase
+//  - a user cannot create a post claiming someone else as owner
+//
+// Run via: firebase emulators:exec --only firestore "vitest run rules"
+let testEnv: RulesTestEnvironment;
+
+beforeAll(async () => {
+  testEnv = await initializeTestEnvironment({
+    projectId: "superwire-rules-test",
+    firestore: {
+      rules: readFileSync("firestore.rules", "utf8"),
+      host: "127.0.0.1",
+      port: 8080,
+    },
+  });
+});
+
+afterAll(async () => {
+  await testEnv?.cleanup();
+});
+
+beforeEach(async () => {
+  await testEnv.clearFirestore();
+});
+
+describe("purchases", () => {
+  it("blocks a client from forging a purchase doc", async () => {
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    await assertFails(
+      setDoc(doc(buyer, "purchases", "buyer_post1"), {
+        uid: "buyer",
+        postId: "post1",
+        amount: 0,
+      }),
+    );
+  });
+
+  it("lets a user read only their own purchase", async () => {
+    // Seed a purchase with admin (rules bypassed).
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "purchases", "buyer_post1"), {
+        uid: "buyer",
+        postId: "post1",
+        amount: 3500,
+      });
+    });
+
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+
+    await assertSucceeds(getDoc(doc(buyer, "purchases", "buyer_post1")));
+    await assertFails(getDoc(doc(stranger, "purchases", "buyer_post1")));
+  });
+});
+
+describe("posts", () => {
+  it("blocks creating a post owned by someone else", async () => {
+    const mallory = testEnv.authenticatedContext("mallory").firestore();
+    await assertFails(
+      setDoc(doc(mallory, "posts", "p1"), {
+        ownerUid: "victim",
+        feedId: "victim",
+        title: "spoofed",
+      }),
+    );
+  });
+
+  it("allows creating your own post", async () => {
+    const author = testEnv.authenticatedContext("author").firestore();
+    await assertSucceeds(
+      setDoc(doc(author, "posts", "p2"), {
+        ownerUid: "author",
+        feedId: "author",
+        title: "mine",
+      }),
+    );
+  });
+});
