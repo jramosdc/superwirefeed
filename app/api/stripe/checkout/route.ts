@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { adminDb, verifyIdToken } from "@/lib/firebase/admin";
 import { getLicense } from "@/lib/licenses";
 import { purchaseId } from "@/lib/db/purchases";
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
   }
 
   const base = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     mode: "payment",
     success_url: `${base}/posts/${postId}?purchase=success`,
     cancel_url: `${base}/posts/${postId}?purchase=cancelled`,

@@ -9,36 +9,59 @@ import {
 } from "firebase-admin/app";
 import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
-import { getStorage } from "firebase-admin/storage";
+import { getStorage, type Storage } from "firebase-admin/storage";
+import type { Bucket } from "@google-cloud/storage";
 
-// Admin SDK — server only. Used by route handlers (Stripe webhook, gated
-// download) and any privileged write. Credentials come from a service account.
-function createAdminApp(): App {
-  if (getApps().length) return getApp();
+// Admin SDK — server only. Lazily initialised so building without credentials
+// (CI page-data collection) doesn't try to parse an empty service account.
+let _app: App | null = null;
+
+function adminApp(): App {
+  if (_app) return _app;
+  if (getApps().length) {
+    _app = getApp();
+    return _app;
+  }
 
   const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
   // Private key is stored with literal "\n"; convert back to real newlines.
   const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, "\n");
 
-  return initializeApp({
+  _app = initializeApp({
     credential: cert({ projectId, clientEmail, privateKey }),
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   });
+  return _app;
 }
 
-const adminApp = createAdminApp();
+// Build a lazy proxy that resolves the real object on first access and binds
+// methods to it (so `this` is preserved when calling e.g. adminDb.collection).
+function lazyProxy<T extends object>(resolve: () => T): T {
+  return new Proxy({} as T, {
+    get(_t, prop) {
+      const target = resolve();
+      const value = Reflect.get(target as object, prop);
+      return typeof value === "function" ? value.bind(target) : value;
+    },
+  });
+}
 
-export const adminAuth: Auth = getAuth(adminApp);
-export const adminDb: Firestore = getFirestore(adminApp);
-export const adminBucket = getStorage(adminApp).bucket();
+export const adminAuth: Auth = lazyProxy(() => getAuth(adminApp()));
+export const adminDb: Firestore = lazyProxy(() => getFirestore(adminApp()));
+
+export function adminBucketRef(): Bucket {
+  return (getStorage(adminApp()) as Storage).bucket();
+}
+
+// Convenience proxy so callers can use `adminBucket.file(...)` directly.
+export const adminBucket: Bucket = lazyProxy(() => adminBucketRef());
 
 // Verify a Firebase ID token sent from the client (Authorization: Bearer ...).
-// Returns the uid or null.
 export async function verifyIdToken(token: string | null): Promise<string | null> {
   if (!token) return null;
   try {
-    const decoded = await adminAuth.verifyIdToken(token);
+    const decoded = await getAuth(adminApp()).verifyIdToken(token);
     return decoded.uid;
   } catch {
     return null;
