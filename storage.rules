@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// SuperWire Storage rules.
+// Public, presentational assets (avatars, banners, cover & inline post images)
+// are world-readable and writable by their owner. Paid/gated assets live under
+// posts/{uid}/assets/** and are NEVER readable by clients — they are streamed
+// only through the purchase-gated /api/download route using the Admin SDK.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Public presentational images.
+    match /public/{uid}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isOwner(uid);
+    }
+
+    // Gated downloadable assets (CSV/PDF). Owner may upload; nobody may read
+    // directly — downloads go through the server after a purchase check.
+    match /posts/{uid}/assets/{allPaths=**} {
+      allow read: if false;
+      allow write: if isOwner(uid);
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
