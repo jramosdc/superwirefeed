@@ -1,0 +1,75 @@
+rules_version = '2';
+
+// SuperWire Firestore security rules. The original app shipped with NO rules;
+// this closes those holes. Listings are world-readable; writes are owner-scoped;
+// purchases can only be written server-side (Admin SDK bypasses these rules).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Users: anyone can read a public profile; only the owner can write theirs.
+    match /users/{uid} {
+      allow read: if true;
+      allow create, update, delete: if isOwner(uid);
+
+      // Follow graph subcollections — only the owning user mutates their side.
+      match /following/{targetId} {
+        allow read: if true;
+        allow write: if isOwner(uid);
+      }
+      match /followers/{followerId} {
+        allow read: if true;
+        // The follower writes into the target's followers list (their own uid).
+        allow write: if isOwner(followerId);
+      }
+    }
+
+    // Feeds: world-readable; one feed per user, writable only by that user.
+    match /feeds/{feedId} {
+      allow read: if true;
+      allow create, update, delete: if isOwner(feedId);
+    }
+
+    // Posts: world-readable. Only the owner may create/edit/delete, and the
+    // ownerUid/feedId must match the caller.
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.feedId == request.auth.uid;
+      allow update, delete: if signedIn()
+        && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Purchases: a user may read only their own. NO client writes — the Stripe
+    // webhook writes these via the Admin SDK (which bypasses rules).
+    match /purchases/{purchaseId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Reviews: world-readable; an author may create their own and edit/delete it.
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.authorUid == request.auth.uid;
+      allow update, delete: if signedIn()
+        && resource.data.authorUid == request.auth.uid;
+    }
+
+    // Comments: comments/{postId}/items/{id}
+    match /comments/{postId}/items/{commentId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.authorUid == request.auth.uid;
+      allow update, delete: if signedIn()
+        && resource.data.authorUid == request.auth.uid;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+rules_version = '2';
+
+// SuperWire Storage rules.
+//  - images/**  : public read (covers, galleries, avatars), owner-only write.
+//  - assets/**  : the GATED downloadable files. NEVER client-readable; served
+//                 only by the purchase-gated download route via the Admin SDK.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /images/{folder}/{uid}/{fileName=**} {
+      allow read: if true;
+      allow write: if isOwner(uid);
+    }
+
+    match /assets/{uid}/{postId}/{fileName=**} {
+      // No public read — the gated download route checks purchases and streams
+      // the file with admin credentials. The seller may write their own asset.
+      allow read: if false;
+      allow write: if isOwner(uid);
+    }
+  }
+}
