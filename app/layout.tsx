@@ -18,7 +18,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-slate-50 text-slate-900">
+      {/* suppressHydrationWarning: some browser extensions inject attributes
+          (e.g. bis_register, __processed_*) onto <body> before React hydrates,
+          which would otherwise trigger a benign hydration-mismatch warning. */}
+      <body
+        className="min-h-screen bg-slate-50 text-slate-900"
+        suppressHydrationWarning
+      >
         <AuthProvider>
           <OnboardingGate />
           <Navbar />
