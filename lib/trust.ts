@@ -25,14 +25,14 @@ export function canModerate(trustScore: number): boolean {
   return trustScore >= MODERATOR_THRESHOLD;
 }
 
-// A post is "Human Certified" when a human authored it (and it isn't AI-flagged)
-// or a human verified its accuracy.
-export function isHumanCertified(
+// A post is human-reviewed when a human authored it (and it isn't AI-flagged) or
+// a human curated/reviewed the data.
+export function isHumanReviewed(
   authoredCount: number,
-  verifiedCount: number,
+  curatedCount: number,
   aiFlagged: boolean,
 ): boolean {
-  return verifiedCount > 0 || (authoredCount > 0 && !aiFlagged);
+  return curatedCount > 0 || (authoredCount > 0 && !aiFlagged);
 }
 
 export function attestationWeight(

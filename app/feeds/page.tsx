@@ -7,7 +7,7 @@ import { listFeeds } from "@/lib/db/feeds";
 import { listAccuracyMap, listTrustMap } from "@/lib/db/accuracy";
 import { listCertificationMap } from "@/lib/db/certifications";
 import { listStatsMap, usageScore } from "@/lib/db/stats";
-import { isHumanCertified } from "@/lib/trust";
+import { isHumanReviewed } from "@/lib/trust";
 import {
   searchByTitle,
   filterByCategory,
@@ -95,7 +95,7 @@ export default function FeedsPage() {
     if (certifiedOnly) {
       result = result.filter((p) => {
         const c = certs[p.id];
-        return c && isHumanCertified(c.authoredCount, c.verifiedCount, c.aiFlagged);
+        return c && isHumanReviewed(c.authoredCount, c.curatedCount, c.aiFlagged);
       });
     }
 
@@ -228,7 +228,7 @@ export default function FeedsPage() {
             checked={certifiedOnly}
             onChange={(e) => setCertifiedOnly(e.target.checked)}
           />
-          ✓ Human Certified
+          ✓ Human-reviewed
         </label>
       </div>
 

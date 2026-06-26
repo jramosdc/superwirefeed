@@ -203,9 +203,10 @@ export interface PostStatsDoc {
 
 // --- Human certification & AI flagging (server-written) ---
 
-// "authored" = made entirely by a human; "verified" = a human reviewed and
-// vouches for the content's accuracy/validity.
-export type CertificationKind = "authored" | "verified";
+// "authored" = content created by a person (journalist, writer, artist,
+// photographer). "curated" = a human reviewed the data, even if the source
+// isn't human-created.
+export type CertificationKind = "authored" | "curated";
 
 // certifications/{certifierUid}_{postId} — one per certifier per post. Issued
 // only by trusted third parties (never the creator).
@@ -223,7 +224,7 @@ export interface CertificationDoc {
 // postCertification/{postId} — denormalized summary, server-maintained.
 export interface PostCertificationDoc {
   authoredCount: number;
-  verifiedCount: number;
+  curatedCount: number;
   // Set by a moderator or the SuperWire audit. Blocks the "authored" claim.
   aiFlagged: boolean;
   aiFlagReason: string;

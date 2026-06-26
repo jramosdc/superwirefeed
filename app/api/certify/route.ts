@@ -4,9 +4,9 @@ import { FieldValue } from "firebase-admin/firestore";
 import { canCertify } from "@/lib/trust";
 import type { CertificationKind } from "@/types";
 
-// Issue a "Human Certified" certification. Server-only (rules block client
-// writes). Only a TRUSTED THIRD PARTY may certify — never the creator. An
-// AI-flagged post cannot be certified as human-authored.
+// Issue a human-review certification (Human Authored or Curated). Server-only
+// (rules block client writes). Only a TRUSTED THIRD PARTY may certify — never the
+// creator. An AI-flagged post cannot be labeled Human Authored.
 export async function POST(req: Request) {
   const token = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? null;
   const uid = await verifyIdToken(token);
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       ? body.certifierName
       : "Anon";
 
-  if (!postId || (kind !== "authored" && kind !== "verified")) {
+  if (!postId || (kind !== "authored" && kind !== "curated")) {
     return NextResponse.json({ error: "Invalid certification" }, { status: 400 });
   }
 
@@ -63,15 +63,15 @@ export async function POST(req: Request) {
       }
 
       let authored = Number(summary.authoredCount ?? 0);
-      let verified = Number(summary.verifiedCount ?? 0);
+      let curated = Number(summary.curatedCount ?? 0);
 
       const prevKind = certSnap.exists
         ? (certSnap.data()?.kind as CertificationKind)
         : null;
       if (prevKind === "authored") authored -= 1;
-      else if (prevKind === "verified") verified -= 1;
+      else if (prevKind === "curated") curated -= 1;
       if (kind === "authored") authored += 1;
-      else verified += 1;
+      else curated += 1;
 
       tx.set(certRef, {
         postId,
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         summaryRef,
         {
           authoredCount: Math.max(0, authored),
-          verifiedCount: Math.max(0, verified),
+          curatedCount: Math.max(0, curated),
           updatedAt: FieldValue.serverTimestamp(),
         },
         { merge: true },
