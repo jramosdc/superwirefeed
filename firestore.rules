@@ -101,6 +101,23 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Requests/bounties: world-readable. A requester owns their request (and may
+    // close it / mark it fulfilled); a responder owns their response.
+    match /requests/{requestId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.requesterUid == request.auth.uid;
+      allow update, delete: if signedIn()
+        && resource.data.requesterUid == request.auth.uid;
+    }
+    match /requestResponses/{responseId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.responderUid == request.auth.uid;
+      allow update, delete: if signedIn()
+        && resource.data.responderUid == request.auth.uid;
+    }
+
     // Comments: comments/{postId}/items/{id}
     match /comments/{postId}/items/{commentId} {
       allow read: if true;

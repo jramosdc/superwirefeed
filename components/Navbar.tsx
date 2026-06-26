@@ -24,6 +24,9 @@ export function Navbar() {
           <Link href="/feeds" className="hover:text-blue-700">
             Browse
           </Link>
+          <Link href="/requests" className="hover:text-blue-700">
+            Requests
+          </Link>
           {user && (
             <>
               <Link href="/following" className="hover:text-blue-700">

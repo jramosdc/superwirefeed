@@ -194,6 +194,55 @@ describe("certifications & AI flags (server-only)", () => {
   });
 });
 
+describe("requests / bounties", () => {
+  it("blocks creating a request as someone else", async () => {
+    const mallory = testEnv.authenticatedContext("mallory").firestore();
+    await assertFails(
+      setDoc(doc(mallory, "requests", "r1"), {
+        requesterUid: "victim",
+        title: "spoofed",
+        status: "open",
+      }),
+    );
+  });
+
+  it("allows creating your own request and lets anyone read it", async () => {
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    await assertSucceeds(
+      setDoc(doc(buyer, "requests", "r2"), {
+        requesterUid: "buyer",
+        title: "Need flood data",
+        status: "open",
+      }),
+    );
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(stranger, "requests", "r2")));
+  });
+
+  it("blocks a non-requester from editing a request", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "requests", "r3"), {
+        requesterUid: "buyer",
+        title: "x",
+        status: "open",
+      });
+    });
+    const other = testEnv.authenticatedContext("other").firestore();
+    await assertFails(setDoc(doc(other, "requests", "r3"), { status: "fulfilled" }));
+  });
+
+  it("lets a responder create their own response", async () => {
+    const seller = testEnv.authenticatedContext("seller").firestore();
+    await assertSucceeds(
+      setDoc(doc(seller, "requestResponses", "resp1"), {
+        requestId: "r2",
+        responderUid: "seller",
+        postId: "p1",
+      }),
+    );
+  });
+});
+
 describe("post stats (server-only)", () => {
   it("blocks a client from inflating usage counters", async () => {
     const u = testEnv.authenticatedContext("alice").firestore();
