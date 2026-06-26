@@ -58,9 +58,9 @@ const sellers = [
   },
   {
     uid: "model-foundry",
-    name: "Model Foundry",
-    category: "AI & Compute",
-    about: "Fine-tuned models, eval sets and training corpora.",
+    name: "Prompt Foundry",
+    category: "AI & Prompts",
+    about: "Battle-tested prompt libraries, eval sets and training corpora.",
     rating: { avg: 0, count: 0 },
   },
   {
@@ -197,16 +197,24 @@ const posts = [
   {
     id: "llm-eval-set",
     owner: "model-foundry",
-    title: "Reasoning eval set with graded rubrics",
+    title: "Production prompt library: reasoning + extraction",
     license: "SELL_EXCLUSIVE",
-    category: "AI & Compute",
+    category: "AI & Prompts",
     format: "Dataset",
     types: ["Dataset"],
     breaking: false,
-    sources: [{ url: "https://example.org/ai/rubric", label: "Rubric", kind: "reporting" }],
+    sources: [{ url: "https://example.org/ai/rubric", label: "Eval rubric", kind: "reporting" }],
     derivedFrom: [],
-    asset: "eval-set.csv",
-    csvPreview: csv,
+    asset: "prompt-library.csv",
+    csvPreview: [
+      ["name", "task", "prompt", "avg_score"],
+      ["chain-extract", "extraction", "Extract every entity as JSON with…", "0.94"],
+      ["stepwise-reason", "reasoning", "Think step by step, then answer…", "0.91"],
+      ["rubric-grade", "evaluation", "Grade the answer 1-5 against…", "0.89"],
+    ],
+    previewText:
+      "120 production prompts with eval scores across reasoning, extraction and grading tasks. A few shown free — full library (CSV + rubrics) on purchase.",
+    freePreviewRows: 2,
     days: 6,
   },
   {

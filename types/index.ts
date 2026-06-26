@@ -15,7 +15,7 @@ export const CATEGORIES = [
   "Science & Research",
   "Datasets & Sensors",
   "Geospatial & Satellite",
-  "AI & Compute",
+  "AI & Prompts",
   "Forecasts & Predictions",
   "Intelligence & OSINT",
   "Health & Biotech",
