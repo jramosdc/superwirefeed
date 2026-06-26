@@ -63,6 +63,11 @@ describe("purchases", () => {
     await assertSucceeds(getDoc(doc(buyer, "purchases", "buyer_post1")));
     await assertFails(getDoc(doc(stranger, "purchases", "buyer_post1")));
   });
+
+  it("lets a signed-in user read a non-existent purchase (the 'did I buy this?' check)", async () => {
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    await assertSucceeds(getDoc(doc(buyer, "purchases", "buyer_never-bought")));
+  });
 });
 
 describe("posts", () => {

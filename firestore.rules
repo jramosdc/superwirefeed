@@ -50,7 +50,10 @@ service cloud.firestore {
     // Purchases: a user may read only their own. NO client writes — the Stripe
     // webhook writes these via the Admin SDK (which bypasses rules).
     match /purchases/{purchaseId} {
-      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      // `resource` is null when the doc doesn't exist (the common "have I bought
+      // this?" check) — allow that so the get returns empty instead of erroring.
+      allow read: if signedIn()
+        && (resource == null || resource.data.uid == request.auth.uid);
       allow write: if false;
     }
 
