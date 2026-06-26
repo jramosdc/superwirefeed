@@ -6,7 +6,7 @@ import Papa from "papaparse";
 import { useAuth } from "@/lib/firebase/auth";
 import { createPost, updatePost, type PostInput } from "@/lib/db/posts";
 import { uploadGatedAsset } from "@/lib/storage";
-import { LICENSE_LIST } from "@/lib/licenses";
+import { LICENSE_LIST, isGated } from "@/lib/licenses";
 import { CATEGORIES, FORMATS } from "@/types";
 import type {
   Category,
@@ -53,6 +53,8 @@ function emptyInput(): PostInput {
     assetPath: null,
     assetName: null,
     csvPreview: null,
+    previewText: "",
+    freePreviewRows: 5,
     sources: [],
     derivedFrom: [],
   };
@@ -78,6 +80,8 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           assetPath: existing.assetPath,
           assetName: existing.assetName,
           csvPreview: existing.csvPreview,
+          previewText: existing.previewText,
+          freePreviewRows: existing.freePreviewRows,
           sources: existing.sources,
           derivedFrom: existing.derivedFrom,
         }
@@ -357,6 +361,44 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           )}
         </div>
       ) : null}
+
+      {isGated(form.license) && (
+        <fieldset className="space-y-3 rounded-lg border border-slate-200 p-4">
+          <legend className="px-1 text-sm font-medium">Preview before purchase</legend>
+          <p className="text-sm text-slate-600">
+            Decide what buyers can sample before paying. The full file stays gated.
+          </p>
+          <div>
+            <label className="mb-1 block text-sm text-slate-600">
+              Teaser / summary shown to non-buyers (optional)
+            </label>
+            <textarea
+              value={form.previewText}
+              onChange={(e) => set("previewText", e.target.value)}
+              rows={3}
+              placeholder="A short summary that entices a purchase…"
+              className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            />
+          </div>
+          {form.format === "Dataset" && (
+            <div>
+              <label className="mb-1 block text-sm text-slate-600">
+                Free preview rows (how many dataset rows non-buyers see)
+              </label>
+              <input
+                type="number"
+                min={0}
+                max={50}
+                value={form.freePreviewRows}
+                onChange={(e) =>
+                  set("freePreviewRows", Math.max(0, Number(e.target.value) || 0))
+                }
+                className="w-28 rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+          )}
+        </fieldset>
+      )}
 
       <fieldset className="space-y-3 rounded-lg border border-slate-200 p-4">
         <legend className="px-1 text-sm font-medium">Provenance</legend>

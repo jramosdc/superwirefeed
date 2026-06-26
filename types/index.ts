@@ -111,6 +111,10 @@ export interface PostDoc {
   assetName: string | null;
   // First N rows of the parsed CSV, shown free for CC licenses / after purchase.
   csvPreview: string[][] | null;
+  // Creator-controlled preview shown to non-buyers of gated posts.
+  previewText: string;
+  // How many CSV rows non-buyers may see before purchase (0 = none).
+  freePreviewRows: number;
   // Provenance (author-stated, public/auditable claims).
   sources: SourceRef[];
   // Derivation-graph edges: postIds this post builds on.

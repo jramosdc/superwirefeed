@@ -57,6 +57,8 @@ function toPost(id: string, data: Record<string, unknown>): PostDoc {
     assetPath: (data.assetPath as string) ?? null,
     assetName: (data.assetName as string) ?? null,
     csvPreview: parseCsvPreview(data.csvPreview),
+    previewText: (data.previewText as string) ?? "",
+    freePreviewRows: (data.freePreviewRows as number) ?? 0,
     sources: (data.sources as PostDoc["sources"]) ?? [],
     derivedFrom: (data.derivedFrom as string[]) ?? [],
     createdAt: tsToMillis(data.createdAt),

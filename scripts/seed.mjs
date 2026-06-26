@@ -110,6 +110,9 @@ const posts = [
     derivedFrom: ["gw-detection"],
     asset: "gw-strain.csv",
     csvPreview: csv,
+    previewText:
+      "Calibrated strain time-series around the candidate event. Sample rows below; full dataset (10k+ rows, multi-detector) on purchase.",
+    freePreviewRows: 2,
     days: 1,
   },
   {
@@ -138,6 +141,9 @@ const posts = [
     derivedFrom: [],
     asset: "liquidity.csv",
     csvPreview: csv,
+    previewText:
+      "Liquidity anomaly windows across three venues. A couple of rows shown free — buy for the full tick-level set.",
+    freePreviewRows: 1,
     days: 3,
   },
   {
@@ -184,6 +190,8 @@ const posts = [
     ],
     derivedFrom: [],
     asset: "convoy-brief.pdf",
+    previewText:
+      "Geolocated convoy movements over 72 hours, cross-checked against three independent sources. Full brief (PDF, maps + timestamps) on purchase.",
     days: 2,
   },
   {
@@ -329,6 +337,8 @@ async function run() {
       assetPath: p.asset ? `assets/${p.owner}/${p.id}/${p.asset}` : null,
       assetName: p.asset ?? null,
       csvPreview: p.csvPreview ? JSON.stringify(p.csvPreview) : null,
+      previewText: p.previewText ?? "",
+      freePreviewRows: p.freePreviewRows ?? 0,
       sources: p.sources ?? [],
       derivedFrom: p.derivedFrom ?? [],
       createdAt: daysAgo(p.days),
