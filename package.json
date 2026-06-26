@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "SuperWire — a marketplace for user-created wire services (Next.js + Firebase rebuild)",
+  "engines": {
+    "node": ">=20 <24"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
