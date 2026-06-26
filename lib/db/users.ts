@@ -27,6 +27,9 @@ export async function bootstrapUser(
     profileImageURL: "",
     backgroundImageURL: "",
     useBackgroundImage: true,
+    interests: [],
+    about: "",
+    onboarded: false,
     createdAt: serverTimestamp(),
   });
 

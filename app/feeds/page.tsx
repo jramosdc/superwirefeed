@@ -63,6 +63,7 @@ export default function FeedsPage() {
                 className="rounded-full border border-slate-300 bg-white px-3 py-1 text-sm hover:bg-slate-100"
               >
                 {f.name || "Untitled wire"} · ♥ {f.likes}
+                {f.ratingCount > 0 ? ` · ★ ${f.ratingAvg}` : ""}
               </Link>
             ))}
           </div>

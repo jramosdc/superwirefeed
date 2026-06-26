@@ -42,3 +42,8 @@ ui-debug.log
 # typescript
 *.tsbuildinfo
 *-debug.log
+
+# secrets / service accounts (NEVER commit)
+service-account-key.json
+*service-account*.json
+*-firebase-adminsdk-*.json

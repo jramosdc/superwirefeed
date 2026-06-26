@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/firebase/auth";
 import { Navbar } from "@/components/Navbar";
+import { OnboardingGate } from "@/components/OnboardingGate";
 
 export const metadata: Metadata = {
   title: {
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen bg-slate-50 text-slate-900">
         <AuthProvider>
+          <OnboardingGate />
           <Navbar />
           <main className="mx-auto w-full max-w-5xl px-4 py-6">{children}</main>
         </AuthProvider>

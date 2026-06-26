@@ -4,7 +4,6 @@ import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { getFeed } from "@/lib/db/feeds";
 import { listPostsByFeed } from "@/lib/db/posts";
-import { listReviewsForSeller, aggregateRating } from "@/lib/db/reviews";
 import { PostCard } from "@/components/PostCard";
 import { FollowButton } from "@/components/FollowButton";
 import { RatingStars } from "@/components/RatingStars";
@@ -18,24 +17,18 @@ export default function FeedDetailPage({
   const { feedId } = use(params);
   const [feed, setFeed] = useState<(FeedDoc & { id: string }) | null>(null);
   const [posts, setPosts] = useState<PostDoc[]>([]);
-  const [rating, setRating] = useState({ avg: 0, count: 0 });
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      getFeed(feedId),
-      listPostsByFeed(feedId),
-      listReviewsForSeller(feedId),
-    ])
-      .then(([f, p, reviews]) => {
+    Promise.all([getFeed(feedId), listPostsByFeed(feedId)])
+      .then(([f, p]) => {
         if (!f) {
           setNotFound(true);
           return;
         }
         setFeed(f);
         setPosts(p);
-        setRating(aggregateRating(reviews));
       })
       .finally(() => setLoading(false));
   }, [feedId]);
@@ -58,10 +51,10 @@ export default function FeedDetailPage({
           <div>
             <h1 className="text-2xl font-bold">{feed?.name || "Untitled wire"}</h1>
             <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
-              <RatingStars value={rating.avg} />
+              <RatingStars value={feed?.ratingAvg ?? 0} />
               <span>
-                {rating.count > 0
-                  ? `${rating.avg} · ${rating.count} review${rating.count > 1 ? "s" : ""}`
+                {(feed?.ratingCount ?? 0) > 0
+                  ? `${feed?.ratingAvg} · ${feed?.ratingCount} review${(feed?.ratingCount ?? 0) > 1 ? "s" : ""}`
                   : "No reviews yet"}
               </span>
               <span>· ♥ {feed?.likes}</span>

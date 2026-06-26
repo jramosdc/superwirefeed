@@ -25,7 +25,9 @@ export default function RegisterPage() {
     setBusy(true);
     try {
       await register(email, password, displayName);
-      router.push("/verify");
+      // New users complete the onboarding wizard next; a verification email
+      // has already been sent and is surfaced via /verify.
+      router.push("/onboarding");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {

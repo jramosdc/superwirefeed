@@ -18,9 +18,13 @@ function toFeed(id: string, data: Record<string, unknown>): FeedDoc & { id: stri
     id,
     ownerUid: (data.ownerUid as string) ?? id,
     name: (data.name as string) ?? "",
+    category: (data.category as string) ?? "",
+    about: (data.about as string) ?? "",
     likes: (data.likes as number) ?? 0,
     postCategories: (data.postCategories as string[]) ?? [],
     coverImageURL: (data.coverImageURL as string) ?? "",
+    ratingAvg: (data.ratingAvg as number) ?? 0,
+    ratingCount: (data.ratingCount as number) ?? 0,
     updatedAt: tsToMillis(data.updatedAt),
   };
 }
@@ -39,9 +43,13 @@ export async function createFeed(uid: string, name: string): Promise<void> {
     {
       ownerUid: uid,
       name,
+      category: "",
+      about: "",
       likes: 0,
       postCategories: [],
       coverImageURL: "",
+      ratingAvg: 0,
+      ratingCount: 0,
       updatedAt: serverTimestamp(),
     },
     { merge: true },

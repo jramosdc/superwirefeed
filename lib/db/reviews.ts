@@ -1,34 +1,21 @@
 import {
-  addDoc,
   getDocs,
   collection,
   query,
   where,
   orderBy,
-  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import type { ReviewDoc } from "@/types";
+
+// NOTE: reviews are created server-side via POST /api/reviews (Admin SDK), which
+// also updates the seller's rating aggregate. Clients only read them here.
 
 function tsToMillis(v: unknown): number {
   if (v && typeof v === "object" && "toMillis" in v) {
     return (v as { toMillis: () => number }).toMillis();
   }
   return typeof v === "number" ? v : 0;
-}
-
-export async function addReview(input: {
-  sellerUid: string;
-  authorUid: string;
-  authorName: string;
-  rating: number;
-  text: string;
-}): Promise<void> {
-  await addDoc(collection(db, "reviews"), {
-    ...input,
-    rating: Math.max(1, Math.min(5, Math.round(input.rating))),
-    createdAt: serverTimestamp(),
-  });
 }
 
 export async function listReviewsForSeller(sellerUid: string): Promise<ReviewDoc[]> {

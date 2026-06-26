@@ -29,6 +29,10 @@ export interface UserDoc {
   profileImageURL: string;
   backgroundImageURL: string;
   useBackgroundImage: boolean;
+  // Onboarding wizard fields (interests/about + completion flag).
+  interests: string[];
+  about: string;
+  onboarded: boolean;
   createdAt: number;
 }
 
@@ -36,9 +40,14 @@ export interface FeedDoc {
   // Doc id === ownerUid. One feed per user.
   ownerUid: string;
   name: string;
+  category: string;
+  about: string;
   likes: number;
   postCategories: string[];
   coverImageURL: string;
+  // Denormalized seller rating, kept consistent server-side by /api/reviews.
+  ratingAvg: number;
+  ratingCount: number;
   updatedAt: number;
 }
 

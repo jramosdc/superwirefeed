@@ -54,13 +54,12 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Reviews: world-readable; an author may create their own and edit/delete it.
+    // Reviews: world-readable. Written ONLY by the server (/api/reviews via the
+    // Admin SDK) so the seller's rating aggregate stays consistent. Clients
+    // cannot write directly.
     match /reviews/{reviewId} {
       allow read: if true;
-      allow create: if signedIn()
-        && request.resource.data.authorUid == request.auth.uid;
-      allow update, delete: if signedIn()
-        && resource.data.authorUid == request.auth.uid;
+      allow write: if false;
     }
 
     // Comments: comments/{postId}/items/{id}

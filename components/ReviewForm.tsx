@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth";
-import { addReview } from "@/lib/db/reviews";
+import { getIdToken } from "@/lib/firebase/token";
 import { getUser } from "@/lib/db/users";
 import { RatingStars } from "./RatingStars";
 
@@ -32,13 +32,24 @@ export function ReviewForm({
     setBusy(true);
     try {
       const profile = await getUser(user.uid);
-      await addReview({
-        sellerUid,
-        authorUid: user.uid,
-        authorName: profile?.displayName ?? user.email ?? "Anon",
-        rating,
-        text: text.trim(),
+      const token = await getIdToken();
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          sellerUid,
+          rating,
+          text: text.trim(),
+          authorName: profile?.displayName ?? user.email ?? "Anon",
+        }),
       });
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        throw new Error(d.error ?? "Failed to submit review");
+      }
       setText("");
       setRating(5);
       onSubmitted();

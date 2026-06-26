@@ -88,3 +88,31 @@ describe("posts", () => {
     );
   });
 });
+
+describe("reviews", () => {
+  it("blocks a client from writing a review directly", async () => {
+    // Reviews are written only by /api/reviews (Admin SDK) so the seller's
+    // rating aggregate stays consistent. Direct client writes must fail.
+    const author = testEnv.authenticatedContext("author").firestore();
+    await assertFails(
+      setDoc(doc(author, "reviews", "author_seller"), {
+        sellerUid: "seller",
+        authorUid: "author",
+        rating: 5,
+        text: "great",
+      }),
+    );
+  });
+
+  it("allows anyone to read reviews", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "reviews", "author_seller"), {
+        sellerUid: "seller",
+        authorUid: "author",
+        rating: 4,
+      });
+    });
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(stranger, "reviews", "author_seller")));
+  });
+});
