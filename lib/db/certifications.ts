@@ -27,7 +27,7 @@ function tsToMillis(v: unknown): number {
 function toSummary(d: Record<string, unknown> | undefined): PostCertificationDoc {
   return {
     authoredCount: (d?.authoredCount as number) ?? 0,
-    verifiedCount: (d?.verifiedCount as number) ?? 0,
+    curatedCount: (d?.curatedCount as number) ?? 0,
     aiFlagged: Boolean(d?.aiFlagged),
     aiFlagReason: (d?.aiFlagReason as string) ?? "",
     aiFlaggedBy: (d?.aiFlaggedBy as string) ?? "",

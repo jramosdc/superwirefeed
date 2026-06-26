@@ -97,8 +97,9 @@ export function CertificationPanel({ post }: { post: PostDoc }) {
       </div>
 
       <p className="text-sm text-slate-600">
-        Human Certified means a trusted third party vouches the content is
-        human-authored or has reviewed its accuracy.
+        A trusted third party can label this <strong>Human Authored</strong>
+        (created by a person) or <strong>Curated</strong> (a human reviewed the
+        data, even if the source isn&apos;t human-created).
       </p>
       {aiFlagged && cert?.aiFlagReason && (
         <p className="mt-2 text-sm text-amber-800">⚠ {cert.aiFlagReason}</p>
@@ -125,14 +126,14 @@ export function CertificationPanel({ post }: { post: PostDoc }) {
               title={aiFlagged ? "Blocked: post is flagged as likely AI-generated" : ""}
               className="rounded bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
             >
-              Certify: human-authored
+              Label: Human Authored
             </button>
             <button
-              onClick={() => certify("verified")}
+              onClick={() => certify("curated")}
               disabled={busy !== ""}
-              className="rounded bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+              className="rounded bg-sky-600 px-3 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
             >
-              Certify: human-verified
+              Mark as Curated
             </button>
           </div>
         </div>

@@ -70,6 +70,13 @@ const sellers = [
     about: "Clinical and genomic datasets for republication and research.",
     rating: { avg: 3.9, count: 2 },
   },
+  {
+    uid: "frontline-wire",
+    name: "Frontline Wire",
+    category: "Culture & Society",
+    about: "On-the-ground photojournalism and dispatches from major events.",
+    rating: { avg: 4.5, count: 5 },
+  },
 ];
 
 // ---- Posts -----------------------------------------------------------------
@@ -245,6 +252,57 @@ const posts = [
     asset: "interview.mp3",
     days: 8,
   },
+
+  // --- Breaking-news events ---
+  {
+    id: "wc-usa-paraguay",
+    owner: "frontline-wire",
+    title: "USA 2–1 Paraguay: on-field photos from the World Cup",
+    license: "SELL_ATTRIBUTION",
+    category: "Culture & Society",
+    format: "Photo set",
+    types: ["Photo"],
+    breaking: true,
+    sources: [
+      { url: "https://example.org/wc/pool", label: "Match pool", kind: "primary" },
+    ],
+    derivedFrom: [],
+    asset: "usa-paraguay-photos.zip",
+    previewText:
+      "12 high-res, editorially-cleared match photos (goals, celebrations, crowd). Full set licensed for republication on purchase.",
+    days: 0,
+  },
+  {
+    id: "quake-images",
+    owner: "frontline-wire",
+    title: "Breaking: 6.8 earthquake — first images from the epicenter",
+    license: "CC_BY",
+    category: "Climate & Environment",
+    format: "Photo set",
+    types: ["Photo"],
+    breaking: true,
+    sources: [
+      { url: "https://example.org/quake/feed", label: "Field dispatch", kind: "primary" },
+    ],
+    derivedFrom: [],
+    asset: "quake-first-images.zip",
+    days: 0,
+  },
+  {
+    id: "rate-decision",
+    owner: "quant-desk",
+    title: "Breaking: central bank announces emergency 50bp cut",
+    license: "CC_BY",
+    category: "Markets & Signals",
+    format: "Article",
+    types: ["Article"],
+    breaking: true,
+    sources: [
+      { url: "https://example.org/cb/statement", label: "Official statement", kind: "primary" },
+    ],
+    derivedFrom: [],
+    days: 0,
+  },
 ];
 
 // ---- Attestations (drive accuracy + trust) ---------------------------------
@@ -288,8 +346,10 @@ const follows = [
 // (certifiers must be trusted, score >= 10, and never the post owner).
 const certifications = [
   ["quant-desk", "gw-detection", "authored"],
-  ["quant-desk", "gw-dataset", "verified"],
-  ["orbital-signals", "market-microstructure", "verified"],
+  ["quant-desk", "gw-dataset", "curated"],
+  ["orbital-signals", "market-microstructure", "curated"],
+  ["quant-desk", "wc-usa-paraguay", "authored"],
+  ["orbital-signals", "rate-decision", "authored"],
 ];
 
 // Requests / bounties (demand side).
@@ -437,6 +497,9 @@ async function run() {
     "flood-satellite": 40,
     "genomic-cohort": 30,
     "interview-audio": 25,
+    "wc-usa-paraguay": 320,
+    "quake-images": 280,
+    "rate-decision": 150,
   };
   const purchasesByPost = {};
   for (const [, postId] of purchases) {
@@ -516,7 +579,7 @@ async function run() {
   }
 
   // Human certifications + per-post summary.
-  const certSummary = {}; // postId -> { authored, verified }
+  const certSummary = {}; // postId -> { authored, curated }
   for (const [certifierUid, postId, kind] of certifications) {
     await db.collection("certifications").doc(`${certifierUid}_${postId}`).set({
       postId,
@@ -527,15 +590,15 @@ async function run() {
       note: "",
       createdAt: daysAgo(0),
     });
-    const s = (certSummary[postId] ??= { authored: 0, verified: 0 });
+    const s = (certSummary[postId] ??= { authored: 0, curated: 0 });
     if (kind === "authored") s.authored += 1;
-    else s.verified += 1;
+    else s.curated += 1;
   }
   for (const [postId, s] of Object.entries(certSummary)) {
     await db.collection("postCertification").doc(postId).set(
       {
         authoredCount: s.authored,
-        verifiedCount: s.verified,
+        curatedCount: s.curated,
         aiFlagged: false,
         aiFlagReason: "",
         aiFlaggedBy: "",
