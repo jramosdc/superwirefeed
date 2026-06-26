@@ -50,7 +50,10 @@ service cloud.firestore {
     // Purchases: a user may read only their own. NO client writes — the Stripe
     // webhook writes these via the Admin SDK (which bypasses rules).
     match /purchases/{purchaseId} {
-      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      // `resource` is null when the doc doesn't exist (the common "have I bought
+      // this?" check) — allow that so the get returns empty instead of erroring.
+      allow read: if signedIn()
+        && (resource == null || resource.data.uid == request.auth.uid);
       allow write: if false;
     }
 
@@ -58,6 +61,35 @@ service cloud.firestore {
     // Admin SDK) so the seller's rating aggregate stays consistent. Clients
     // cannot write directly.
     match /reviews/{reviewId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Accuracy attestations, the per-post accuracy aggregate, and member trust
+    // scores are world-readable but written ONLY by the server (/api/attestations
+    // via the Admin SDK). This is what makes the trust signal forgery-proof — a
+    // member can't write their own trust or fake an aggregate.
+    match /attestations/{attestationId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /postAccuracy/{postId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /trust/{uid} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Human certifications + AI flags: world-readable, written ONLY by the
+    // server (/api/certify, /api/moderate) which enforces third-party + role
+    // (trust-tier) checks. Clients can't self-certify or self-flag.
+    match /certifications/{certId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /postCertification/{postId} {
       allow read: if true;
       allow write: if false;
     }

@@ -24,6 +24,20 @@ function adminApp(): App {
   }
 
   const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID;
+
+  // Emulator mode: when the *_EMULATOR_HOST vars are present the Admin SDK talks
+  // to the local emulator and needs no real service-account credential.
+  if (
+    process.env.FIRESTORE_EMULATOR_HOST ||
+    process.env.FIREBASE_AUTH_EMULATOR_HOST
+  ) {
+    _app = initializeApp({
+      projectId: projectId ?? process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    });
+    return _app;
+  }
+
   const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
   // Private key is stored with literal "\n"; convert back to real newlines.
   const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, "\n");

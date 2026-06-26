@@ -1,9 +1,16 @@
 import Link from "next/link";
-import type { PostDoc } from "@/types";
+import type { PostDoc, PostCertificationDoc } from "@/types";
 import { getLicense, formatPrice } from "@/lib/licenses";
 import { truncateText, readingTime } from "@/lib/search";
+import { HumanCertifiedBadge } from "./HumanCertifiedBadge";
 
-export function PostCard({ post }: { post: PostDoc }) {
+export function PostCard({
+  post,
+  cert,
+}: {
+  post: PostDoc;
+  cert?: PostCertificationDoc | null;
+}) {
   const license = getLicense(post.license);
   return (
     <Link
@@ -36,6 +43,11 @@ export function PostCard({ post }: { post: PostDoc }) {
         </span>
       </div>
       <h3 className="font-semibold leading-snug">{post.title}</h3>
+      {cert && (
+        <div className="mt-1">
+          <HumanCertifiedBadge cert={cert} size="xs" />
+        </div>
+      )}
       <p className="mt-1 text-sm text-slate-600">{truncateText(post.detailHtml, 140)}</p>
       <p className="mt-2 text-xs text-slate-400">{readingTime(post.detailHtml)}</p>
     </Link>

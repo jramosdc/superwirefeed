@@ -12,6 +12,9 @@ import { readingTime } from "@/lib/search";
 import { PostActions } from "@/components/PostActions";
 import { CsvTable } from "@/components/CsvTable";
 import { Comments } from "@/components/Comments";
+import { ProvenancePanel } from "@/components/ProvenancePanel";
+import { AccuracyPanel } from "@/components/AccuracyPanel";
+import { CertificationPanel } from "@/components/CertificationPanel";
 import type { PostDoc, FeedDoc } from "@/types";
 
 export default function PostPage({
@@ -58,7 +61,16 @@ export default function PostPage({
   if (notFound || !post) return <p className="text-slate-500">Post not found.</p>;
 
   const isOwner = user?.uid === post.ownerUid;
-  const showCsv = post.csvPreview && (!isGated(post.license) || unlocked);
+  const fullAccess = !isGated(post.license) || unlocked;
+  // Non-buyers of a gated dataset see only the creator-set number of rows.
+  const csvRows =
+    post.csvPreview &&
+    (fullAccess
+      ? post.csvPreview
+      : post.csvPreview.slice(0, post.freePreviewRows));
+  const showCsv = csvRows && csvRows.length > 0;
+  // Creator's teaser, shown to those who haven't unlocked the post.
+  const showTeaser = !fullAccess && !!post.previewText;
 
   return (
     <article className="space-y-6">
@@ -85,6 +97,9 @@ export default function PostPage({
               BREAKING
             </span>
           )}
+          <span className="rounded bg-blue-100 px-1.5 py-0.5 font-medium text-blue-700">
+            {post.format}
+          </span>
           <span className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-600">
             {post.category}
           </span>
@@ -135,19 +150,43 @@ export default function PostPage({
         </a>
       )}
 
-      <PostActions post={post} unlocked={unlocked} />
-
-      {showCsv && post.csvPreview && (
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold">Dataset preview</h2>
-          <CsvTable rows={post.csvPreview} />
+      {showTeaser && (
+        <section className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-amber-700">
+            Preview
+          </p>
+          <p className="text-sm text-slate-700">{post.previewText}</p>
         </section>
       )}
-      {post.csvPreview && isGated(post.license) && !unlocked && (
+
+      <PostActions post={post} unlocked={unlocked} />
+
+      {showCsv && csvRows && (
+        <section className="space-y-2">
+          <h2 className="text-lg font-semibold">
+            {fullAccess ? "Dataset preview" : "Dataset sample"}
+          </h2>
+          <CsvTable rows={csvRows} />
+          {!fullAccess && (
+            <p className="text-sm text-slate-500">
+              Showing {csvRows.length} sample row{csvRows.length === 1 ? "" : "s"}.
+              Buy a license for the full dataset.
+            </p>
+          )}
+        </section>
+      )}
+      {post.csvPreview && isGated(post.license) && !unlocked && !showCsv && (
         <p className="text-sm text-slate-500">
           Buy a license to preview and download the full dataset.
         </p>
       )}
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <ProvenancePanel post={post} />
+        <AccuracyPanel post={post} />
+      </div>
+
+      <CertificationPanel post={post} />
 
       <Comments postId={post.id} />
     </article>

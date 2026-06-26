@@ -1,4 +1,5 @@
-import type { CategoryFilter, PostDoc } from "@/types";
+import type { CategoryFilter, FormatFilter, PostDoc } from "@/types";
+import { isGated } from "@/lib/licenses";
 
 // Replacements for the old Angular pipes (legacy/src/components/pipes/*).
 
@@ -25,6 +26,20 @@ export function filterByCategory(
 // ("newest first" via createdAt).
 export function orderByNewest<T extends { createdAt: number }>(items: T[]): T[] {
   return [...items].sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export function filterByFormat(posts: PostDoc[], format: FormatFilter): PostDoc[] {
+  if (format === "All") return posts;
+  return posts.filter((p) => p.format === format);
+}
+
+export type PriceFilter = "all" | "free" | "paid";
+
+export function filterByPrice(posts: PostDoc[], price: PriceFilter): PostDoc[] {
+  if (price === "all") return posts;
+  return posts.filter((p) =>
+    price === "paid" ? isGated(p.license) : !isGated(p.license),
+  );
 }
 
 // truncate: strip HTML tags and clamp to a length, mirroring

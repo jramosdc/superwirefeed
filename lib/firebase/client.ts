@@ -41,7 +41,9 @@ declare global {
 
 if (
   typeof window !== "undefined" &&
-  process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === "1" &&
+  ["1", "true"].includes(
+    (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR ?? "").toLowerCase(),
+  ) &&
   !globalThis.__SUPERWIRE_EMULATORS_CONNECTED__
 ) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });

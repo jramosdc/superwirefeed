@@ -6,20 +6,44 @@ import Papa from "papaparse";
 import { useAuth } from "@/lib/firebase/auth";
 import { createPost, updatePost, type PostInput } from "@/lib/db/posts";
 import { uploadGatedAsset } from "@/lib/storage";
-import { LICENSE_LIST } from "@/lib/licenses";
-import { CATEGORIES } from "@/types";
-import type { Category, LicenseKey, PostDoc, EmbedPreview } from "@/types";
+import { LICENSE_LIST, isGated } from "@/lib/licenses";
+import { CATEGORIES, FORMATS } from "@/types";
+import type {
+  Category,
+  LicenseKey,
+  PostDoc,
+  PostFormat,
+  EmbedPreview,
+  SourceRef,
+} from "@/types";
+
+const MAX_ASSET_BYTES = 25 * 1024 * 1024; // 25 MB for non-CSV deliverables
 import { RichEditor } from "./RichEditor";
 import { ImageUploader } from "./ImageUploader";
 
 const TYPE_OPTIONS = ["Article", "Dataset", "Media", "Photo", "Video", "Document"];
+const SOURCE_KINDS: SourceRef["kind"][] = ["primary", "data", "reporting", "other"];
+
+// Extract a post id from a pasted /posts/<id> URL, or accept a raw id.
+function parseDerivedFrom(text: string): string[] {
+  return text
+    .split(/[\n,]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => {
+      const m = s.match(/posts\/([^/?#]+)/);
+      return m ? m[1] : s;
+    });
+}
 
 function emptyInput(): PostInput {
   return {
     title: "",
     detailHtml: "",
     license: "CC_BY",
-    category: "News",
+    // No biased default — the author must pick a topic (validated on submit).
+    category: "" as Category,
+    format: "Article",
     types: [],
     breaking: false,
     coverImage: "",
@@ -29,6 +53,10 @@ function emptyInput(): PostInput {
     assetPath: null,
     assetName: null,
     csvPreview: null,
+    previewText: "",
+    freePreviewRows: 5,
+    sources: [],
+    derivedFrom: [],
   };
 }
 
@@ -42,6 +70,7 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           detailHtml: existing.detailHtml,
           license: existing.license,
           category: existing.category,
+          format: existing.format,
           types: existing.types,
           breaking: existing.breaking,
           coverImage: existing.coverImage,
@@ -51,10 +80,18 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           assetPath: existing.assetPath,
           assetName: existing.assetName,
           csvPreview: existing.csvPreview,
+          previewText: existing.previewText,
+          freePreviewRows: existing.freePreviewRows,
+          sources: existing.sources,
+          derivedFrom: existing.derivedFrom,
         }
       : emptyInput(),
   );
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [assetFile, setAssetFile] = useState<File | null>(null);
+  const [derivedText, setDerivedText] = useState(
+    existing?.derivedFrom.join("\n") ?? "",
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -71,6 +108,27 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
     }));
   }
 
+  function addSource() {
+    setForm((f) => ({
+      ...f,
+      sources: [...f.sources, { url: "", label: "", kind: "primary" }],
+    }));
+  }
+  function updateSource(i: number, patch: Partial<SourceRef>) {
+    setForm((f) => ({
+      ...f,
+      sources: f.sources.map((s, idx) => (idx === i ? { ...s, ...patch } : s)),
+    }));
+  }
+  function removeSource(i: number) {
+    setForm((f) => ({ ...f, sources: f.sources.filter((_, idx) => idx !== i) }));
+  }
+
+  function onDerivedChange(text: string) {
+    setDerivedText(text);
+    set("derivedFrom", parseDerivedFrom(text));
+  }
+
   // Parse the CSV client-side for the preview table (papaparse, as before).
   function onCsv(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -84,6 +142,18 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
       skipEmptyLines: true,
       complete: (res) => set("csvPreview", res.data.slice(0, 50)),
     });
+  }
+
+  // Generic gated deliverable (PDF, image pack, video, audio…) for non-CSV formats.
+  function onAssetFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_ASSET_BYTES) {
+      setError("File must be 25MB or smaller.");
+      return;
+    }
+    setError("");
+    setAssetFile(file);
   }
 
   // Fetch a server-side link preview for the embedded URL.
@@ -108,18 +178,28 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
       setError("Pick at least one type.");
       return;
     }
+    if (!form.category) {
+      setError("Pick a category.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
+      // Drop blank source rows before saving.
+      const cleaned: PostInput = {
+        ...form,
+        sources: form.sources.filter((s) => s.url.trim()),
+      };
       // Create first (need the id for the asset path), then upload + patch.
       const postId = existing
         ? existing.id
-        : await createPost(user.uid, form);
+        : await createPost(user.uid, cleaned);
 
-      let patch: Partial<PostInput> = form;
-      if (csvFile) {
-        const assetPath = await uploadGatedAsset(csvFile, user.uid, postId);
-        patch = { ...patch, assetPath, assetName: csvFile.name };
+      let patch: Partial<PostInput> = cleaned;
+      const gatedFile = form.format === "Dataset" ? csvFile : assetFile;
+      if (gatedFile) {
+        const assetPath = await uploadGatedAsset(gatedFile, user.uid, postId);
+        patch = { ...patch, assetPath, assetName: gatedFile.name };
       }
       await updatePost(postId, patch);
 
@@ -147,7 +227,7 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
         <RichEditor value={form.detailHtml} onChange={(html) => set("detailHtml", html)} />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
         <div>
           <label className="mb-1 block text-sm font-medium">Category</label>
           <select
@@ -155,6 +235,9 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
             onChange={(e) => set("category", e.target.value as Category)}
             className="w-full rounded border border-slate-300 px-3 py-2"
           >
+            <option value="" disabled>
+              Choose a topic…
+            </option>
             {CATEGORIES.map((c) => (
               <option key={c}>{c}</option>
             ))}
@@ -171,6 +254,18 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
               <option key={l.key} value={l.key}>
                 {l.label}
               </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium">Format</label>
+          <select
+            value={form.format}
+            onChange={(e) => set("format", e.target.value as PostFormat)}
+            className="w-full rounded border border-slate-300 px-3 py-2"
+          >
+            {FORMATS.map((f) => (
+              <option key={f}>{f}</option>
             ))}
           </select>
         </div>
@@ -232,20 +327,144 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
         )}
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium">
-          Dataset (CSV, max 1MB) — the gated downloadable file
-        </label>
-        <input type="file" accept=".csv" onChange={onCsv} />
-        {form.csvPreview && (
-          <p className="mt-1 text-sm text-slate-500">
-            {form.csvPreview.length} preview rows parsed.
+      {form.format === "Dataset" ? (
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            Dataset (CSV, max 1MB) — the gated downloadable file
+          </label>
+          <input type="file" accept=".csv" onChange={onCsv} />
+          {form.csvPreview && (
+            <p className="mt-1 text-sm text-slate-500">
+              {form.csvPreview.length} preview rows parsed.
+            </p>
+          )}
+          {existing?.assetName && !csvFile && (
+            <p className="mt-1 text-sm text-slate-500">
+              Current file: {existing.assetName}
+            </p>
+          )}
+        </div>
+      ) : form.format !== "Article" ? (
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            Deliverable file ({form.format}, max 25MB) — the gated download buyers
+            receive
+          </label>
+          <input type="file" onChange={onAssetFile} />
+          {assetFile && (
+            <p className="mt-1 text-sm text-slate-500">Selected: {assetFile.name}</p>
+          )}
+          {existing?.assetName && !assetFile && (
+            <p className="mt-1 text-sm text-slate-500">
+              Current file: {existing.assetName}
+            </p>
+          )}
+        </div>
+      ) : null}
+
+      {isGated(form.license) && (
+        <fieldset className="space-y-3 rounded-lg border border-slate-200 p-4">
+          <legend className="px-1 text-sm font-medium">Preview before purchase</legend>
+          <p className="text-sm text-slate-600">
+            Decide what buyers can sample before paying. The full file stays gated.
           </p>
-        )}
-        {existing?.assetName && !csvFile && (
-          <p className="mt-1 text-sm text-slate-500">Current file: {existing.assetName}</p>
-        )}
-      </div>
+          <div>
+            <label className="mb-1 block text-sm text-slate-600">
+              Teaser / summary shown to non-buyers (optional)
+            </label>
+            <textarea
+              value={form.previewText}
+              onChange={(e) => set("previewText", e.target.value)}
+              rows={3}
+              placeholder="A short summary that entices a purchase…"
+              className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            />
+          </div>
+          {form.format === "Dataset" && (
+            <div>
+              <label className="mb-1 block text-sm text-slate-600">
+                Free preview rows (how many dataset rows non-buyers see)
+              </label>
+              <input
+                type="number"
+                min={0}
+                max={50}
+                value={form.freePreviewRows}
+                onChange={(e) =>
+                  set("freePreviewRows", Math.max(0, Number(e.target.value) || 0))
+                }
+                className="w-28 rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+          )}
+        </fieldset>
+      )}
+
+      <fieldset className="space-y-3 rounded-lg border border-slate-200 p-4">
+        <legend className="px-1 text-sm font-medium">Provenance</legend>
+
+        <div className="space-y-2">
+          <p className="text-sm text-slate-600">
+            Sources — where this information came from.
+          </p>
+          {form.sources.map((s, i) => (
+            <div key={i} className="flex flex-wrap items-center gap-2">
+              <select
+                value={s.kind}
+                onChange={(e) =>
+                  updateSource(i, { kind: e.target.value as SourceRef["kind"] })
+                }
+                className="rounded border border-slate-300 px-2 py-1.5 text-sm"
+              >
+                {SOURCE_KINDS.map((k) => (
+                  <option key={k} value={k}>
+                    {k}
+                  </option>
+                ))}
+              </select>
+              <input
+                value={s.label}
+                onChange={(e) => updateSource(i, { label: e.target.value })}
+                placeholder="Label"
+                className="w-32 rounded border border-slate-300 px-2 py-1.5 text-sm"
+              />
+              <input
+                value={s.url}
+                onChange={(e) => updateSource(i, { url: e.target.value })}
+                placeholder="https://…"
+                className="min-w-0 flex-1 rounded border border-slate-300 px-2 py-1.5 text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => removeSource(i)}
+                className="text-sm text-red-600 hover:underline"
+              >
+                remove
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addSource}
+            className="rounded border border-slate-300 px-3 py-1 text-sm hover:bg-slate-100"
+          >
+            + Add source
+          </button>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm text-slate-600">
+            Builds on — post links or IDs this work derives from (one per line)
+          </label>
+          <textarea
+            value={derivedText}
+            onChange={(e) => onDerivedChange(e.target.value)}
+            rows={2}
+            placeholder="https://…/posts/abc123"
+            className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+          />
+        </div>
+      </fieldset>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
       <button
