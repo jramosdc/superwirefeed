@@ -41,6 +41,18 @@ export async function POST(req: Request) {
           stripeSessionId: session.id,
           createdAt: FieldValue.serverTimestamp(),
         });
+
+      // Bump the usage counter (drives "Most used" / Trending).
+      await adminDb
+        .collection("postStats")
+        .doc(postId)
+        .set(
+          {
+            purchases: FieldValue.increment(1),
+            updatedAt: FieldValue.serverTimestamp(),
+          },
+          { merge: true },
+        );
     }
   }
 
