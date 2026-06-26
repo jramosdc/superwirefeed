@@ -59,6 +59,13 @@ export interface EmbedPreview {
   faviconURL: string;
 }
 
+// A structured provenance entry — where a post's information came from.
+export interface SourceRef {
+  url: string;
+  label: string;
+  kind: "primary" | "data" | "reporting" | "other";
+}
+
 export interface PostDoc {
   id: string;
   ownerUid: string;
@@ -79,7 +86,47 @@ export interface PostDoc {
   assetName: string | null;
   // First N rows of the parsed CSV, shown free for CC licenses / after purchase.
   csvPreview: string[][] | null;
+  // Provenance (author-stated, public/auditable claims).
+  sources: SourceRef[];
+  // Derivation-graph edges: postIds this post builds on.
+  derivedFrom: string[];
   createdAt: number;
+  updatedAt: number;
+}
+
+// --- Gatekeeper-less accuracy trust (server-written collections) ---
+
+export type AttestationVerdict = "corroborate" | "dispute";
+
+// attestations/{attesterUid}_{postId} — one per member per post.
+export interface AttestationDoc {
+  id: string; // `${attesterUid}_${postId}`
+  attesterUid: string;
+  attesterName: string;
+  postId: string;
+  sellerUid: string;
+  verdict: AttestationVerdict;
+  evidenceUrl: string;
+  // Weight at write time: higher for verified buyers (economic skin-in-the-game).
+  weight: number;
+  verifiedBuyer: boolean;
+  createdAt: number;
+}
+
+// postAccuracy/{postId} — denormalized accuracy aggregate, server-maintained.
+export interface PostAccuracyDoc {
+  corroborations: number;
+  disputes: number;
+  corrWeight: number;
+  dispWeight: number;
+  // corrWeight / (corrWeight + dispWeight), 0..1.
+  score: number;
+  updatedAt: number;
+}
+
+// trust/{uid} — member trust signal, server-maintained.
+export interface TrustDoc {
+  score: number;
   updatedAt: number;
 }
 

@@ -10,6 +10,7 @@ import { listFollowers, listFollowing } from "@/lib/db/follows";
 import { FollowButton } from "@/components/FollowButton";
 import { RatingStars } from "@/components/RatingStars";
 import { ReviewForm } from "@/components/ReviewForm";
+import { TrustBadge } from "@/components/TrustBadge";
 import type { UserDoc, FeedDoc, ReviewDoc } from "@/types";
 
 export default function ProfilePage({
@@ -82,7 +83,10 @@ export default function ProfilePage({
               </div>
             )}
             <div>
-              <h1 className="text-2xl font-bold">{profile.displayName}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold">{profile.displayName}</h1>
+                <TrustBadge uid={uid} />
+              </div>
               <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
                 <RatingStars value={rating.avg} />
                 <span>{rating.count > 0 ? `${rating.avg} (${rating.count})` : "No reviews"}</span>

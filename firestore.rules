@@ -62,6 +62,23 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Accuracy attestations, the per-post accuracy aggregate, and member trust
+    // scores are world-readable but written ONLY by the server (/api/attestations
+    // via the Admin SDK). This is what makes the trust signal forgery-proof — a
+    // member can't write their own trust or fake an aggregate.
+    match /attestations/{attestationId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /postAccuracy/{postId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /trust/{uid} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // Comments: comments/{postId}/items/{id}
     match /comments/{postId}/items/{commentId} {
       allow read: if true;

@@ -12,6 +12,8 @@ import { readingTime } from "@/lib/search";
 import { PostActions } from "@/components/PostActions";
 import { CsvTable } from "@/components/CsvTable";
 import { Comments } from "@/components/Comments";
+import { ProvenancePanel } from "@/components/ProvenancePanel";
+import { AccuracyPanel } from "@/components/AccuracyPanel";
 import type { PostDoc, FeedDoc } from "@/types";
 
 export default function PostPage({
@@ -148,6 +150,11 @@ export default function PostPage({
           Buy a license to preview and download the full dataset.
         </p>
       )}
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <ProvenancePanel post={post} />
+        <AccuracyPanel post={post} />
+      </div>
 
       <Comments postId={post.id} />
     </article>

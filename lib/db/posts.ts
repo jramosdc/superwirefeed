@@ -41,6 +41,8 @@ function toPost(id: string, data: Record<string, unknown>): PostDoc {
     assetPath: (data.assetPath as string) ?? null,
     assetName: (data.assetName as string) ?? null,
     csvPreview: (data.csvPreview as string[][]) ?? null,
+    sources: (data.sources as PostDoc["sources"]) ?? [],
+    derivedFrom: (data.derivedFrom as string[]) ?? [],
     createdAt: tsToMillis(data.createdAt),
     updatedAt: tsToMillis(data.updatedAt),
   };
@@ -105,6 +107,16 @@ export async function listPostsByFeed(feedId: string): Promise<PostDoc[]> {
 
 export async function listAllPosts(): Promise<PostDoc[]> {
   const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => toPost(d.id, d.data()));
+}
+
+// Posts that build on (cite) the given post — the reverse derivation edge.
+export async function listPostsBuiltOn(postId: string): Promise<PostDoc[]> {
+  const q = query(
+    collection(db, "posts"),
+    where("derivedFrom", "array-contains", postId),
+  );
   const snap = await getDocs(q);
   return snap.docs.map((d) => toPost(d.id, d.data()));
 }

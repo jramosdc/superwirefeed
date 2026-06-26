@@ -7,6 +7,7 @@ import { listPostsByFeed } from "@/lib/db/posts";
 import { PostCard } from "@/components/PostCard";
 import { FollowButton } from "@/components/FollowButton";
 import { RatingStars } from "@/components/RatingStars";
+import { TrustBadge } from "@/components/TrustBadge";
 import type { FeedDoc, PostDoc } from "@/types";
 
 export default function FeedDetailPage({
@@ -49,7 +50,10 @@ export default function FeedDetailPage({
         )}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">{feed?.name || "Untitled wire"}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold">{feed?.name || "Untitled wire"}</h1>
+              <TrustBadge uid={feedId} />
+            </div>
             <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
               <RatingStars value={feed?.ratingAvg ?? 0} />
               <span>

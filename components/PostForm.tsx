@@ -8,11 +8,30 @@ import { createPost, updatePost, type PostInput } from "@/lib/db/posts";
 import { uploadGatedAsset } from "@/lib/storage";
 import { LICENSE_LIST } from "@/lib/licenses";
 import { CATEGORIES } from "@/types";
-import type { Category, LicenseKey, PostDoc, EmbedPreview } from "@/types";
+import type {
+  Category,
+  LicenseKey,
+  PostDoc,
+  EmbedPreview,
+  SourceRef,
+} from "@/types";
 import { RichEditor } from "./RichEditor";
 import { ImageUploader } from "./ImageUploader";
 
 const TYPE_OPTIONS = ["Article", "Dataset", "Media", "Photo", "Video", "Document"];
+const SOURCE_KINDS: SourceRef["kind"][] = ["primary", "data", "reporting", "other"];
+
+// Extract a post id from a pasted /posts/<id> URL, or accept a raw id.
+function parseDerivedFrom(text: string): string[] {
+  return text
+    .split(/[\n,]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => {
+      const m = s.match(/posts\/([^/?#]+)/);
+      return m ? m[1] : s;
+    });
+}
 
 function emptyInput(): PostInput {
   return {
@@ -29,6 +48,8 @@ function emptyInput(): PostInput {
     assetPath: null,
     assetName: null,
     csvPreview: null,
+    sources: [],
+    derivedFrom: [],
   };
 }
 
@@ -51,10 +72,15 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           assetPath: existing.assetPath,
           assetName: existing.assetName,
           csvPreview: existing.csvPreview,
+          sources: existing.sources,
+          derivedFrom: existing.derivedFrom,
         }
       : emptyInput(),
   );
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [derivedText, setDerivedText] = useState(
+    existing?.derivedFrom.join("\n") ?? "",
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -69,6 +95,27 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
         ? f.types.filter((x) => x !== t)
         : [...f.types, t],
     }));
+  }
+
+  function addSource() {
+    setForm((f) => ({
+      ...f,
+      sources: [...f.sources, { url: "", label: "", kind: "primary" }],
+    }));
+  }
+  function updateSource(i: number, patch: Partial<SourceRef>) {
+    setForm((f) => ({
+      ...f,
+      sources: f.sources.map((s, idx) => (idx === i ? { ...s, ...patch } : s)),
+    }));
+  }
+  function removeSource(i: number) {
+    setForm((f) => ({ ...f, sources: f.sources.filter((_, idx) => idx !== i) }));
+  }
+
+  function onDerivedChange(text: string) {
+    setDerivedText(text);
+    set("derivedFrom", parseDerivedFrom(text));
   }
 
   // Parse the CSV client-side for the preview table (papaparse, as before).
@@ -111,12 +158,17 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
     setBusy(true);
     setError("");
     try {
+      // Drop blank source rows before saving.
+      const cleaned: PostInput = {
+        ...form,
+        sources: form.sources.filter((s) => s.url.trim()),
+      };
       // Create first (need the id for the asset path), then upload + patch.
       const postId = existing
         ? existing.id
-        : await createPost(user.uid, form);
+        : await createPost(user.uid, cleaned);
 
-      let patch: Partial<PostInput> = form;
+      let patch: Partial<PostInput> = cleaned;
       if (csvFile) {
         const assetPath = await uploadGatedAsset(csvFile, user.uid, postId);
         patch = { ...patch, assetPath, assetName: csvFile.name };
@@ -246,6 +298,72 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           <p className="mt-1 text-sm text-slate-500">Current file: {existing.assetName}</p>
         )}
       </div>
+
+      <fieldset className="space-y-3 rounded-lg border border-slate-200 p-4">
+        <legend className="px-1 text-sm font-medium">Provenance</legend>
+
+        <div className="space-y-2">
+          <p className="text-sm text-slate-600">
+            Sources — where this information came from.
+          </p>
+          {form.sources.map((s, i) => (
+            <div key={i} className="flex flex-wrap items-center gap-2">
+              <select
+                value={s.kind}
+                onChange={(e) =>
+                  updateSource(i, { kind: e.target.value as SourceRef["kind"] })
+                }
+                className="rounded border border-slate-300 px-2 py-1.5 text-sm"
+              >
+                {SOURCE_KINDS.map((k) => (
+                  <option key={k} value={k}>
+                    {k}
+                  </option>
+                ))}
+              </select>
+              <input
+                value={s.label}
+                onChange={(e) => updateSource(i, { label: e.target.value })}
+                placeholder="Label"
+                className="w-32 rounded border border-slate-300 px-2 py-1.5 text-sm"
+              />
+              <input
+                value={s.url}
+                onChange={(e) => updateSource(i, { url: e.target.value })}
+                placeholder="https://…"
+                className="min-w-0 flex-1 rounded border border-slate-300 px-2 py-1.5 text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => removeSource(i)}
+                className="text-sm text-red-600 hover:underline"
+              >
+                remove
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addSource}
+            className="rounded border border-slate-300 px-3 py-1 text-sm hover:bg-slate-100"
+          >
+            + Add source
+          </button>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm text-slate-600">
+            Builds on — post links or IDs this work derives from (one per line)
+          </label>
+          <textarea
+            value={derivedText}
+            onChange={(e) => onDerivedChange(e.target.value)}
+            rows={2}
+            placeholder="https://…/posts/abc123"
+            className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+          />
+        </div>
+      </fieldset>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
       <button

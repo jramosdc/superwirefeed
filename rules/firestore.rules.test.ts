@@ -116,3 +116,40 @@ describe("reviews", () => {
     await assertSucceeds(getDoc(doc(stranger, "reviews", "author_seller")));
   });
 });
+
+describe("trust & accuracy (server-only)", () => {
+  it("blocks a client from forging an attestation", async () => {
+    const u = testEnv.authenticatedContext("alice").firestore();
+    await assertFails(
+      setDoc(doc(u, "attestations", "alice_post1"), {
+        attesterUid: "alice",
+        postId: "post1",
+        verdict: "corroborate",
+        weight: 99,
+        verifiedBuyer: true,
+      }),
+    );
+  });
+
+  it("blocks a client from writing their own trust score", async () => {
+    const u = testEnv.authenticatedContext("alice").firestore();
+    await assertFails(setDoc(doc(u, "trust", "alice"), { score: 9999 }));
+  });
+
+  it("blocks a client from forging a post accuracy aggregate", async () => {
+    const u = testEnv.authenticatedContext("alice").firestore();
+    await assertFails(
+      setDoc(doc(u, "postAccuracy", "post1"), { score: 1, corroborations: 50 }),
+    );
+  });
+
+  it("allows anyone to read trust & accuracy", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "trust", "seller"), { score: 12 });
+      await setDoc(doc(ctx.firestore(), "postAccuracy", "post1"), { score: 0.8 });
+    });
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(stranger, "trust", "seller")));
+    await assertSucceeds(getDoc(doc(stranger, "postAccuracy", "post1")));
+  });
+});
