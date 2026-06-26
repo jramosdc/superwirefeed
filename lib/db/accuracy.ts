@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import type { PostAccuracyDoc, TrustDoc } from "@/types";
 
@@ -35,4 +35,30 @@ export async function getTrust(uid: string): Promise<TrustDoc | null> {
     score: (d.score as number) ?? 0,
     updatedAt: tsToMillis(d.updatedAt),
   };
+}
+
+// Bulk reads for the feeds browse page (filter/sort by accuracy & trust without
+// a per-post round trip). Fine at marketplace MVP scale.
+export async function listAccuracyMap(): Promise<
+  Record<string, { score: number; corroborations: number }>
+> {
+  const snap = await getDocs(collection(db, "postAccuracy"));
+  const map: Record<string, { score: number; corroborations: number }> = {};
+  snap.docs.forEach((d) => {
+    const data = d.data();
+    map[d.id] = {
+      score: (data.score as number) ?? 0,
+      corroborations: (data.corroborations as number) ?? 0,
+    };
+  });
+  return map;
+}
+
+export async function listTrustMap(): Promise<Record<string, number>> {
+  const snap = await getDocs(collection(db, "trust"));
+  const map: Record<string, number> = {};
+  snap.docs.forEach((d) => {
+    map[d.id] = (d.data().score as number) ?? 0;
+  });
+  return map;
 }

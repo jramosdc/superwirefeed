@@ -23,6 +23,21 @@ function tsToMillis(v: unknown): number {
   return typeof v === "number" ? v : 0;
 }
 
+// Firestore forbids directly-nested arrays, so the CSV preview (string[][]) is
+// stored as a JSON string and decoded on read.
+function parseCsvPreview(v: unknown): string[][] | null {
+  if (typeof v === "string") {
+    try {
+      const arr = JSON.parse(v);
+      return Array.isArray(arr) ? (arr as string[][]) : null;
+    } catch {
+      return null;
+    }
+  }
+  if (Array.isArray(v)) return v as string[][]; // tolerate legacy/raw values
+  return null;
+}
+
 function toPost(id: string, data: Record<string, unknown>): PostDoc {
   return {
     id,
@@ -31,7 +46,8 @@ function toPost(id: string, data: Record<string, unknown>): PostDoc {
     title: (data.title as string) ?? "",
     detailHtml: (data.detailHtml as string) ?? "",
     license: (data.license as PostDoc["license"]) ?? "CC_BY",
-    category: (data.category as PostDoc["category"]) ?? "Misc",
+    category: (data.category as PostDoc["category"]) ?? "Breaking News",
+    format: (data.format as PostDoc["format"]) ?? "Article",
     types: (data.types as string[]) ?? [],
     breaking: Boolean(data.breaking),
     coverImage: (data.coverImage as string) ?? "",
@@ -40,7 +56,7 @@ function toPost(id: string, data: Record<string, unknown>): PostDoc {
     imageURLs: (data.imageURLs as string[]) ?? [],
     assetPath: (data.assetPath as string) ?? null,
     assetName: (data.assetName as string) ?? null,
-    csvPreview: (data.csvPreview as string[][]) ?? null,
+    csvPreview: parseCsvPreview(data.csvPreview),
     sources: (data.sources as PostDoc["sources"]) ?? [],
     derivedFrom: (data.derivedFrom as string[]) ?? [],
     createdAt: tsToMillis(data.createdAt),
@@ -61,7 +77,7 @@ export async function createPost(
 ): Promise<string> {
   const ref = doc(collection(db, "posts"));
   await setDoc(ref, {
-    ...stripGatedPreview(input),
+    ...prepareForWrite(input),
     ownerUid: uid,
     feedId: uid,
     createdAt: serverTimestamp(),
@@ -76,7 +92,7 @@ export async function updatePost(
   input: Partial<PostInput>,
 ): Promise<void> {
   await updateDoc(doc(db, "posts", postId), {
-    ...stripGatedPreview(input),
+    ...prepareForWrite(input),
     updatedAt: serverTimestamp(),
   });
 }
@@ -88,6 +104,18 @@ function stripGatedPreview<T extends Partial<PostInput>>(input: T): T {
     return { ...input, csvPreview: input.csvPreview.slice(0, 50) };
   }
   return input;
+}
+
+// Encode for Firestore: csvPreview (string[][]) -> JSON string (nested arrays
+// aren't allowed as raw Firestore values).
+function prepareForWrite(input: Partial<PostInput>): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...stripGatedPreview(input) };
+  if ("csvPreview" in out) {
+    out.csvPreview = out.csvPreview
+      ? JSON.stringify(out.csvPreview)
+      : null;
+  }
+  return out;
 }
 
 export async function getPost(postId: string): Promise<PostDoc | null> {

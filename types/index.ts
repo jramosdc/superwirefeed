@@ -7,20 +7,44 @@ export type LicenseKey =
   | "SELL_ATTRIBUTION"
   | "SELL_EXCLUSIVE";
 
+// Information-market categories. Beyond journalism: the tradeable commodity here
+// is data, signals and foresight. Spans timely news → raw data/sensor feeds →
+// AI artifacts → predictions → frontier science, with provenance/trust central.
 export const CATEGORIES = [
-  "News",
-  "Communications",
-  "Research",
-  "Data",
-  "Visualizations",
-  "Design",
-  "Misc",
+  "Breaking News",
+  "Markets & Signals",
+  "Science & Research",
+  "Datasets & Sensors",
+  "Geospatial & Satellite",
+  "AI & Compute",
+  "Forecasts & Predictions",
+  "Intelligence & OSINT",
+  "Health & Biotech",
+  "Climate & Environment",
+  "Space & Frontier",
+  "Culture & Society",
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];
 
 // "All" is a filter sentinel only — never persisted on a post.
 export type CategoryFilter = Category | "All";
+
+// Sellable formats — the kind of deliverable a buyer receives.
+export const FORMATS = [
+  "Article",
+  "Investigation",
+  "Dataset",
+  "Document",
+  "Photo set",
+  "Video",
+  "Audio",
+] as const;
+
+export type PostFormat = (typeof FORMATS)[number];
+
+// "All" is a filter sentinel only.
+export type FormatFilter = PostFormat | "All";
 
 export interface UserDoc {
   uid: string;
@@ -74,6 +98,8 @@ export interface PostDoc {
   detailHtml: string;
   license: LicenseKey;
   category: Category;
+  // Sellable deliverable format (Article, Dataset, Photo set, …).
+  format: PostFormat;
   types: string[];
   breaking: boolean;
   coverImage: string;

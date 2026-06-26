@@ -87,6 +87,9 @@ export default function PostPage({
               BREAKING
             </span>
           )}
+          <span className="rounded bg-blue-100 px-1.5 py-0.5 font-medium text-blue-700">
+            {post.format}
+          </span>
           <span className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-600">
             {post.category}
           </span>

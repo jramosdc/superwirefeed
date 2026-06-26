@@ -7,14 +7,17 @@ import { useAuth } from "@/lib/firebase/auth";
 import { createPost, updatePost, type PostInput } from "@/lib/db/posts";
 import { uploadGatedAsset } from "@/lib/storage";
 import { LICENSE_LIST } from "@/lib/licenses";
-import { CATEGORIES } from "@/types";
+import { CATEGORIES, FORMATS } from "@/types";
 import type {
   Category,
   LicenseKey,
   PostDoc,
+  PostFormat,
   EmbedPreview,
   SourceRef,
 } from "@/types";
+
+const MAX_ASSET_BYTES = 25 * 1024 * 1024; // 25 MB for non-CSV deliverables
 import { RichEditor } from "./RichEditor";
 import { ImageUploader } from "./ImageUploader";
 
@@ -38,7 +41,8 @@ function emptyInput(): PostInput {
     title: "",
     detailHtml: "",
     license: "CC_BY",
-    category: "News",
+    category: "Breaking News",
+    format: "Article",
     types: [],
     breaking: false,
     coverImage: "",
@@ -63,6 +67,7 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           detailHtml: existing.detailHtml,
           license: existing.license,
           category: existing.category,
+          format: existing.format,
           types: existing.types,
           breaking: existing.breaking,
           coverImage: existing.coverImage,
@@ -78,6 +83,7 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
       : emptyInput(),
   );
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [assetFile, setAssetFile] = useState<File | null>(null);
   const [derivedText, setDerivedText] = useState(
     existing?.derivedFrom.join("\n") ?? "",
   );
@@ -133,6 +139,18 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
     });
   }
 
+  // Generic gated deliverable (PDF, image pack, video, audio…) for non-CSV formats.
+  function onAssetFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_ASSET_BYTES) {
+      setError("File must be 25MB or smaller.");
+      return;
+    }
+    setError("");
+    setAssetFile(file);
+  }
+
   // Fetch a server-side link preview for the embedded URL.
   async function fetchEmbed() {
     if (!form.mainUrl) return;
@@ -169,9 +187,10 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
         : await createPost(user.uid, cleaned);
 
       let patch: Partial<PostInput> = cleaned;
-      if (csvFile) {
-        const assetPath = await uploadGatedAsset(csvFile, user.uid, postId);
-        patch = { ...patch, assetPath, assetName: csvFile.name };
+      const gatedFile = form.format === "Dataset" ? csvFile : assetFile;
+      if (gatedFile) {
+        const assetPath = await uploadGatedAsset(gatedFile, user.uid, postId);
+        patch = { ...patch, assetPath, assetName: gatedFile.name };
       }
       await updatePost(postId, patch);
 
@@ -199,7 +218,7 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
         <RichEditor value={form.detailHtml} onChange={(html) => set("detailHtml", html)} />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
         <div>
           <label className="mb-1 block text-sm font-medium">Category</label>
           <select
@@ -223,6 +242,18 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
               <option key={l.key} value={l.key}>
                 {l.label}
               </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium">Format</label>
+          <select
+            value={form.format}
+            onChange={(e) => set("format", e.target.value as PostFormat)}
+            className="w-full rounded border border-slate-300 px-3 py-2"
+          >
+            {FORMATS.map((f) => (
+              <option key={f}>{f}</option>
             ))}
           </select>
         </div>
@@ -284,20 +315,40 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
         )}
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium">
-          Dataset (CSV, max 1MB) — the gated downloadable file
-        </label>
-        <input type="file" accept=".csv" onChange={onCsv} />
-        {form.csvPreview && (
-          <p className="mt-1 text-sm text-slate-500">
-            {form.csvPreview.length} preview rows parsed.
-          </p>
-        )}
-        {existing?.assetName && !csvFile && (
-          <p className="mt-1 text-sm text-slate-500">Current file: {existing.assetName}</p>
-        )}
-      </div>
+      {form.format === "Dataset" ? (
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            Dataset (CSV, max 1MB) — the gated downloadable file
+          </label>
+          <input type="file" accept=".csv" onChange={onCsv} />
+          {form.csvPreview && (
+            <p className="mt-1 text-sm text-slate-500">
+              {form.csvPreview.length} preview rows parsed.
+            </p>
+          )}
+          {existing?.assetName && !csvFile && (
+            <p className="mt-1 text-sm text-slate-500">
+              Current file: {existing.assetName}
+            </p>
+          )}
+        </div>
+      ) : form.format !== "Article" ? (
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            Deliverable file ({form.format}, max 25MB) — the gated download buyers
+            receive
+          </label>
+          <input type="file" onChange={onAssetFile} />
+          {assetFile && (
+            <p className="mt-1 text-sm text-slate-500">Selected: {assetFile.name}</p>
+          )}
+          {existing?.assetName && !assetFile && (
+            <p className="mt-1 text-sm text-slate-500">
+              Current file: {existing.assetName}
+            </p>
+          )}
+        </div>
+      ) : null}
 
       <fieldset className="space-y-3 rounded-lg border border-slate-200 p-4">
         <legend className="px-1 text-sm font-medium">Provenance</legend>
