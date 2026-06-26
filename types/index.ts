@@ -11,7 +11,6 @@ export type LicenseKey =
 // is data, signals and foresight. Spans timely news → raw data/sensor feeds →
 // AI artifacts → predictions → frontier science, with provenance/trust central.
 export const CATEGORIES = [
-  "Breaking News",
   "Markets & Signals",
   "Science & Research",
   "Datasets & Sensors",

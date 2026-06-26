@@ -46,7 +46,7 @@ function toPost(id: string, data: Record<string, unknown>): PostDoc {
     title: (data.title as string) ?? "",
     detailHtml: (data.detailHtml as string) ?? "",
     license: (data.license as PostDoc["license"]) ?? "CC_BY",
-    category: (data.category as PostDoc["category"]) ?? "Breaking News",
+    category: (data.category as PostDoc["category"]) ?? "Markets & Signals",
     format: (data.format as PostDoc["format"]) ?? "Article",
     types: (data.types as string[]) ?? [],
     breaking: Boolean(data.breaking),

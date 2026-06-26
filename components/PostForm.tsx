@@ -41,7 +41,8 @@ function emptyInput(): PostInput {
     title: "",
     detailHtml: "",
     license: "CC_BY",
-    category: "Breaking News",
+    // No biased default — the author must pick a topic (validated on submit).
+    category: "" as Category,
     format: "Article",
     types: [],
     breaking: false,
@@ -173,6 +174,10 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
       setError("Pick at least one type.");
       return;
     }
+    if (!form.category) {
+      setError("Pick a category.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -226,6 +231,9 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
             onChange={(e) => set("category", e.target.value as Category)}
             className="w-full rounded border border-slate-300 px-3 py-2"
           >
+            <option value="" disabled>
+              Choose a topic…
+            </option>
             {CATEGORIES.map((c) => (
               <option key={c}>{c}</option>
             ))}

@@ -39,6 +39,7 @@ export default function FeedsPage() {
   const [price, setPrice] = useState<PriceFilter>("all");
   const [trustFilter, setTrustFilter] = useState<TrustFilter>("all");
   const [sort, setSort] = useState<SortKey>("newest");
+  const [breakingOnly, setBreakingOnly] = useState(false);
 
   useEffect(() => {
     Promise.all([listAllPosts(), listFeeds(), listAccuracyMap(), listTrustMap()])
@@ -67,6 +68,8 @@ export default function FeedsPage() {
       result = result.filter((p) => (trust[p.ownerUid] ?? 0) >= TRUSTED_THRESHOLD);
     }
 
+    if (breakingOnly) result = result.filter((p) => p.breaking);
+
     const sorted = [...result];
     if (sort === "newest") return orderByNewest(sorted);
     if (sort === "corroborated")
@@ -81,7 +84,7 @@ export default function FeedsPage() {
       );
     // price: free first, then ascending
     return sorted.sort((a, b) => priceCents(a.license) - priceCents(b.license));
-  }, [posts, queryStr, category, format, price, trustFilter, sort, accuracy, trust]);
+  }, [posts, queryStr, category, format, price, trustFilter, sort, breakingOnly, accuracy, trust]);
 
   const selectCls =
     "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm";
@@ -154,6 +157,15 @@ export default function FeedsPage() {
           <option value="trust">Highest trust</option>
           <option value="price">Price (low→high)</option>
         </select>
+
+        <label className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
+          <input
+            type="checkbox"
+            checked={breakingOnly}
+            onChange={(e) => setBreakingOnly(e.target.checked)}
+          />
+          🔴 Breaking
+        </label>
       </div>
 
       {feeds.length > 0 && (
