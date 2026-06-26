@@ -94,6 +94,13 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Usage counters (views/purchases/downloads) — read-public, written only by
+    // the server (/api/view, webhook, download route) so they can't be inflated.
+    match /postStats/{postId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // Comments: comments/{postId}/items/{id}
     match /comments/{postId}/items/{commentId} {
       allow read: if true;

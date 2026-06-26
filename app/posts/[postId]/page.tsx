@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/firebase/auth";
 import { getPost, deletePost } from "@/lib/db/posts";
 import { getFeed } from "@/lib/db/feeds";
 import { hasPurchased } from "@/lib/db/purchases";
+import { getPostStats, recordView } from "@/lib/db/stats";
 import { isGated } from "@/lib/licenses";
 import { readingTime } from "@/lib/search";
 import { PostActions } from "@/components/PostActions";
@@ -15,7 +16,7 @@ import { Comments } from "@/components/Comments";
 import { ProvenancePanel } from "@/components/ProvenancePanel";
 import { AccuracyPanel } from "@/components/AccuracyPanel";
 import { CertificationPanel } from "@/components/CertificationPanel";
-import type { PostDoc, FeedDoc } from "@/types";
+import type { PostDoc, FeedDoc, PostStatsDoc } from "@/types";
 
 export default function PostPage({
   params,
@@ -28,8 +29,19 @@ export default function PostPage({
   const [post, setPost] = useState<PostDoc | null>(null);
   const [feed, setFeed] = useState<(FeedDoc & { id: string }) | null>(null);
   const [unlocked, setUnlocked] = useState(false);
+  const [stats, setStats] = useState<PostStatsDoc | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  // Load usage counts and record one view per browser session.
+  useEffect(() => {
+    getPostStats(postId).then(setStats);
+    const key = `sw-viewed-${postId}`;
+    if (typeof window !== "undefined" && !sessionStorage.getItem(key)) {
+      sessionStorage.setItem(key, "1");
+      recordView(postId);
+    }
+  }, [postId]);
 
   useEffect(() => {
     getPost(postId)
@@ -109,6 +121,13 @@ export default function PostPage({
             </span>
           ))}
           <span className="text-slate-400">{readingTime(post.detailHtml)}</span>
+          {stats && (
+            <span className="text-slate-400">
+              · 👁 {stats.views}
+              {stats.purchases + stats.downloads > 0 &&
+                ` · ↓ ${stats.purchases + stats.downloads} used`}
+            </span>
+          )}
         </div>
         <h1 className="text-3xl font-bold">{post.title}</h1>
       </header>

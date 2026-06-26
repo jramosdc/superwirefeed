@@ -159,6 +159,15 @@ export interface TrustDoc {
   updatedAt: number;
 }
 
+// postStats/{postId} — usage counters, server-maintained (drives "Most used" /
+// Trending). Server-written only.
+export interface PostStatsDoc {
+  views: number;
+  purchases: number;
+  downloads: number;
+  updatedAt: number;
+}
+
 // --- Human certification & AI flagging (server-written) ---
 
 // "authored" = made entirely by a human; "verified" = a human reviewed and

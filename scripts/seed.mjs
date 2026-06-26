@@ -373,6 +373,34 @@ async function run() {
     });
   }
 
+  // Usage stats (drives "Most used" / Trending). Purchases/downloads derive from
+  // the seeded purchases; views are varied to create a believable ranking.
+  const viewsByPost = {
+    "gw-detection": 240,
+    "market-microstructure": 180,
+    "air-quality-grid": 130,
+    "gw-dataset": 95,
+    "osint-convoy": 70,
+    "gw-forecast": 60,
+    "llm-eval-set": 55,
+    "flood-satellite": 40,
+    "genomic-cohort": 30,
+    "interview-audio": 25,
+  };
+  const purchasesByPost = {};
+  for (const [, postId] of purchases) {
+    purchasesByPost[postId] = (purchasesByPost[postId] ?? 0) + 1;
+  }
+  for (const p of posts) {
+    const pur = purchasesByPost[p.id] ?? 0;
+    await db.collection("postStats").doc(p.id).set({
+      views: viewsByPost[p.id] ?? 10,
+      purchases: pur,
+      downloads: pur,
+      updatedAt: daysAgo(0),
+    });
+  }
+
   // Attestations + derived accuracy aggregates + seller trust.
   const acc = {}; // postId -> {corr, disp, corrW, dispW}
   const trust = {}; // sellerUid -> score

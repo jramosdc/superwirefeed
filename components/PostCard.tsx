@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PostDoc, PostCertificationDoc } from "@/types";
+import type { PostDoc, PostCertificationDoc, PostStatsDoc } from "@/types";
 import { getLicense, formatPrice } from "@/lib/licenses";
 import { truncateText, readingTime } from "@/lib/search";
 import { HumanCertifiedBadge } from "./HumanCertifiedBadge";
@@ -7,11 +7,14 @@ import { HumanCertifiedBadge } from "./HumanCertifiedBadge";
 export function PostCard({
   post,
   cert,
+  stats,
 }: {
   post: PostDoc;
   cert?: PostCertificationDoc | null;
+  stats?: PostStatsDoc | null;
 }) {
   const license = getLicense(post.license);
+  const used = stats ? stats.purchases + stats.downloads : 0;
   return (
     <Link
       href={`/posts/${post.id}`}
@@ -49,7 +52,11 @@ export function PostCard({
         </div>
       )}
       <p className="mt-1 text-sm text-slate-600">{truncateText(post.detailHtml, 140)}</p>
-      <p className="mt-2 text-xs text-slate-400">{readingTime(post.detailHtml)}</p>
+      <p className="mt-2 text-xs text-slate-400">
+        {readingTime(post.detailHtml)}
+        {stats && ` · 👁 ${stats.views}`}
+        {used > 0 && ` · ↓ ${used} used`}
+      </p>
     </Link>
   );
 }

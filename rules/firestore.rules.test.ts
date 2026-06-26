@@ -193,3 +193,24 @@ describe("certifications & AI flags (server-only)", () => {
     await assertSucceeds(getDoc(doc(stranger, "postCertification", "post1")));
   });
 });
+
+describe("post stats (server-only)", () => {
+  it("blocks a client from inflating usage counters", async () => {
+    const u = testEnv.authenticatedContext("alice").firestore();
+    await assertFails(
+      setDoc(doc(u, "postStats", "post1"), { views: 99999, purchases: 100 }),
+    );
+  });
+
+  it("allows anyone to read usage counters", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "postStats", "post1"), {
+        views: 10,
+        purchases: 2,
+        downloads: 1,
+      });
+    });
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(stranger, "postStats", "post1")));
+  });
+});

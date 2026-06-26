@@ -6,6 +6,7 @@ import { listAllPosts } from "@/lib/db/posts";
 import { listFeeds } from "@/lib/db/feeds";
 import { listAccuracyMap, listTrustMap } from "@/lib/db/accuracy";
 import { listCertificationMap } from "@/lib/db/certifications";
+import { listStatsMap, usageScore } from "@/lib/db/stats";
 import { isHumanCertified } from "@/lib/trust";
 import {
   searchByTitle,
@@ -26,10 +27,11 @@ import type {
   CategoryFilter,
   FormatFilter,
   PostCertificationDoc,
+  PostStatsDoc,
 } from "@/types";
 
 type TrustFilter = "all" | "corroborated" | "trusted";
-type SortKey = "newest" | "corroborated" | "trust" | "price";
+type SortKey = "newest" | "used" | "corroborated" | "trust" | "price";
 
 export default function FeedsPage() {
   const [posts, setPosts] = useState<PostDoc[]>([]);
@@ -39,6 +41,7 @@ export default function FeedsPage() {
   >({});
   const [trust, setTrust] = useState<Record<string, number>>({});
   const [certs, setCerts] = useState<Record<string, PostCertificationDoc>>({});
+  const [stats, setStats] = useState<Record<string, PostStatsDoc>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -58,13 +61,15 @@ export default function FeedsPage() {
       listAccuracyMap(),
       listTrustMap(),
       listCertificationMap(),
+      listStatsMap(),
     ])
-      .then(([p, f, acc, tr, ce]) => {
+      .then(([p, f, acc, tr, ce, st]) => {
         setPosts(p);
         setFeeds(f);
         setAccuracy(acc);
         setTrust(tr);
         setCerts(ce);
+        setStats(st);
       })
       .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"))
       .finally(() => setLoading(false));
@@ -96,6 +101,10 @@ export default function FeedsPage() {
 
     const sorted = [...result];
     if (sort === "newest") return orderByNewest(sorted);
+    if (sort === "used")
+      return sorted.sort(
+        (a, b) => usageScore(stats[b.id]) - usageScore(stats[a.id]),
+      );
     if (sort === "corroborated")
       return sorted.sort(
         (a, b) =>
@@ -108,7 +117,15 @@ export default function FeedsPage() {
       );
     // price: free first, then ascending
     return sorted.sort((a, b) => priceCents(a.license) - priceCents(b.license));
-  }, [posts, queryStr, category, format, price, trustFilter, sort, breakingOnly, certifiedOnly, accuracy, trust, certs]);
+  }, [posts, queryStr, category, format, price, trustFilter, sort, breakingOnly, certifiedOnly, accuracy, trust, certs, stats]);
+
+  // Trending: top posts by weighted usage (purchases/downloads/views).
+  const trending = useMemo(() => {
+    return [...posts]
+      .filter((p) => usageScore(stats[p.id]) > 0)
+      .sort((a, b) => usageScore(stats[b.id]) - usageScore(stats[a.id]))
+      .slice(0, 6);
+  }, [posts, stats]);
 
   const selectCls =
     "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm";
@@ -122,6 +139,19 @@ export default function FeedsPage() {
           license to republish; corroborate what you trust.
         </p>
       </div>
+
+      {trending.length > 0 && (
+        <section>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            🔥 Trending now
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {trending.map((p) => (
+              <PostCard key={p.id} post={p} cert={certs[p.id]} stats={stats[p.id]} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <input
         type="search"
@@ -177,6 +207,7 @@ export default function FeedsPage() {
           aria-label="Sort"
         >
           <option value="newest">Newest</option>
+          <option value="used">Most used</option>
           <option value="corroborated">Most corroborated</option>
           <option value="trust">Highest trust</option>
           <option value="price">Price (low→high)</option>
@@ -230,7 +261,7 @@ export default function FeedsPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((p) => (
-          <PostCard key={p.id} post={p} cert={certs[p.id]} />
+          <PostCard key={p.id} post={p} cert={certs[p.id]} stats={stats[p.id]} />
         ))}
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminDb, adminBucket, verifyIdToken } from "@/lib/firebase/admin";
+import { FieldValue } from "firebase-admin/firestore";
 import { getLicense } from "@/lib/licenses";
 import { purchaseId } from "@/lib/db/purchases";
 import type { LicenseKey } from "@/types";
@@ -45,6 +46,17 @@ export async function GET(
     expires: Date.now() + 5 * 60 * 1000, // 5 minutes
     responseDisposition: `attachment; filename="${post.assetName ?? "download"}"`,
   });
+
+  // Count real consumers' downloads (not the owner's own) for usage ranking.
+  if (post.ownerUid !== uid) {
+    await adminDb
+      .collection("postStats")
+      .doc(postId)
+      .set(
+        { downloads: FieldValue.increment(1), updatedAt: FieldValue.serverTimestamp() },
+        { merge: true },
+      );
+  }
 
   return NextResponse.json({ url });
 }
