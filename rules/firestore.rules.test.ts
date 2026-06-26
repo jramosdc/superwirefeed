@@ -158,3 +158,38 @@ describe("trust & accuracy (server-only)", () => {
     await assertSucceeds(getDoc(doc(stranger, "postAccuracy", "post1")));
   });
 });
+
+describe("certifications & AI flags (server-only)", () => {
+  it("blocks a client from forging a certification", async () => {
+    const u = testEnv.authenticatedContext("alice").firestore();
+    await assertFails(
+      setDoc(doc(u, "certifications", "alice_post1"), {
+        postId: "post1",
+        certifierUid: "alice",
+        kind: "authored",
+      }),
+    );
+  });
+
+  it("blocks a client from writing the certification summary / AI flag", async () => {
+    const u = testEnv.authenticatedContext("alice").firestore();
+    await assertFails(
+      setDoc(doc(u, "postCertification", "post1"), {
+        authoredCount: 5,
+        aiFlagged: false,
+      }),
+    );
+  });
+
+  it("allows anyone to read certifications", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "postCertification", "post1"), {
+        authoredCount: 1,
+        verifiedCount: 0,
+        aiFlagged: false,
+      });
+    });
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(stranger, "postCertification", "post1")));
+  });
+});

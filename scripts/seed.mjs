@@ -284,6 +284,14 @@ const follows = [
   ["helix-bio", "quant-desk"],
 ];
 
+// Human certifications by trusted third parties. [certifierUid, postId, kind]
+// (certifiers must be trusted, score >= 10, and never the post owner).
+const certifications = [
+  ["quant-desk", "gw-detection", "authored"],
+  ["quant-desk", "gw-dataset", "verified"],
+  ["orbital-signals", "market-microstructure", "verified"],
+];
+
 async function run() {
   console.log(`Seeding emulator (project ${PROJECT_ID})…`);
 
@@ -428,11 +436,41 @@ async function run() {
     await db.doc(`users/${target}/followers/${me}`).set({ uid: me, createdAt: daysAgo(3) });
   }
 
+  // Human certifications + per-post summary.
+  const certSummary = {}; // postId -> { authored, verified }
+  for (const [certifierUid, postId, kind] of certifications) {
+    await db.collection("certifications").doc(`${certifierUid}_${postId}`).set({
+      postId,
+      ownerUid: ownerOf[postId],
+      certifierUid,
+      certifierName: sellers.find((s) => s.uid === certifierUid)?.name ?? "Anon",
+      kind,
+      note: "",
+      createdAt: daysAgo(0),
+    });
+    const s = (certSummary[postId] ??= { authored: 0, verified: 0 });
+    if (kind === "authored") s.authored += 1;
+    else s.verified += 1;
+  }
+  for (const [postId, s] of Object.entries(certSummary)) {
+    await db.collection("postCertification").doc(postId).set(
+      {
+        authoredCount: s.authored,
+        verifiedCount: s.verified,
+        aiFlagged: false,
+        aiFlagReason: "",
+        aiFlaggedBy: "",
+        updatedAt: daysAgo(0),
+      },
+      { merge: true },
+    );
+  }
+
   const trusted = Object.entries(trust)
     .filter(([, s]) => s >= TRUSTED_THRESHOLD)
     .map(([u]) => u);
 
-  console.log(`✓ Seeded ${sellers.length} sellers, ${posts.length} posts, ${attestations.length} attestations.`);
+  console.log(`✓ Seeded ${sellers.length} sellers, ${posts.length} posts, ${attestations.length} attestations, ${certifications.length} certifications.`);
   console.log(`✓ Trusted sources (score ≥ ${TRUSTED_THRESHOLD}): ${trusted.join(", ") || "none"}`);
   console.log(`✓ Log in as e.g. orbital-signals@superwire.test / ${PASSWORD}`);
 }

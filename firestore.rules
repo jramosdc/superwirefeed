@@ -82,6 +82,18 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Human certifications + AI flags: world-readable, written ONLY by the
+    // server (/api/certify, /api/moderate) which enforces third-party + role
+    // (trust-tier) checks. Clients can't self-certify or self-flag.
+    match /certifications/{certId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /postCertification/{postId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // Comments: comments/{postId}/items/{id}
     match /comments/{postId}/items/{commentId} {
       allow read: if true;

@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "emulators": "firebase emulators:start",
     "seed": "node scripts/seed.mjs",
+    "audit": "node scripts/audit.mjs",
     "test:rules": "firebase emulators:exec --only firestore,storage \"vitest run rules\""
   },
   "dependencies": {

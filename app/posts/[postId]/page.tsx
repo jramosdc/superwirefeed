@@ -14,6 +14,7 @@ import { CsvTable } from "@/components/CsvTable";
 import { Comments } from "@/components/Comments";
 import { ProvenancePanel } from "@/components/ProvenancePanel";
 import { AccuracyPanel } from "@/components/AccuracyPanel";
+import { CertificationPanel } from "@/components/CertificationPanel";
 import type { PostDoc, FeedDoc } from "@/types";
 
 export default function PostPage({
@@ -184,6 +185,8 @@ export default function PostPage({
         <ProvenancePanel post={post} />
         <AccuracyPanel post={post} />
       </div>
+
+      <CertificationPanel post={post} />
 
       <Comments postId={post.id} />
     </article>

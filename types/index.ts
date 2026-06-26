@@ -159,6 +159,36 @@ export interface TrustDoc {
   updatedAt: number;
 }
 
+// --- Human certification & AI flagging (server-written) ---
+
+// "authored" = made entirely by a human; "verified" = a human reviewed and
+// vouches for the content's accuracy/validity.
+export type CertificationKind = "authored" | "verified";
+
+// certifications/{certifierUid}_{postId} — one per certifier per post. Issued
+// only by trusted third parties (never the creator).
+export interface CertificationDoc {
+  id: string; // `${certifierUid}_${postId}`
+  postId: string;
+  ownerUid: string;
+  certifierUid: string;
+  certifierName: string;
+  kind: CertificationKind;
+  note: string;
+  createdAt: number;
+}
+
+// postCertification/{postId} — denormalized summary, server-maintained.
+export interface PostCertificationDoc {
+  authoredCount: number;
+  verifiedCount: number;
+  // Set by a moderator or the SuperWire audit. Blocks the "authored" claim.
+  aiFlagged: boolean;
+  aiFlagReason: string;
+  aiFlaggedBy: string;
+  updatedAt: number;
+}
+
 export interface PurchaseDoc {
   // Doc id === `${uid}_${postId}`.
   uid: string;

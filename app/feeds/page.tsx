@@ -5,6 +5,8 @@ import Link from "next/link";
 import { listAllPosts } from "@/lib/db/posts";
 import { listFeeds } from "@/lib/db/feeds";
 import { listAccuracyMap, listTrustMap } from "@/lib/db/accuracy";
+import { listCertificationMap } from "@/lib/db/certifications";
+import { isHumanCertified } from "@/lib/trust";
 import {
   searchByTitle,
   filterByCategory,
@@ -18,7 +20,13 @@ import { TRUSTED_THRESHOLD } from "@/lib/trust";
 import { PostCard } from "@/components/PostCard";
 import { CategoryBar } from "@/components/CategoryBar";
 import { FORMATS } from "@/types";
-import type { PostDoc, FeedDoc, CategoryFilter, FormatFilter } from "@/types";
+import type {
+  PostDoc,
+  FeedDoc,
+  CategoryFilter,
+  FormatFilter,
+  PostCertificationDoc,
+} from "@/types";
 
 type TrustFilter = "all" | "corroborated" | "trusted";
 type SortKey = "newest" | "corroborated" | "trust" | "price";
@@ -30,6 +38,7 @@ export default function FeedsPage() {
     Record<string, { score: number; corroborations: number }>
   >({});
   const [trust, setTrust] = useState<Record<string, number>>({});
+  const [certs, setCerts] = useState<Record<string, PostCertificationDoc>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -40,14 +49,22 @@ export default function FeedsPage() {
   const [trustFilter, setTrustFilter] = useState<TrustFilter>("all");
   const [sort, setSort] = useState<SortKey>("newest");
   const [breakingOnly, setBreakingOnly] = useState(false);
+  const [certifiedOnly, setCertifiedOnly] = useState(false);
 
   useEffect(() => {
-    Promise.all([listAllPosts(), listFeeds(), listAccuracyMap(), listTrustMap()])
-      .then(([p, f, acc, tr]) => {
+    Promise.all([
+      listAllPosts(),
+      listFeeds(),
+      listAccuracyMap(),
+      listTrustMap(),
+      listCertificationMap(),
+    ])
+      .then(([p, f, acc, tr, ce]) => {
         setPosts(p);
         setFeeds(f);
         setAccuracy(acc);
         setTrust(tr);
+        setCerts(ce);
       })
       .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"))
       .finally(() => setLoading(false));
@@ -70,6 +87,13 @@ export default function FeedsPage() {
 
     if (breakingOnly) result = result.filter((p) => p.breaking);
 
+    if (certifiedOnly) {
+      result = result.filter((p) => {
+        const c = certs[p.id];
+        return c && isHumanCertified(c.authoredCount, c.verifiedCount, c.aiFlagged);
+      });
+    }
+
     const sorted = [...result];
     if (sort === "newest") return orderByNewest(sorted);
     if (sort === "corroborated")
@@ -84,7 +108,7 @@ export default function FeedsPage() {
       );
     // price: free first, then ascending
     return sorted.sort((a, b) => priceCents(a.license) - priceCents(b.license));
-  }, [posts, queryStr, category, format, price, trustFilter, sort, breakingOnly, accuracy, trust]);
+  }, [posts, queryStr, category, format, price, trustFilter, sort, breakingOnly, certifiedOnly, accuracy, trust, certs]);
 
   const selectCls =
     "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm";
@@ -166,6 +190,15 @@ export default function FeedsPage() {
           />
           🔴 Breaking
         </label>
+
+        <label className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
+          <input
+            type="checkbox"
+            checked={certifiedOnly}
+            onChange={(e) => setCertifiedOnly(e.target.checked)}
+          />
+          ✓ Human Certified
+        </label>
       </div>
 
       {feeds.length > 0 && (
@@ -197,7 +230,7 @@ export default function FeedsPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((p) => (
-          <PostCard key={p.id} post={p} />
+          <PostCard key={p.id} post={p} cert={certs[p.id]} />
         ))}
       </div>
     </div>

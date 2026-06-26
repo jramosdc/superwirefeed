@@ -13,6 +13,28 @@ export const TRUST_BONUS_CAP = 3;
 // A member is shown as a "trusted source" at/above this trust score.
 export const TRUSTED_THRESHOLD = 10;
 
+// Roles are earned from trust (no explicit role docs). A trusted third party can
+// issue Human-Certified certifications; a higher tier can moderate (flag AI).
+export const CERTIFIER_THRESHOLD = TRUSTED_THRESHOLD; // 10
+export const MODERATOR_THRESHOLD = 12;
+
+export function canCertify(trustScore: number): boolean {
+  return trustScore >= CERTIFIER_THRESHOLD;
+}
+export function canModerate(trustScore: number): boolean {
+  return trustScore >= MODERATOR_THRESHOLD;
+}
+
+// A post is "Human Certified" when a human authored it (and it isn't AI-flagged)
+// or a human verified its accuracy.
+export function isHumanCertified(
+  authoredCount: number,
+  verifiedCount: number,
+  aiFlagged: boolean,
+): boolean {
+  return verifiedCount > 0 || (authoredCount > 0 && !aiFlagged);
+}
+
 export function attestationWeight(
   verifiedBuyer: boolean,
   attesterTrustScore: number,
