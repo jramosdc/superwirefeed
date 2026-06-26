@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...but keep the template tracked.
+!.env.example
+
+# secrets / service accounts (NEVER commit)
+service-account-key.json
+*service-account*.json
+*-firebase-adminsdk-*.json
 
 # vercel
 .vercel
