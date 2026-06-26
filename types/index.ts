@@ -159,6 +159,39 @@ export interface TrustDoc {
   updatedAt: number;
 }
 
+// --- Requests / bounties (demand side) ---
+
+export type RequestStatus = "open" | "fulfilled" | "closed";
+
+// requests/{requestId} — a buyer asks for content/data, optionally with a bounty.
+export interface RequestDoc {
+  id: string;
+  requesterUid: string;
+  requesterName: string;
+  title: string;
+  description: string;
+  category: string; // a Category or "Any"
+  format: string; // a PostFormat or "Any"
+  bountyUsd: number; // 0 = no stated bounty
+  status: RequestStatus;
+  fulfilledByPostId: string;
+  fulfilledByUid: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+// requestResponses/{id} — a seller offers one of their posts to fulfill a request.
+export interface RequestResponseDoc {
+  id: string;
+  requestId: string;
+  responderUid: string;
+  responderName: string;
+  postId: string;
+  postTitle: string;
+  note: string;
+  createdAt: number;
+}
+
 // postStats/{postId} — usage counters, server-maintained (drives "Most used" /
 // Trending). Server-written only.
 export interface PostStatsDoc {

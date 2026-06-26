@@ -292,6 +292,57 @@ const certifications = [
   ["orbital-signals", "market-microstructure", "verified"],
 ];
 
+// Requests / bounties (demand side).
+const requests = [
+  {
+    id: "req-icu",
+    requester: "helix-bio",
+    title: "Anonymized ICU vitals time-series",
+    description:
+      "Looking for de-identified ICU vital-sign streams (HR, SpO2, BP) at 1-minute resolution for a research cohort. Clear licensing required.",
+    category: "Health & Biotech",
+    format: "Dataset",
+    bounty: 150,
+    status: "open",
+    days: 2,
+  },
+  {
+    id: "req-smoke",
+    requester: "sensor-collective",
+    title: "Wildfire smoke plume imagery, US West Coast",
+    description: "Recent satellite/aerial imagery of smoke plumes, geolocated.",
+    category: "Geospatial & Satellite",
+    format: "Photo set",
+    bounty: 80,
+    status: "open",
+    days: 1,
+  },
+  {
+    id: "req-tick",
+    requester: "osint-ledger",
+    title: "Cross-venue tick data, 2026",
+    description: "Tick-level trades across at least three exchanges for 2026.",
+    category: "Markets & Signals",
+    format: "Dataset",
+    bounty: 120,
+    status: "fulfilled",
+    fulfilledByPostId: "market-microstructure",
+    fulfilledByUid: "quant-desk",
+    days: 5,
+  },
+];
+
+const requestResponses = [
+  {
+    id: "resp-tick",
+    requestId: "req-tick",
+    responder: "quant-desk",
+    postId: "market-microstructure",
+    postTitle: "Intraday liquidity anomalies across three exchanges",
+    note: "Covers all three venues at tick level.",
+  },
+];
+
 async function run() {
   console.log(`Seeding emulator (project ${PROJECT_ID})…`);
 
@@ -494,11 +545,40 @@ async function run() {
     );
   }
 
+  // Requests / bounties + responses.
+  for (const r of requests) {
+    await db.collection("requests").doc(r.id).set({
+      requesterUid: r.requester,
+      requesterName: sellers.find((s) => s.uid === r.requester)?.name ?? "Anon",
+      title: r.title,
+      description: r.description,
+      category: r.category,
+      format: r.format,
+      bountyUsd: r.bounty,
+      status: r.status,
+      fulfilledByPostId: r.fulfilledByPostId ?? "",
+      fulfilledByUid: r.fulfilledByUid ?? "",
+      createdAt: daysAgo(r.days ?? 2),
+      updatedAt: daysAgo(0),
+    });
+  }
+  for (const r of requestResponses) {
+    await db.collection("requestResponses").doc(r.id).set({
+      requestId: r.requestId,
+      responderUid: r.responder,
+      responderName: sellers.find((s) => s.uid === r.responder)?.name ?? "Anon",
+      postId: r.postId,
+      postTitle: r.postTitle,
+      note: r.note,
+      createdAt: daysAgo(1),
+    });
+  }
+
   const trusted = Object.entries(trust)
     .filter(([, s]) => s >= TRUSTED_THRESHOLD)
     .map(([u]) => u);
 
-  console.log(`✓ Seeded ${sellers.length} sellers, ${posts.length} posts, ${attestations.length} attestations, ${certifications.length} certifications.`);
+  console.log(`✓ Seeded ${sellers.length} sellers, ${posts.length} posts, ${attestations.length} attestations, ${certifications.length} certifications, ${requests.length} requests.`);
   console.log(`✓ Trusted sources (score ≥ ${TRUSTED_THRESHOLD}): ${trusted.join(", ") || "none"}`);
   console.log(`✓ Log in as e.g. orbital-signals@superwire.test / ${PASSWORD}`);
 }
