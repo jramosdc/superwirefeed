@@ -13,6 +13,8 @@
     "typecheck": "tsc --noEmit",
     "emulators": "firebase emulators:start",
     "seed": "node scripts/seed.mjs",
+    "loadtest": "node scripts/loadtest.mjs",
+    "loadtest:cleanup": "node scripts/loadtest.mjs --cleanup",
     "audit": "node scripts/audit.mjs",
     "test:rules": "firebase emulators:exec --only firestore,storage \"vitest run rules\""
   },

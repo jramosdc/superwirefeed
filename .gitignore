@@ -47,3 +47,5 @@ ui-debug.log
 service-account-key.json
 *service-account*.json
 *-firebase-adminsdk-*.json
+loadtest-key.json
+*-key.json
