@@ -21,18 +21,36 @@ export default function FeedDetailPage({
   const [posts, setPosts] = useState<PostDoc[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [postsError, setPostsError] = useState(false);
 
   useEffect(() => {
-    Promise.all([getFeed(feedId), listPostsByFeed(feedId)])
-      .then(([f, p]) => {
-        if (!f) {
-          setNotFound(true);
-          return;
-        }
-        setFeed(f);
-        setPosts(p);
+    let active = true;
+    // The feed decides whether the page renders. Loading is tied to the feed
+    // only — never to the posts query.
+    getFeed(feedId)
+      .then((f) => {
+        if (!active) return;
+        if (!f) setNotFound(true);
+        else setFeed(f);
       })
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (active) setNotFound(true);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    // Posts load independently: a query failure (e.g. the composite index is
+    // still building) must not blank the whole feed.
+    listPostsByFeed(feedId)
+      .then((p) => {
+        if (active) setPosts(p);
+      })
+      .catch(() => {
+        if (active) setPostsError(true);
+      });
+    return () => {
+      active = false;
+    };
   }, [feedId]);
 
   if (loading) return <p className="text-slate-500">Loading…</p>;
@@ -90,7 +108,12 @@ export default function FeedDetailPage({
       </header>
 
       <h2 className="text-lg font-semibold">Posts</h2>
-      {posts.length === 0 ? (
+      {postsError ? (
+        <p className="text-slate-500">
+          Couldn’t load posts just yet — the database index may still be
+          building. Refresh in a minute.
+        </p>
+      ) : posts.length === 0 ? (
         <p className="text-slate-500">This wire has no posts yet.</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
