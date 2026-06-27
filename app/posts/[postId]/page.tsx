@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/firebase/auth";
 import { getPost, deletePost } from "@/lib/db/posts";
 import { getFeed } from "@/lib/db/feeds";
 import { hasPurchased } from "@/lib/db/purchases";
+import { hasActiveSubscription } from "@/lib/db/subscriptions";
 import { getPostStats, recordView } from "@/lib/db/stats";
 import { isGated } from "@/lib/licenses";
 import { readingTime } from "@/lib/search";
@@ -52,12 +53,19 @@ export default function PostPage({
         }
         setPost(p);
         getFeed(p.feedId).then(setFeed);
-        // Unlock when the license is free, the viewer owns it, or they bought it.
+        // Unlock when the license is free, the viewer owns it, bought it, or has
+        // an active subscription to the creator's feed.
         if (!isGated(p.license)) {
           setUnlocked(true);
         } else if (user) {
           if (user.uid === p.ownerUid) setUnlocked(true);
-          else setUnlocked(await hasPurchased(user.uid, p.id));
+          else {
+            const [bought, subscribed] = await Promise.all([
+              hasPurchased(user.uid, p.id),
+              hasActiveSubscription(user.uid, p.ownerUid),
+            ]);
+            setUnlocked(bought || subscribed);
+          }
         }
       })
       .finally(() => setLoading(false));
@@ -178,7 +186,7 @@ export default function PostPage({
         </section>
       )}
 
-      <PostActions post={post} unlocked={unlocked} />
+      <PostActions post={post} feed={feed} unlocked={unlocked} />
 
       {showCsv && csvRows && (
         <section className="space-y-2">

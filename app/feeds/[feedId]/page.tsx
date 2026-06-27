@@ -6,6 +6,7 @@ import { getFeed } from "@/lib/db/feeds";
 import { listPostsByFeed } from "@/lib/db/posts";
 import { PostCard } from "@/components/PostCard";
 import { FollowButton } from "@/components/FollowButton";
+import { SubscribeButton } from "@/components/SubscribeButton";
 import { RatingStars } from "@/components/RatingStars";
 import { TrustBadge } from "@/components/TrustBadge";
 import type { FeedDoc, PostDoc } from "@/types";
@@ -70,8 +71,22 @@ export default function FeedDetailPage({
               View seller profile
             </Link>
           </div>
-          <FollowButton targetUid={feedId} />
+          <div className="flex flex-col items-end gap-2">
+            <FollowButton targetUid={feedId} />
+            {feed?.subscriptionEnabled && feed.subscriptionPriceCents > 0 && (
+              <SubscribeButton
+                creatorUid={feedId}
+                priceCents={feed.subscriptionPriceCents}
+              />
+            )}
+          </div>
         </div>
+        {feed?.subscriptionEnabled && feed.subscriptionPriceCents > 0 && (
+          <p className="mt-3 text-sm text-slate-600">
+            Subscribe to unlock every paid post in this wire, or buy posts
+            individually.
+          </p>
+        )}
       </header>
 
       <h2 className="text-lg font-semibold">Posts</h2>

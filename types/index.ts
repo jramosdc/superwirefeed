@@ -71,6 +71,11 @@ export interface FeedDoc {
   // Denormalized seller rating, kept consistent server-side by /api/reviews.
   ratingAvg: number;
   ratingCount: number;
+  // Recurring subscription to this feed. When enabled, a subscriber unlocks ALL
+  // gated posts in the feed; per-item purchases still coexist and free CC posts
+  // stay open to everyone. Price is monthly, in cents (0 when disabled).
+  subscriptionEnabled: boolean;
+  subscriptionPriceCents: number;
   updatedAt: number;
 }
 
@@ -238,6 +243,20 @@ export interface PurchaseDoc {
   postId: string;
   amount: number; // cents
   stripeSessionId: string;
+  createdAt: number;
+}
+
+// subscriptions/{subscriberUid}_{creatorUid} — a buyer's recurring subscription
+// to a creator's feed. WRITTEN only by the Stripe webhook (Admin SDK); the
+// client reads its own to decide whether a feed's gated posts are unlocked.
+export interface SubscriptionDoc {
+  // Doc id === `${subscriberUid}_${creatorUid}`.
+  subscriberUid: string;
+  creatorUid: string; // === feedId
+  status: "active" | "canceled";
+  priceCents: number; // monthly
+  stripeSessionId: string;
+  stripeSubscriptionId: string;
   createdAt: number;
 }
 

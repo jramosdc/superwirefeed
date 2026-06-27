@@ -70,6 +70,42 @@ describe("purchases", () => {
   });
 });
 
+describe("subscriptions", () => {
+  it("blocks a client from forging a subscription doc", async () => {
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    await assertFails(
+      setDoc(doc(buyer, "subscriptions", "buyer_creator1"), {
+        subscriberUid: "buyer",
+        creatorUid: "creator1",
+        status: "active",
+      }),
+    );
+  });
+
+  it("lets a user read only their own subscription", async () => {
+    // Seed a subscription with admin (rules bypassed).
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "subscriptions", "buyer_creator1"), {
+        subscriberUid: "buyer",
+        creatorUid: "creator1",
+        status: "active",
+        priceCents: 1900,
+      });
+    });
+
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+
+    await assertSucceeds(getDoc(doc(buyer, "subscriptions", "buyer_creator1")));
+    await assertFails(getDoc(doc(stranger, "subscriptions", "buyer_creator1")));
+  });
+
+  it("lets a signed-in user read a non-existent subscription (the 'am I subscribed?' check)", async () => {
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    await assertSucceeds(getDoc(doc(buyer, "subscriptions", "buyer_never-subbed")));
+  });
+});
+
 describe("posts", () => {
   it("blocks creating a post owned by someone else", async () => {
     const mallory = testEnv.authenticatedContext("mallory").firestore();

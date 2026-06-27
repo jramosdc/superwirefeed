@@ -41,6 +41,8 @@ const sellers = [
     category: "Markets & Signals",
     about: "Quantitative market signals and probabilistic forecasts.",
     rating: { avg: 4.6, count: 7 },
+    // Steady, similar-value output → offers a monthly subscription ($19/mo).
+    subscription: 1900,
   },
   {
     uid: "sensor-collective",
@@ -48,6 +50,7 @@ const sellers = [
     category: "Datasets & Sensors",
     about: "Crowd-run environmental and urban sensor networks, published openly.",
     rating: { avg: 4.2, count: 4 },
+    subscription: 900,
   },
   {
     uid: "osint-ledger",
@@ -441,6 +444,8 @@ async function run() {
       coverImageURL: "",
       ratingAvg: s.rating.avg,
       ratingCount: s.rating.count,
+      subscriptionEnabled: !!s.subscription,
+      subscriptionPriceCents: s.subscription ?? 0,
       updatedAt: daysAgo(0),
     });
   }

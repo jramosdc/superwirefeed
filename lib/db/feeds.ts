@@ -25,6 +25,8 @@ function toFeed(id: string, data: Record<string, unknown>): FeedDoc & { id: stri
     coverImageURL: (data.coverImageURL as string) ?? "",
     ratingAvg: (data.ratingAvg as number) ?? 0,
     ratingCount: (data.ratingCount as number) ?? 0,
+    subscriptionEnabled: (data.subscriptionEnabled as boolean) ?? false,
+    subscriptionPriceCents: (data.subscriptionPriceCents as number) ?? 0,
     updatedAt: tsToMillis(data.updatedAt),
   };
 }
@@ -50,6 +52,8 @@ export async function createFeed(uid: string, name: string): Promise<void> {
       coverImageURL: "",
       ratingAvg: 0,
       ratingCount: 0,
+      subscriptionEnabled: false,
+      subscriptionPriceCents: 0,
       updatedAt: serverTimestamp(),
     },
     { merge: true },

@@ -15,6 +15,9 @@ export default function SettingsPage() {
   const [backgroundImageURL, setBackgroundImageURL] = useState("");
   const [feedName, setFeedName] = useState("");
   const [coverImageURL, setCoverImageURL] = useState("");
+  const [subscriptionEnabled, setSubscriptionEnabled] = useState(false);
+  // Monthly price as a dollar string for the input; stored as cents.
+  const [subscriptionPrice, setSubscriptionPrice] = useState("");
   const [ready, setReady] = useState(false);
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -30,6 +33,10 @@ export default function SettingsPage() {
       if (f) {
         setFeedName(f.name);
         setCoverImageURL(f.coverImageURL);
+        setSubscriptionEnabled(f.subscriptionEnabled);
+        setSubscriptionPrice(
+          f.subscriptionPriceCents > 0 ? String(f.subscriptionPriceCents / 100) : "",
+        );
       }
       setReady(true);
     });
@@ -41,9 +48,17 @@ export default function SettingsPage() {
     setBusy(true);
     setSaved(false);
     try {
+      const dollars = parseFloat(subscriptionPrice);
+      const subscriptionPriceCents =
+        subscriptionEnabled && dollars > 0 ? Math.round(dollars * 100) : 0;
       await Promise.all([
         updateUser(user.uid, { displayName, profileImageURL, backgroundImageURL }),
-        updateFeed(user.uid, { name: feedName, coverImageURL }),
+        updateFeed(user.uid, {
+          name: feedName,
+          coverImageURL,
+          subscriptionEnabled: subscriptionEnabled && subscriptionPriceCents > 0,
+          subscriptionPriceCents,
+        }),
       ]);
       setSaved(true);
     } finally {
@@ -99,6 +114,43 @@ export default function SettingsPage() {
             )}
             <ImageUploader folder="feeds" label="Change cover" onUploaded={setCoverImageURL} />
           </div>
+        </section>
+
+        <section className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
+          <h2 className="font-semibold">Subscription</h2>
+          <p className="text-sm text-slate-600">
+            Offer a monthly subscription so readers can unlock every paid post in
+            your wire. Per-item sales and free posts still work alongside it.
+          </p>
+          <label className="flex items-center gap-2 text-sm font-medium">
+            <input
+              type="checkbox"
+              checked={subscriptionEnabled}
+              onChange={(e) => setSubscriptionEnabled(e.target.checked)}
+              className="h-4 w-4"
+            />
+            Offer a subscription to my wire
+          </label>
+          {subscriptionEnabled && (
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                Monthly price (USD)
+              </label>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-500">$</span>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={subscriptionPrice}
+                  onChange={(e) => setSubscriptionPrice(e.target.value)}
+                  placeholder="9"
+                  className="w-32 rounded border border-slate-300 px-3 py-2"
+                />
+                <span className="text-sm text-slate-500">/ month</span>
+              </div>
+            </div>
+          )}
         </section>
 
         <div className="flex items-center gap-3">

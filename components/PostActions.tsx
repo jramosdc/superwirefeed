@@ -5,15 +5,18 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth";
 import { getIdToken } from "@/lib/firebase/token";
 import { getLicense, formatPrice } from "@/lib/licenses";
-import type { PostDoc } from "@/types";
+import { SubscribeButton } from "@/components/SubscribeButton";
+import type { PostDoc, FeedDoc } from "@/types";
 
 // Buy + download controls for the post view. Mirrors viewpost.onStripeBtnClick /
 // download, but the price is decided server-side and the file is gated.
 export function PostActions({
   post,
+  feed,
   unlocked,
 }: {
   post: PostDoc;
+  feed: (FeedDoc & { id: string }) | null;
   unlocked: boolean;
 }) {
   const { user } = useAuth();
@@ -91,13 +94,22 @@ export function PostActions({
           <p className="text-sm text-slate-500">No downloadable file attached.</p>
         )
       ) : (
-        <button
-          onClick={buy}
-          disabled={busy}
-          className="w-full rounded bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 disabled:opacity-50"
-        >
-          {busy ? "Redirecting…" : `Buy to unlock — ${formatPrice(license.priceCents)}`}
-        </button>
+        <div className="space-y-2">
+          <button
+            onClick={buy}
+            disabled={busy}
+            className="w-full rounded bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 disabled:opacity-50"
+          >
+            {busy ? "Redirecting…" : `Buy to unlock — ${formatPrice(license.priceCents)}`}
+          </button>
+          {feed?.subscriptionEnabled && feed.subscriptionPriceCents > 0 && (
+            <SubscribeButton
+              creatorUid={post.ownerUid}
+              priceCents={feed.subscriptionPriceCents}
+              variant="secondary"
+            />
+          )}
+        </div>
       )}
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>

@@ -57,6 +57,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Subscriptions: a user may read only their own. NO client writes — the
+    // Stripe webhook writes these via the Admin SDK (which bypasses rules).
+    match /subscriptions/{subId} {
+      // `resource` is null when the doc doesn't exist (the common "am I
+      // subscribed?" check) — allow that so the get returns empty.
+      allow read: if signedIn()
+        && (resource == null || resource.data.subscriberUid == request.auth.uid);
+      allow write: if false;
+    }
+
     // Reviews: world-readable. Written ONLY by the server (/api/reviews via the
     // Admin SDK) so the seller's rating aggregate stays consistent. Clients
     // cannot write directly.

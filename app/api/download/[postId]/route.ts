@@ -3,6 +3,7 @@ import { adminDb, adminBucket, verifyIdToken } from "@/lib/firebase/admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { getLicense } from "@/lib/licenses";
 import { purchaseId } from "@/lib/db/purchases";
+import { subscriptionId } from "@/lib/db/subscriptions";
 import type { LicenseKey } from "@/types";
 
 // Purchase-gated download. Verifies the caller's Firebase ID token, confirms
@@ -32,13 +33,18 @@ export async function GET(
   }
 
   const gated = getLicense(post.license).gated;
-  const allowed =
-    !gated ||
-    post.ownerUid === uid ||
-    (await adminDb.collection("purchases").doc(purchaseId(uid, postId)).get()).exists;
+  let allowed = !gated || post.ownerUid === uid;
+  if (!allowed) {
+    // Unlocked by a per-item purchase or an active subscription to the creator.
+    const [purchase, sub] = await Promise.all([
+      adminDb.collection("purchases").doc(purchaseId(uid, postId)).get(),
+      adminDb.collection("subscriptions").doc(subscriptionId(uid, post.ownerUid)).get(),
+    ]);
+    allowed = purchase.exists || (sub.exists && sub.data()?.status === "active");
+  }
 
   if (!allowed) {
-    return NextResponse.json({ error: "Purchase required" }, { status: 403 });
+    return NextResponse.json({ error: "Purchase or subscription required" }, { status: 403 });
   }
 
   const [url] = await adminBucket.file(post.assetPath).getSignedUrl({
