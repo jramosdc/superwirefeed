@@ -12,3 +12,14 @@ export function AuthCard({
     </div>
   );
 }
+
+// "or" separator between the Google button and the email/password form.
+export function AuthDivider() {
+  return (
+    <div className="my-4 flex items-center gap-3 text-xs text-slate-400">
+      <span className="h-px flex-1 bg-slate-200" />
+      or
+      <span className="h-px flex-1 bg-slate-200" />
+    </div>
+  );
+}

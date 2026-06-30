@@ -4,7 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth";
-import { AuthCard } from "@/components/AuthCard";
+import { friendlyAuthError } from "@/lib/firebase/authErrors";
+import { AuthCard, AuthDivider } from "@/components/AuthCard";
+import { GoogleAuthButton } from "@/components/GoogleAuthButton";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -29,7 +31,7 @@ export default function RegisterPage() {
       // has already been sent and is surfaced via /verify.
       router.push("/onboarding");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      setError(friendlyAuthError(err));
     } finally {
       setBusy(false);
     }
@@ -37,6 +39,8 @@ export default function RegisterPage() {
 
   return (
     <AuthCard title="Create your wire">
+      <GoogleAuthButton label="Sign up with Google" />
+      <AuthDivider />
       <form onSubmit={onSubmit} className="space-y-4">
         <input
           type="text"

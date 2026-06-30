@@ -14,6 +14,8 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
   type User as FirebaseUser,
 } from "firebase/auth";
 import { auth } from "./client";
@@ -24,6 +26,7 @@ interface AuthContextValue {
   loading: boolean;
   register: (email: string, password: string, displayName: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   resendVerification: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -54,6 +57,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signInWithEmailAndPassword(auth, email, password);
   }
 
+  async function loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    const cred = await signInWithPopup(auth, provider);
+    // First Google sign-in bootstraps the profile + empty feed (no-op if they
+    // already exist). Google accounts arrive email-verified, so no extra step.
+    await bootstrapUser(
+      cred.user.uid,
+      cred.user.email ?? "",
+      cred.user.displayName ?? "",
+    );
+  }
+
   async function logout() {
     await fbSignOut(auth);
   }
@@ -68,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, register, login, logout, resendVerification, resetPassword }}
+      value={{ user, loading, register, login, loginWithGoogle, logout, resendVerification, resetPassword }}
     >
       {children}
     </AuthContext.Provider>
