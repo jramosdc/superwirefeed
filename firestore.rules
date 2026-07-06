@@ -57,6 +57,14 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Download history: a user may read only their own. NO client writes —
+    // the /api/download route records them via the Admin SDK.
+    match /downloads/{downloadId} {
+      allow read: if signedIn()
+        && (resource == null || resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+
     // Subscriptions: a user may read only their own. NO client writes — the
     // Stripe webhook writes these via the Admin SDK (which bypasses rules).
     match /subscriptions/{subId} {

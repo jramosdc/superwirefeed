@@ -34,6 +34,8 @@ export async function GET(
 
   const gated = getLicense(post.license).gated;
   let allowed = !gated || post.ownerUid === uid;
+  // How access was granted — recorded in the user's download history.
+  let accessKind: "free" | "purchase" | "subscription" = "free";
   if (!allowed) {
     // Unlocked by a per-item purchase or an active subscription to the creator.
     const [purchase, sub] = await Promise.all([
@@ -41,6 +43,7 @@ export async function GET(
       adminDb.collection("subscriptions").doc(subscriptionId(uid, post.ownerUid)).get(),
     ]);
     allowed = purchase.exists || (sub.exists && sub.data()?.status === "active");
+    accessKind = purchase.exists ? "purchase" : "subscription";
   }
 
   if (!allowed) {
@@ -53,15 +56,33 @@ export async function GET(
     responseDisposition: `attachment; filename="${post.assetName ?? "download"}"`,
   });
 
-  // Count real consumers' downloads (not the owner's own) for usage ranking.
+  // Count real consumers' downloads (not the owner's own) for usage ranking,
+  // and record the user's download history (their "library" — one doc per
+  // user+post, re-downloads bump lastAt/count). Rules let a user read only
+  // their own history docs.
   if (post.ownerUid !== uid) {
-    await adminDb
-      .collection("postStats")
-      .doc(postId)
-      .set(
-        { downloads: FieldValue.increment(1), updatedAt: FieldValue.serverTimestamp() },
-        { merge: true },
-      );
+    await Promise.all([
+      adminDb
+        .collection("postStats")
+        .doc(postId)
+        .set(
+          { downloads: FieldValue.increment(1), updatedAt: FieldValue.serverTimestamp() },
+          { merge: true },
+        ),
+      adminDb
+        .collection("downloads")
+        .doc(`${uid}_${postId}`)
+        .set(
+          {
+            uid,
+            postId,
+            kind: accessKind,
+            count: FieldValue.increment(1),
+            lastAt: FieldValue.serverTimestamp(),
+          },
+          { merge: true },
+        ),
+    ]);
   }
 
   return NextResponse.json({ url });
