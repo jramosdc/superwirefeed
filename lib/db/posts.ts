@@ -61,6 +61,7 @@ function toPost(id: string, data: Record<string, unknown>): PostDoc {
     freePreviewRows: (data.freePreviewRows as number) ?? 0,
     sources: (data.sources as PostDoc["sources"]) ?? [],
     derivedFrom: (data.derivedFrom as string[]) ?? [],
+    requestId: (data.requestId as string) ?? "",
     createdAt: tsToMillis(data.createdAt),
     updatedAt: tsToMillis(data.updatedAt),
   };

@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/firebase/auth";
 import { getUser } from "@/lib/db/users";
 import { listPostsByFeed } from "@/lib/db/posts";
 import {
+  acceptResponse,
   addResponse,
   getRequest,
   listResponses,
@@ -75,12 +76,17 @@ export default function RequestDetailPage({
   }
 
   async function accept(r: RequestResponseDoc) {
+    if (!req) return;
     setBusy(true);
     try {
-      await updateRequestStatus(requestId, "fulfilled", {
-        postId: r.postId,
-        uid: r.responderUid,
-      });
+      // Multi-winner: each accept appends; the first also sets the legacy
+      // single fulfilledBy fields.
+      await acceptResponse(
+        requestId,
+        r.postId,
+        r.responderUid,
+        req.acceptedPostIds.length === 0 && !req.fulfilledByPostId,
+      );
       reload();
     } finally {
       setBusy(false);
@@ -125,17 +131,15 @@ export default function RequestDetailPage({
           {req.category !== "Any" && ` · ${req.category}`}
         </p>
 
-        {req.status === "fulfilled" && req.fulfilledByPostId && (
-          <p className="mt-3 text-sm text-emerald-700">
-            ✓ Fulfilled by{" "}
-            <Link href={`/posts/${req.fulfilledByPostId}`} className="underline">
-              this post
-            </Link>
-            .
-          </p>
-        )}
+        {req.status === "fulfilled" &&
+          (req.acceptedPostIds.length > 0 || req.fulfilledByPostId) && (
+            <p className="mt-3 text-sm text-emerald-700">
+              ✓ Fulfilled by {Math.max(req.acceptedPostIds.length, 1)} accepted{" "}
+              {Math.max(req.acceptedPostIds.length, 1) === 1 ? "post" : "posts"}.
+            </p>
+          )}
 
-        {isRequester && req.status === "open" && (
+        {isRequester && req.status !== "closed" && (
           <button
             onClick={close}
             disabled={busy}
@@ -146,10 +150,21 @@ export default function RequestDetailPage({
         )}
       </header>
 
-      {/* Respond */}
+      {/* Respond — an existing post, or a new one created for this bounty.
+          One offer per user: re-submitting replaces the previous one. */}
       {canRespond && (
         <section className="rounded-lg border border-slate-200 bg-white p-5">
           <h2 className="mb-2 font-semibold">Respond with one of your posts</h2>
+          <p className="mb-3 text-sm text-slate-500">
+            Or{" "}
+            <Link
+              href={`/posts/new?requestId=${requestId}`}
+              className="text-blue-700 hover:underline"
+            >
+              create a new post for this bounty
+            </Link>{" "}
+            — it stays yours to sell on the open market either way.
+          </p>
           {myPosts.length === 0 ? (
             <p className="text-sm text-slate-500">
               You don&apos;t have any posts yet to offer.
@@ -214,14 +229,22 @@ export default function RequestDetailPage({
                     {r.note && ` — ${r.note}`}
                   </p>
                 </div>
-                {isRequester && req.status === "open" && (
-                  <button
-                    onClick={() => accept(r)}
-                    disabled={busy}
-                    className="shrink-0 rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
-                  >
-                    Accept
-                  </button>
+                {req.acceptedPostIds.includes(r.postId) ||
+                req.fulfilledByPostId === r.postId ? (
+                  <span className="shrink-0 text-sm font-semibold text-emerald-600">
+                    ✓ Accepted
+                  </span>
+                ) : (
+                  isRequester &&
+                  req.status !== "closed" && (
+                    <button
+                      onClick={() => accept(r)}
+                      disabled={busy}
+                      className="shrink-0 rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                    >
+                      Accept
+                    </button>
+                  )
                 )}
               </li>
             ))}

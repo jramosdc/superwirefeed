@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { useAuth } from "@/lib/firebase/auth";
 import { createPost, updatePost, type PostInput } from "@/lib/db/posts";
+import { addResponse } from "@/lib/db/requests";
+import { getUser } from "@/lib/db/users";
 import { uploadGatedAsset } from "@/lib/storage";
 import { LICENSE_LIST, isGated } from "@/lib/licenses";
 import { CATEGORIES, FORMATS } from "@/types";
@@ -57,10 +59,20 @@ function emptyInput(): PostInput {
     freePreviewRows: 5,
     sources: [],
     derivedFrom: [],
+    requestId: "",
   };
 }
 
-export function PostForm({ existing }: { existing?: PostDoc }) {
+// `requestId` links a brand-new post to the bounty it's created for
+// (arrives via /posts/new?requestId=…): it's stamped on the post as
+// provenance and the post is auto-offered as a response on publish.
+export function PostForm({
+  existing,
+  requestId,
+}: {
+  existing?: PostDoc;
+  requestId?: string;
+}) {
   const { user } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState<PostInput>(
@@ -84,8 +96,9 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
           freePreviewRows: existing.freePreviewRows,
           sources: existing.sources,
           derivedFrom: existing.derivedFrom,
+          requestId: existing.requestId,
         }
-      : emptyInput(),
+      : { ...emptyInput(), requestId: requestId ?? "" },
   );
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [assetFile, setAssetFile] = useState<File | null>(null);
@@ -202,6 +215,21 @@ export function PostForm({ existing }: { existing?: PostDoc }) {
         patch = { ...patch, assetPath, assetName: gatedFile.name };
       }
       await updatePost(postId, patch);
+
+      // Created for a bounty → auto-offer it as a response (one per user;
+      // re-publishing revises the offer). The post stays on the open
+      // market regardless of whether the requester picks it.
+      if (!existing && cleaned.requestId) {
+        const profile = await getUser(user.uid);
+        await addResponse({
+          requestId: cleaned.requestId,
+          responderUid: user.uid,
+          responderName: profile?.displayName ?? user.email ?? "Anon",
+          postId,
+          postTitle: cleaned.title,
+          note: "Created for this bounty.",
+        });
+      }
 
       router.push(`/posts/${postId}`);
     } catch (err) {

@@ -74,6 +74,39 @@ export async function POST(req: Request) {
             },
             { merge: true },
           );
+
+        // Bounty auto-fulfill: if this post was offered to a bounty and the
+        // BUYER is that bounty's requester, the purchase IS the acceptance —
+        // append the winner (requesters may accept more than one) and set
+        // the legacy single fulfilledBy fields on the first accept only.
+        const offers = await adminDb
+          .collection("requestResponses")
+          .where("postId", "==", postId)
+          .get();
+        for (const offer of offers.docs) {
+          const { requestId, responderUid } = offer.data() as {
+            requestId?: string;
+            responderUid?: string;
+          };
+          if (!requestId || !responderUid) continue;
+          const requestRef = adminDb.collection("requests").doc(requestId);
+          const requestSnap = await requestRef.get();
+          const request = requestSnap.data();
+          if (!requestSnap.exists || !request) continue;
+          if (request.requesterUid !== uid || request.status === "closed") continue;
+
+          const isFirstAccept =
+            !(request.acceptedPostIds ?? []).length && !request.fulfilledByPostId;
+          await requestRef.update({
+            acceptedPostIds: FieldValue.arrayUnion(postId),
+            acceptedUids: FieldValue.arrayUnion(responderUid),
+            status: "fulfilled",
+            updatedAt: FieldValue.serverTimestamp(),
+            ...(isFirstAccept
+              ? { fulfilledByPostId: postId, fulfilledByUid: responderUid }
+              : {}),
+          });
+        }
       }
     }
   }

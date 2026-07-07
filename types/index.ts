@@ -124,6 +124,8 @@ export interface PostDoc {
   sources: SourceRef[];
   // Derivation-graph edges: postIds this post builds on.
   derivedFrom: string[];
+  // Provenance: the bounty/request this post was created for ("" = none).
+  requestId: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -181,6 +183,10 @@ export interface RequestDoc {
   status: RequestStatus;
   fulfilledByPostId: string;
   fulfilledByUid: string;
+  // All accepted responses — the requester may pick MORE THAN ONE winner.
+  // fulfilledByPostId/-Uid stay as the first accepted pair for back-compat.
+  acceptedPostIds: string[];
+  acceptedUids: string[];
   createdAt: number;
   updatedAt: number;
 }

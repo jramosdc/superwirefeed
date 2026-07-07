@@ -11,6 +11,7 @@ import {
   where,
   orderBy,
   serverTimestamp,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import type { RequestDoc, RequestResponseDoc, RequestStatus } from "@/types";
@@ -39,6 +40,8 @@ function toRequest(id: string, d: Record<string, unknown>): RequestDoc {
     status: (d.status as RequestStatus) ?? "open",
     fulfilledByPostId: (d.fulfilledByPostId as string) ?? "",
     fulfilledByUid: (d.fulfilledByUid as string) ?? "",
+    acceptedPostIds: (d.acceptedPostIds as string[]) ?? [],
+    acceptedUids: (d.acceptedUids as string[]) ?? [],
     createdAt: tsToMillis(d.createdAt),
     updatedAt: tsToMillis(d.updatedAt),
   };
@@ -78,7 +81,7 @@ export async function listRequests(): Promise<RequestDoc[]> {
   return snap.docs.map((d) => toRequest(d.id, d.data()));
 }
 
-// Requester closes or marks a request fulfilled (optionally crediting a post).
+// Requester closes a request (also legacy single-winner fulfill).
 export async function updateRequestStatus(
   id: string,
   status: RequestStatus,
@@ -92,6 +95,29 @@ export async function updateRequestStatus(
   });
 }
 
+// Requester accepts a response — supports picking MORE THAN ONE winner:
+// each accept appends to the accepted arrays. The legacy single fulfilledBy
+// fields are only set by the first accept (kept for back-compat).
+export async function acceptResponse(
+  requestId: string,
+  postId: string,
+  responderUid: string,
+  isFirstAccept: boolean,
+): Promise<void> {
+  await updateDoc(doc(db, "requests", requestId), {
+    acceptedPostIds: arrayUnion(postId),
+    acceptedUids: arrayUnion(responderUid),
+    status: "fulfilled",
+    updatedAt: serverTimestamp(),
+    ...(isFirstAccept
+      ? { fulfilledByPostId: postId, fulfilledByUid: responderUid }
+      : {}),
+  });
+}
+
+// ONE response per user per bounty: the doc ID is
+// "{requestId}_{responderUid}", so re-submitting revises your offer instead
+// of stacking duplicates (same pattern as purchases/follows).
 export async function addResponse(input: {
   requestId: string;
   responderUid: string;
@@ -100,7 +126,7 @@ export async function addResponse(input: {
   postTitle: string;
   note: string;
 }): Promise<void> {
-  const ref = doc(collection(db, "requestResponses"));
+  const ref = doc(db, "requestResponses", `${input.requestId}_${input.responderUid}`);
   await setDoc(ref, { ...input, createdAt: serverTimestamp() });
 }
 

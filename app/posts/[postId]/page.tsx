@@ -95,9 +95,19 @@ export default function PostPage({
   return (
     <article className="space-y-6">
       <div className="flex items-center justify-between text-sm">
-        <Link href={`/feeds/${post.feedId}`} className="text-blue-700 hover:underline">
-          ← {feed?.name || "wire"}
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href={`/feeds/${post.feedId}`} className="text-blue-700 hover:underline">
+            ← {feed?.name || "wire"}
+          </Link>
+          {post.requestId && (
+            <Link
+              href={`/requests/${post.requestId}`}
+              className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 hover:bg-amber-200"
+            >
+              🎯 Created for a bounty
+            </Link>
+          )}
+        </div>
         {isOwner && (
           <div className="flex gap-3">
             <Link href={`/posts/${post.id}/edit`} className="text-blue-700 hover:underline">
