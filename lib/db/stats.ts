@@ -1,4 +1,12 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  documentId,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import type { PostStatsDoc } from "@/types";
 
@@ -41,6 +49,26 @@ export async function listStatsMap(): Promise<Record<string, PostStatsDoc>> {
   snap.docs.forEach((d) => {
     map[d.id] = toStats(d.data());
   });
+  return map;
+}
+
+// Bounded alternative to listStatsMap: stats for a SPECIFIC set of posts,
+// batched documentId `in` queries (Firestore caps `in` at 30 values).
+// Same pattern the iOS app uses everywhere — prefer this for new code.
+export async function statsFor(
+  postIds: string[],
+): Promise<Record<string, PostStatsDoc>> {
+  const ids = [...new Set(postIds)];
+  const map: Record<string, PostStatsDoc> = {};
+  for (let i = 0; i < ids.length; i += 30) {
+    const chunk = ids.slice(i, i + 30);
+    const snap = await getDocs(
+      query(collection(db, "postStats"), where(documentId(), "in", chunk)),
+    );
+    snap.docs.forEach((d) => {
+      map[d.id] = toStats(d.data());
+    });
+  }
   return map;
 }
 

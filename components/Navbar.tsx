@@ -32,8 +32,9 @@ export function Navbar() {
               <Link href="/following" className="hover:text-blue-700">
                 Following
               </Link>
-              <Link href="/posts/new" className="hover:text-blue-700">
-                New post
+              {/* The seller dashboard (compose lives there, like the iOS Feed tab). */}
+              <Link href="/feed" className="hover:text-blue-700">
+                My feed
               </Link>
               <Link href={`/profile/${user.uid}`} className="hover:text-blue-700">
                 Profile
