@@ -187,6 +187,10 @@ export interface RequestDoc {
   // fulfilledByPostId/-Uid stay as the first accepted pair for back-compat.
   acceptedPostIds: string[];
   acceptedUids: string[];
+  // Optional deadline (millis). Past it, an unfulfilled request is treated as
+  // closed — no new responses. undefined = no deadline. Stored in Firestore as
+  // a Timestamp so the iOS client reads it too.
+  expiresAt?: number;
   createdAt: number;
   updatedAt: number;
 }

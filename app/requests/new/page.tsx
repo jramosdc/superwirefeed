@@ -7,6 +7,13 @@ import { getUser } from "@/lib/db/users";
 import { createRequest } from "@/lib/db/requests";
 import { CATEGORIES, FORMATS } from "@/types";
 
+// YYYY-MM-DD, `days` from today (for <input type="date"> value/min).
+function isoDate(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString("en-CA"); // en-CA => YYYY-MM-DD in local time
+}
+
 export default function NewRequestPage() {
   const { user, loading } = useRequireAuth();
   const router = useRouter();
@@ -15,6 +22,8 @@ export default function NewRequestPage() {
   const [category, setCategory] = useState("Any");
   const [format, setFormat] = useState("Any");
   const [bounty, setBounty] = useState(0);
+  const [hasDeadline, setHasDeadline] = useState(false);
+  const [deadline, setDeadline] = useState(() => isoDate(14));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,6 +48,12 @@ export default function NewRequestPage() {
         category,
         format,
         bountyUsd: Math.max(0, Math.round(bounty) || 0),
+        // End of the chosen local day, so "closes on the 24th" stays open
+        // through all of the 24th (matches the iOS client).
+        expiresAt:
+          hasDeadline && deadline
+            ? new Date(`${deadline}T23:59:59`).getTime()
+            : undefined,
       });
       router.push(`/requests/${id}`);
     } catch {
@@ -111,6 +126,35 @@ export default function NewRequestPage() {
             />
           </div>
         </div>
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <label className="flex items-center gap-2 text-sm font-medium">
+            <input
+              type="checkbox"
+              checked={hasDeadline}
+              onChange={(e) => setHasDeadline(e.target.checked)}
+              className="h-4 w-4"
+            />
+            Set a deadline
+          </label>
+          {hasDeadline ? (
+            <div className="mt-3 flex items-center gap-3">
+              <span className="text-sm text-slate-600">Closes on</span>
+              <input
+                type="date"
+                value={deadline}
+                min={isoDate(1)}
+                onChange={(e) => setDeadline(e.target.value)}
+                className={inputCls + " max-w-[12rem]"}
+              />
+            </div>
+          ) : null}
+          <p className="mt-2 text-xs text-slate-400">
+            {hasDeadline
+              ? "After this date the request closes to new proposals. If none were accepted, it's marked expired."
+              : "Optional. Add a deadline so the request closes on its own if no proposals come in."}
+          </p>
+        </div>
+
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"

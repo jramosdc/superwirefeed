@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { listRequests } from "@/lib/db/requests";
+import { listRequests, deadlineBadge, isExpired } from "@/lib/db/requests";
 import { CATEGORIES, FORMATS } from "@/types";
 import type { RequestDoc, RequestStatus } from "@/types";
 
@@ -111,10 +111,23 @@ export default function RequestsPage() {
               </span>
             </div>
             <p className="mt-1 line-clamp-2 text-sm text-slate-600">{r.description}</p>
-            <p className="mt-2 text-xs text-slate-400">
-              {r.requesterName} · wants {r.format === "Any" ? "any format" : r.format}
-              {r.category !== "Any" && ` · ${r.category}`}
-            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <span className="text-xs text-slate-400">
+                {r.requesterName} · wants {r.format === "Any" ? "any format" : r.format}
+                {r.category !== "Any" && ` · ${r.category}`}
+              </span>
+              {deadlineBadge(r) && (
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                    isExpired(r)
+                      ? "bg-slate-200 text-slate-600"
+                      : "bg-amber-100 text-amber-800"
+                  }`}
+                >
+                  {deadlineBadge(r)}
+                </span>
+              )}
+            </div>
           </Link>
         ))}
       </div>

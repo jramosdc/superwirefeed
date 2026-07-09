@@ -12,9 +12,35 @@ import {
   orderBy,
   serverTimestamp,
   arrayUnion,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import type { RequestDoc, RequestResponseDoc, RequestStatus } from "@/types";
+
+// --- Deadline helpers (display + response-gating; expiry is client-side) ---
+// A fulfilled/closed request is never "expired" — it already ended. These
+// mirror the iOS client's RequestDoc.isExpired / .deadlineBadge exactly.
+
+const startOfDay = (ms: number): number => {
+  const d = new Date(ms);
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+};
+
+export function isExpired(r: RequestDoc): boolean {
+  return r.status === "open" && r.expiresAt != null && r.expiresAt < Date.now();
+}
+
+/** "Ends in 3d" / "Ends today" / "Expired", or null when there's no deadline. */
+export function deadlineBadge(r: RequestDoc): string | null {
+  if (r.status !== "open" || r.expiresAt == null) return null;
+  const now = Date.now();
+  if (r.expiresAt < now) return "Expired";
+  const days = Math.round((startOfDay(r.expiresAt) - startOfDay(now)) / 86_400_000);
+  if (days <= 0) return "Ends today";
+  if (days === 1) return "Ends tomorrow";
+  return `Ends in ${days}d`;
+}
 
 // Requests/bounties are client-written, owner-scoped (rules enforce that the
 // requester owns the request and a responder owns their response). No server
@@ -42,6 +68,7 @@ function toRequest(id: string, d: Record<string, unknown>): RequestDoc {
     fulfilledByUid: (d.fulfilledByUid as string) ?? "",
     acceptedPostIds: (d.acceptedPostIds as string[]) ?? [],
     acceptedUids: (d.acceptedUids as string[]) ?? [],
+    expiresAt: d.expiresAt != null ? tsToMillis(d.expiresAt) : undefined,
     createdAt: tsToMillis(d.createdAt),
     updatedAt: tsToMillis(d.updatedAt),
   };
@@ -55,15 +82,21 @@ export interface RequestInput {
   category: string;
   format: string;
   bountyUsd: number;
+  /** Optional deadline in millis; omit for no deadline. */
+  expiresAt?: number;
 }
 
 export async function createRequest(input: RequestInput): Promise<string> {
+  const { expiresAt, ...rest } = input;
   const ref = doc(collection(db, "requests"));
   await setDoc(ref, {
-    ...input,
+    ...rest,
     status: "open",
     fulfilledByPostId: "",
     fulfilledByUid: "",
+    // Write as a Timestamp (not raw millis) so the iOS client — which reads
+    // expiresAt as a Firestore Timestamp — sees it too. Omit when unset.
+    ...(expiresAt ? { expiresAt: Timestamp.fromMillis(expiresAt) } : {}),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });

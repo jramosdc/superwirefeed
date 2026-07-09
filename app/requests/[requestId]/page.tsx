@@ -9,6 +9,7 @@ import {
   acceptResponse,
   addResponse,
   getRequest,
+  isExpired,
   listResponses,
   updateRequestStatus,
 } from "@/lib/db/requests";
@@ -48,7 +49,24 @@ export default function RequestDetailPage({
   if (!req) return <p className="text-slate-500">Request not found.</p>;
 
   const isRequester = user?.uid === req.requesterUid;
-  const canRespond = !!user && !isRequester && req.status === "open";
+  const expired = isExpired(req);
+  // Same rule as before, plus: not past its deadline.
+  const canRespond = !!user && !isRequester && req.status === "open" && !expired;
+
+  // Full-sentence deadline line for the header (matches the iOS client).
+  function deadlineSentence(r: RequestDoc): string {
+    if (r.expiresAt == null) return "";
+    const date = new Date(r.expiresAt).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    if (!isExpired(r)) return `Closes ${date}`;
+    const noProposals = r.acceptedPostIds.length === 0 && !r.fulfilledByPostId;
+    return noProposals
+      ? `Expired ${date} — no accepted proposals`
+      : `Deadline passed (${date})`;
+  }
 
   async function respond() {
     if (!user || !selectedPost) return;
@@ -131,6 +149,17 @@ export default function RequestDetailPage({
           {req.category !== "Any" && ` · ${req.category}`}
         </p>
 
+        {req.expiresAt != null && (
+          <p
+            className={`mt-2 text-sm font-medium ${
+              expired ? "text-slate-500" : "text-amber-700"
+            }`}
+          >
+            {expired ? "⏳ " : "🕑 "}
+            {deadlineSentence(req)}
+          </p>
+        )}
+
         {req.status === "fulfilled" &&
           (req.acceptedPostIds.length > 0 || req.fulfilledByPostId) && (
             <p className="mt-3 text-sm text-emerald-700">
@@ -198,6 +227,13 @@ export default function RequestDetailPage({
               </button>
             </div>
           )}
+        </section>
+      )}
+
+      {/* Tell a would-be responder why they can't offer a post. */}
+      {expired && !isRequester && !!user && (
+        <section className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-500">
+          ⏳ This bounty has expired and is no longer accepting proposals.
         </section>
       )}
 
