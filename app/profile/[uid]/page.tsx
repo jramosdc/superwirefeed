@@ -11,6 +11,7 @@ import { FollowButton } from "@/components/FollowButton";
 import { RatingStars } from "@/components/RatingStars";
 import { ReviewForm } from "@/components/ReviewForm";
 import { TrustBadge } from "@/components/TrustBadge";
+import { EarningsPanel } from "@/components/EarningsPanel";
 import type { UserDoc, FeedDoc, ReviewDoc } from "@/types";
 
 export default function ProfilePage({
@@ -113,6 +114,8 @@ export default function ProfilePage({
           </div>
         </div>
       </header>
+
+      {isSelf && <EarningsPanel uid={uid} />}
 
       <section className="grid gap-6 md:grid-cols-2">
         <div className="space-y-3">

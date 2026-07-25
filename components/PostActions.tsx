@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth";
 import { getIdToken } from "@/lib/firebase/token";
 import { getLicense, formatPrice } from "@/lib/licenses";
+import { SERVICE_FEE_CENTS, formatCents } from "@/lib/fees";
 import { SubscribeButton } from "@/components/SubscribeButton";
 import type { PostDoc, FeedDoc } from "@/types";
 
@@ -102,6 +103,13 @@ export function PostActions({
           >
             {busy ? "Redirecting…" : `Buy to unlock — ${formatPrice(license.priceCents)}`}
           </button>
+          {SERVICE_FEE_CENTS > 0 && (
+            // No surprise fees in the Stripe sheet — state it up front.
+            <p className="text-center text-xs text-slate-500">
+              {formatPrice(license.priceCents)} + {formatCents(SERVICE_FEE_CENTS)}{" "}
+              service fee at checkout
+            </p>
+          )}
           {feed?.subscriptionEnabled && feed.subscriptionPriceCents > 0 && (
             <SubscribeButton
               creatorUid={post.ownerUid}

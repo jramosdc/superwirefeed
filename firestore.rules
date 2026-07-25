@@ -136,6 +136,39 @@ service cloud.firestore {
         && resource.data.responderUid == request.auth.uid;
     }
 
+    // Share events (growth loop): create-only. A client may record that THEY
+    // shared something; nobody can read, edit, or delete share events (they
+    // feed the server-side waiver-credit economy, so they must be untamperable
+    // after the fact). Matches the write the iOS client already attempts.
+    match /shares/{shareId} {
+      allow read: if false;
+      allow create: if signedIn()
+        && request.resource.data.sharerUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Fee-waiver credits: a user may read only their own (the iOS Rewards
+    // screen queries `where uid == auth.uid`). NO client writes — credits are
+    // granted/consumed only by the server (/api/shares + the Stripe webhook).
+    match /waiverCredits/{creditId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Transactions ledger — the source of truth for what sellers are owed.
+    // A seller may read their own sales; written ONLY by the Stripe webhook.
+    match /transactions/{txId} {
+      allow read: if signedIn() && resource.data.sellerUid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Payouts — money actually sent to a seller, recorded by the owner via the
+    // Admin SDK. A seller may read their own; NO client writes.
+    match /payouts/{payoutId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
     // Comments: comments/{postId}/items/{id}
     match /comments/{postId}/items/{commentId} {
       allow read: if true;

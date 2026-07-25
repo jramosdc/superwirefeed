@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/firebase/auth";
 import { Navbar } from "@/components/Navbar";
 import { OnboardingGate } from "@/components/OnboardingGate";
+import { RefCapture } from "@/components/RefCapture";
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +27,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AuthProvider>
+          <RefCapture />
           <OnboardingGate />
           <Navbar />
           <main className="mx-auto w-full max-w-5xl px-4 py-6">{children}</main>

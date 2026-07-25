@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { adminDb, verifyIdToken } from "@/lib/firebase/admin";
 import { getLicense } from "@/lib/licenses";
+import { SERVICE_FEE_CENTS } from "@/lib/fees";
 import { purchaseId } from "@/lib/db/purchases";
 import type { LicenseKey } from "@/types";
 
@@ -51,9 +52,31 @@ export async function POST(req: Request) {
           },
         },
       },
+      // Buyer-side service fee (HANDOFF 4.5) — its own line item so the
+      // receipt is honest about what's the post price and what's the fee.
+      ...(SERVICE_FEE_CENTS > 0
+        ? [
+            {
+              quantity: 1,
+              price_data: {
+                currency: "usd",
+                unit_amount: SERVICE_FEE_CENTS,
+                product_data: { name: "Service fee" },
+              },
+            },
+          ]
+        : []),
     ],
-    // The webhook uses this metadata to write the purchase record.
-    metadata: { uid, postId, amount: String(license.priceCents) },
+    // The webhook uses this metadata to write the purchase record and the
+    // transactions ledger entry. `amount` stays the POST price (gross),
+    // excluding the service fee.
+    metadata: {
+      uid,
+      postId,
+      sellerUid: post.ownerUid,
+      amount: String(license.priceCents),
+      serviceFeeCents: String(SERVICE_FEE_CENTS),
+    },
   });
 
   return NextResponse.json({ url: session.url });

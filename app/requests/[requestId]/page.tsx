@@ -13,6 +13,7 @@ import {
   listResponses,
   updateRequestStatus,
 } from "@/lib/db/requests";
+import { ShareButton } from "@/components/ShareButton";
 import type { PostDoc, RequestDoc, RequestResponseDoc } from "@/types";
 
 export default function RequestDetailPage({
@@ -168,14 +169,23 @@ export default function RequestDetailPage({
             </p>
           )}
 
-        {isRequester && req.status !== "closed" && (
-          <button
-            onClick={close}
-            disabled={busy}
-            className="mt-3 rounded border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100 disabled:opacity-50"
-          >
-            Close request
-          </button>
+        <div className="mt-3 flex items-center gap-2">
+          <ShareButton requestId={requestId} title={req.title} />
+          {isRequester && req.status !== "closed" && (
+            <button
+              onClick={close}
+              disabled={busy}
+              className="rounded border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100 disabled:opacity-50"
+            >
+              Close request
+            </button>
+          )}
+        </div>
+        {isRequester && req.status === "open" && (
+          <p className="mt-2 text-xs text-slate-400">
+            Share your bounty to reach more sellers — sharing it earns a
+            fee-waiver credit on your next sale.
+          </p>
         )}
       </header>
 

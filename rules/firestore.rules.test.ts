@@ -279,6 +279,120 @@ describe("requests / bounties", () => {
   });
 });
 
+describe("shares (create-only growth events)", () => {
+  it("lets a user record their own share", async () => {
+    const sharer = testEnv.authenticatedContext("sharer").firestore();
+    await assertSucceeds(
+      setDoc(doc(sharer, "shares", "s1"), {
+        sharerUid: "sharer",
+        requestId: "r1",
+        platform: "web",
+      }),
+    );
+  });
+
+  it("blocks recording a share as someone else", async () => {
+    const mallory = testEnv.authenticatedContext("mallory").firestore();
+    await assertFails(
+      setDoc(doc(mallory, "shares", "s2"), {
+        sharerUid: "victim",
+        requestId: "r1",
+        platform: "web",
+      }),
+    );
+  });
+
+  it("blocks reading and editing share events", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "shares", "s3"), {
+        sharerUid: "sharer",
+        requestId: "r1",
+        platform: "ios",
+      });
+    });
+    const sharer = testEnv.authenticatedContext("sharer").firestore();
+    await assertFails(getDoc(doc(sharer, "shares", "s3")));
+    await assertFails(
+      setDoc(doc(sharer, "shares", "s3"), {
+        sharerUid: "sharer",
+        requestId: "OTHER",
+        platform: "web",
+      }),
+    );
+  });
+});
+
+describe("waiver credits (server-granted, read-own)", () => {
+  it("lets a user read their own credit but not someone else's", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "waiverCredits", "c1"), {
+        uid: "earner",
+        source: "created-and-shared",
+        requestId: "r1",
+        consumedByTransactionId: null,
+      });
+    });
+    const earner = testEnv.authenticatedContext("earner").firestore();
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(earner, "waiverCredits", "c1")));
+    await assertFails(getDoc(doc(stranger, "waiverCredits", "c1")));
+  });
+
+  it("blocks a client from minting a credit", async () => {
+    const mallory = testEnv.authenticatedContext("mallory").firestore();
+    await assertFails(
+      setDoc(doc(mallory, "waiverCredits", "forged"), {
+        uid: "mallory",
+        source: "share-converted",
+        consumedByTransactionId: null,
+      }),
+    );
+  });
+});
+
+describe("transactions & payouts (webhook/admin-written ledger)", () => {
+  it("lets a seller read their own transaction but not someone else's", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "transactions", "sess_1"), {
+        sellerUid: "seller",
+        buyerUid: "buyer",
+        grossCents: 3500,
+        netCents: 3325,
+      });
+    });
+    const seller = testEnv.authenticatedContext("seller").firestore();
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(seller, "transactions", "sess_1")));
+    await assertFails(getDoc(doc(stranger, "transactions", "sess_1")));
+  });
+
+  it("blocks a client from writing to the ledger", async () => {
+    const mallory = testEnv.authenticatedContext("mallory").firestore();
+    await assertFails(
+      setDoc(doc(mallory, "transactions", "forged"), {
+        sellerUid: "mallory",
+        netCents: 999999,
+      }),
+    );
+  });
+
+  it("payouts: read-own only, no client writes", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "payouts", "p1"), {
+        uid: "seller",
+        amountCents: 2500,
+      });
+    });
+    const seller = testEnv.authenticatedContext("seller").firestore();
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(seller, "payouts", "p1")));
+    await assertFails(getDoc(doc(stranger, "payouts", "p1")));
+    await assertFails(
+      setDoc(doc(seller, "payouts", "p2"), { uid: "seller", amountCents: 1 }),
+    );
+  });
+});
+
 describe("post stats (server-only)", () => {
   it("blocks a client from inflating usage counters", async () => {
     const u = testEnv.authenticatedContext("alice").firestore();

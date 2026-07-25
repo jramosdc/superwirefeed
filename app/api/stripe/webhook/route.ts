@@ -3,12 +3,19 @@ import { getStripe } from "@/lib/stripe";
 import { adminDb } from "@/lib/firebase/admin";
 import { purchaseId } from "@/lib/db/purchases";
 import { subscriptionId } from "@/lib/db/subscriptions";
+import {
+  grantCreatedAndSharedCredits,
+  grantShareConvertedCredit,
+  recordSaleTransaction,
+} from "@/lib/server/waiverCredits";
 import { FieldValue } from "firebase-admin/firestore";
 import type Stripe from "stripe";
 
-// Stripe webhook. This is the ONLY writer of purchase records. The signature is
-// verified, then on a completed checkout we write purchases/{uid}_{postId} via
-// the Admin SDK (which bypasses Firestore rules — clients can never forge one).
+// Stripe webhook. This is the ONLY writer of purchase records and of the
+// transactions ledger (HANDOFF 4.3 — the source of truth for what sellers are
+// owed). The signature is verified, then on a completed checkout we write
+// purchases/{uid}_{postId} via the Admin SDK (which bypasses Firestore rules —
+// clients can never forge one).
 export async function POST(req: Request) {
   const sig = req.headers.get("stripe-signature");
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -75,6 +82,32 @@ export async function POST(req: Request) {
             { merge: true },
           );
 
+        // Transactions ledger + fee (HANDOFF 4.3/4.4). Resolve the seller,
+        // reconcile any credits their shares have earned (covers iOS-recorded
+        // shares), then write the ledger entry — consuming the oldest
+        // unconsumed credit, which makes this sale's platform fee $0.
+        let sellerUid = session.metadata?.sellerUid ?? "";
+        if (!sellerUid) {
+          // Sessions created before sellerUid was added to metadata.
+          const postSnap = await adminDb.collection("posts").doc(postId).get();
+          sellerUid = (postSnap.data()?.ownerUid as string) ?? "";
+        }
+        if (sellerUid) {
+          try {
+            await grantCreatedAndSharedCredits(sellerUid);
+          } catch (err) {
+            console.error("credit reconciliation failed", err);
+          }
+          await recordSaleTransaction({
+            stripeSessionId: session.id,
+            postId,
+            sellerUid,
+            buyerUid: uid,
+            grossCents: amount,
+            serviceFeeCents: Number(session.metadata?.serviceFeeCents ?? 0),
+          });
+        }
+
         // Bounty auto-fulfill: if this post was offered to a bounty and the
         // BUYER is that bounty's requester, the purchase IS the acceptance —
         // append the winner (requesters may accept more than one) and set
@@ -84,9 +117,10 @@ export async function POST(req: Request) {
           .where("postId", "==", postId)
           .get();
         for (const offer of offers.docs) {
-          const { requestId, responderUid } = offer.data() as {
+          const { requestId, responderUid, refUid } = offer.data() as {
             requestId?: string;
             responderUid?: string;
+            refUid?: string;
           };
           if (!requestId || !responderUid) continue;
           const requestRef = adminDb.collection("requests").doc(requestId);
@@ -106,6 +140,24 @@ export async function POST(req: Request) {
               ? { fulfilledByPostId: postId, fulfilledByUid: responderUid }
               : {}),
           });
+
+          // Share-converted waiver credit (HANDOFF 4.4): the winning response
+          // arrived via someone's ?ref link and the bounty ended in this real
+          // purchase — the sharer earns a credit. Self/buyer refs grant nothing
+          // (enforced inside the helper); deterministic id makes retries safe.
+          if (refUid) {
+            try {
+              await grantShareConvertedCredit({
+                refUid,
+                requestId,
+                responderUid,
+                buyerUid: uid,
+                label: (request.title as string) ?? "",
+              });
+            } catch (err) {
+              console.error("share-converted credit grant failed", err);
+            }
+          }
         }
       }
     }

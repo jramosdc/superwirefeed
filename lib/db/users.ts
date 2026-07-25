@@ -7,6 +7,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import { createFeed } from "./feeds";
+import { getStoredRef } from "@/lib/referral";
 import type { UserDoc } from "@/types";
 
 // Bootstrap a brand-new user: profile doc + an empty feed keyed by uid.
@@ -20,6 +21,12 @@ export async function bootstrapUser(
   const existing = await getDoc(ref);
   if (existing.exists()) return;
 
+  // Referral attribution: if this signup arrived through a ?ref share link,
+  // stamp the sharer once at creation (first ref wins; self-refs ignored).
+  const storedRef = getStoredRef();
+  const referredBy =
+    storedRef && storedRef.refUid !== uid ? storedRef.refUid : "";
+
   await setDoc(ref, {
     uid,
     email,
@@ -30,6 +37,7 @@ export async function bootstrapUser(
     interests: [],
     about: "",
     onboarded: false,
+    ...(referredBy ? { referredBy } : {}),
     createdAt: serverTimestamp(),
   });
 

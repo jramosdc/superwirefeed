@@ -12,6 +12,7 @@ import { getPostStats, recordView } from "@/lib/db/stats";
 import { isGated } from "@/lib/licenses";
 import { readingTime } from "@/lib/search";
 import { PostActions } from "@/components/PostActions";
+import { ShareButton } from "@/components/ShareButton";
 import { CsvTable } from "@/components/CsvTable";
 import { Comments } from "@/components/Comments";
 import { ProvenancePanel } from "@/components/ProvenancePanel";
@@ -108,16 +109,19 @@ export default function PostPage({
             </Link>
           )}
         </div>
-        {isOwner && (
-          <div className="flex gap-3">
-            <Link href={`/posts/${post.id}/edit`} className="text-blue-700 hover:underline">
-              Edit
-            </Link>
-            <button onClick={onDelete} className="text-red-600 hover:underline">
-              Delete
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          <ShareButton postId={post.id} title={post.title} />
+          {isOwner && (
+            <>
+              <Link href={`/posts/${post.id}/edit`} className="text-blue-700 hover:underline">
+                Edit
+              </Link>
+              <button onClick={onDelete} className="text-red-600 hover:underline">
+                Delete
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <header>

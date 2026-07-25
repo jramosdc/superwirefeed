@@ -56,6 +56,9 @@ export interface UserDoc {
   interests: string[];
   about: string;
   onboarded: boolean;
+  // Referral attribution: uid of the sharer whose ?ref link brought this user
+  // here. Stamped once at signup — first ref wins, never overwritten.
+  referredBy?: string;
   createdAt: number;
 }
 
@@ -204,6 +207,67 @@ export interface RequestResponseDoc {
   postId: string;
   postTitle: string;
   note: string;
+  // Referral attribution: the sharer whose ?ref link brought this responder to
+  // the bounty ("" = arrived organically). Read by the Stripe webhook to grant
+  // share-converted waiver credits when the bounty ends in a purchase.
+  refUid?: string;
+  createdAt: number;
+}
+
+// --- Growth & monetization (Phase 4) ---
+
+// shares/{autoId} — a share event, create-only for clients (never readable).
+// Same shape the iOS client writes (FirestoreService.recordShare).
+export interface ShareDoc {
+  sharerUid: string;
+  requestId: string; // "" when the share was of a post, not a bounty
+  postId?: string;
+  platform: "web" | "ios";
+  createdAt: number;
+}
+
+export type WaiverCreditSource = "created-and-shared" | "share-converted";
+
+// waiverCredits/{id} — a fee-waiver credit: the platform fee on the holder's
+// next sale is $0. Server-written only; a user may read their own.
+export interface WaiverCreditDoc {
+  id: string;
+  uid: string;
+  source: WaiverCreditSource;
+  requestId: string; // the bounty it came from ("" if none)
+  // Transaction that spent this credit; null = still available.
+  consumedByTransactionId: string | null;
+  // Bounty/sale title, denormalized for display (iOS Rewards shows this).
+  label: string;
+  createdAt: number;
+}
+
+// transactions/{stripeSessionId} — the money ledger, written ONLY by the Stripe
+// webhook. Source of truth for what sellers are owed (payouts are manual until
+// volume justifies automation — HANDOFF 4.6). Doc id === the Stripe session id
+// so webhook retries can never double-write.
+export interface TransactionDoc {
+  id: string;
+  postId: string;
+  sellerUid: string;
+  buyerUid: string;
+  grossCents: number; // post price (excludes the buyer service fee)
+  serviceFeeCents: number; // buyer-side fee, kept by the platform
+  feeCents: number; // seller-side platform fee (0 when a credit was consumed)
+  waiverCreditId: string | null;
+  netCents: number; // grossCents - feeCents — what the seller is owed
+  stripeSessionId: string;
+  createdAt: number;
+}
+
+// payouts/{autoId} — money actually sent to a seller, written by the owner via
+// the Admin SDK. Balance owed = sum(net) - sum(payouts).
+export interface PayoutDoc {
+  id: string;
+  uid: string;
+  amountCents: number;
+  method: string; // "paypal" | "wise" | "bank" | ...
+  reference: string;
   createdAt: number;
 }
 

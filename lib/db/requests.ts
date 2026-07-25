@@ -15,6 +15,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
+import { getStoredRef } from "@/lib/referral";
 import type { RequestDoc, RequestResponseDoc, RequestStatus } from "@/types";
 
 // --- Deadline helpers (display + response-gating; expiry is client-side) ---
@@ -159,8 +160,23 @@ export async function addResponse(input: {
   postTitle: string;
   note: string;
 }): Promise<void> {
+  // Referral attribution (HANDOFF 4.2): if this responder arrived via a ?ref
+  // share link for THIS bounty, stamp the sharer on the response. The Stripe
+  // webhook reads it to grant a share-converted waiver credit when the bounty
+  // ends in a purchase. Self-refs grant nothing, so don't stamp them.
+  const stored = getStoredRef();
+  const refUid =
+    stored &&
+    stored.refUid !== input.responderUid &&
+    (stored.requestId === "" || stored.requestId === input.requestId)
+      ? stored.refUid
+      : "";
   const ref = doc(db, "requestResponses", `${input.requestId}_${input.responderUid}`);
-  await setDoc(ref, { ...input, createdAt: serverTimestamp() });
+  await setDoc(ref, {
+    ...input,
+    ...(refUid ? { refUid } : {}),
+    createdAt: serverTimestamp(),
+  });
 }
 
 export async function listResponses(
