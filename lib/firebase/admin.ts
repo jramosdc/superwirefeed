@@ -5,6 +5,7 @@ import {
   getApps,
   getApp,
   cert,
+  applicationDefault,
   type App,
 } from "firebase-admin/app";
 import { getAuth, type Auth } from "firebase-admin/auth";
@@ -42,8 +43,18 @@ function adminApp(): App {
   // Private key is stored with literal "\n"; convert back to real newlines.
   const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, "\n");
 
+  // Two credential styles, either works (Vercel wants the env-var pair; local
+  // dev often has only GOOGLE_APPLICATION_CREDENTIALS pointing at the
+  // service-account JSON). Without the fallback, a missing env-var pair made
+  // cert() throw on first use and every API route returned an opaque 401.
+  const credential =
+    clientEmail && privateKey
+      ? cert({ projectId, clientEmail, privateKey })
+      : applicationDefault();
+
   _app = initializeApp({
-    credential: cert({ projectId, clientEmail, privateKey }),
+    credential,
+    projectId,
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   });
   return _app;
