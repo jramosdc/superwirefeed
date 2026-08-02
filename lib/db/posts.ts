@@ -56,6 +56,7 @@ function toPost(id: string, data: Record<string, unknown>): PostDoc {
     imageURLs: (data.imageURLs as string[]) ?? [],
     assetPath: (data.assetPath as string) ?? null,
     assetName: (data.assetName as string) ?? null,
+    hasExternalDeliverable: Boolean(data.hasExternalDeliverable),
     csvPreview: parseCsvPreview(data.csvPreview),
     previewText: (data.previewText as string) ?? "",
     freePreviewRows: (data.freePreviewRows as number) ?? 0,

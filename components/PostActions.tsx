@@ -91,6 +91,16 @@ export function PostActions({
           >
             {busy ? "Preparing…" : `Download ${post.assetName ?? "file"}`}
           </button>
+        ) : post.hasExternalDeliverable ? (
+          // External deliverable (Drive/WeTransfer catalogue…) — the same
+          // gated route returns the seller's link after verifying access.
+          <button
+            onClick={download}
+            disabled={busy}
+            className="w-full rounded bg-green-700 px-4 py-2 font-medium text-white hover:bg-green-800 disabled:opacity-50"
+          >
+            {busy ? "Preparing…" : "Open deliverable link"}
+          </button>
         ) : (
           <p className="text-sm text-slate-500">No downloadable file attached.</p>
         )

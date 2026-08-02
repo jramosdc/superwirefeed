@@ -11,6 +11,7 @@ export type LicenseKey =
 // is data, signals and foresight. Spans timely news → raw data/sensor feeds →
 // AI artifacts → predictions → frontier science, with provenance/trust central.
 export const CATEGORIES = [
+  "News & Current Events",
   "Markets & Signals",
   "Science & Research",
   "Datasets & Sensors",
@@ -117,6 +118,12 @@ export interface PostDoc {
   // the client directly — only served via the purchase-gated download route.
   assetPath: string | null;
   assetName: string | null;
+  // True when the seller attached an EXTERNAL deliverable link (Drive,
+  // WeTransfer, …). The URL itself lives in postSecrets/{postId} — never on
+  // this world-readable doc — and is served only by the gated download route.
+  // This public flag just tells clients to render the "open deliverable"
+  // button after unlock.
+  hasExternalDeliverable: boolean;
   // First N rows of the parsed CSV, shown free for CC licenses / after purchase.
   csvPreview: string[][] | null;
   // Creator-controlled preview shown to non-buyers of gated posts.

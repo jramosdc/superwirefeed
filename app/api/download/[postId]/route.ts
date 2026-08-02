@@ -8,8 +8,10 @@ import type { LicenseKey } from "@/types";
 
 // Purchase-gated download. Verifies the caller's Firebase ID token, confirms
 // they may access the asset (free post, owner, or a matching purchase), then
-// returns a short-lived signed URL. The asset file is never client-readable
-// directly (storage.rules deny reads of /assets/**).
+// returns either a short-lived signed URL for an uploaded asset or the
+// seller's EXTERNAL deliverable link (postSecrets/{postId} — Drive,
+// WeTransfer, …). Neither is ever client-readable directly (storage.rules
+// deny /assets/** reads; firestore.rules deny postSecrets reads).
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ postId: string }> },
@@ -26,9 +28,10 @@ export async function GET(
     ownerUid: string;
     assetPath?: string | null;
     assetName?: string | null;
+    hasExternalDeliverable?: boolean;
   };
 
-  if (!post.assetPath) {
+  if (!post.assetPath && !post.hasExternalDeliverable) {
     return NextResponse.json({ error: "No file attached" }, { status: 404 });
   }
 
@@ -50,11 +53,24 @@ export async function GET(
     return NextResponse.json({ error: "Purchase or subscription required" }, { status: 403 });
   }
 
-  const [url] = await adminBucket.file(post.assetPath).getSignedUrl({
-    action: "read",
-    expires: Date.now() + 5 * 60 * 1000, // 5 minutes
-    responseDisposition: `attachment; filename="${post.assetName ?? "download"}"`,
-  });
+  let url: string;
+  if (post.assetPath) {
+    [url] = await adminBucket.file(post.assetPath).getSignedUrl({
+      action: "read",
+      expires: Date.now() + 5 * 60 * 1000, // 5 minutes
+      responseDisposition: `attachment; filename="${post.assetName ?? "download"}"`,
+    });
+  } else {
+    // External deliverable: the link lives in postSecrets, never on the
+    // world-readable post doc. The ownerUid cross-check stops a stale or
+    // forged secret from serving under someone else's post.
+    const secret = await adminDb.collection("postSecrets").doc(postId).get();
+    const external = secret.data();
+    if (!secret.exists || external?.ownerUid !== post.ownerUid || !external?.deliverableUrl) {
+      return NextResponse.json({ error: "No file attached" }, { status: 404 });
+    }
+    url = external.deliverableUrl as string;
+  }
 
   // Count real consumers' downloads (not the owner's own) for usage ranking,
   // and record the user's download history (their "library" — one doc per

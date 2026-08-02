@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { useAuth } from "@/lib/firebase/auth";
 import { createPost, updatePost, type PostInput } from "@/lib/db/posts";
 import { addResponse } from "@/lib/db/requests";
 import { getUser } from "@/lib/db/users";
+import { getDeliverableUrl, setDeliverableUrl } from "@/lib/db/postSecrets";
 import { uploadGatedAsset } from "@/lib/storage";
 import { LICENSE_LIST, isGated } from "@/lib/licenses";
 import { CATEGORIES, FORMATS } from "@/types";
@@ -25,6 +26,19 @@ import { ImageUploader } from "./ImageUploader";
 
 const TYPE_OPTIONS = ["Article", "Dataset", "Media", "Photo", "Video", "Document"];
 const SOURCE_KINDS: SourceRef["kind"][] = ["primary", "data", "reporting", "other"];
+
+// Default type tag per format, so Types is an optional refinement rather than
+// a second required decision that mostly restates Format (photographer-in-a-
+// hurry friction).
+const FORMAT_DEFAULT_TYPE: Record<PostFormat, string> = {
+  Article: "Article",
+  Investigation: "Article",
+  Dataset: "Dataset",
+  Document: "Document",
+  "Photo set": "Photo",
+  Video: "Video",
+  Audio: "Media",
+};
 
 // Extract a post id from a pasted /posts/<id> URL, or accept a raw id.
 function parseDerivedFrom(text: string): string[] {
@@ -54,6 +68,7 @@ function emptyInput(): PostInput {
     imageURLs: [],
     assetPath: null,
     assetName: null,
+    hasExternalDeliverable: false,
     csvPreview: null,
     previewText: "",
     freePreviewRows: 5,
@@ -91,6 +106,7 @@ export function PostForm({
           imageURLs: existing.imageURLs,
           assetPath: existing.assetPath,
           assetName: existing.assetName,
+          hasExternalDeliverable: existing.hasExternalDeliverable,
           csvPreview: existing.csvPreview,
           previewText: existing.previewText,
           freePreviewRows: existing.freePreviewRows,
@@ -102,6 +118,9 @@ export function PostForm({
   );
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [assetFile, setAssetFile] = useState<File | null>(null);
+  // External deliverable link (buyers only). Lives in postSecrets, not on the
+  // world-readable post doc — see lib/db/postSecrets.ts.
+  const [deliverableUrl, setDeliverableUrlState] = useState("");
   const [derivedText, setDerivedText] = useState(
     existing?.derivedFrom.join("\n") ?? "",
   );
@@ -111,6 +130,13 @@ export function PostForm({
   function set<K extends keyof PostInput>(key: K, value: PostInput[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
+
+  // Prefill the seller-private deliverable link when editing (owner-only read).
+  useEffect(() => {
+    if (existing?.hasExternalDeliverable) {
+      getDeliverableUrl(existing.id).then(setDeliverableUrlState);
+    }
+  }, [existing]);
 
   function toggleType(t: string) {
     setForm((f) => ({
@@ -187,10 +213,6 @@ export function PostForm({
       setError("Title is required.");
       return;
     }
-    if (form.types.length === 0) {
-      setError("Pick at least one type.");
-      return;
-    }
     if (!form.category) {
       setError("Pick a category.");
       return;
@@ -198,15 +220,26 @@ export function PostForm({
     setBusy(true);
     setError("");
     try {
-      // Drop blank source rows before saving.
+      const trimmedLink = deliverableUrl.trim();
+      // Drop blank source rows; default Types from Format when left empty
+      // (Types is an optional refinement, not a second required decision).
       const cleaned: PostInput = {
         ...form,
+        types:
+          form.types.length > 0 ? form.types : [FORMAT_DEFAULT_TYPE[form.format]],
         sources: form.sources.filter((s) => s.url.trim()),
+        hasExternalDeliverable: Boolean(trimmedLink),
       };
       // Create first (need the id for the asset path), then upload + patch.
       const postId = existing
         ? existing.id
         : await createPost(user.uid, cleaned);
+
+      // Seller-private deliverable link — written to postSecrets AFTER the
+      // post exists (the create rule verifies post ownership).
+      if (trimmedLink || existing?.hasExternalDeliverable) {
+        await setDeliverableUrl(postId, user.uid, trimmedLink);
+      }
 
       let patch: Partial<PostInput> = cleaned;
       const gatedFile = form.format === "Dataset" ? csvFile : assetFile;
@@ -300,7 +333,9 @@ export function PostForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Types</label>
+        <label className="mb-1 block text-sm font-medium">
+          Types <span className="font-normal text-slate-400">(optional — defaults from format)</span>
+        </label>
         <div className="flex flex-wrap gap-2">
           {TYPE_OPTIONS.map((t) => (
             <button
@@ -342,7 +377,10 @@ export function PostForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Embed a link</label>
+        <label className="mb-1 block text-sm font-medium">
+          Public link{" "}
+          <span className="font-normal text-slate-400">(shown to everyone)</span>
+        </label>
         <input
           value={form.mainUrl}
           onChange={(e) => set("mainUrl", e.target.value)}
@@ -350,6 +388,10 @@ export function PostForm({
           placeholder="https://…"
           className="w-full rounded border border-slate-300 px-3 py-2"
         />
+        <p className="mt-1 text-xs text-slate-500">
+          Visible before purchase — never put paid content here. For a paid
+          deliverable, use the buyers-only link below.
+        </p>
         {form.embed && (
           <p className="mt-1 text-sm text-slate-500">Preview: {form.embed.title}</p>
         )}
@@ -389,6 +431,26 @@ export function PostForm({
           )}
         </div>
       ) : null}
+
+      {isGated(form.license) && (
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            Deliverable link{" "}
+            <span className="font-normal text-slate-400">(buyers only)</span>
+          </label>
+          <input
+            value={deliverableUrl}
+            onChange={(e) => setDeliverableUrlState(e.target.value)}
+            placeholder="https://wetransfer.com/… or Drive, Dropbox, …"
+            className="w-full rounded border border-slate-300 px-3 py-2"
+          />
+          <p className="mt-1 text-xs text-slate-500">
+            Revealed only after purchase — ideal for a full catalogue too big to
+            upload here. Heads up: transfer links can expire; prefer a
+            long-lived link (Drive/Dropbox).
+          </p>
+        </div>
+      )}
 
       {isGated(form.license) && (
         <fieldset className="space-y-3 rounded-lg border border-slate-200 p-4">

@@ -279,6 +279,56 @@ describe("requests / bounties", () => {
   });
 });
 
+describe("postSecrets (seller-private deliverable links)", () => {
+  it("lets the post owner create and read their secret", async () => {
+    const author = testEnv.authenticatedContext("author").firestore();
+    await setDoc(doc(author, "posts", "p10"), {
+      ownerUid: "author",
+      feedId: "author",
+      title: "gated",
+    });
+    await assertSucceeds(
+      setDoc(doc(author, "postSecrets", "p10"), {
+        ownerUid: "author",
+        deliverableUrl: "https://wetransfer.com/x",
+      }),
+    );
+    await assertSucceeds(getDoc(doc(author, "postSecrets", "p10")));
+  });
+
+  it("blocks squatting a secret onto someone else's post", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "posts", "p11"), {
+        ownerUid: "victim",
+        feedId: "victim",
+        title: "victim's post",
+      });
+    });
+    const mallory = testEnv.authenticatedContext("mallory").firestore();
+    // Even claiming their own uid on the secret, the POST isn't theirs.
+    await assertFails(
+      setDoc(doc(mallory, "postSecrets", "p11"), {
+        ownerUid: "mallory",
+        deliverableUrl: "https://evil.example",
+      }),
+    );
+  });
+
+  it("blocks anyone but the owner from reading the deliverable URL", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "postSecrets", "p12"), {
+        ownerUid: "author",
+        deliverableUrl: "https://wetransfer.com/secret",
+      });
+    });
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertFails(getDoc(doc(stranger, "postSecrets", "p12")));
+    // A BUYER also can't read it directly — only the gated route serves it.
+    const buyer = testEnv.authenticatedContext("buyer").firestore();
+    await assertFails(getDoc(doc(buyer, "postSecrets", "p12")));
+  });
+});
+
 describe("shares (create-only growth events)", () => {
   it("lets a user record their own share", async () => {
     const sharer = testEnv.authenticatedContext("sharer").firestore();
