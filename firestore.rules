@@ -187,6 +187,27 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // FCM device tokens (push notifications). Keyed by token; a user may
+    // register/replace/remove only their own device docs and read only their
+    // own. Sending happens exclusively server-side (/api/notify-followers).
+    match /fcmTokens/{token} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // Per-post notification marker: one push blast per post, written ONLY by
+    // /api/notify-followers (Admin SDK). The post's owner may read theirs
+    // (drives "already notified" UI); doubles as the future billing record.
+    match /postNotifications/{postId} {
+      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow write: if false;
+    }
+
     // Comments: comments/{postId}/items/{id}
     match /comments/{postId}/items/{commentId} {
       allow read: if true;

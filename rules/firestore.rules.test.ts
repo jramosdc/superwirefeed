@@ -443,6 +443,46 @@ describe("transactions & payouts (webhook/admin-written ledger)", () => {
   });
 });
 
+describe("fcmTokens & postNotifications (push)", () => {
+  it("lets a user register and read their own device token", async () => {
+    const u = testEnv.authenticatedContext("alice").firestore();
+    await assertSucceeds(
+      setDoc(doc(u, "fcmTokens", "tok-1"), { uid: "alice", platform: "ios" }),
+    );
+    await assertSucceeds(getDoc(doc(u, "fcmTokens", "tok-1")));
+  });
+
+  it("blocks registering a token for someone else or reading theirs", async () => {
+    const mallory = testEnv.authenticatedContext("mallory").firestore();
+    await assertFails(
+      setDoc(doc(mallory, "fcmTokens", "tok-2"), { uid: "victim", platform: "ios" }),
+    );
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "fcmTokens", "tok-3"), {
+        uid: "victim",
+        platform: "ios",
+      });
+    });
+    await assertFails(getDoc(doc(mallory, "fcmTokens", "tok-3")));
+  });
+
+  it("postNotifications: owner reads own marker, nobody writes", async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), "postNotifications", "p1"), {
+        ownerUid: "author",
+        sentCount: 3,
+      });
+    });
+    const author = testEnv.authenticatedContext("author").firestore();
+    const stranger = testEnv.authenticatedContext("stranger").firestore();
+    await assertSucceeds(getDoc(doc(author, "postNotifications", "p1")));
+    await assertFails(getDoc(doc(stranger, "postNotifications", "p1")));
+    await assertFails(
+      setDoc(doc(author, "postNotifications", "p2"), { ownerUid: "author" }),
+    );
+  });
+});
+
 describe("post stats (server-only)", () => {
   it("blocks a client from inflating usage counters", async () => {
     const u = testEnv.authenticatedContext("alice").firestore();

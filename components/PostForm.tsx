@@ -8,6 +8,7 @@ import { createPost, updatePost, type PostInput } from "@/lib/db/posts";
 import { addResponse } from "@/lib/db/requests";
 import { getUser } from "@/lib/db/users";
 import { getDeliverableUrl, setDeliverableUrl } from "@/lib/db/postSecrets";
+import { getIdToken } from "@/lib/firebase/token";
 import { uploadGatedAsset } from "@/lib/storage";
 import { LICENSE_LIST, isGated } from "@/lib/licenses";
 import { CATEGORIES, FORMATS } from "@/types";
@@ -121,6 +122,8 @@ export function PostForm({
   // External deliverable link (buyers only). Lives in postSecrets, not on the
   // world-readable post doc — see lib/db/postSecrets.ts.
   const [deliverableUrl, setDeliverableUrlState] = useState("");
+  // Push-notify followers on publish (breaking posts only; free during beta).
+  const [notifyFollowers, setNotifyFollowers] = useState(true);
   const [derivedText, setDerivedText] = useState(
     existing?.derivedFrom.join("\n") ?? "",
   );
@@ -249,6 +252,24 @@ export function PostForm({
       }
       await updatePost(postId, patch);
 
+      // Breaking + opted in → push-notify followers, best-effort (a push
+      // failure must never fail the publish). Server enforces once-per-post.
+      if (!existing && cleaned.breaking && notifyFollowers) {
+        try {
+          const idToken = await getIdToken();
+          await fetch("/api/notify-followers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken}`,
+            },
+            body: JSON.stringify({ postId }),
+          });
+        } catch {
+          /* best-effort */
+        }
+      }
+
       // Created for a bounty → auto-offer it as a response (one per user;
       // re-publishing revises the offer). The post stays on the open
       // market regardless of whether the requester picks it.
@@ -362,6 +383,16 @@ export function PostForm({
         />
         Mark as breaking
       </label>
+      {form.breaking && !existing && (
+        <label className="ml-6 flex items-center gap-2 text-sm text-slate-600">
+          <input
+            type="checkbox"
+            checked={notifyFollowers}
+            onChange={(e) => setNotifyFollowers(e.target.checked)}
+          />
+          Push-notify your followers on publish (free during beta; once per post)
+        </label>
+      )}
 
       <div>
         <label className="mb-1 block text-sm font-medium">Cover image</label>

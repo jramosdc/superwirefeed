@@ -16,6 +16,13 @@ export const SERVICE_FEE_CENTS = 75;
 // real purchase verified in the webhook.)
 export const CREATED_AND_SHARED_MONTHLY_CAP = 3;
 
+// Push-notifying your followers about a breaking post. FREE during beta;
+// the owner's plan is to make this a paid per-use feature later — when that
+// happens, this constant becomes the price and /api/notify-followers (the
+// single choke point) charges it before sending. The postNotifications
+// marker doc already records feeCents per send, so history stays honest.
+export const NOTIFY_FOLLOWERS_FEE_CENTS = 0;
+
 export function platformFeeCents(grossCents: number): number {
   return Math.round((grossCents * PLATFORM_FEE_PCT) / 100);
 }
